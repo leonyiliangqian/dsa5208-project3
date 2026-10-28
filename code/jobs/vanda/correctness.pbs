@@ -56,7 +56,7 @@ python3 -c 'import sys; sys.exit(sys.version_info < (3, 7))' \
     echo "== mpi";       mpirun --version 2>&1 | head -2
     echo "== ompi_info"; ompi_info 2>/dev/null | grep -iE 'Open MPI:|Thread support|MCA (plm|ras): tm' || true
     echo "== python";    python3 --version
-    echo "== source";    git rev-parse HEAD 2>&1; git status --porcelain -- . 2>&1 | head -20
+    echo "== source";    git rev-parse HEAD 2>&1; git status --porcelain --untracked-files=no -- . 2>&1 | head -20
 } > "$OUT/env/environment.txt" 2>&1
 echo "environment recorded in $OUT/env/environment.txt"
 

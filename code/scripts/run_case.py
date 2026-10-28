@@ -45,7 +45,9 @@ def source_state():
     for f in files:
         h.update(str(f.relative_to(root)).encode())
         h.update(f.read_bytes())
-    dirty = sh(f"git -C {shlex.quote(str(root))} status --porcelain -- . 2>/dev/null")
+    # Tracked files only: run outputs are untracked by design and must not mark
+    # an unmodified source tree as dirty.
+    dirty = sh(f"git -C {shlex.quote(str(root))} status --porcelain --untracked-files=no -- . 2>/dev/null")
     return {"git_rev": rev, "source_tree_sha256": h.hexdigest(), "git_dirty": bool(dirty)}
 
 

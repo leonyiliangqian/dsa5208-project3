@@ -30,7 +30,7 @@ if [ -z "$project" ] && [ "$no_project" != 1 ]; then
     echo "Pass --no-project only if you have confirmed that is acceptable." >&2
     exit 2
 fi
-[ -z "$(git status --porcelain -- . 2>/dev/null)" ] || echo "WARNING: uncommitted changes in code/; runs will record git_dirty=true"
+[ -z "$(git status --porcelain --untracked-files=no -- . 2>/dev/null)" ] || echo "WARNING: modified tracked files in code/; runs will record git_dirty=true"
 
 mkdir -p artifacts/cluster/logs
 cmd=(qsub -q "$queue")
