@@ -1,0 +1,116 @@
+{
+  "timestamp_utc": "2026-10-28T10:28:59.927212+00:00",
+  "kind": "local development validation; not Atlas/Vanda performance evidence",
+  "source_sha256": {
+    "serial/barnes_hut.cpp": "562b0fa8599b240a4b7c663f340643a523ac03f5fe36866171c0b12fd440e1c1",
+    "common/nbody.hpp": "7f8fe48d54052d1733e1829467f85bcedf60a959ba06d5c365f3289b5dc9529b"
+  },
+  "platform": "Linux-7.0.12-linuxkit-x86_64-with-glibc2.36",
+  "binary": "bin/linux/bh_serial",
+  "binary_sha256": "e50a30c6181ebd711906dcc70ba27508fa6ed5b25d77c82cfdb1f1baeb7304a3",
+  "theta_zero_threshold": 1e-10,
+  "self_test_stdout": "self_test case=empty n=0 leaf_size=1 nodes=0 PASS\nself_test case=empty n=0 leaf_size=8 nodes=0 PASS\nself_test case=singleton n=1 leaf_size=1 nodes=1 PASS\nself_test case=singleton n=1 leaf_size=8 nodes=1 PASS\nself_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS\nself_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS\nself_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS\nself_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS\nself_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS\nself_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS\nself_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS\nself_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS\nself_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS\nself_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS\nself_test case=two_particle_analytic PASS\nself_test case=symmetric_cube PASS\nself_test case=negative_control_force_perturbation PASS\nself_test case=negative_control_mass_mismatch PASS\nself_test failures=0\n",
+  "rejected_arguments": [
+    [
+      "--n",
+      "12abc"
+    ],
+    [
+      "--n",
+      "0"
+    ],
+    [
+      "--n",
+      "-5"
+    ],
+    [
+      "--theta",
+      "-1"
+    ],
+    [
+      "--theta",
+      "nan"
+    ],
+    [
+      "--dt",
+      "0"
+    ],
+    [
+      "--steps",
+      "0"
+    ],
+    [
+      "--leaf-size",
+      "0"
+    ],
+    [
+      "--method",
+      "fmm"
+    ],
+    [
+      "--bogus"
+    ]
+  ],
+  "measurements": [
+    {
+      "theta": 0.0,
+      "leaf_size": 1,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 1.128e-14,
+      "mean_rel_err": 1.475e-15,
+      "max_abs_err": 2.461e-15,
+      "stdout": "validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.128e-14 mean_rel_err=1.475e-15 max_abs_err=2.461e-15\n"
+    },
+    {
+      "theta": 0.3,
+      "leaf_size": 1,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 0.01573,
+      "mean_rel_err": 0.0008571,
+      "max_abs_err": 0.002599,
+      "stdout": "validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03\n"
+    },
+    {
+      "theta": 0.5,
+      "leaf_size": 1,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 0.1095,
+      "mean_rel_err": 0.003517,
+      "max_abs_err": 0.01094,
+      "stdout": "validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02\n"
+    },
+    {
+      "theta": 0.0,
+      "leaf_size": 8,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 1.144e-14,
+      "mean_rel_err": 1.471e-15,
+      "max_abs_err": 2.461e-15,
+      "stdout": "validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.144e-14 mean_rel_err=1.471e-15 max_abs_err=2.461e-15\n"
+    },
+    {
+      "theta": 0.3,
+      "leaf_size": 8,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 0.008409,
+      "mean_rel_err": 0.0006735,
+      "max_abs_err": 0.0007099,
+      "stdout": "validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04\n"
+    },
+    {
+      "theta": 0.5,
+      "leaf_size": 8,
+      "n": 2000,
+      "seed": 42,
+      "max_rel_err": 0.05909,
+      "mean_rel_err": 0.002962,
+      "max_abs_err": 0.00548,
+      "stdout": "validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03\n"
+    }
+  ]
+}

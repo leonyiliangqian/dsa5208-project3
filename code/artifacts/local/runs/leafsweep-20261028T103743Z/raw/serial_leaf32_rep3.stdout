@@ -1,0 +1,2 @@
+method=bh n=50000 theta=0.500 leaf_size=32 steps=2 wall_s=3.2449 build_s=0.0111 traverse_s=3.2330 integrate_s=0.0008 s_per_step=1.6225
+result {"program":"bh_serial","method":"bh","n":50000,"theta":0.5,"dt":0.001,"steps":2,"warmup":1,"leaf_size":32,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":1,"threads_effective":1,"hosts":["de6715063436"],"nodes":6278,"setup_s":3.569998,"wall_s":3.244903,"integrate_s":0.000841,"exchange_s":0,"build_s":0.011055,"traverse_s":3.233006,"compiler":"12.2.0","cxxflags":"-O3 -std=c++17 -Wall -Wextra -march=native"}

@@ -1,0 +1,32 @@
+{
+  "platform": "macOS-26.7.1-x86_64-i386-64bit",
+  "tools": {
+    "c++": {
+      "path": "/usr/bin/c++",
+      "version": "Apple clang version 21.0.0 (clang-2100.1.1.101)"
+    },
+    "make": {
+      "path": "/usr/bin/make",
+      "version": "GNU Make 3.81"
+    },
+    "python3": {
+      "path": "/Library/Frameworks/Python.framework/Versions/3.10/bin/python3",
+      "version": "Python 3.10.5"
+    },
+    "mpicxx": {
+      "path": null
+    },
+    "mpirun": {
+      "path": null
+    },
+    "cmake": {
+      "path": null
+    },
+    "pdflatex": {
+      "path": null
+    },
+    "biber": {
+      "path": null
+    }
+  }
+}

@@ -1,0 +1,161 @@
+{
+  "timestamp_utc": "2026-10-28T10:33:08.689817+00:00",
+  "kind": "local supplementary diagnostic; not correctness proof, not cluster evidence",
+  "platform": "Linux-7.0.12-linuxkit-x86_64-with-glibc2.36",
+  "n": 2000,
+  "simulated_time": 0.2,
+  "seed": 42,
+  "leaf_size": 8,
+  "rows": [
+    {
+      "theta": 0.0,
+      "dt": 0.008,
+      "steps": 25,
+      "energy_rel_drift": 7.271995e-08
+    },
+    {
+      "theta": 0.0,
+      "dt": 0.004,
+      "steps": 50,
+      "energy_rel_drift": 1.817797e-08
+    },
+    {
+      "theta": 0.0,
+      "dt": 0.002,
+      "steps": 100,
+      "energy_rel_drift": 4.544401e-09
+    },
+    {
+      "theta": 0.0,
+      "dt": 0.001,
+      "steps": 200,
+      "energy_rel_drift": 1.136116e-09
+    },
+    {
+      "theta": 0.0,
+      "dt": 0.0005,
+      "steps": 400,
+      "energy_rel_drift": 2.840156e-10
+    },
+    {
+      "theta": 0.2,
+      "dt": 0.008,
+      "steps": 25,
+      "energy_rel_drift": 1.209887e-07
+    },
+    {
+      "theta": 0.2,
+      "dt": 0.004,
+      "steps": 50,
+      "energy_rel_drift": 1.752879e-07
+    },
+    {
+      "theta": 0.2,
+      "dt": 0.002,
+      "steps": 100,
+      "energy_rel_drift": 1.897864e-07
+    },
+    {
+      "theta": 0.2,
+      "dt": 0.001,
+      "steps": 200,
+      "energy_rel_drift": 1.93374e-07
+    },
+    {
+      "theta": 0.2,
+      "dt": 0.0005,
+      "steps": 400,
+      "energy_rel_drift": 1.942563e-07
+    },
+    {
+      "theta": 0.3,
+      "dt": 0.008,
+      "steps": 25,
+      "energy_rel_drift": 9.98132e-07
+    },
+    {
+      "theta": 0.3,
+      "dt": 0.004,
+      "steps": 50,
+      "energy_rel_drift": 1.050284e-06
+    },
+    {
+      "theta": 0.3,
+      "dt": 0.002,
+      "steps": 100,
+      "energy_rel_drift": 1.068723e-06
+    },
+    {
+      "theta": 0.3,
+      "dt": 0.001,
+      "steps": 200,
+      "energy_rel_drift": 1.073585e-06
+    },
+    {
+      "theta": 0.3,
+      "dt": 0.0005,
+      "steps": 400,
+      "energy_rel_drift": 1.075368e-06
+    },
+    {
+      "theta": 0.5,
+      "dt": 0.008,
+      "steps": 25,
+      "energy_rel_drift": 3.637356e-06
+    },
+    {
+      "theta": 0.5,
+      "dt": 0.004,
+      "steps": 50,
+      "energy_rel_drift": 3.701303e-06
+    },
+    {
+      "theta": 0.5,
+      "dt": 0.002,
+      "steps": 100,
+      "energy_rel_drift": 3.725653e-06
+    },
+    {
+      "theta": 0.5,
+      "dt": 0.001,
+      "steps": 200,
+      "energy_rel_drift": 3.733172e-06
+    },
+    {
+      "theta": 0.5,
+      "dt": 0.0005,
+      "steps": 400,
+      "energy_rel_drift": 3.734171e-06
+    },
+    {
+      "theta": 0.7,
+      "dt": 0.008,
+      "steps": 25,
+      "energy_rel_drift": 3.53855e-06
+    },
+    {
+      "theta": 0.7,
+      "dt": 0.004,
+      "steps": 50,
+      "energy_rel_drift": 3.593957e-06
+    },
+    {
+      "theta": 0.7,
+      "dt": 0.002,
+      "steps": 100,
+      "energy_rel_drift": 3.633876e-06
+    },
+    {
+      "theta": 0.7,
+      "dt": 0.001,
+      "steps": 200,
+      "energy_rel_drift": 3.644218e-06
+    },
+    {
+      "theta": 0.7,
+      "dt": 0.0005,
+      "steps": 400,
+      "energy_rel_drift": 3.644541e-06
+    }
+  ]
+}

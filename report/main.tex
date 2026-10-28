@@ -1,0 +1,199 @@
+
+\documentclass[10pt,a4paper,twocolumn,twoside]{rho-class/rho}
+\definecolor{rhocolor}{rgb}{0.0, 0.2, 0.4} % dark blue accent (the template's built-in blue option)
+\usepackage[english]{babel}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{multirow}
+\setlength{\columnsep}{0.25in}
+% Visible marker for content that depends on Atlas/Vanda runs; none may remain at submission.
+\newcommand{\pending}[1]{\textcolor{red}{\textbf{[PENDING: #1]}}}
+\setlength{\intextsep}{6pt}
+\setlength{\textfloatsep}{6pt}
+\usepackage{titlesec}
+\titlespacing*{\paragraph}{0pt}{0.2ex}{0.5em}
+\makeatletter
+\titlespacing*{\subsubsection}{0pt}{1ex}{2pt}
+\makeatother
+%----------------------------------------------------------
+% Title
+%----------------------------------------------------------
+
+\title{DSA5208 Project 3 Report : MPI+OpenMP Parallelization of Barnes--Hut N-Body Simulation}
+
+\author{\textbf{Group Members: }Yan Yixin (A0327039A), Zhang Yue (A0333668U), Leon Yiliang Qian (A0355825W)}
+
+%----------------------------------------------------------
+% Abstract and Keywords
+%----------------------------------------------------------
+
+\begin{abstract}
+
+\end{abstract}
+\makeatletter
+\renewcommand{\rhoabstract}{}
+\makeatother
+
+%----------------------------------------------------------
+% Footer: page number centred at the bottom of EVERY page, as "n/N"
+%----------------------------------------------------------
+\makeatletter
+% Running head: project title on every page that carries one
+\fancyhead[RO,LE]{\footerfont DSA5208 Project 3}
+\fancyhead[RE,LO]{}
+\fancyfoot[C]{\footerfont\thepage/\pageref{LastPage}}
+\fancypagestyle{firststyle}{
+    \fancyhead[L]{}
+    \fancyhead[C]{}
+    \fancyhead[R]{}
+    \fancyfoot[C]{\footerfont\thepage/\pageref{LastPage}}
+    \fancyfoot[L]{
+        {\ifx\@journalname\undefined\else\footerfont\bfseries\@journalname\hspace{8pt}\fi}
+        {\ifx\@theday\undefined\else\footerfont\@theday\hspace{8pt}\fi}
+        {\ifx\@vol\undefined\else\footerfont{Vol.\nobreakspace}\@vol\hspace{8pt}\fi}
+        {\ifx\@no\undefined\else\footerfont{No.\nobreakspace}\@no\hspace{8pt}\fi}
+        }
+    \fancyfoot[R]{
+        {\ifx\@journal\undefined\else\footerfont\@journal\hspace{8pt}\fi}
+    }
+}
+\makeatother
+
+\begin{document}
+
+    \maketitle
+    \thispagestyle{firststyle}
+
+%----------------------------------------------------------
+
+\noindent\textbf{Submission Overview.} \pending{confirm with the lecturer how source code is submitted alongside this PDF.} The submission comprises the C++17 source (shared core, serial driver, MPI+OpenMP driver), the validation and measurement scripts, the scheduler job scripts used on \pending{Atlas or Vanda}, the raw run records from which every table and figure is generated, and a \texttt{README.md} with build and run instructions.
+
+\section{Introduction}
+\rhostart{T}he gravitational $N$-body problem asks for the motion of $N$ point masses under their mutual attraction. Direct summation costs $O(N^2)$ per force evaluation, which limits it to small $N$. The Barnes--Hut algorithm~\cite{BarnesHut1986} reduces the cost to $O(N \log N)$ by grouping distant particles into the cells of an octree and replacing each sufficiently distant group by its total mass at its centre of mass.
+
+Barnes--Hut is a useful parallelization exercise because it is not embarrassingly parallel. Every particle's force depends on a tree built from all positions, so each timestep needs global information; the work per particle depends on local density, so equal particle counts need not mean equal work; and particles move, so any decomposition changes over time. We implement a serial reference and an MPI+OpenMP version in C++17, verify that the parallel version reproduces the serial one, and study how the split between MPI ranks and OpenMP threads, and the OpenMP loop schedule, affect scaling and efficiency on \pending{Atlas or Vanda}.
+
+\pending{main measured findings in two or three sentences, once cluster runs exist.}
+
+\section{Problem and Method}
+\subsection{Physical Model and Inputs}
+Particle $i$ has mass $m_i$, position $\mathbf{x}_i$ and velocity $\mathbf{v}_i$. With $G=1$ and Plummer softening $\varepsilon = 0.025$, its acceleration is
+\begin{equation}
+\mathbf{a}_i = \sum_{j \ne i} m_j \frac{\mathbf{x}_j - \mathbf{x}_i}{\left(|\mathbf{x}_j - \mathbf{x}_i|^2 + \varepsilon^2\right)^{3/2}}.
+\label{eq:force}
+\end{equation}
+Softening keeps the force finite when particles come close or coincide.
+
+Inputs are synthetic. Positions follow the Plummer density profile~\cite{Plummer1911}, sampled by inverting its cumulative mass function as in Aarseth, H\'enon and Wielen~\cite{Aarseth1974}, with equal masses $1/N$. Velocities are small, isotropic and random (speed uniform in $[0, 0.1]$); they are \emph{not} the Plummer equilibrium distribution, which this study does not need. All randomness comes from a fixed-seed Mersenne Twister, so every implementation starts from an identical state. The profile is strongly centrally concentrated, which makes tree depth and per-particle work vary across space; a uniform cube would hide the load-balance question.
+
+Time integration uses kick--drift--kick leapfrog~\cite{Verlet1967}: half kick $\mathbf{v} \leftarrow \mathbf{v} + \tfrac{\Delta t}{2}\mathbf{a}$, drift $\mathbf{x} \leftarrow \mathbf{x} + \Delta t\,\mathbf{v}$, new forces, half kick. Unless stated otherwise $\Delta t = 10^{-3}$.
+
+\subsection{Barnes--Hut Force Evaluation}
+The root cell is the smallest cube containing all particles, enlarged by a relative $10^{-9}$ so that boundary particles lie strictly inside. A cell holding more than $L$ particles (the \emph{leaf size}) is split into eight octants; particles are partitioned by a counting sort over the cell's index range, so every subtree owns a contiguous range of a permutation array. Subdivision stops at depth 64. Particles that still share a cell there, which happens only for coincident or near-coincident positions, remain together in one leaf, so no particle is lost. Each cell stores its total mass and centre of mass.
+
+To evaluate $\mathbf{a}_i$ the tree is walked from the root. A cell of edge length $s$ whose centre of mass is at distance $d$ from $\mathbf{x}_i$ is accepted as a single softened point mass when $s/d < \theta$. Otherwise it is opened: an internal cell's children are visited, and an opened leaf is summed particle by particle with Eq.~\eqref{eq:force}, skipping $j=i$. One further rule is enforced: a cell that contains particle $i$ is never accepted, whatever $s/d$ is. For $\theta$ above about $1/\sqrt{3}$ such a cell can pass the test, and its monopole would include $i$'s own mass. This rule removes only that failure. Salmon and Warren~\cite{SalmonWarren1994} show that the standard criterion can give large worst-case errors for other configurations, which we do not address. At $\theta = 0$ no cell is accepted and the method reduces to direct summation, which provides an exact correctness check.
+
+\subsection{Serial Baseline}
+The serial program builds the tree and then evaluates every particle's acceleration in a single loop. Its timings are the denominator for every speedup, so it must not be artificially slow. Bucketed leaves reduce the number of tree nodes compared with one particle per leaf (867 against 2979 at $N=2000$). \input{generated/leaf_note.tex} We use $L=8$ by default; \pending{the leaf size will be re-tuned on the cluster before the experiment manifest is frozen}. Direct summation is kept only as a correctness reference on small inputs and is never used as a speedup denominator.
+
+\section{Parallel Implementation}
+\subsection{Design: Replicated Tree, Distributed Targets}
+We use the simplest decomposition that keeps the tree exact: every rank holds all positions and masses and builds the full tree, but each rank computes forces for, and integrates, only the particles it owns. Ownership is by contiguous particle-ID range. The first $N \bmod R$ of $R$ ranks own $\lceil N/R \rceil$ particles and the rest $\lfloor N/R \rfloor$; ranks with no particles are allowed and tested. Algorithm~\ref{alg:step} shows one timestep.
+
+\begin{algorithm}[t]
+\caption{One timestep on rank $r$ (owned IDs $[b_r, e_r)$)}
+\label{alg:step}
+\begin{algorithmic}[1]
+\State $\mathbf{v}_i \gets \mathbf{v}_i + \tfrac{\Delta t}{2}\mathbf{a}_i$, \ $\mathbf{x}_i \gets \mathbf{x}_i + \Delta t\,\mathbf{v}_i$ \quad for $i \in [b_r, e_r)$
+\State \texttt{MPI\_Allgatherv}: owned $\mathbf{x}$ $\to$ global $\mathbf{x}$ in ID order
+\State build the global octree from all $N$ positions
+\State \textbf{parallel for} $i \in [b_r, e_r)$ \texttt{schedule(runtime)}: $\mathbf{a}_i \gets$ tree walk
+\State $\mathbf{v}_i \gets \mathbf{v}_i + \tfrac{\Delta t}{2}\mathbf{a}_i$ \quad for $i \in [b_r, e_r)$
+\end{algorithmic}
+\end{algorithm}
+
+Rank 0 generates the initial state and broadcasts positions, velocities and masses once. Masses never change and are not resent. Velocities and accelerations stay distributed during the run and are gathered only for validation output. Particle coordinates are sent as three \texttt{MPI\_DOUBLE}s per particle; the code asserts at compile time that its vector type has exactly that layout. Counts and displacements are checked to fit in an \texttt{int}.
+
+This design is chosen as a correct communication baseline, not as the most scalable option. Its costs are known in advance: every rank stores $O(N)$ positions, so memory per rank does not shrink with more ranks; every rank repeats the whole tree build; and the all-to-all position exchange moves $O(N)$ data per rank per step. A distributed, locally essential tree in the style of Warren and Salmon~\cite{WarrenSalmon1993} would avoid the replication, but it is outside the scope of this report.
+
+\subsection{OpenMP Work Sharing and Memory Safety}
+Within a rank, the tree is built by the main thread and is read-only during the force loop. Each iteration writes only $\mathbf{a}_i$ for its own $i$, keeps its accumulator and traversal stack in local variables, and reads shared data only. The loop therefore needs no locks or atomics. The traversal stack is a fixed local array whose size is proven sufficient: each visited cell pushes at most eight children and depth is capped at 64, so at most $7 \cdot 64 + 8$ entries are ever pending.
+
+Traversal cost varies strongly between particles, since particles in the dense core open more cells. The loop uses \texttt{schedule(runtime)}, so static, dynamic and guided schedules and their chunk sizes can be compared on the same binary~\cite{OpenMP51}. Both the requested schedule and the schedule the runtime reports are recorded with every run.
+
+\subsection{MPI and Threads}
+MPI is initialised with \texttt{MPI\_Init\_thread} requesting \texttt{MPI\_THREAD\_FUNNELED}, and the program stops if the library provides less~\cite{MPI40}. All MPI calls are made by the main thread outside parallel regions. Argument errors are detected identically on every rank, so all ranks exit together rather than leaving some waiting in a collective; an unexpected exception on one rank aborts the whole job. After the timed loop, every rank checks that its global positions and masses are bitwise identical to every other rank's and that owned counts sum to $N$; a mismatch makes the run fail.
+
+Placement matters as much as the code. During local development we found that Open MPI's default binding can put a rank's whole thread team on one hardware thread: \input{generated/binding_note.tex} Every cluster job therefore sets binding explicitly and records it, and analysis treats placement as part of the configuration.
+
+\section{Correctness}
+We separate two questions: how far Barnes--Hut is from the exact force at a given $\theta$ (approximation error), and whether the parallel program computes the same Barnes--Hut result as the serial one (implementation error). All results in this section are \textbf{local development evidence} from a Debian container with GCC~12 and Open MPI~4.1.4; \pending{the correctness gates will be re-run on the cluster with the cluster toolchain}.
+
+\subsection{Approximation Error}
+Table~\ref{tab:approx} compares serial Barnes--Hut with direct summation on the same input. At $\theta=0$ agreement is at rounding level, which tests tree construction and traversal: every particle is reached exactly once and self-interaction is excluded. At $\theta>0$ the errors measure the approximation and grow with $\theta$; they are diagnostics, not pass/fail thresholds. The acceptance threshold at $\theta=0$ is a maximum relative error of $10^{-10}$.
+
+\input{generated/approximation_table.tex}
+
+Edge cases are tested by a built-in self-test that checks tree invariants (each particle in exactly one leaf, root mass equal to total mass) and $\theta=0$ agreement with direct summation for each case at leaf sizes 1 and 8, plus closed-form and symmetry checks. \input{generated/selftest_summary.tex} The two-particle case uses the closed-form softened force at $\theta=0$, $0.5$ and $10$. At $\theta=10$ the root passes $s/d<\theta$ from either particle, so this case fails if a cell containing the target is ever accepted; we confirmed that by temporarily restoring that behaviour. The negative controls confirm that the checks can fail: a $10^{-8}$ perturbation of one force and a mass mismatch must both be detected. The serial code also runs cleanly under AddressSanitizer and UndefinedBehaviorSanitizer.
+
+\subsection{Implementation Error}
+The hybrid program is compared with the serial one at identical $\theta$, leaf size, softening, timestep, seed and particle count, by particle ID. Tolerances were fixed before any comparison was run (Table~\ref{tab:hybrid}) and are not adjusted afterwards. The cases cover 1--5 ranks, 1--4 threads, all three schedules, $N$ not divisible by the number of ranks, ranks that own no particles, and $N=1$.
+
+\input{generated/hybrid_table.tex}
+
+Every difference in Table~\ref{tab:hybrid} is exactly zero. That is expected rather than suspicious: each particle's force is computed by the same code on a bitwise-identical tree in the same order, whatever rank or thread computes it. To check that the harness can detect a real fault, we removed the position exchange from a test build. All ten multi-rank cases then failed, as did the repeatability check, while single-rank cases still passed, as they should. \input{generated/hybrid_extras.tex} Invalid arguments make all ranks exit with status 2 without hanging.
+
+\subsection{Energy Behaviour}
+Energy is a supplementary diagnostic, not a correctness proof (Table~\ref{tab:energy}). With exact forces ($\theta=0$) the relative energy change falls by a factor of four each time $\Delta t$ is halved, the second-order behaviour expected of leapfrog. For $\theta>0$ it is almost independent of $\Delta t$ and instead differs between opening angles: it increases from $\theta=0.2$ to $0.5$ but is slightly lower at $0.7$ than at $0.5$. A plateau that depends on $\theta$ but not on $\Delta t$ is consistent with a contribution from the approximate tree force. Two further facts complicate the picture: the energy is evaluated exactly while the dynamics use approximate forces, and the tree changes discontinuously between steps. We have not isolated the cause, and draw no conclusion beyond the observed values.
+
+\input{generated/energy_table.tex}
+
+\section{Computing Environment}
+\pending{cluster name, node model, cores and memory per node, interconnect, scheduler and queue, compiler and MPI modules and versions, build flags, binding policy and job scripts, from the recorded discovery output and run records.}
+
+Local development used a Debian~12 container (GCC~12.2, Open MPI~4.1.4) on an 8-core Intel Core i9-9880H laptop with simultaneous multithreading, and Apple clang on macOS for the serial gates. No timing from these machines is reported as a performance result.
+
+\section{Experimental Methodology}
+\subsection{Timing}
+The timed region is a fixed number of timesteps after setup. Setup covers initial-condition generation (and its broadcast in the hybrid code), the initial force evaluation, optional diagnostics and any warm-up steps, and is recorded separately. In the hybrid code all ranks synchronise with a barrier, time the region with \texttt{MPI\_Wtime}, and the reported time is the maximum over ranks. Within the region each rank accumulates four phases (integration, position exchange, tree build and force traversal) and each is reported as its maximum over ranks. Because different ranks can be slowest in different phases, these maxima need not sum to the wall time. The traversal imbalance is the ratio of the maximum to the mean traversal time over ranks. The serial program times the same region and phases with a monotonic clock. Energy diagnostics and output are never inside the timed region.
+
+\subsection{Metrics}
+$P$ is the number of physical cores allocated to a run, normally ranks $\times$ threads, and runs that place more threads than allocated cores are rejected. Strong-scaling speedup is $S(P) = T_{\mathrm{serial}}/T(P)$ and efficiency is $E(P) = S(P)/P$, where $T_{\mathrm{serial}}$ is serial Barnes--Hut with the same problem, numerical settings, source revision, compiler flags and CPU model. The one-rank, one-thread hybrid time is reported alongside it to expose MPI and OpenMP overhead. Weak-scaling efficiency is $T(P_0, N_0)/T(P, N)$ with $N/P = N_0/P_0$ and a stated baseline $P_0$. Constant particles per core does not mean constant work per core, since tree depth grows with $N$, and the replicated design stores all $N$ positions on every rank.
+
+\subsection{Planned Studies}
+\begin{enumerate}
+\item Strong scaling at fixed $N$ and step count over increasing $P$, including serial and one-rank, one-thread baselines, and node boundaries where the allocation allows.
+\item Ranks $\times$ threads at fixed $P$ and $N$, e.g.\ $16{\times}1$, $8{\times}2$, $4{\times}4$, $2{\times}8$, $1{\times}16$, with matched placement.
+\item OpenMP schedule: static against dynamic and guided, with a small chunk-size sweep fixed in advance.
+\item Weak scaling with $N \propto P$ and fixed threads per rank.
+\item Accuracy against cost across $\theta$, reported separately from scaling.
+\end{enumerate}
+Problem sizes, step counts and core counts will be chosen from pilot runs within the cluster's memory and time limits and then frozen in a manifest. \pending{manifest.} Each configuration is run at least three times. We report the median with the minimum and maximum, and failed runs are kept and listed.
+
+\subsection{Provenance}
+Each run writes its own record: exact command, scheduler job ID, nodes, CPU model, allocated cores, OpenMP settings, source revision with a hash of the source tree, binary hash, compiler, flags and MPI library, raw output and the program's result. Summaries, tables and figures are regenerated from these records by scripts, never copied by hand. Records are grouped by every setting that can change a timing, including placement and build, before medians are taken.
+
+\section{Results}
+\pending{strong scaling, efficiency, ranks $\times$ threads, scheduling, weak scaling, phase breakdown and accuracy--cost figures from Atlas/Vanda runs.}
+
+\section{Discussion}
+\subsection{What the Results Support}
+\pending{after cluster results.}
+
+\subsection{Limitations}
+\label{sec:limitations}
+The replicated design keeps $O(N)$ memory and a full tree build on every rank, and exchanges $O(N)$ positions per step, so it cannot scale to very large $N$ or very many ranks. The tree build is serial within each rank. Ownership by particle ID ignores spatial locality, and neither locality-aware ordering nor work-weighted partitioning is implemented. Inputs are synthetic Plummer-profile clouds, so no conclusions about real astrophysical data are drawn. \pending{limitations revealed by the measurements.}
+
+\section{Conclusion}
+\pending{after cluster results.}
+
+\subsection{AI Usage Statement}
+\pending{Draft for group review; confirm the provenance of the earlier serial code and design before submission.} We used OpenAI Codex (ChatGPT) to review the project starter, organise requirements and milestones, refine the parallelization and validation plans, and create setup and validation scripts. We used Anthropic's Claude Code (Claude Opus 5.5) to audit and fix the serial octree, write the MPI+OpenMP implementation, the validation, measurement and analysis scripts and the local development environment, run the local correctness checks, and draft sections of this report. The group reviewed the code, tests and text, and is responsible for the content and quality of the submitted work.
+
+%======================
+% References
+%======================
+
+\printbibliography
+
+\end{document}
