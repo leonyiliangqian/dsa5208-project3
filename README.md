@@ -14,7 +14,10 @@ membership and student IDs in `report/main.tex` before submission.
   local configurations (Docker, Open MPI 4.1.4, GCC 12). Local evidence only.
 - Report: method, parallel design, local correctness and methodology drafted
   in `report/` for Overleaf; cluster results sections pending.
-- Waiting on Atlas/Vanda access: job scripts, cluster gates and runtime figures.
+- Vanda (PBS) access works. First correctness job `code/jobs/vanda/correctness.pbs`
+  is ready and tested in a local PBS simulation; submission needs the allocation
+  (`amgr login`, preflight) before scheduling stops on 29 Oct 18:00. Benchmarks
+  resume after the 2 Nov 17:00 reopening. See notes/cluster_access.md.
 
 ## Start here
 

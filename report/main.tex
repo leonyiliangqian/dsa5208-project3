@@ -124,7 +124,7 @@ Traversal cost varies strongly between particles, since particles in the dense c
 \subsection{MPI and Threads}
 MPI is initialised with \texttt{MPI\_Init\_thread} requesting \texttt{MPI\_THREAD\_FUNNELED}, and the program stops if the library provides less~\cite{MPI40}. All MPI calls are made by the main thread outside parallel regions. Argument errors are detected identically on every rank, so all ranks exit together rather than leaving some waiting in a collective; an unexpected exception on one rank aborts the whole job. After the timed loop, every rank checks that its global positions and masses are bitwise identical to every other rank's and that owned counts sum to $N$; a mismatch makes the run fail.
 
-Placement matters as much as the code. During local development we found that Open MPI's default binding can put a rank's whole thread team on one hardware thread: \input{generated/binding_note.tex} Every cluster job therefore sets binding explicitly and records it, and analysis treats placement as part of the configuration.
+Placement matters as much as the code. During local development we found that Open MPI's default binding can put a rank's whole thread team on one hardware thread: \input{generated/binding_note.tex} Every cluster job therefore sets placement explicitly: $R$ ranks per node with $T$ cores each (Open MPI \texttt{--map-by ppr:$R$:node:PE=$T$ --bind-to core}), and within each rank one OpenMP thread per core (\texttt{OMP\_PROC\_BIND=close}, \texttt{OMP\_PLACES=cores}). A placement probe run inside each job checks that every thread runs on a different CPU and is bound to a single core. Placement is recorded with every run and treated as part of the configuration in the analysis.
 
 \section{Correctness}
 We separate two questions: how far Barnes--Hut is from the exact force at a given $\theta$ (approximation error), and whether the parallel program computes the same Barnes--Hut result as the serial one (implementation error). All results in this section are \textbf{local development evidence} from a Debian container with GCC~12 and Open MPI~4.1.4; \pending{the correctness gates will be re-run on the cluster with the cluster toolchain}.
@@ -149,7 +149,7 @@ Energy is a supplementary diagnostic, not a correctness proof (Table~\ref{tab:en
 \input{generated/energy_table.tex}
 
 \section{Computing Environment}
-\pending{cluster name, node model, cores and memory per node, interconnect, scheduler and queue, compiler and MPI modules and versions, build flags, binding policy and job scripts, from the recorded discovery output and run records.}
+Formal measurements use the NUS HPC cluster Vanda, which is scheduled by PBS. Code is compiled on the allocated compute node, because login and compute nodes differ in architecture, with \texttt{-O3 -march=native} and the same flags for serial and hybrid builds. \pending{node model, cores, sockets and memory per node, interconnect, queue, compiler and Open MPI module versions, from the recorded job environment; job scripts and allocation used.}
 
 Local development used a Debian~12 container (GCC~12.2, Open MPI~4.1.4) on an 8-core Intel Core i9-9880H laptop with simultaneous multithreading, and Apple clang on macOS for the serial gates. No timing from these machines is reported as a performance result.
 

@@ -53,7 +53,7 @@ This preserves a complete measurable MPI+X path before the more complex LET work
 
 ## Blockers and next checks
 
-- Verify Atlas/Vanda account and access manually; no cluster run has been performed here.
+- Vanda access works (28 Oct); allocation (`amgr login`, `hpc project`) and execution-queue limits still unverified. First correctness job prepared; scheduling pauses 29 Oct 18:00 to 2 Nov 17:00.
 - Record scheduler, queue limits, CPU topology, modules and compiler/MPI versions
   before writing scheduler-specific scripts. Do not assume Slurm or PBS.
 - Confirm how code is submitted alongside the PDF.

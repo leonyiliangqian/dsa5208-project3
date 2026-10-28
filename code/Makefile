@@ -13,10 +13,12 @@ MPIDEFS  := -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX
 BUILDDEF  = -DNBODY_CXXFLAGS='"$(strip $(CXXFLAGS))"'
 # Per-OS output directory so macOS and Docker/Linux binaries never mix.
 BIN      ?= bin/$(shell uname -s | tr '[:upper:]' '[:lower:]')
+# Where gate evidence goes; cluster jobs point this at their run directory.
+EVIDENCE ?= artifacts/local
 
 .DEFAULT_GOAL := all
 
-.PHONY: help all hybrid clean check check-hybrid preflight sanitize toolchain
+.PHONY: help all hybrid clean check check-hybrid preflight sanitize toolchain placement
 
 help:       ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -36,7 +38,7 @@ $(BIN):
 
 check: $(BIN)/bh_serial  ## Serial gate: edge cases, argument rejection, theta=0 vs direct
 	$(PYTHON) tests/validate_serial.py --binary $(BIN)/bh_serial \
-	    --out artifacts/local/serial_validation_$(notdir $(BIN)).json
+	    --out $(EVIDENCE)/serial_validation_$(notdir $(BIN)).json
 
 # Debug build with AddressSanitizer and UndefinedBehaviorSanitizer; never timed.
 SANFLAGS := -O1 -g -std=c++17 -Wall -Wextra -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=undefined
@@ -55,10 +57,22 @@ $(BIN)/omp_check: tests/toolchain/omp_check.cpp | $(BIN)
 	$(CXX) -O2 $(OMPFLAGS) -o $@ $<
 
 $(BIN)/mpi_check: tests/toolchain/mpi_check.cpp | $(BIN)
-	$(MPICXX) -O2 -o $@ $<
+	$(MPICXX) -O2 $(MPIDEFS) -o $@ $<
 
 $(BIN)/hybrid_check: tests/toolchain/hybrid_check.cpp | $(BIN)
-	$(MPICXX) -O2 $(OMPFLAGS) -o $@ $<
+	$(MPICXX) -O2 $(OMPFLAGS) $(MPIDEFS) -o $@ $<
+
+$(BIN)/placement_check: tests/toolchain/placement_check.cpp | $(BIN)
+	$(MPICXX) -O2 $(OMPFLAGS) $(MPIDEFS) -o $@ $<
+
+# Bound placement: R ranks x T threads, each rank on T cores, one thread per core.
+PLACE_R ?= 2
+PLACE_T ?= 4
+placement: $(BIN)/placement_check  ## Check rank/thread placement: PLACE_R ranks x PLACE_T threads, bound
+	OMP_NUM_THREADS=$(PLACE_T) OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+	    $(MPIRUN) -np $(PLACE_R) --map-by ppr:$(PLACE_R):node:PE=$(PLACE_T) --bind-to core \
+	    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
+	    $(BIN)/placement_check
 
 toolchain: $(BIN)/omp_check $(BIN)/mpi_check $(BIN)/hybrid_check  ## Verify OpenMP, MPI and MPI+OpenMP work
 	OMP_NUM_THREADS=4 $(BIN)/omp_check
@@ -71,7 +85,7 @@ MPIRUN_FLAGS ?= --bind-to none
 check-hybrid: $(BIN)/bh_serial $(BIN)/bh_hybrid  ## Hybrid gate: serial vs MPI+OpenMP by particle ID
 	$(PYTHON) tests/validate_hybrid.py --serial $(BIN)/bh_serial --hybrid $(BIN)/bh_hybrid \
 	    --mpirun $(MPIRUN) --mpirun-flags "$(MPIRUN_FLAGS)" \
-	    --out artifacts/local/hybrid_validation_$(notdir $(BIN)).json
+	    --out $(EVIDENCE)/hybrid_validation_$(notdir $(BIN)).json $(HYBRID_GATE_ARGS)
 
 preflight:  ## Record the local tool inventory
 	$(PYTHON) scripts/preflight.py

@@ -106,7 +106,14 @@ reduced with MPI_MAX, plus the traverse mean for the imbalance ratio max/mean.
 Serial times the same region and phases with `steady_clock`. Use serial
 Barnes–Hut, never direct summation, as the speedup denominator.
 
-## Status
+## Vanda (PBS)
 
-No Atlas/Vanda measurements exist yet; cluster job scripts will be written after
-`scripts/cluster_discover.sh` output from the real login node is available.
+`jobs/vanda/preflight.sh` (read-only login-node checks), `jobs/vanda/submit.sh`
+(requires explicit `--queue` and `--project`; dry run unless `--yes`) and
+`jobs/vanda/correctness.pbs` (8 cores, 30 min: builds on the compute node with
+`OpenMPI/4.1.6-GCC-13.2.0`, records the environment, runs toolchain probes,
+bound placement checks 2x4/4x2/8x1, serial and hybrid gates, sanitizer and one
+recorded smoke run into `artifacts/cluster/runs/<RUN_ID>/`). `make placement`
+runs the placement probe locally. Step-by-step: `../notes/cluster_access.md`.
+
+No Vanda measurements exist yet.
