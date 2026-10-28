@@ -24,6 +24,8 @@ echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is)"
 # ---------------------------------------------------------------- modules
 MPI_MODULE=${MPI_MODULE:-OpenMPI/4.1.6-GCC-13.2.0}
 PY_MODULE=${PY_MODULE:-Python/3.11.5-GCCcore-13.2.0}
+# PBS runs this in a non-login shell, where `module` may not be defined yet.
+type module >/dev/null 2>&1 || source /etc/profile >/dev/null 2>&1
 if type module >/dev/null 2>&1; then
     module purge
     module load "$MPI_MODULE" || { echo "FATAL: cannot load $MPI_MODULE"; exit 3; }

@@ -1,0 +1,185 @@
+== captured 2026-10-28T20:20:42+08:00 on stdct-login-01 by leonyil.qian (read-only)
+== hpc project
+
+  =======================================================================================
+       Vanda CPU and GPU-Hours Credits for:  leonyil.qian 
+  =======================================================================================
+    Project-Name  | Total CPU Hours | CPU Net Balance | Total GPU Hours | GPU Net Balance
+  ---------------------------------------------------------------------------------------
+personal-leonyil.qian  |          10000  |        10000.0  |           1000  |           1000
+           Users  :                   leonyil.qian 
+  ---------------------------------------------------------------------------------------
+
+  ##############################################################################
+  ##  Please quote the right Project-Name in below line in PBS job script,    ##
+  ##  in order to use the GPU-Hours allocated in the Project.                 ##
+  ##############################################################################
+  #PBS -P Project-Name 
+
+
+== hpc cpu
+
+===================================================
+  Submit and Run A Batch CPU Job in Vanda Cluster
+===================================================
+
+  --- Sample job submission script [job1.txt] in GREEN starts from the below line -->> 
+#!/bin/bash 
+#PBS -P Project-Name 
+##PBS -q auto_free 
+#PBS -j oe 
+#PBS -k oed 
+#PBS -N Job_name 
+#PBS -l walltime=24:00:00 
+#PBS -l select=1:ncpus=36:mpiprocs=36:ompthreads=1:mem=240gb 
+### Example for requesting 72 cores for the job: 
+###PBS -l select=1:ncpus=72:mpiprocs=72:ompthreads=1:mem=480gb 
+# 
+### To submit job to [auto_free] queue, delete '-P Project-Name' line, and 
+###    activate this line '-q auto_free' by changing to #PBS -q ... 
+
+cd $PBS_O_WORKDIR; 
+
+## load module 
+module load HPL/2.3-intel-2023b 
+
+## run command 
+mpirun  xhpl   
+  <<--- End at the above line with EOF ----- 
+
+ Replace Project-Name with real project name allocated. You can check 
+   the available project name via:  hpc project 
+
+ Make necessary changes to the above script file [job1.txt], then 
+ you can submit the job, check job status, and check cluster loading status by:
+
+  # qsub  job1.txt     ##--- To submit a batch job via script <job1.txt> 
+  # qstat -awn1        ##--- To list batch jobs with wide format and show exec nodes 
+  # qstat -fx job_id   ##--- To list details of a batch job <job_id> 
+  # hpc gstat          ##--- To check overall loading status of hopper cluster and queue  
+
+
+ More examples and instructions are available at this URL: 
+
+ https://nusit.nus.edu.sg/hpc/ --> Vanda Onboarding.
+
+
+== hpc interactive
+
+ ===================================================
+   Open An Interactive Job in Vanda Cluster Node
+ ===================================================
+
+ ---------------------------------------------------------------
+  To start an interactive command line interface in a CPU node
+ ---------------------------------------------------------------
+
+ Enter this pbs command in login node:
+
+   [vanda-login-01]> qsub -I -l select=1 -l walltime=02:00:00 -P <projectid> 
+
+   where 
+         -I                   :  Launch an interactive session
+         -l select=1          :  Request for 1 CPU socket, 36 cores, 250gb memory by default
+                                 To request for a full node (2 CPU sockets), use select=2
+         -l walltime=**       :  Request walltime, max up to 12 hours
+         -P projectid         :  Specify which project that be used for credits
+
+   After enter the command, you should see your prompt change to NUS-ID@cn-XXX, indicates a CPU node.
+
+
+ ---------------------------------------------------------------
+  To start an interactive command line interface in a GPU node
+ ---------------------------------------------------------------
+
+ Enter this pbs command in login node:
+
+   [vanda-login-01]> qsub -I -l select=1:ngpus=1 -l walltime=02:00:00 -P <projectid> 
+
+   where 
+         -I                   :  Launch an interactive session
+         -l select=1:ngpus=1  :  Request for 1 CPU socket, 36 cores, 250gb memory, 1 GPU by default
+                                 To request for a full node (2 CPU sockets, 2 GPUs), use select=2:ngpus=1
+         -l walltime=**       :  Request walltime, max up to 12 hours
+
+   After enter the command, you should see your prompt change to NUS-ID@gn-a40-XXX, indicates a GPU node.
+
+
+ ------------------------------------------------------------------------
+  NOTE: If -P <projectid> not provided, will default to personal credits 
+ ------------------------------------------------------------------------
+
+
+== qstat -Qf auto_free
+Queue: auto_free
+    queue_type = Route
+    total_jobs = 17
+    state_count = Transit:0 Queued:0 Held:14 Waiting:3 Running:0 Exiting:0 Begu
+	n:0 
+    acl_host_enable = False
+    from_route_only = False
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    route_held_jobs = False
+    route_waiting_jobs = False
+    route_retry_time = 5
+    enabled = True
+    started = True
+
+== qstat -Qf cpu_parallel
+Queue: cpu_parallel
+    queue_type = Execution
+    total_jobs = 113
+    state_count = Transit:0 Queued:54 Held:19 Waiting:0 Running:38 Exiting:0 Be
+	gun:2 
+    from_route_only = True
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 2
+    resources_min.nodect = 1
+    resources_default.mem = 20gb
+    resources_default.ncpus = 2
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_free
+    resources_assigned.mem = 7038gb
+    resources_assigned.mpiprocs = 874
+    resources_assigned.ncpus = 1302
+    resources_assigned.nodect = 53
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e0030005=16]
+    max_run = [u:e0540410=9]
+    max_run = [u:e0983460=28]
+    max_run = [u:e1554743=3]
+    max_run = [u:sauyong=12]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+
+== qstat -Qf cpu_serial
+Queue: cpu_serial
+    queue_type = Execution
+    total_jobs = 184
+    state_count = Transit:0 Queued:26 Held:18 Waiting:0 Running:138 Exiting:0 B
+	egun:2 
+    from_route_only = True
+    resources_max.mem = 20gb
+    resources_max.ncpus = 1
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 1
+    resources_min.nodect = 1
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_free
+    resources_assigned.mem = 1869gb
+    resources_assigned.mpiprocs = 11
+    resources_assigned.ncpus = 138
+    resources_assigned.nodect = 138
+    max_run = [u:PBS_GENERIC=32]
+    enabled = True
+    started = True
+
