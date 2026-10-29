@@ -121,12 +121,23 @@ Job 1506687 findings (`code/artifacts/cluster/runs/twonode-20261029T053005Z-1506
 two distinct hosts (CN-161, IN-002), each restricted to exactly its 8
 allocated CPUs, including the rank launched remotely; CPU models differ
 (Platinum 8452Y vs Gold 6438N), which the original identical-model rule
-rejected, so nothing was compiled or run. The ISA flags of these two models are
-identical (50 of 50; compared offline from the login node and the IN-003 record),
-so a -march=native binary is compatible across them. Open MPI 4.1.6 has tm
-components that failed only because libpbs.so.0 (in /opt/pbs/lib) was not on the
-library path. The cpu_free pool holds 20 IN (64-core 6438N), 3 CN (72-core 8452Y)
-and 1 RN node, with no PBS attribute for CPU model, so select=2 can mix families.
-Revised twonode.pbs (not yet run): require identical ISA flags rather than
-identical models, and enable tm via /opt/pbs/lib. Benchmarks must use one family.
+rejected, so nothing was compiled or run. The launcher actually used was
+pbs_tmrsh with a hostfile, not tm: the tm components failed to load because
+libpbs.so.0 (in /opt/pbs/lib) was not on the library path, although ompi_info
+lists them either way. The cpu_free pool holds 20 IN (64-core 6438N), 3 CN
+(72-core 8452Y) and 1 RN node, with no PBS attribute for CPU model, so
+select=2 can mix families.
+
+Correction: an earlier note here said the two models' matching ISA flag lists
+(a filtered subset) made a -march=native binary compatible across them. That
+does not follow and is withdrawn. Revised twonode.pbs: builds with the
+portable target -march=x86-64 -mtune=generic for serial and hybrid, records
+the resolved target and embedded flags (flags gate); requires two hosts,
+exactly 8 allowed CPUs each and x86_64 before compiling; forces the tm
+launcher (`--mca plm tm --mca ras tm`, no fallback) and requires mpirun's own
+selection log to show plm tm and the remote process to start from orted, not
+sshd. Models and ISA lists are recorded only. Vanda's Open MPI library is
+itself built for x86-64-v3 (AVX2), so this job shows portability of this
+project's code only. Mixed-model results are correctness evidence, never
+scaling measurements; benchmarks must use one family.
 Balance 10000.0 at 13:29 (after job 1503779), before this job.
