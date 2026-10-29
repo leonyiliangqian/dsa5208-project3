@@ -1,0 +1,38 @@
+== captured 2026-10-29T13:29:47+08:00 on stdct-login-01 (read-only)
+== hpc project
+
+  =======================================================================================
+       Vanda CPU and GPU-Hours Credits for:  leonyil.qian 
+  =======================================================================================
+    Project-Name  | Total CPU Hours | CPU Net Balance | Total GPU Hours | GPU Net Balance
+  ---------------------------------------------------------------------------------------
+personal-leonyil.qian  |          10000  |        10000.0  |           1000  |           1000
+           Users  :                   leonyil.qian 
+  ---------------------------------------------------------------------------------------
+
+  ##############################################################################
+  ##  Please quote the right Project-Name in below line in PBS job script,    ##
+  ##  in order to use the GPU-Hours allocated in the Project.                 ##
+  ##############################################################################
+  #PBS -P Project-Name 
+
+
+== scheduler
+    server_state = Active
+    scheduling = True
+== auto_free
+    resources_default.queue_charge_rate = 0
+    enabled = True
+    started = True
+== cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== my jobs
+0

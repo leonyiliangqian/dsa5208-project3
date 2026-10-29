@@ -97,6 +97,7 @@ showed the default bound the rank to one hardware thread.
 | When (SGT) | Job | Commit | Request | Queue | Purpose | Outcome |
 |---|---|---|---|---|---|---|
 | 28 Oct 20:24 | 1503779.stdct-mgmt-02 | d959217 | 1 x 8 CPUs, 16 GB, 30 min | auto_free -> cpu_parallel, no -P | First correctness job | Ran 20:31–20:32 on IN-003, Exit_status 0; all 9 gates PASS |
+| 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | pending |
 
 Charging basis: site `hpc cpu` instructions present `-q auto_free` without
 `-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
