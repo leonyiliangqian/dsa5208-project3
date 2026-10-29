@@ -1,7 +1,8 @@
 # Optional progress report — DRAFT for group review, not sent
 
 To: Anthony Chen <cygnari@nus.edu.sg>
-Optional progress reports are accepted before 30 October 2026.
+Optional progress reports are accepted before 30 October 2026, so it must go
+out by tomorrow if the group wants to use it. Updated 29 Oct with the Vanda result.
 Before sending: confirm names and student IDs (taken from the Project 2 report),
 check every claim against the current state, and agree as a group. Claude will
 not send this.
@@ -23,7 +24,7 @@ concentrated Plummer-profile particle clouds. The method is not embarrassingly
 parallel: every timestep needs a tree built from all positions, the work per
 particle depends on local density, and the decomposition changes as particles move.
 
-**Progress (on local machines; no cluster runs yet).**
+**Progress so far.**
 - Serial reference with direct summation as a check. With the opening angle set
   to zero, the tree reproduces direct summation to rounding error, and edge-case
   tests (coincident particles, empty and single-particle inputs, unequal masses)
@@ -34,13 +35,18 @@ particle depends on local density, and the decomposition changes as particles mo
   MPI_THREAD_FUNNELED. Across 1–5 ranks and 1–4 threads, including uneven
   divisions and ranks with no particles, it gives results identical to the
   serial program.
+- On Vanda, a first correctness job on one compute node (8 cores, built there
+  with GCC 13.2 and Open MPI 4.1.6) passed all of these checks, and also
+  confirmed that each MPI rank and OpenMP thread runs on its own core. No
+  performance measurements have been made yet.
 
-**Plan for Atlas/Vanda.** Strong and weak scaling against the serial
-Barnes–Hut time; different ranks × threads splits at fixed core counts; and
-static versus dynamic OpenMP scheduling. We will present this as a
-replicated-tree baseline and discuss its limits (every rank stores all
-positions and repeats the tree build) rather than claim a distributed tree.
-Our HPC access is being arranged.
+**Plan on Vanda.** After a two-node correctness check and a pilot to choose
+problem sizes: strong and weak scaling against the serial Barnes–Hut time;
+different ranks × threads splits at fixed core counts; static versus dynamic
+OpenMP scheduling; and the effect of leaf size and opening angle on cost. We
+will present this as a replicated-tree baseline and discuss its limits (every
+rank stores all positions and repeats the tree build) rather than claim a
+distributed tree.
 
 **Questions.**
 1. Is this scope sufficient for the project, or would you expect a distributed

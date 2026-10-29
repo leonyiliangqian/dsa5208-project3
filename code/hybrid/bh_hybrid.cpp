@@ -237,6 +237,12 @@ int run(int argc, char **argv, int provided) {
 
     // Phase statistics across ranks: max, and mean for the imbalance ratio.
     double local[6] = {wall_local, t.integrate, t.exchange, t.build, t.traverse, setup_local};
+    // Peak memory per rank, before the validation-only gathers below. Every
+    // rank holds all N positions, so the sum grows with the number of ranks.
+    const double rss = peak_rss_mib();
+    double rss_max = 0.0, rss_sum = 0.0;
+    MPI_Reduce(&rss, &rss_max, 1, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
+    MPI_Reduce(&rss, &rss_sum, 1, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     double vmax[6], vsum[6], vmin[6];
     MPI_Reduce(local, vmax, 6, MPI_DOUBLE, MPI_MAX, 0, MPI_COMM_WORLD);
     MPI_Reduce(local, vsum, 6, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
@@ -314,15 +320,16 @@ int run(int argc, char **argv, int provided) {
             "\"hosts\":%s,\"nodes\":%zu,\"setup_s\":%.6f,"
             "\"wall_s\":%.6f,\"integrate_s\":%.6f,\"exchange_s\":%.6f,\"build_s\":%.6f,"
             "\"traverse_s\":%.6f,\"traverse_mean_s\":%.6f,\"traverse_min_s\":%.6f,"
-            "\"wall_min_s\":%.6f,\"replicated\":%s,\"mpi_library\":%s%s%s}\n",
+            "\"wall_min_s\":%.6f,\"replicated\":%s,\"mpi_library\":%s,"
+            "\"peak_rss_mib_rank_max\":%.1f,\"peak_rss_mib_rank_sum\":%.1f%s%s}\n",
             n, opt.theta, opt.dt, opt.steps, opt.warmup, opt.leaf_size,
             static_cast<unsigned long long>(opt.seed), kSoftening, size, threads, team_min,
             json_string(hopt.schedule).c_str(), hopt.chunk, schedule_name(kind), chunk, provided,
             json_string(env_or("OMP_PROC_BIND", "")).c_str(),
             json_string(env_or("OMP_PLACES", "")).c_str(), host_list.c_str(), tree.node_count(),
             vmax[5], vmax[0], vmax[1], vmax[2], vmax[3], vmax[4], mean_traverse, vmin[4], vmin[0],
-            replicated ? "true" : "false", json_string(mpi_library()).c_str(), energy,
-            build_json().c_str());
+            replicated ? "true" : "false", json_string(mpi_library()).c_str(), rss_max, rss_sum,
+            energy, build_json().c_str());
         if (!replicated) std::fprintf(stderr, "replication check FAILED\n");
         if (!opt.dump.empty()) {
             try {

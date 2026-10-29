@@ -18,7 +18,7 @@ EVIDENCE ?= artifacts/local
 
 .DEFAULT_GOAL := all
 
-.PHONY: help all hybrid clean check check-hybrid preflight sanitize toolchain placement
+.PHONY: help all hybrid clean check check-hybrid preflight sanitize toolchain placement internode
 
 help:       ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -65,14 +65,27 @@ $(BIN)/hybrid_check: tests/toolchain/hybrid_check.cpp | $(BIN)
 $(BIN)/placement_check: tests/toolchain/placement_check.cpp | $(BIN)
 	$(MPICXX) -O2 $(OMPFLAGS) $(MPIDEFS) -o $@ $<
 
-# Bound placement: R ranks x T threads, each rank on T cores, one thread per core.
+$(BIN)/internode_check: tests/toolchain/internode_check.cpp | $(BIN)
+	$(MPICXX) -O2 $(MPIDEFS) -o $@ $<
+
+# Bound placement: PLACE_R ranks per node on PLACE_NODES nodes, each rank on
+# PLACE_T cores, one thread per core; the probe also checks the host count.
 PLACE_R ?= 2
 PLACE_T ?= 4
-placement: $(BIN)/placement_check  ## Check rank/thread placement: PLACE_R ranks x PLACE_T threads, bound
+PLACE_NODES ?= 1
+placement: $(BIN)/placement_check  ## Check placement: PLACE_R ranks/node x PLACE_T threads on PLACE_NODES nodes, bound
 	OMP_NUM_THREADS=$(PLACE_T) OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
-	    $(MPIRUN) -np $(PLACE_R) --map-by ppr:$(PLACE_R):node:PE=$(PLACE_T) --bind-to core \
-	    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
-	    $(BIN)/placement_check
+	    PLACEMENT_EXPECT_HOSTS=$(PLACE_NODES) \
+	    $(MPIRUN) -np $(shell expr $(PLACE_R) \* $(PLACE_NODES)) --map-by ppr:$(PLACE_R):node:PE=$(PLACE_T) \
+	    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+	    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS $(BIN)/placement_check
+
+# Inter-node MPI: ranks round-robin over hosts, verified point-to-point and Allgatherv.
+INTERNODE_NP ?= 2
+INTERNODE_HOSTS ?= 1
+internode: $(BIN)/internode_check  ## Verify MPI data exchange across INTERNODE_HOSTS hosts
+	INTERNODE_EXPECT_HOSTS=$(INTERNODE_HOSTS) $(MPIRUN) -np $(INTERNODE_NP) --map-by node \
+	    -x INTERNODE_EXPECT_HOSTS $(BIN)/internode_check
 
 toolchain: $(BIN)/omp_check $(BIN)/mpi_check $(BIN)/hybrid_check  ## Verify OpenMP, MPI and MPI+OpenMP work
 	OMP_NUM_THREADS=4 $(BIN)/omp_check

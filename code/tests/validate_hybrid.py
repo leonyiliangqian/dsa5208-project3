@@ -38,6 +38,10 @@ parser.add_argument("--mpirun-flags", default=os.environ.get("MPIRUN_FLAGS", "--
                     help="extra launcher flags, e.g. binding policy")
 parser.add_argument("--max-cores", type=int, default=os.cpu_count() or 4,
                     help="skip configurations with ranks*threads above this")
+parser.add_argument("--suite", choices=("single", "multinode"), default="single",
+                    help="multinode adds 16-core cases meant to span two nodes")
+parser.add_argument("--expect-hosts", type=int, default=0,
+                    help="require multi-rank runs to report exactly min(ranks, this) hosts")
 opts = parser.parse_args()
 serial, hybrid = str(Path(opts.serial).resolve()), str(Path(opts.hybrid).resolve())
 work = Path(tempfile.mkdtemp(prefix="validate_hybrid_"))
@@ -134,9 +138,14 @@ def check(name, n, steps, theta, leaf, ranks, threads, schedule="static", chunk=
     else:
         result = next((l for l in r.stdout.splitlines() if l.startswith("result ")), None)
         meta = json.loads(result[len("result "):]) if result else {}
+        hosts = meta.get("hosts", [])
+        want_hosts = min(ranks, opts.expect_hosts) if opts.expect_hosts else len(hosts)
+        rec["hosts"] = hosts
         if meta.get("replicated") is not True or meta.get("threads") != threads:
             rec.update(ok=False, why=f"bad metadata: replicated={meta.get('replicated')} "
                                      f"threads={meta.get('threads')}")
+        elif len(hosts) != want_hosts:
+            rec.update(ok=False, why=f"ran on {len(hosts)} host(s) {hosts}, expected {want_hosts}")
         else:
             tol = ACC_TOL if steps == 1 else TRAJ_TOL
             fields = ["acc"] if steps == 1 else ["pos", "vel", "acc"]
@@ -145,7 +154,7 @@ def check(name, n, steps, theta, leaf, ranks, threads, schedule="static", chunk=
     status = "PASS" if rec["ok"] else "FAIL " + rec.get("why", "")
     diffs = " ".join(f"{k}={v:.2e}" for k, v in rec.items() if k.endswith("max_abs_diff"))
     print(f"hybrid case={name} n={n} steps={steps} ranks={ranks} threads={threads} "
-          f"schedule={schedule}/{chunk} {diffs} {status}")
+          f"schedule={schedule}/{chunk} hosts={len(rec.get('hosts', []))} {diffs} {status}")
     records.append(rec)
     if not rec["ok"]:
         failures.append(name)
@@ -168,6 +177,18 @@ check("traj_4x2_guided", 2003, 10, 0.5, 8, 4, 2, "guided", 0)
 check("uneven_n7_4ranks", 7, 10, 0.5, 2, 4, 1)
 check("zero_owned_n3_5ranks", 3, 10, 0.5, 8, 5, 1)
 check("singleton_3ranks", 1, 5, 0.5, 8, 3, 1)
+
+if opts.suite == "multinode":
+    # Up to 16 cores over two nodes. With round-robin mapping (--map-by node),
+    # each node carries ranks*threads/2 <= 8 threads. N is never divisible by
+    # the rank count; the 16-rank N=10 case leaves six ranks owning nothing.
+    check("mn_2x8_static", 20011, 1, 0.5, 8, 2, 8)
+    check("mn_4x4_dynamic64", 20011, 10, 0.5, 8, 4, 4, "dynamic", 64)
+    check("mn_8x2_guided", 20003, 10, 0.5, 8, 8, 2, "guided", 0)
+    check("mn_16x1_static", 2003, 10, 0.5, 8, 16, 1)
+    check("mn_6x2_dynamic1", 1001, 10, 0.7, 4, 6, 2, "dynamic", 1)
+    check("mn_zero_owned_16x1", 10, 10, 0.5, 8, 16, 1)
+    check("mn_theta0_4x4", 4001, 1, 0.0, 8, 4, 4)
 
 # Race symptoms: repeated threaded runs must give bitwise-identical states.
 repeat_dumps = []
@@ -208,7 +229,7 @@ evidence = {
     "timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
     "kind": "local development validation; not Atlas/Vanda performance evidence",
     "platform": platform.platform(),
-    "mpirun_flags": opts.mpirun_flags,
+    "mpirun_flags": opts.mpirun_flags, "suite": opts.suite, "expect_hosts": opts.expect_hosts,
     "source_sha256": {str(f.relative_to(root)): hashlib.sha256(f.read_bytes()).hexdigest()
                       for f in sources},
     "binary_sha256": {Path(b).name: hashlib.sha256(Path(b).read_bytes()).hexdigest()

@@ -87,6 +87,11 @@ int main(int argc, char **argv) {
         // A bound thread may own one core's hardware threads (SMT), never more
         // than a few CPUs; an unbound one sees the whole cpuset.
         if (expect_bound && max_mask > 2) ok = 0;
+        // Multi-node jobs: ranks must actually be spread over the expected hosts.
+        const char *hosts_env = std::getenv("PLACEMENT_EXPECT_HOSTS");
+        const int want_hosts = hosts_env ? std::atoi(hosts_env) : 0;
+        if (want_hosts > 0 && static_cast<int>(threads_per_host.size()) != want_hosts) ok = 0;
+        std::printf("placement_hosts distinct=%zu expected=%d\n", threads_per_host.size(), want_hosts);
         std::printf("placement_check ranks=%d threads=%d online_cpus=%ld max_mask_cpus=%d "
                     "expect_bound=%d %s\n",
                     size, threads, online, max_mask, expect_bound ? 1 : 0, ok ? "PASS" : "FAIL");

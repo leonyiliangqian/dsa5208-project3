@@ -13,6 +13,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <sys/resource.h>
+
 // Compiler flags, passed in by the Makefile so every result records how its
 // binary was built.
 #ifndef NBODY_CXXFLAGS
@@ -24,6 +26,18 @@ namespace nbody {
 // Build provenance fields for the result JSON (leading comma included).
 inline std::string build_json() {
     return ",\"compiler\":" + std::string("\"") + __VERSION__ + "\",\"cxxflags\":\"" + NBODY_CXXFLAGS + "\"";
+}
+
+// Peak resident set size of this process so far, in MiB. ru_maxrss is in KiB
+// on Linux and in bytes on macOS.
+inline double peak_rss_mib() {
+    struct rusage u {};
+    getrusage(RUSAGE_SELF, &u);
+#ifdef __APPLE__
+    return static_cast<double>(u.ru_maxrss) / (1024.0 * 1024.0);
+#else
+    return static_cast<double>(u.ru_maxrss) / 1024.0;
+#endif
 }
 
 // Parameters that define the simulated problem and the timed region. Anything

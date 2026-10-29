@@ -1,0 +1,93 @@
+#!/bin/bash
+# Single-node benchmark pilot. Measures runtime and peak memory to choose the
+# final problem sizes; its numbers are pilot evidence, not formal results
+# (one repetition each, no warm-node control).
+#
+# Submit only through jobs/vanda/submit.sh (explicit queue and allocation).
+#
+#PBS -N p3_pilot1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+set -uo pipefail
+cd "${PBS_O_WORKDIR:?run under PBS, from the code/ directory}"
+
+JOB=${PBS_JOBID%%.*}
+RUN_ID=${RUN_ID:-pilot1-$(date -u +%Y%m%dT%H%M%SZ)-$JOB}
+OUT=${RUNS_ROOT:-artifacts/cluster/runs}/$RUN_ID
+mkdir -p "$OUT/env"
+exec > >(tee "$OUT/job.log") 2>&1
+echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is) source_rev=${SOURCE_GIT_REV:-unset}"
+
+MPI_MODULE=${MPI_MODULE:-OpenMPI/4.1.6-GCC-13.2.0}
+type module >/dev/null 2>&1 || source /etc/profile >/dev/null 2>&1
+if type module >/dev/null 2>&1; then
+    module purge
+    module load "$MPI_MODULE" || { echo "FATAL: cannot load $MPI_MODULE"; exit 3; }
+elif [ "${ALLOW_NO_MODULES:-0}" != 1 ]; then
+    echo "FATAL: no module command on this node"; exit 3
+fi
+python3 -c 'import sys; sys.exit(sys.version_info < (3, 7))' || { echo "FATAL: python3 >= 3.7 needed"; exit 3; }
+
+{
+    echo "== date"; date -Is; echo "== host"; hostname -f
+    echo "== pbs"; env | grep -E '^(PBS_|NCPUS|SOURCE_GIT_REV)' | sort
+    echo "== cpus_allowed"; grep -E 'Cpus_allowed_list|Mems_allowed_list' /proc/self/status
+    echo "== lscpu"; lscpu
+    echo "== numactl"; numactl --hardware 2>&1 || true
+    echo "== memory"; free -g 2>&1 || true
+    echo "== modules"; module list 2>&1 || true
+    echo "== mpi"; mpirun --version 2>&1 | head -1
+} > "$OUT/env/environment.txt" 2>&1
+
+BIN=bin/vanda-$JOB
+export CXXFLAGS="-O3 -std=c++17 -Wall -Wextra -march=native"
+make BIN="$BIN" all hybrid > "$OUT/build.log" 2>&1 || { echo "FATAL: build failed"; cat "$OUT/build.log"; exit 4; }
+# PILOT_PLACEMENT overrides the 8x8 layout for local simulation only.
+read -r PR PT <<< "${PILOT_PLACEMENT:-8 8}"
+make BIN="$BIN" placement PLACE_R="$PR" PLACE_T="$PT" > "$OUT/placement_${PR}x${PT}.log" 2>&1 \
+    || { echo "FATAL: placement check failed"; cat "$OUT/placement_${PR}x${PT}.log"; exit 4; }
+
+# Each run records the cores it is bound to (ranks x threads), not the whole
+# job allocation, so its efficiency uses the right P; idle cores are listed in
+# the job's allocation record.
+# PILOT_SCALE divides every N, for local simulation only.
+SCALE=${PILOT_SCALE:-1}
+N() { echo $(( $1 / SCALE )); }
+# Serial runs are pinned to the first allowed CPU so they do not migrate.
+FIRST_CPU=$(grep Cpus_allowed_list /proc/self/status | cut -f2 | cut -d, -f1 | cut -d- -f1)
+COMMON="--warmup 1 --seed 42"
+
+serial() {  # serial <case> <args...>
+    local case=$1; shift
+    python3 scripts/run_case.py --out "$OUT" --case "$case" --rep 1 --allocated-cores 1 \
+        --launcher "taskset -c $FIRST_CPU" -- "$BIN/bh_serial" $COMMON "$@" || true
+}
+hybrid() {  # hybrid <case> <ranks> <threads> <args...>
+    local case=$1 r=$2 t=$3; shift 3
+    OMP_NUM_THREADS=$t OMP_PROC_BIND=close OMP_PLACES=cores \
+    python3 scripts/run_case.py --out "$OUT" --case "$case" --rep 1 --allocated-cores $((r * t)) \
+        --launcher "mpirun -np $r --map-by ppr:$r:node:PE=$t --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES" \
+        -- "$BIN/bh_hybrid" $COMMON "$@" || true
+}
+
+# A. Serial runtime and memory against N (theta 0.5, leaf 8).
+for n in 100000 300000 1000000 2000000; do serial "serial_n$n" --n "$(N $n)" --steps 2; done
+# B. Hybrid range at N = 1e6 on the full allocation, plus the 1x1 overhead point.
+hybrid hyb_1x1_n1000000 1 1 --n "$(N 1000000)" --steps 2 --schedule dynamic --chunk 64
+for rt in 1x64 8x8 64x1; do
+    hybrid "hyb_${rt}_n1000000" "${rt%x*}" "${rt#*x}" --n "$(N 1000000)" --steps 2 --schedule dynamic --chunk 64
+done
+# C. Schedule contrast at 1x64.
+for s in static guided; do hybrid "sched_${s}_1x64_n1000000" 1 64 --n "$(N 1000000)" --steps 2 --schedule $s --chunk 0; done
+# D. Leaf size, serial, N = 3e5.
+for l in 4 16 32; do serial "leaf${l}_n300000" --n "$(N 300000)" --steps 2 --leaf-size $l; done
+# E. Accuracy against direct summation (N = 2e4) and cost at N = 1e6 on 8x8.
+for th in 0.3 0.5 0.7 0.9; do
+    taskset -c "$FIRST_CPU" "$BIN/bh_serial" --validate --n 20000 --theta $th > "$OUT/accuracy_theta$th.txt" 2>&1
+    hybrid "theta${th}_8x8_n1000000" 8 8 --n "$(N 1000000)" --steps 2 --theta $th --schedule dynamic --chunk 64
+done
+
+python3 scripts/analyze.py "$OUT" | tee "$OUT/summary.txt"
+echo "end=$(date -Is)"

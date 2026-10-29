@@ -347,16 +347,18 @@ int main(int argc, char **argv) {
     }
     char host[256] = "unknown";
     gethostname(host, sizeof host - 1);
+    // Measured after the timed loop and before any dump is written.
+    const double rss = peak_rss_mib();
     std::printf("result {\"program\":\"bh_serial\",\"method\":\"%s\",\"n\":%zu,\"theta\":%.17g,"
                 "\"dt\":%.17g,\"steps\":%d,\"warmup\":%d,\"leaf_size\":%d,\"seed\":%llu,"
                 "\"softening\":%.17g,\"ranks\":1,\"threads\":1,\"threads_effective\":1,"
                 "\"hosts\":[%s],\"nodes\":%zu,\"setup_s\":%.6f,"
                 "\"wall_s\":%.6f,\"integrate_s\":%.6f,\"exchange_s\":0,\"build_s\":%.6f,"
-                "\"traverse_s\":%.6f%s%s}\n",
+                "\"traverse_s\":%.6f,\"peak_rss_mib_rank_max\":%.1f,\"peak_rss_mib_rank_sum\":%.1f%s%s}\n",
                 method.c_str(), opt.n, opt.theta, opt.dt, opt.steps, opt.warmup, opt.leaf_size,
                 static_cast<unsigned long long>(opt.seed), kSoftening, json_string(host).c_str(),
-                tree.node_count(), setup_s, wall, integrate_s, build_s, traverse_s, energy,
-                build_json().c_str());
+                tree.node_count(), setup_s, wall, integrate_s, build_s, traverse_s, rss, rss,
+                energy, build_json().c_str());
     if (!opt.dump.empty()) write_dump(opt.dump, p);
     return 0;
 }

@@ -116,4 +116,16 @@ bound placement checks 2x4/4x2/8x1, serial and hybrid gates, sanitizer and one
 recorded smoke run into `artifacts/cluster/runs/<RUN_ID>/`). `make placement`
 runs the placement probe locally. Step-by-step: `../notes/cluster_access.md`.
 
-No Vanda measurements exist yet.
+- `jobs/vanda/twonode.pbs`: 2 nodes x 8 cores (`place=scatter`), 30 min. Checks
+  each node's allowed CPUs and CPU model, inter-node MPI (`make internode`),
+  bound placement 1x8/2x4/4x2/8x1 per node on both hosts, and the hybrid gate with
+  `--suite multinode --expect-hosts 2` (every multi-rank run must report two hosts).
+  Vanda's Open MPI has no PBS `tm` launcher, so the job uses `--hostfile
+  $PBS_NODEFILE`, `pbs_tmrsh` when present, `--prefix` and `-x PATH -x LD_LIBRARY_PATH`.
+- `jobs/vanda/pilot.pbs`: 1 node x 64 cores, 60 min. Serial time and memory
+  against N, hybrid range at N = 1e6, schedules, leaf size, accuracy against
+  cost; one repetition each, to size the manifest (`../notes/experiment_manifest.md`).
+- `submit.sh` passes the login node's git commit as `SOURCE_GIT_REV`, because
+  compute nodes have no git; run records fall back to it.
+
+Results: correctness job 1503779 (one node) passed; no performance measurements yet.
