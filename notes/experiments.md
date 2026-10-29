@@ -97,7 +97,7 @@ showed the default bound the rank to one hardware thread.
 | When (SGT) | Job | Commit | Request | Queue | Purpose | Outcome |
 |---|---|---|---|---|---|---|
 | 28 Oct 20:24 | 1503779.stdct-mgmt-02 | d959217 | 1 x 8 CPUs, 16 GB, 30 min | auto_free -> cpu_parallel, no -P | First correctness job | Ran 20:31–20:32 on IN-003, Exit_status 0; all 9 gates PASS |
-| 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | pending |
+| 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | Ran 13:30-13:31 on CN-161 + IN-002; Exit_status 5: allocation check stopped the job before compiling (CPU models differ) |
 
 Charging basis: site `hpc cpu` instructions present `-q auto_free` without
 `-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
@@ -116,3 +116,17 @@ warning. Hybrid gate: all 15 cases bitwise identical to serial. System Python
 git_rev=no-git; their source hashes match commit d959217. submit.sh now passes
 SOURCE_GIT_REV. Credit balance after the job: not yet re-checked (connection
 dropped).
+
+Job 1506687 findings (`code/artifacts/cluster/runs/twonode-20261029T053005Z-1506687/`):
+two distinct hosts (CN-161, IN-002), each restricted to exactly its 8
+allocated CPUs, including the rank launched remotely; CPU models differ
+(Platinum 8452Y vs Gold 6438N), which the original identical-model rule
+rejected, so nothing was compiled or run. The ISA flags of these two models are
+identical (50 of 50; compared offline from the login node and the IN-003 record),
+so a -march=native binary is compatible across them. Open MPI 4.1.6 has tm
+components that failed only because libpbs.so.0 (in /opt/pbs/lib) was not on the
+library path. The cpu_free pool holds 20 IN (64-core 6438N), 3 CN (72-core 8452Y)
+and 1 RN node, with no PBS attribute for CPU model, so select=2 can mix families.
+Revised twonode.pbs (not yet run): require identical ISA flags rather than
+identical models, and enable tm via /opt/pbs/lib. Benchmarks must use one family.
+Balance 10000.0 at 13:29 (after job 1503779), before this job.

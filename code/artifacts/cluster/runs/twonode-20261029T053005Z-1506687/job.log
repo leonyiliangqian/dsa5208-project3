@@ -1,0 +1,28 @@
+run_id=twonode-20261029T053005Z-1506687 job=1506687.stdct-mgmt-02 host=CN-161 start=2026-10-29T13:30:05+08:00 source_rev=3c76d5ea786588c0524c99607bf0d34c6ad4fe37
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1506687.stdct-mgmt-02 -x PATH -x LD_LIBRARY_PATH
+
+===== gate allocation: allocation_check
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+node CN-161 allowed=16,18,22,32,34,40,42,46 model=Intel(R) Xeon(R) Platinum 8452Y
+node IN-002 allowed=0,2,4,6,8,10,12,14 model=Intel(R) Xeon(R) Gold 6438N
+allocation hosts=['CN-161', 'IN-002'] allowed_cpus=[8, 8] models=['Intel(R) Xeon(R) Gold 6438N', 'Intel(R) Xeon(R) Platinum 8452Y'] FAIL
+allocation FAIL
+
+STOP: allocation check failed; not compiling or running further gates
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+node CN-161 allowed=16,18,22,32,34,40,42,46 model=Intel(R) Xeon(R) Platinum 8452Y
+node IN-002 allowed=0,2,4,6,8,10,12,14 model=Intel(R) Xeon(R) Gold 6438N
+allocation hosts=['CN-161', 'IN-002'] allowed_cpus=[8, 8] models=['Intel(R) Xeon(R) Gold 6438N', 'Intel(R) Xeon(R) Platinum 8452Y'] FAIL
+end=2026-10-29T13:30:15+08:00

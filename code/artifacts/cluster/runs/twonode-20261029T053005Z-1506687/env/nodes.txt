@@ -1,0 +1,2 @@
+node CN-161 allowed=16,18,22,32,34,40,42,46 model=Intel(R) Xeon(R) Platinum 8452Y
+node IN-002 allowed=0,2,4,6,8,10,12,14 model=Intel(R) Xeon(R) Gold 6438N

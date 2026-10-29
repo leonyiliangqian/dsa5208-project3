@@ -1,0 +1,5 @@
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[CN-161:964977] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+node CN-161 allowed=16,18,22,32,34,40,42,46 model=Intel(R) Xeon(R) Platinum 8452Y
+node IN-002 allowed=0,2,4,6,8,10,12,14 model=Intel(R) Xeon(R) Gold 6438N
+allocation hosts=['CN-161', 'IN-002'] allowed_cpus=[8, 8] models=['Intel(R) Xeon(R) Gold 6438N', 'Intel(R) Xeon(R) Platinum 8452Y'] FAIL
