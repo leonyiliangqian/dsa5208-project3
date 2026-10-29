@@ -1,0 +1,117 @@
+== captured 2026-10-29T13:14:05+08:00 on stdct-login-01 by leonyil.qian (read-only)
+== hpc project
+
+ To check PBS Project, credits and members, run this command in terminal first:
+   #  amgr login 
+
+ Please enter with your NUS password to login.
+
+
+== motd
+   ************************************************************
+   *****            Welcome to NUS HPC System             *****
+   ************************************************************
+   #  Enter "hpc" command in the terminal to list out         #
+   #  instructions for using Vanda Cluster.                   #
+   #                                                          #
+   #  To list out sample job script for CPU enter:  hpc cpu   #
+   #  To list out sample job script for GPU enter:  hpc gpu   #
+   #  List your Project(s) Information by       : hpc project #
+   See  https://bobcat.nus.edu.sg/hpc/support/ebenv/  for a full
+   searchable list of preinstalled software  
+
+   Existing Atlas files are available under "/atlas/home/$USER" 
+   and "/atlas/hpctmp/$USER" as read-only on Login node. To use 
+   these files copy them to "/scratch/$USER" 
+   ############################################################
+   *SOFTWARE USAGE POLICY*:  Users shall not use or distribute
+   software  contrary  to prevailing licensing aggreements and 
+   not install illegally obtained software onto NUS HPC System.
+   ############################################################
+   *NOTE1:  Architecture of the Vanda login node is different    
+   than that of the Compute Nodes. To compile software please 
+   start an interactive session on compute node first.          
+
+   *NOTE2:  Files older than 60days inside /scratch working     
+   space are purged automatically. No backup is available.     
+   Use 'hpc s" to check the usage and do housekeeping.         
+   ############################################################
+   For problems or queries, please contact us through A.S.K.   
+   https://ask.nus.edu.sg/ search for "HPC Enquiries" form
+   ###############################################################
+
+   ###############################################################
+           HPC Scheduled Maintenance
+1.  Thu, 29-Oct, 6:00PM:  Stop job scheduling
+2.  Sat, 31-Oct, 6:00AM:  Stop cluster access and terminate running jobs
+3.  Mon, 2-Nov,  5:00PM:  Release of HPC system
+   ###############################################################
+
+   ############################################################
+           Data Purging Schedule on Vanda
+1.  Fri, 23-Oct, 6:00PM:  Purging files idle for >180 days in /scratch/ folder
+2.  Fri, 30-Oct, 6:00PM:  Purging files idle for >120 days in /scratch/ folder
+3.  Fri, 06-Nov, 6:00PM:  Purging files idle for >90 days in /scratch/ folder
+4.  Fri, 13-Nov, 6:00PM:  Purging files idle for >60 days in /scratch/ folder
+   ############################################################
+
+== qstat -B
+Server             Max   Tot   Que   Run   Hld   Wat   Trn   Ext Status
+---------------- ----- ----- ----- ----- ----- ----- ----- ----- -----------
+stdct-mgmt-02        0 39035   597   334  5190     2     0     1 Scheduling
+    server_state = Scheduling
+    scheduling = True
+== qstat -Qf auto_free
+Queue: auto_free
+    queue_type = Route
+    total_jobs = 6
+    state_count = Transit:0 Queued:0 Held:2 Waiting:4 Running:0 Exiting:0 Begun
+	:0 
+    acl_host_enable = False
+    from_route_only = False
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    route_held_jobs = False
+    route_waiting_jobs = False
+    route_retry_time = 5
+    enabled = True
+    started = True
+
+== qstat -Qf cpu_parallel
+Queue: cpu_parallel
+    queue_type = Execution
+    total_jobs = 76
+    state_count = Transit:0 Queued:34 Held:18 Waiting:0 Running:23 Exiting:0 Be
+	gun:1 
+    from_route_only = True
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 2
+    resources_min.nodect = 1
+    resources_default.mem = 20gb
+    resources_default.ncpus = 2
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_free
+    resources_assigned.mem = 4768gb
+    resources_assigned.mpiprocs = 619
+    resources_assigned.ncpus = 944
+    resources_assigned.nodect = 29
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e0030005=16]
+    max_run = [u:e0540410=9]
+    max_run = [u:e0983460=28]
+    max_run = [u:e1554743=3]
+    max_run = [u:sauyong=12]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+
+== my jobs
+== dirs
+/home/svu/leonyil.qian/dsa5208-p3-b5a5ebb
+/home/svu/leonyil.qian/dsa5208-p3-b5a5ebb.bundle
+/home/svu/leonyil.qian/dsa5208-p3-update-814936c.bundle
+/home/svu/leonyil.qian/dsa5208-p3-update-d959217.bundle
