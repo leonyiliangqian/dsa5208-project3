@@ -113,6 +113,15 @@ EOF
 }
 
 gate allocation   allocation_check
+# Fail fast: without two distinct hosts, one CPU model and the expected 8 CPUs
+# per node, nothing after this point would mean what it claims. The failed
+# check's output stays in gate_allocation.log, env/nodes.txt and gates.txt.
+if grep -q "^allocation FAIL" "$OUT/gates.txt"; then
+    echo; echo "STOP: allocation check failed; not compiling or running further gates"
+    cat "$OUT/gate_allocation.log"
+    echo "end=$(date -Is)"
+    exit 5
+fi
 gate build        make BIN="$BIN" all hybrid
 gate toolchain    make BIN="$BIN" toolchain
 gate internode_2  make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=2 INTERNODE_HOSTS=2
