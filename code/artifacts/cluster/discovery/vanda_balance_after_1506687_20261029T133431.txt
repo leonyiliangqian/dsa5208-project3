@@ -1,0 +1,20 @@
+== captured 2026-10-29T13:34:31+08:00 on stdct-login-01 (read-only), after jobs 1503779 and 1506687
+
+  =======================================================================================
+       Vanda CPU and GPU-Hours Credits for:  leonyil.qian 
+  =======================================================================================
+    Project-Name  | Total CPU Hours | CPU Net Balance | Total GPU Hours | GPU Net Balance
+  ---------------------------------------------------------------------------------------
+personal-leonyil.qian  |          10000  |        10000.0  |           1000  |           1000
+           Users  :                   leonyil.qian 
+  ---------------------------------------------------------------------------------------
+
+  ##############################################################################
+  ##  Please quote the right Project-Name in below line in PBS job script,    ##
+  ##  in order to use the GPU-Hours allocated in the Project.                 ##
+  ##############################################################################
+  #PBS -P Project-Name 
+
+
+    server_state = Active
+    scheduling = True
