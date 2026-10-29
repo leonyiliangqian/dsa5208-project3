@@ -1,0 +1,8 @@
+g++ -O1 -g -std=c++17 -Wall -Wextra -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=undefined -o bin/vanda-999999/bh_serial_san serial/barnes_hut.cpp
+bin/vanda-999999/bh_serial_san --self-test > /dev/null
+bin/vanda-999999/bh_serial_san --validate --n 1000 --theta 0.5
+validate n=1000 theta=0.500 leaf_size=8 nodes=456 max_rel_err=9.354e-02 mean_rel_err=3.814e-03 max_abs_err=4.502e-03
+bin/vanda-999999/bh_serial_san --n 2000 --steps 3 --theta 0.7 --leaf-size 4
+method=bh n=2000 theta=0.700 leaf_size=4 steps=3 wall_s=0.1696 build_s=0.0038 traverse_s=0.1653 integrate_s=0.0005 s_per_step=0.0565
+result {"program":"bh_serial","method":"bh","n":2000,"theta":0.69999999999999996,"dt":0.001,"steps":3,"warmup":0,"leaf_size":4,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":1,"threads_effective":1,"hosts":["f789f7e1045f"],"nodes":1368,"setup_s":0.058107,"wall_s":0.169590,"integrate_s":0.000532,"exchange_s":0,"build_s":0.003780,"traverse_s":0.165272,"compiler":"12.2.0","cxxflags":"unknown"}
+PASS: sanitizer run reported no errors

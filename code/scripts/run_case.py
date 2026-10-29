@@ -37,7 +37,9 @@ def sh(cmd):
 
 
 def source_state():
-    rev = sh(f"git -C {shlex.quote(str(root))} rev-parse HEAD 2>/dev/null") or "no-git"
+    # Compute nodes may lack git; submit.sh passes the login node's HEAD instead.
+    rev = (sh(f"git -C {shlex.quote(str(root))} rev-parse HEAD 2>/dev/null")
+           or os.environ.get("SOURCE_GIT_REV") or "no-git")
     # Hash the source files themselves so an uncommitted edit is still traceable.
     files = sorted(list(root.glob("common/*.hpp")) + list(root.glob("serial/*.cpp")) +
                    list(root.glob("hybrid/*.cpp")) + [root / "Makefile"])

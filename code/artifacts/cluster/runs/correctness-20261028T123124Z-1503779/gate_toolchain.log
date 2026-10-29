@@ -1,0 +1,14 @@
+g++ -O2 -fopenmp -o bin/vanda-1503779/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1503779/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1503779/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-1503779/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-1503779/mpi_check
+[IN-003:3446333] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446333] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.6, package: Open MPI ebapps@atlas8-c01 Distribution, ident: 4.1.6,
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-1503779/hybrid_check
+[IN-003:3446353] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446353] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS

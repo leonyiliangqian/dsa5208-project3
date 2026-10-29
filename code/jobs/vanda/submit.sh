@@ -35,7 +35,10 @@ fi
 mkdir -p artifacts/cluster/logs
 cmd=(qsub -q "$queue")
 [ -n "$project" ] && cmd+=(-P "$project")
-[ -n "$vars" ] && cmd+=(-v "$vars")
+# Compute nodes have no git, so record the commit here, on the login node.
+rev=$(git rev-parse HEAD 2>/dev/null || echo unknown)
+vars=${vars:+$vars,}SOURCE_GIT_REV=$rev
+cmd+=(-v "$vars")
 cmd+=(-o "$PWD/artifacts/cluster/logs/" "$script")
 echo "command: ${cmd[*]}"
 if [ "$yes" = 1 ]; then

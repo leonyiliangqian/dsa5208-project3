@@ -6,18 +6,17 @@ Optional progress report: **before 30 October**; prepare by 29 October if using 
 Existing group listing: Yan Yixin, Zhang Yue, Leon Yiliang Qian. Confirm the
 membership and student IDs in `report/main.tex` before submission.
 
-## Current state (28 October 2026)
+## Current state (29 October 2026)
 
 - Topic: Barnes–Hut n-body, C++17, MPI+OpenMP.
-- Serial reference audited and fixed; serial gate passes on macOS and Docker Linux.
-- Replicated-tree MPI+OpenMP solver implemented; matches serial bitwise in 15
-  local configurations (Docker, Open MPI 4.1.4, GCC 12). Local evidence only.
-- Report: method, parallel design, local correctness and methodology drafted
-  in `report/` for Overleaf; cluster results sections pending.
-- Vanda (PBS) access works. First correctness job `code/jobs/vanda/correctness.pbs`
-  is ready and tested in a local PBS simulation; submission needs the allocation
-  (`amgr login`, preflight) before scheduling stops on 29 Oct 18:00. Benchmarks
-  resume after the 2 Nov 17:00 reopening. See notes/cluster_access.md.
+- Serial reference audited and fixed; serial gate passes on macOS, Docker and Vanda.
+- Replicated-tree MPI+OpenMP solver matches serial bitwise in 15 configurations,
+  locally (Docker) and on a Vanda compute node.
+- Vanda (PBS) correctness job 1503779 passed all 9 gates on node IN-003 (8 cores,
+  zero-rate `auto_free`). Benchmarks start after the 2 Nov 17:00 reopening.
+  See notes/experiments.md and notes/cluster_access.md.
+- Report: method, parallel design, correctness (Vanda) and methodology drafted
+  in `report/` for Overleaf; scaling results pending.
 
 ## Start here
 

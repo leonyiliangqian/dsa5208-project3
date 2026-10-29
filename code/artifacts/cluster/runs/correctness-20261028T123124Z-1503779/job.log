@@ -1,0 +1,190 @@
+run_id=correctness-20261028T123124Z-1503779 job=1503779.stdct-mgmt-02 host=IN-003 start=2026-10-28T20:31:24+08:00
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+environment recorded in artifacts/cluster/runs/correctness-20261028T123124Z-1503779/env/environment.txt
+
+===== gate build: make BIN=bin/vanda-1503779 all hybrid
+mkdir -p bin/vanda-1503779
+g++ -O3 -std=c++17 -Wall -Wextra -march=native -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1503779/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=native -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1503779/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS
+
+===== gate toolchain: make BIN=bin/vanda-1503779 toolchain
+g++ -O2 -fopenmp -o bin/vanda-1503779/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1503779/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1503779/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-1503779/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-1503779/mpi_check
+[IN-003:3446333] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446333] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.6, package: Open MPI ebapps@atlas8-c01 Distribution, ident: 4.1.6,
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-1503779/hybrid_check
+[IN-003:3446353] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446353] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
+toolchain PASS
+
+===== gate place_2x4: make BIN=bin/vanda-1503779 placement PLACE_R=2 PLACE_T=4
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1503779/placement_check tests/toolchain/placement_check.cpp
+OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    mpirun -np 2 --map-by ppr:2:node:PE=4 --bind-to core \
+    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
+    bin/vanda-1503779/placement_check
+[IN-003:3446384] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446384] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446384] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././.][]
+[IN-003:3446384] MCW rank 1 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B][]
+placement host=IN-003 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=IN-003 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=IN-003 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=IN-003 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=IN-003 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=IN-003 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=IN-003 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=IN-003 rank=1 thread=3 cpu=14 mask_cpus=1
+placement_host host=IN-003 threads=8 distinct_cpus=8
+placement_check ranks=2 threads=4 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+place_2x4 PASS
+
+===== gate place_4x2: make BIN=bin/vanda-1503779 placement PLACE_R=4 PLACE_T=2
+OMP_NUM_THREADS=2 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    mpirun -np 4 --map-by ppr:4:node:PE=2 --bind-to core \
+    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
+    bin/vanda-1503779/placement_check
+[IN-003:3446413] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446413] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446413] MCW rank 3 bound to socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././././B/B][]
+[IN-003:3446413] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]]: [B/B/./././././.][]
+[IN-003:3446413] MCW rank 1 bound to socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [././B/B/./././.][]
+[IN-003:3446413] MCW rank 2 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]]: [././././B/B/./.][]
+placement host=IN-003 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=IN-003 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=IN-003 rank=1 thread=0 cpu=4 mask_cpus=1
+placement host=IN-003 rank=1 thread=1 cpu=6 mask_cpus=1
+placement host=IN-003 rank=2 thread=0 cpu=8 mask_cpus=1
+placement host=IN-003 rank=2 thread=1 cpu=10 mask_cpus=1
+placement host=IN-003 rank=3 thread=0 cpu=12 mask_cpus=1
+placement host=IN-003 rank=3 thread=1 cpu=14 mask_cpus=1
+placement_host host=IN-003 threads=8 distinct_cpus=8
+placement_check ranks=4 threads=2 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+place_4x2 PASS
+
+===== gate place_8x1: make BIN=bin/vanda-1503779 placement PLACE_R=8 PLACE_T=1
+OMP_NUM_THREADS=1 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    mpirun -np 8 --map-by ppr:8:node:PE=1 --bind-to core \
+    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
+    bin/vanda-1503779/placement_check
+[IN-003:3446474] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446474] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446474] MCW rank 5 bound to socket 0[core 5[hwt 0]]: [./././././B/./.][]
+[IN-003:3446474] MCW rank 6 bound to socket 0[core 6[hwt 0]]: [././././././B/.][]
+[IN-003:3446474] MCW rank 7 bound to socket 0[core 7[hwt 0]]: [./././././././B][]
+[IN-003:3446474] MCW rank 0 bound to socket 0[core 0[hwt 0]]: [B/././././././.][]
+[IN-003:3446474] MCW rank 1 bound to socket 0[core 1[hwt 0]]: [./B/./././././.][]
+[IN-003:3446474] MCW rank 2 bound to socket 0[core 2[hwt 0]]: [././B/././././.][]
+[IN-003:3446474] MCW rank 3 bound to socket 0[core 3[hwt 0]]: [./././B/./././.][]
+[IN-003:3446474] MCW rank 4 bound to socket 0[core 4[hwt 0]]: [././././B/././.][]
+placement host=IN-003 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=IN-003 rank=1 thread=0 cpu=2 mask_cpus=1
+placement host=IN-003 rank=2 thread=0 cpu=4 mask_cpus=1
+placement host=IN-003 rank=3 thread=0 cpu=6 mask_cpus=1
+placement host=IN-003 rank=4 thread=0 cpu=8 mask_cpus=1
+placement host=IN-003 rank=5 thread=0 cpu=10 mask_cpus=1
+placement host=IN-003 rank=6 thread=0 cpu=12 mask_cpus=1
+placement host=IN-003 rank=7 thread=0 cpu=14 mask_cpus=1
+placement_host host=IN-003 threads=8 distinct_cpus=8
+placement_check ranks=8 threads=1 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+place_8x1 PASS
+
+===== gate serial: make BIN=bin/vanda-1503779 EVIDENCE=artifacts/cluster/runs/correctness-20261028T123124Z-1503779 check
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.128e-14 mean_rel_err=1.476e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.144e-14 mean_rel_err=1.471e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)
+serial PASS
+
+===== gate hybrid: make BIN=bin/vanda-1503779 EVIDENCE=artifacts/cluster/runs/correctness-20261028T123124Z-1503779 check-hybrid MPIRUN_FLAGS=--bind-to none HYBRID_GATE_ARGS=--max-cores 8
+python3 tests/validate_hybrid.py --serial bin/vanda-1503779/bh_serial --hybrid bin/vanda-1503779/bh_hybrid \
+    --mpirun mpirun --mpirun-flags "--bind-to none" \
+    --out artifacts/cluster/runs/correctness-20261028T123124Z-1503779/hybrid_validation_vanda-1503779.json --max-cores 8
+hybrid case=1x1_static n=2000 steps=1 ranks=1 threads=1 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_static n=2000 steps=1 ranks=1 threads=4 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_dynamic1 n=2000 steps=1 ranks=1 threads=4 schedule=dynamic/1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=2x1_static n=2000 steps=1 ranks=2 threads=1 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=3x2_dynamic16 n=2000 steps=1 ranks=3 threads=2 schedule=dynamic/16 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=4x2_guided n=2000 steps=1 ranks=4 threads=2 schedule=guided/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=theta0_3x2 n=1500 steps=1 ranks=3 threads=2 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=leaf1_2x2 n=1500 steps=1 ranks=2 threads=2 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x1 n=2000 steps=10 ranks=1 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x4_dynamic n=2000 steps=10 ranks=1 threads=4 schedule=dynamic/8 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_3x2_static n=2001 steps=10 ranks=3 threads=2 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_4x2_guided n=2003 steps=10 ranks=4 threads=2 schedule=guided/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=uneven_n7_4ranks n=7 steps=10 ranks=4 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=zero_owned_n3_5ranks n=3 steps=10 ranks=5 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=singleton_3ranks n=1 steps=5 ranks=3 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)
+hybrid PASS
+
+===== gate sanitize: make BIN=bin/vanda-1503779 sanitize
+g++ -O1 -g -std=c++17 -Wall -Wextra -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=undefined -o bin/vanda-1503779/bh_serial_san serial/barnes_hut.cpp
+bin/vanda-1503779/bh_serial_san --self-test > /dev/null
+bin/vanda-1503779/bh_serial_san --validate --n 1000 --theta 0.5
+validate n=1000 theta=0.500 leaf_size=8 nodes=456 max_rel_err=9.354e-02 mean_rel_err=3.814e-03 max_abs_err=4.502e-03
+bin/vanda-1503779/bh_serial_san --n 2000 --steps 3 --theta 0.7 --leaf-size 4
+method=bh n=2000 theta=0.700 leaf_size=4 steps=3 wall_s=0.1219 build_s=0.0037 traverse_s=0.1179 integrate_s=0.0003 s_per_step=0.0406
+result {"program":"bh_serial","method":"bh","n":2000,"theta":0.69999999999999996,"dt":0.001,"steps":3,"warmup":0,"leaf_size":4,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":1,"threads_effective":1,"hosts":["IN-003"],"nodes":1368,"setup_s":0.042701,"wall_s":0.121931,"integrate_s":0.000325,"exchange_s":0,"build_s":0.003725,"traverse_s":0.117877,"compiler":"13.2.0","cxxflags":"unknown"}
+PASS: sanitizer run reported no errors
+sanitize PASS
+
+===== gate recorder: env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores python3 scripts/run_case.py --out artifacts/cluster/runs/correctness-20261028T123124Z-1503779 --case smoke_bound_2x4 --rep 1 --allocated-cores 8 --launcher mpirun -np 2 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -- bin/vanda-1503779/bh_hybrid --n 20000 --steps 2 --schedule dynamic --chunk 64
+smoke_bound_2x4_rep1: exit=0 ok=True wall_s=0.087667
+recorder PASS
+
+===== summary
+build PASS
+toolchain PASS
+place_2x4 PASS
+place_4x2 PASS
+place_8x1 PASS
+serial PASS
+hybrid PASS
+sanitize PASS
+recorder PASS
+end=2026-10-28T20:32:32+08:00

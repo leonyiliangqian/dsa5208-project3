@@ -91,3 +91,27 @@ slower. The default stays 8 until re-tuned on the cluster.
 Binding (`artifacts/local/runs/binding-*`): 1 rank x 4 threads, Open MPI default
 binding 1.57 s median vs 0.40 s with `--bind-to none`; `--report-bindings`
 showed the default bound the rank to one hardware thread.
+
+## Vanda runs (actual cluster execution)
+
+| When (SGT) | Job | Commit | Request | Queue | Purpose | Outcome |
+|---|---|---|---|---|---|---|
+| 28 Oct 20:24 | 1503779.stdct-mgmt-02 | d959217 | 1 x 8 CPUs, 16 GB, 30 min | auto_free -> cpu_parallel, no -P | First correctness job | Ran 20:31–20:32 on IN-003, Exit_status 0; all 9 gates PASS |
+
+Charging basis: site `hpc cpu` instructions present `-q auto_free` without
+`-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
+`cpu_serial` have `queue_charge_rate = 0`; personal-leonyil.qian balance
+10000.0 CPU-hours before submission (evidence:
+`code/artifacts/cluster/discovery/vanda_allocation_queues_20261028T202042.txt`).
+Submission explicitly authorised by the user for exactly this one job.
+
+Job 1503779 findings (`code/artifacts/cluster/runs/correctness-20261028T123124Z-1503779/`):
+compute node IN-003 is 2 x 32-core Intel Xeon Gold 6438N, no SMT, 2 NUMA
+domains, RHEL 9.4 (the login node is a Xeon Platinum 8452Y, so build on compute
+nodes). The PBS cpuset gave CPUs 0,2,...,14 and Open MPI saw only those 8 cores.
+Placement 2x4, 4x2 and 8x1 bound one thread per core, with no memory-binding
+warning. Hybrid gate: all 15 cases bitwise identical to serial. System Python
+3.9.18 sufficed. git is absent on compute nodes, so the records show
+git_rev=no-git; their source hashes match commit d959217. submit.sh now passes
+SOURCE_GIT_REV. Credit balance after the job: not yet re-checked (connection
+dropped).

@@ -1,0 +1,9 @@
+build PASS
+toolchain PASS
+place_2x4 PASS
+place_4x2 PASS
+place_8x1 PASS
+serial PASS
+hybrid PASS
+sanitize PASS
+recorder PASS

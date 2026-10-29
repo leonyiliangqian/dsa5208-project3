@@ -1,0 +1,25 @@
+python3 tests/validate_hybrid.py --serial bin/vanda-999999/bh_serial --hybrid bin/vanda-999999/bh_hybrid \
+    --mpirun mpirun --mpirun-flags "--bind-to none" \
+    --out artifacts/local/runs/simulated-pbs-20261028T111332Z/hybrid_validation_vanda-999999.json --max-cores 8
+hybrid case=1x1_static n=2000 steps=1 ranks=1 threads=1 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_static n=2000 steps=1 ranks=1 threads=4 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_dynamic1 n=2000 steps=1 ranks=1 threads=4 schedule=dynamic/1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=2x1_static n=2000 steps=1 ranks=2 threads=1 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=3x2_dynamic16 n=2000 steps=1 ranks=3 threads=2 schedule=dynamic/16 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=4x2_guided n=2000 steps=1 ranks=4 threads=2 schedule=guided/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=theta0_3x2 n=1500 steps=1 ranks=3 threads=2 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=leaf1_2x2 n=1500 steps=1 ranks=2 threads=2 schedule=static/0 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x1 n=2000 steps=10 ranks=1 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x4_dynamic n=2000 steps=10 ranks=1 threads=4 schedule=dynamic/8 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_3x2_static n=2001 steps=10 ranks=3 threads=2 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_4x2_guided n=2003 steps=10 ranks=4 threads=2 schedule=guided/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=uneven_n7_4ranks n=7 steps=10 ranks=4 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=zero_owned_n3_5ranks n=3 steps=10 ranks=5 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=singleton_3ranks n=1 steps=5 ranks=3 threads=1 schedule=static/0 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)

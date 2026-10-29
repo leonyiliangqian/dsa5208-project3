@@ -1,0 +1,20 @@
+OMP_NUM_THREADS=2 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    mpirun -np 4 --map-by ppr:4:node:PE=2 --bind-to core \
+    --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND \
+    bin/vanda-1503779/placement_check
+[IN-003:3446413] mca_base_component_repository_open: unable to open mca_plm_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446413] mca_base_component_repository_open: unable to open mca_ras_tm: libpbs.so.0: cannot open shared object file: No such file or directory (ignored)
+[IN-003:3446413] MCW rank 3 bound to socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././././B/B][]
+[IN-003:3446413] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]]: [B/B/./././././.][]
+[IN-003:3446413] MCW rank 1 bound to socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [././B/B/./././.][]
+[IN-003:3446413] MCW rank 2 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]]: [././././B/B/./.][]
+placement host=IN-003 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=IN-003 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=IN-003 rank=1 thread=0 cpu=4 mask_cpus=1
+placement host=IN-003 rank=1 thread=1 cpu=6 mask_cpus=1
+placement host=IN-003 rank=2 thread=0 cpu=8 mask_cpus=1
+placement host=IN-003 rank=2 thread=1 cpu=10 mask_cpus=1
+placement host=IN-003 rank=3 thread=0 cpu=12 mask_cpus=1
+placement host=IN-003 rank=3 thread=1 cpu=14 mask_cpus=1
+placement_host host=IN-003 threads=8 distinct_cpus=8
+placement_check ranks=4 threads=2 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS

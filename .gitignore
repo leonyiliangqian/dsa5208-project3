@@ -15,3 +15,6 @@ code/artifacts/report_preview*
 .DS_Store
 bin/
 *.o
+# Job and gate logs under artifacts are evidence: keep them despite the rules above.
+!code/artifacts/cluster/logs/
+!code/artifacts/**/*.log

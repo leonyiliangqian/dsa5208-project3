@@ -1,0 +1,10 @@
+g++ -O2 -fopenmp -o bin/vanda-999999/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-999999/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-999999/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-999999/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-999999/mpi_check
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.4, package: Debian OpenMPI, ident: 4.1.4, repo rev: v4.1.4, May 26
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-999999/hybrid_check
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
