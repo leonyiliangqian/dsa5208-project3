@@ -98,6 +98,7 @@ showed the default bound the rank to one hardware thread.
 |---|---|---|---|---|---|---|
 | 28 Oct 20:24 | 1503779.stdct-mgmt-02 | d959217 | 1 x 8 CPUs, 16 GB, 30 min | auto_free -> cpu_parallel, no -P | First correctness job | Ran 20:31–20:32 on IN-003, Exit_status 0; all 9 gates PASS |
 | 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | Ran 13:30-13:31 on CN-161 + IN-002; Exit_status 5: allocation check stopped the job before compiling (CPU models differ) |
+| 29 Oct 15:15 | 1507215.stdct-mgmt-02 | 494af8b | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness, portable build, forced tm launch | Ran 15:15-15:47 on IN-011 + IN-013; Exit_status -29 (killed at the 30 min walltime). Gates allocation, build, flags, toolchain, internode_2, internode_16 PASS; place_1x8 hung with no output; later gates not run |
 
 Charging basis: site `hpc cpu` instructions present `-q auto_free` without
 `-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
@@ -141,3 +142,19 @@ itself built for x86-64-v3 (AVX2), so this job shows portability of this
 project's code only. Mixed-model results are correctness evidence, never
 scaling measurements; benchmarks must use one family.
 Balance 10000.0 at 13:29 (after job 1503779), before this job.
+
+Job 1507215 findings (`code/artifacts/cluster/runs/twonode-20261029T071525Z-1507215/`,
+retrieved 30 Oct 15:52): two distinct hosts IN-011 and IN-013, both Gold
+6438N, each restricted to CPUs 0,2,...,14 (8). mpirun's log selected plm tm
+and ras tm; the remote process ancestry was bash<orted<pbs_shepherd<pbs_mom,
+so PBS-integrated launching was used. The portable flags were resolved to
+-march=x86-64 with no AVX/SSE4.2 macros and are embedded in both binaries.
+internode_2 and internode_16 exchanged data across the two hosts correctly.
+The place_1x8 gate (2 ranks, `--map-by ppr:1:node:PE=8 --bind-to core
+--report-bindings`, under tm) printed nothing, not even the binding report,
+and the job used 19 CPU-seconds in 31 minutes before PBS killed it. Cause not
+established; the placement mapping/binding under tm with PE=8 equal to the
+whole per-node cpuset is one possibility to test, not a finding. No gate had
+its own time limit, so one hang consumed the walltime and the serial, hybrid
+and recorder gates never ran: the two-node correctness of the solver is still
+unverified. Scheduling was off (maintenance) when the evidence was retrieved.

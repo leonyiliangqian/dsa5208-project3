@@ -1,0 +1,100 @@
+run_id=twonode-20261029T071525Z-1507215 job=1507215.stdct-mgmt-02 host=IN-011 start=2026-10-29T15:15:25+08:00 source_rev=494af8b8670ee57bded09ceb1473d8ab1ab6228d
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=tm mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH
+
+===== gate allocation: allocation_check
+[IN-011:1109651] mca: base: components_register: registering framework plm components
+[IN-011:1109651] mca: base: components_register: found loaded component rsh
+[IN-011:1109651] mca: base: components_register: component rsh register function successful
+[IN-011:1109651] mca: base: components_open: opening plm components
+[IN-011:1109651] mca: base: components_open: found loaded component rsh
+[IN-011:1109651] mca: base: components_open: component rsh open function successful
+[IN-011:1109651] mca:base:select: Auto-selecting plm components
+[IN-011:1109651] mca:base:select:(  plm) Querying component [rsh]
+[IN-011:1109651] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-011:1109651] mca:base:select:(  plm) Selected component [rsh]
+[IN-013:2630556] mca: base: components_register: registering framework plm components
+[IN-013:2630556] mca: base: components_register: found loaded component rsh
+[IN-013:2630556] mca: base: components_register: component rsh register function successful
+[IN-013:2630556] mca: base: components_open: opening plm components
+[IN-013:2630556] mca: base: components_open: found loaded component rsh
+[IN-013:2630556] mca: base: components_open: component rsh open function successful
+[IN-013:2630556] mca:base:select: Auto-selecting plm components
+[IN-013:2630556] mca:base:select:(  plm) Querying component [rsh]
+[IN-013:2630556] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-013:2630556] mca:base:select:(  plm) Selected component [rsh]
+[IN-011:1109651] mca: base: close: component rsh closed
+[IN-011:1109651] mca: base: close: unloading component rsh
+[IN-013:2630556] mca: base: close: component rsh closed
+[IN-013:2630556] mca: base: close: unloading component rsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	in-011: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+	in-013: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+node IN-011 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node IN-013 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['IN-011', 'IN-013'] head=IN-011 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=tm plm_selected=['tm'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N'] mixed_models=False isa_lists_equal=True
+two_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_tm_selected=ok remote_orted_not_sshd=ok
+allocation PASS
+allocation PASS
+
+===== gate build: make BIN=bin/vanda-1507215 all hybrid
+mkdir -p bin/vanda-1507215
+g++ -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-1507215/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-1507215/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS
+
+===== gate flags: flags_check
+CXXFLAGS=-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+== mpicxx -show
+g++ -I/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/include -L/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib -L/app1/ebapps/arches/flat-avx2/software/hwloc/2.9.2-GCCcore-13.2.0/lib -L/app1/ebapps/arches/flat-avx2/software/libevent/2.1.12-GCCcore-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/hwloc/2.9.2-GCCcore-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/libevent/2.1.12-GCCcore-13.2.0/lib -Wl,--enable-new-dtags -lmpi
+== resolved target
+  -march=                     		x86-64
+  -mtune=                     		generic
+== ISA macros defined by these flags
+none
+== embedded in binaries
+bin/vanda-1507215/bh_serial: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+bin/vanda-1507215/bh_hybrid: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+flags PASS
+
+===== gate toolchain: make BIN=bin/vanda-1507215 toolchain
+g++ -O2 -fopenmp -o bin/vanda-1507215/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1507215/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1507215/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-1507215/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-1507215/mpi_check
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.6, package: Open MPI ebapps@atlas8-c01 Distribution, ident: 4.1.6,
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-1507215/hybrid_check
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
+toolchain PASS
+
+===== gate internode_2: make BIN=bin/vanda-1507215 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=2 INTERNODE_HOSTS=2
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1507215/internode_check tests/toolchain/internode_check.cpp
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-1507215/internode_check
+internode_check ranks=2 hosts=2 [IN-011,IN-013] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0080 allgatherv_1000003x3_max_s=0.0080 expect_hosts=2 PASS
+internode_2 PASS
+
+===== gate internode_16: make BIN=bin/vanda-1507215 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=16 INTERNODE_HOSTS=2
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 16 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-1507215/internode_check
+internode_check ranks=16 hosts=2 [IN-011,IN-013] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0205 allgatherv_1000003x3_max_s=0.0379 expect_hosts=2 PASS
+internode_16 PASS
+
+===== gate place_1x8: make BIN=bin/vanda-1507215 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+=>> PBS: job killed: walltime 1859 exceeded limit 1800

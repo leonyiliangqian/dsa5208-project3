@@ -1,0 +1,3 @@
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 16 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-1507215/internode_check
+internode_check ranks=16 hosts=2 [IN-011,IN-013] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0205 allgatherv_1000003x3_max_s=0.0379 expect_hosts=2 PASS

@@ -1,0 +1,27 @@
+Fri Oct 30 03:52:38 PM +08 2026
+== qstat -xf 1507215
+    resources_used.cpupercent = 19
+    resources_used.cput = 00:00:19
+    resources_used.mem = 69472kb
+    resources_used.ncpus = 16
+    resources_used.ngpus = 0
+    resources_used.vmem = 264716kb
+    resources_used.walltime = 00:31:00
+    queue = cpu_parallel
+    exec_host = IN-011/0*8+IN-013/0*8
+    mtime = Thu Oct 29 15:47:52 2026
+    Resource_List.am_job_cache = {"job.walltime": 1800, "job.ncpus": 16.0,
+    Resource_List.mem = 32gb
+    Resource_List.mpiprocs = 16
+    Resource_List.ncpus = 16
+    Resource_List.ngpus = 0
+    Resource_List.nodect = 2
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=8:mpiprocs=8:mem=16gb
+    Resource_List.walltime = 00:30:00
+    stime = Thu Oct 29 15:15:24 2026
+    Exit_status = -29
+== server
+    server_state = Idle
+    scheduling = False

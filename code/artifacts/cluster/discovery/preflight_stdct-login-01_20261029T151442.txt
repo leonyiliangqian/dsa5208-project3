@@ -1,0 +1,123 @@
+== date/host
+2026-10-29T15:14:42+08:00
+stdct-login-01.stdct.loc
+== source
+494af8b8670ee57bded09ceb1473d8ab1ab6228d
+?? code/artifacts/cluster/discovery/preflight_stdct-login-01_20261029T151442.txt
+== qstat -Qf auto_free
+    queue_type = Route
+    acl_host_enable = False
+    from_route_only = False
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== qstat -Qf cpu_serial
+    queue_type = Execution
+    from_route_only = True
+    resources_max.mem = 20gb
+    resources_max.ncpus = 1
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 1
+    resources_min.nodect = 1
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    max_run = [u:PBS_GENERIC=32]
+    enabled = True
+    started = True
+== qstat -Qf cpu_parallel
+    queue_type = Execution
+    from_route_only = True
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 2
+    resources_min.nodect = 1
+    resources_default.mem = 20gb
+    resources_default.ncpus = 2
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e0030005=16]
+    max_run = [u:e0540410=9]
+    max_run = [u:e0983460=28]
+    max_run = [u:e1554743=3]
+    max_run = [u:sauyong=12]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== candidate modules
+/app1/ebapps/arches/flat-avx512/modules/all:
+OpenMPI/5.0.3-GCC-13.3.0
+OpenMPI/5.0.7-GCC-14.2.0
+
+/app1/ebapps/arches/flat-avx2/modules/mpi:
+OpenMPI/3.1.4-GCC-8.3.0
+OpenMPI/4.0.3-GCC-9.3.0
+OpenMPI/4.0.5-GCC-10.2.0
+OpenMPI/4.1.1-GCC-10.3.0
+OpenMPI/4.1.1-GCC-11.2.0
+OpenMPI/4.1.4-GCC-11.3.0
+OpenMPI/4.1.4-GCC-12.2.0
+OpenMPI/4.1.4-NVHPC-22.7-CUDA-11.7.0
+OpenMPI/4.1.5-GCC-12.2.0
+OpenMPI/4.1.5-GCC-12.3.0
+OpenMPI/4.1.5-intel-compilers-2023.1.0
+OpenMPI/4.1.6-GCC-13.2.0
+OpenMPI/5.0.3-GCC-13.3.0
+OpenMPI/5.0.7-GCC-14.2.0
+OpenMPI/5.0.8-GCC-14.3.0
+Python-bundle-PyPI/2024.06-GCCcore-13.3.0
+Python/3.12.3-GCCcore-13.3.0
+Python/3.13.1-GCCcore-14.2.0
+Python-bundle-PyPI/2023.06-GCCcore-12.3.0
+Python-bundle-PyPI/2023.10-GCCcore-13.2.0
+Python-bundle-PyPI/2024.06-GCCcore-13.3.0
+Python-bundle-PyPI/2025.04-GCCcore-14.2.0
+Python-bundle-PyPI/2025.07-GCCcore-14.3.0
+Python-bundle/3.10.4-foss-2022a
+Python/2.7.15-GCCcore-8.2.0
+Python/2.7.16-GCCcore-8.3.0
+Python/2.7.18-GCCcore-9.3.0
+Python/2.7.18-GCCcore-10.2.0
+Python/2.7.18-GCCcore-10.3.0-bare
+Python/2.7.18-GCCcore-11.2.0
+Python/2.7.18-GCCcore-11.2.0-bare
+Python/2.7.18-GCCcore-11.3.0
+Python/2.7.18-GCCcore-11.3.0-bare
+Python/2.7.18-GCCcore-12.2.0-bare
+Python/2.7.18-GCCcore-12.3.0
+== module show OpenMPI/4.1.6-GCC-13.2.0
+module-whatis	{Description: The Open MPI Project is an open source MPI-3 implementation.}
+module-whatis	{Homepage: https://www.open-mpi.org/}
+module-whatis	{URL: https://www.open-mpi.org/}
+module		load GCC/13.2.0
+module		load zlib/1.2.13-GCCcore-13.2.0
+module		load hwloc/2.9.2-GCCcore-13.2.0
+module		load libevent/2.1.12-GCCcore-13.2.0
+module		load UCX/1.15.0-GCCcore-13.2.0
+module		load libfabric/1.19.0-GCCcore-13.2.0
+module		load PMIx/4.2.6-GCCcore-13.2.0
+module		load UCC/1.2.0-GCCcore-13.2.0
+== allocations (needs a prior 'amgr login'; output only, nothing changes)
+
+  =======================================================================================
+       Vanda CPU and GPU-Hours Credits for:  leonyil.qian 
+  =======================================================================================
+    Project-Name  | Total CPU Hours | CPU Net Balance | Total GPU Hours | GPU Net Balance
+  ---------------------------------------------------------------------------------------
+personal-leonyil.qian  |          10000  |        10000.0  |           1000  |           1000
+           Users  :                   leonyil.qian 
+  ---------------------------------------------------------------------------------------
+
+  ##############################################################################
+  ##  Please quote the right Project-Name in below line in PBS job script,    ##
+  ##  in order to use the GPU-Hours allocated in the Project.                 ##
+  ##############################################################################
+[1;32m  #PBS -P Project-Name [0m
+
+
+== my jobs
