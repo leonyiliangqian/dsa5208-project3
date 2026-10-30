@@ -1,0 +1,30 @@
+== after allocation 08:21:42
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after build 08:21:44
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d1_launch_only 08:21:46
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d2_bind_pe4 08:21:47
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d3_bind_pe8 08:21:49
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d4_probe_pe4 08:21:51
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d5_probe_pe8 08:21:54
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d6_probe_pe8_head 08:21:55
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d7_probe_nobind 08:21:58
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after d9_probe_pe8_repeat 08:22:00
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN

@@ -1,0 +1,62 @@
+[node1:01239] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  bin/vanda-simdiag/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:01239] MCW rank 0 is not bound (or bound to all available processors)
+[node2:00529] MCW rank 1 is not bound (or bound to all available processors)
+trace t=1793348519.740 host=node1 rank=0 pid=1244 stage=start affinity=0 omp_num_threads=8
+trace t=1793348519.740 host=node1 rank=0 pid=1244 stage=mpi_init_begin 
+trace t=1793348519.761 host=node2 rank=1 pid=532 stage=start affinity=0 omp_num_threads=8
+trace t=1793348519.761 host=node2 rank=1 pid=532 stage=mpi_init_begin 
+trace t=1793348520.020 host=node1 rank=0 pid=1244 stage=mpi_init_done size=2 provided=1
+trace t=1793348520.020 host=node1 rank=0 pid=1244 stage=allreduce_threads_begin threads=8
+trace t=1793348520.020 host=node2 rank=1 pid=532 stage=mpi_init_done size=2 provided=1
+trace t=1793348520.020 host=node2 rank=1 pid=532 stage=allreduce_threads_begin threads=8
+trace t=1793348520.037 host=node2 rank=1 pid=532 stage=allreduce_threads_done min=8 max=8
+trace t=1793348520.037 host=node2 rank=1 pid=532 stage=omp_begin 
+trace t=1793348520.040 host=node1 rank=0 pid=1244 stage=allreduce_threads_done min=8 max=8
+trace t=1793348520.040 host=node1 rank=0 pid=1244 stage=omp_begin 
+trace t=1793348520.041 host=node1 rank=0 pid=1244 stage=omp_team_started team=8
+trace t=1793348520.037 host=node2 rank=1 pid=532 stage=omp_team_started team=8
+trace t=1793348520.442 host=node2 rank=1 pid=532 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793348520.442 host=node2 rank=1 pid=532 stage=gather_begin 
+trace t=1793348520.442 host=node2 rank=1 pid=532 stage=gather_done 
+trace t=1793348520.442 host=node2 rank=1 pid=532 stage=bcast_begin 
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=gather_begin 
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=bcast_begin 
+trace t=1793348520.451 host=node1 rank=0 pid=1244 stage=finalize_begin verdict=PASS
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348520.451 host=node2 rank=1 pid=532 stage=finalize_begin verdict=PASS
+trace t=1793348520.504 host=node2 rank=1 pid=532 stage=finalize_done 
+trace t=1793348520.509 host=node1 rank=0 pid=1244 stage=finalize_done 
+[node1:01239] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:01239] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

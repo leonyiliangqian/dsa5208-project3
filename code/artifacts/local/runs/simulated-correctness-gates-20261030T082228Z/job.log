@@ -1,0 +1,207 @@
+run_id=simulated-correctness-gates-20261030T082228Z job=simcorr.local host=b20758e916bb start=2026-10-30T08:22:28+00:00
+environment recorded in artifacts/local/runs/simulated-correctness-gates-20261030T082228Z/env/environment.txt
+
+===== gate build (critical, limit 240s) 08:22:28: make BIN=bin/vanda-simcorr all hybrid
+mkdir -p bin/vanda-simcorr
+g++ -O3 -std=c++17 -Wall -Wextra -march=native -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-simcorr/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=native -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-simcorr/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=8 
+
+===== gate toolchain (critical, limit 90s) 08:22:36: make BIN=bin/vanda-simcorr toolchain
+g++ -O2 -fopenmp -o bin/vanda-simcorr/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simcorr/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simcorr/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-simcorr/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-simcorr/mpi_check
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.4, package: Debian OpenMPI, ident: 4.1.4, repo rev: v4.1.4, May 26
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-simcorr/hybrid_check
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
+toolchain PASS rc=0 secs=1 
+
+===== gate place_2x4 (independent, limit 60s) 08:22:37: make BIN=bin/vanda-simcorr placement PLACE_R=2 PLACE_T=4
+trace t=1793348559.560 host=b20758e916bb rank=1 pid=300 stage=allreduce_threads_begin threads=4
+trace t=1793348559.560 host=b20758e916bb rank=1 pid=300 stage=allreduce_threads_done min=4 max=4
+trace t=1793348559.560 host=b20758e916bb rank=1 pid=300 stage=omp_begin 
+trace t=1793348559.561 host=b20758e916bb rank=1 pid=300 stage=omp_team_started team=4
+trace t=1793348559.561 host=b20758e916bb rank=0 pid=299 stage=omp_team_started team=4
+trace t=1793348559.961 host=b20758e916bb rank=1 pid=300 stage=omp_done thread_cpus=4,5,6,7
+trace t=1793348559.961 host=b20758e916bb rank=1 pid=300 stage=gather_begin 
+trace t=1793348559.961 host=b20758e916bb rank=1 pid=300 stage=gather_done 
+trace t=1793348559.961 host=b20758e916bb rank=1 pid=300 stage=bcast_begin 
+trace t=1793348559.961 host=b20758e916bb rank=0 pid=299 stage=omp_done thread_cpus=0,1,2,3
+trace t=1793348559.961 host=b20758e916bb rank=0 pid=299 stage=gather_begin 
+trace t=1793348559.961 host=b20758e916bb rank=0 pid=299 stage=gather_done 
+placement host=b20758e916bb rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=b20758e916bb rank=0 thread=1 cpu=1 mask_cpus=1
+placement host=b20758e916bb rank=0 thread=2 cpu=2 mask_cpus=1
+placement host=b20758e916bb rank=0 thread=3 cpu=3 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=0 cpu=4 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=1 cpu=5 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=2 cpu=6 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=3 cpu=7 mask_cpus=1
+placement_host host=b20758e916bb threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=2 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348559.961 host=b20758e916bb rank=1 pid=300 stage=finalize_begin verdict=PASS
+trace t=1793348559.961 host=b20758e916bb rank=0 pid=299 stage=bcast_begin 
+trace t=1793348559.961 host=b20758e916bb rank=0 pid=299 stage=finalize_begin verdict=PASS
+trace t=1793348560.006 host=b20758e916bb rank=1 pid=300 stage=finalize_done 
+trace t=1793348560.009 host=b20758e916bb rank=0 pid=299 stage=finalize_done 
+[b20758e916bb:00295] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[b20758e916bb:00295] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_2x4 PASS rc=0 secs=3 
+
+===== gate place_4x2 (independent, limit 60s) 08:22:40: make BIN=bin/vanda-simcorr placement PLACE_R=4 PLACE_T=2
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=omp_done thread_cpus=2,3
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=omp_done thread_cpus=6,7
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=finalize_begin verdict=PASS
+placement host=b20758e916bb rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=b20758e916bb rank=0 thread=1 cpu=1 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=0 cpu=2 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=1 cpu=3 mask_cpus=1
+placement host=b20758e916bb rank=2 thread=0 cpu=4 mask_cpus=1
+placement host=b20758e916bb rank=2 thread=1 cpu=5 mask_cpus=1
+placement host=b20758e916bb rank=3 thread=0 cpu=6 mask_cpus=1
+placement host=b20758e916bb rank=3 thread=1 cpu=7 mask_cpus=1
+placement_host host=b20758e916bb threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=4 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348560.930 host=b20758e916bb rank=3 pid=416 stage=finalize_done 
+trace t=1793348560.930 host=b20758e916bb rank=1 pid=414 stage=finalize_done 
+trace t=1793348560.930 host=b20758e916bb rank=0 pid=413 stage=finalize_done 
+trace t=1793348560.933 host=b20758e916bb rank=2 pid=415 stage=finalize_done 
+[b20758e916bb:00409] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[b20758e916bb:00409] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_4x2 PASS rc=0 secs=0 
+
+===== gate place_8x1 (independent, limit 60s) 08:22:41: make BIN=bin/vanda-simcorr placement PLACE_R=8 PLACE_T=1
+placement host=b20758e916bb rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=0 cpu=1 mask_cpus=1
+placement host=b20758e916bb rank=2 thread=0 cpu=2 mask_cpus=1
+placement host=b20758e916bb rank=3 thread=0 cpu=3 mask_cpus=1
+placement host=b20758e916bb rank=4 thread=0 cpu=4 mask_cpus=1
+placement host=b20758e916bb rank=5 thread=0 cpu=5 mask_cpus=1
+placement host=b20758e916bb rank=6 thread=0 cpu=6 mask_cpus=1
+placement host=b20758e916bb rank=7 thread=0 cpu=7 mask_cpus=1
+placement_host host=b20758e916bb threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=8 threads=1 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348561.864 host=b20758e916bb rank=0 pid=539 stage=bcast_begin 
+trace t=1793348561.864 host=b20758e916bb rank=0 pid=539 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=4 pid=544 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=7 pid=556 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=3 pid=542 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=6 pid=552 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=1 pid=540 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=5 pid=548 stage=finalize_begin verdict=PASS
+trace t=1793348561.864 host=b20758e916bb rank=2 pid=541 stage=finalize_begin verdict=PASS
+trace t=1793348561.914 host=b20758e916bb rank=5 pid=548 stage=finalize_done 
+trace t=1793348561.914 host=b20758e916bb rank=4 pid=544 stage=finalize_done 
+trace t=1793348561.916 host=b20758e916bb rank=6 pid=552 stage=finalize_done 
+trace t=1793348561.917 host=b20758e916bb rank=7 pid=556 stage=finalize_done 
+trace t=1793348561.919 host=b20758e916bb rank=0 pid=539 stage=finalize_done 
+trace t=1793348561.923 host=b20758e916bb rank=1 pid=540 stage=finalize_done 
+trace t=1793348561.929 host=b20758e916bb rank=3 pid=542 stage=finalize_done 
+trace t=1793348561.929 host=b20758e916bb rank=2 pid=541 stage=finalize_done 
+[b20758e916bb:00535] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[b20758e916bb:00535] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_8x1 PASS rc=0 secs=0 
+
+===== gate serial (independent, limit 240s) 08:22:42: make BIN=bin/vanda-simcorr EVIDENCE=artifacts/local/runs/simulated-correctness-gates-20261030T082228Z check
+python3 tests/validate_serial.py --binary bin/vanda-simcorr/bh_serial \
+    --out artifacts/local/runs/simulated-correctness-gates-20261030T082228Z/serial_validation_vanda-simcorr.json
+self_test case=empty n=0 leaf_size=1 nodes=0 PASS
+self_test case=empty n=0 leaf_size=8 nodes=0 PASS
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.128e-14 mean_rel_err=1.475e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.144e-14 mean_rel_err=1.471e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)
+serial PASS rc=0 secs=1 
+
+===== gate hybrid (independent, limit 600s) 08:22:43: make BIN=bin/vanda-simcorr EVIDENCE=artifacts/local/runs/simulated-correctness-gates-20261030T082228Z check-hybrid MPIRUN_FLAGS=--bind-to none HYBRID_GATE_ARGS=--max-cores 8
+python3 tests/validate_hybrid.py --serial bin/vanda-simcorr/bh_serial --hybrid bin/vanda-simcorr/bh_hybrid \
+    --mpirun mpirun --mpirun-flags "--bind-to none" \
+    --out artifacts/local/runs/simulated-correctness-gates-20261030T082228Z/hybrid_validation_vanda-simcorr.json --max-cores 8
+hybrid case=1x1_static n=2000 steps=1 ranks=1 threads=1 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_static n=2000 steps=1 ranks=1 threads=4 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_dynamic1 n=2000 steps=1 ranks=1 threads=4 schedule=dynamic/1 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=2x1_static n=2000 steps=1 ranks=2 threads=1 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=3x2_dynamic16 n=2000 steps=1 ranks=3 threads=2 schedule=dynamic/16 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=4x2_guided n=2000 steps=1 ranks=4 threads=2 schedule=guided/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=theta0_3x2 n=1500 steps=1 ranks=3 threads=2 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=leaf1_2x2 n=1500 steps=1 ranks=2 threads=2 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x1 n=2000 steps=10 ranks=1 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x4_dynamic n=2000 steps=10 ranks=1 threads=4 schedule=dynamic/8 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_3x2_static n=2001 steps=10 ranks=3 threads=2 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_4x2_guided n=2003 steps=10 ranks=4 threads=2 schedule=guided/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=uneven_n7_4ranks n=7 steps=10 ranks=4 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=zero_owned_n3_5ranks n=3 steps=10 ranks=5 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=singleton_3ranks n=1 steps=5 ranks=3 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)
+hybrid PASS rc=0 secs=19 
+
+===== gate sanitize (independent, limit 300s) 08:23:02: make BIN=bin/vanda-simcorr sanitize
+g++ -O1 -g -std=c++17 -Wall -Wextra -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=undefined -o bin/vanda-simcorr/bh_serial_san serial/barnes_hut.cpp
+bin/vanda-simcorr/bh_serial_san --self-test > /dev/null
+bin/vanda-simcorr/bh_serial_san --validate --n 1000 --theta 0.5
+validate n=1000 theta=0.500 leaf_size=8 nodes=456 max_rel_err=9.354e-02 mean_rel_err=3.814e-03 max_abs_err=4.502e-03
+bin/vanda-simcorr/bh_serial_san --n 2000 --steps 3 --theta 0.7 --leaf-size 4
+method=bh n=2000 theta=0.700 leaf_size=4 steps=3 wall_s=0.4441 build_s=0.0074 traverse_s=0.4353 integrate_s=0.0013 s_per_step=0.1480
+result {"program":"bh_serial","method":"bh","n":2000,"theta":0.69999999999999996,"dt":0.001,"steps":3,"warmup":0,"leaf_size":4,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":1,"threads_effective":1,"hosts":["b20758e916bb"],"nodes":1368,"setup_s":0.083235,"wall_s":0.444074,"integrate_s":0.001338,"exchange_s":0,"build_s":0.007434,"traverse_s":0.435281,"peak_rss_mib_rank_max":12.2,"peak_rss_mib_rank_sum":12.2,"compiler":"12.2.0","cxxflags":"unknown"}
+PASS: sanitizer run reported no errors
+sanitize PASS rc=0 secs=10 
+
+===== gate recorder (independent, limit 120s) 08:23:12: env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores python3 scripts/run_case.py --out artifacts/local/runs/simulated-correctness-gates-20261030T082228Z --case smoke_bound_2x4 --rep 1 --allocated-cores 8 --launcher mpirun -np 2 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -- bin/vanda-simcorr/bh_hybrid --n 20000 --steps 2 --schedule dynamic --chunk 64
+smoke_bound_2x4_rep1: exit=0 ok=True wall_s=0.2124
+recorder PASS rc=0 secs=1 
+
+===== summary 08:23:13
+build PASS rc=0 secs=8 
+toolchain PASS rc=0 secs=1 
+place_2x4 PASS rc=0 secs=3 
+place_4x2 PASS rc=0 secs=0 
+place_8x1 PASS rc=0 secs=0 
+serial PASS rc=0 secs=1 
+hybrid PASS rc=0 secs=19 
+sanitize PASS rc=0 secs=10 
+recorder PASS rc=0 secs=1 
+end=2026-10-30T08:23:13+00:00

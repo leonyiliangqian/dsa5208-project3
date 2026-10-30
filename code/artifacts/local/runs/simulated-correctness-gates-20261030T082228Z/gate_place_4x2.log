@@ -1,0 +1,85 @@
+OMP_NUM_THREADS=2 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    PLACEMENT_EXPECT_HOSTS=1 PLACEMENT_TRACE=1 \
+    mpirun -np 4 --map-by ppr:4:node:PE=2 \
+    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simcorr/placement_check
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        b20758e916bb
+  Application name:  bin/vanda-simcorr/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[b20758e916bb:00409] MCW rank 1 bound to socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [././B/B/./././././././././././.]
+trace t=1793348560.236 host=b20758e916bb rank=1 pid=414 stage=start affinity=2 omp_num_threads=2
+trace t=1793348560.236 host=b20758e916bb rank=1 pid=414 stage=mpi_init_begin 
+[b20758e916bb:00409] MCW rank 2 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]]: [././././B/B/./././././././././.]
+trace t=1793348560.240 host=b20758e916bb rank=2 pid=415 stage=start affinity=4 omp_num_threads=2
+trace t=1793348560.240 host=b20758e916bb rank=2 pid=415 stage=mpi_init_begin 
+[b20758e916bb:00409] MCW rank 3 bound to socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././././B/B/./././././././.]
+[b20758e916bb:00409] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]]: [B/B/./././././././././././././.]
+trace t=1793348560.233 host=b20758e916bb rank=0 pid=413 stage=start affinity=0 omp_num_threads=2
+trace t=1793348560.233 host=b20758e916bb rank=0 pid=413 stage=mpi_init_begin 
+trace t=1793348560.244 host=b20758e916bb rank=3 pid=416 stage=start affinity=6 omp_num_threads=2
+trace t=1793348560.244 host=b20758e916bb rank=3 pid=416 stage=mpi_init_begin 
+trace t=1793348560.481 host=b20758e916bb rank=2 pid=415 stage=mpi_init_done size=4 provided=1
+trace t=1793348560.481 host=b20758e916bb rank=2 pid=415 stage=allreduce_threads_begin threads=2
+trace t=1793348560.481 host=b20758e916bb rank=3 pid=416 stage=mpi_init_done size=4 provided=1
+trace t=1793348560.481 host=b20758e916bb rank=3 pid=416 stage=allreduce_threads_begin threads=2
+trace t=1793348560.481 host=b20758e916bb rank=0 pid=413 stage=mpi_init_done size=4 provided=1
+trace t=1793348560.481 host=b20758e916bb rank=0 pid=413 stage=allreduce_threads_begin threads=2
+trace t=1793348560.482 host=b20758e916bb rank=3 pid=416 stage=allreduce_threads_done min=2 max=2
+trace t=1793348560.482 host=b20758e916bb rank=3 pid=416 stage=omp_begin 
+trace t=1793348560.482 host=b20758e916bb rank=3 pid=416 stage=omp_team_started team=2
+trace t=1793348560.482 host=b20758e916bb rank=2 pid=415 stage=allreduce_threads_done min=2 max=2
+trace t=1793348560.482 host=b20758e916bb rank=2 pid=415 stage=omp_begin 
+trace t=1793348560.482 host=b20758e916bb rank=2 pid=415 stage=omp_team_started team=2
+trace t=1793348560.482 host=b20758e916bb rank=1 pid=414 stage=mpi_init_done size=4 provided=1
+trace t=1793348560.482 host=b20758e916bb rank=1 pid=414 stage=allreduce_threads_begin threads=2
+trace t=1793348560.482 host=b20758e916bb rank=1 pid=414 stage=allreduce_threads_done min=2 max=2
+trace t=1793348560.482 host=b20758e916bb rank=1 pid=414 stage=omp_begin 
+trace t=1793348560.482 host=b20758e916bb rank=1 pid=414 stage=omp_team_started team=2
+trace t=1793348560.482 host=b20758e916bb rank=0 pid=413 stage=allreduce_threads_done min=2 max=2
+trace t=1793348560.482 host=b20758e916bb rank=0 pid=413 stage=omp_begin 
+trace t=1793348560.482 host=b20758e916bb rank=0 pid=413 stage=omp_team_started team=2
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=omp_done thread_cpus=4,5
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=omp_done thread_cpus=0,1
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=omp_done thread_cpus=2,3
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=omp_done thread_cpus=6,7
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=gather_begin 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=gather_done 
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=1 pid=414 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=2 pid=415 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=3 pid=416 stage=finalize_begin verdict=PASS
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=bcast_begin 
+trace t=1793348560.882 host=b20758e916bb rank=0 pid=413 stage=finalize_begin verdict=PASS
+placement host=b20758e916bb rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=b20758e916bb rank=0 thread=1 cpu=1 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=0 cpu=2 mask_cpus=1
+placement host=b20758e916bb rank=1 thread=1 cpu=3 mask_cpus=1
+placement host=b20758e916bb rank=2 thread=0 cpu=4 mask_cpus=1
+placement host=b20758e916bb rank=2 thread=1 cpu=5 mask_cpus=1
+placement host=b20758e916bb rank=3 thread=0 cpu=6 mask_cpus=1
+placement host=b20758e916bb rank=3 thread=1 cpu=7 mask_cpus=1
+placement_host host=b20758e916bb threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=4 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348560.930 host=b20758e916bb rank=3 pid=416 stage=finalize_done 
+trace t=1793348560.930 host=b20758e916bb rank=1 pid=414 stage=finalize_done 
+trace t=1793348560.930 host=b20758e916bb rank=0 pid=413 stage=finalize_done 
+trace t=1793348560.933 host=b20758e916bb rank=2 pid=415 stage=finalize_done 
+[b20758e916bb:00409] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[b20758e916bb:00409] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

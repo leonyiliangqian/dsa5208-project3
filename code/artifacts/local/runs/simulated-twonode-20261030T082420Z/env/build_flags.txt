@@ -1,0 +1,11 @@
+CXXFLAGS=-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+== mpicxx -show
+g++ -I/usr/lib/x86_64-linux-gnu/openmpi/include -I/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi_cxx -lmpi
+== resolved target
+  -march=                     		x86-64
+  -mtune=                     		generic
+== ISA macros defined by these flags
+none
+== embedded in binaries
+bin/vanda-sim2/bh_serial: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+bin/vanda-sim2/bh_hybrid: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic

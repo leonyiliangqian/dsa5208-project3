@@ -73,12 +73,14 @@ $(BIN)/internode_check: tests/toolchain/internode_check.cpp | $(BIN)
 PLACE_R ?= 2
 PLACE_T ?= 4
 PLACE_NODES ?= 1
+# Per-rank stage tracing on stderr (1) or off (0).
+PLACE_TRACE ?= 1
 placement: $(BIN)/placement_check  ## Check placement: PLACE_R ranks/node x PLACE_T threads on PLACE_NODES nodes, bound
 	OMP_NUM_THREADS=$(PLACE_T) OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
-	    PLACEMENT_EXPECT_HOSTS=$(PLACE_NODES) \
+	    PLACEMENT_EXPECT_HOSTS=$(PLACE_NODES) PLACEMENT_TRACE=$(PLACE_TRACE) \
 	    $(MPIRUN) -np $(shell expr $(PLACE_R) \* $(PLACE_NODES)) --map-by ppr:$(PLACE_R):node:PE=$(PLACE_T) \
 	    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
-	    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS $(BIN)/placement_check
+	    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE $(BIN)/placement_check
 
 # Inter-node MPI: ranks round-robin over hosts, verified point-to-point and Allgatherv.
 INTERNODE_NP ?= 2

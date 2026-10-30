@@ -158,3 +158,59 @@ whole per-node cpuset is one possibility to test, not a finding. No gate had
 its own time limit, so one hang consumed the walltime and the serial, hybrid
 and recorder gates never ran: the two-node correctness of the solver is still
 unverified. Scheduling was off (maintenance) when the evidence was retrieved.
+
+**Status: two-node solver correctness is UNVERIFIED** (no hybrid gate has run
+on two nodes on Vanda). Single-node correctness: job 1503779, all gates PASS.
+
+### Local diagnosis of the 1507215 stall (30 Oct, Docker; not Vanda evidence)
+
+What the Vanda evidence shows: in 1507215 the place_1x8 log holds the make
+and mpirun command lines and nothing else. In single-node job 1503779 the
+`--report-bindings` lines (from mpirun) came before any probe output. Their
+absence suggests the stall began at or before binding was reported, but does
+not establish it: output can be lost when a process is killed, and how the
+remote node's binding report travels under tm has not been observed. Launch,
+binding and the probe all remain possible locations.
+
+Local tests (Open MPI 4.1.4, GCC 12, Docker; rsh/ssh launch, no PBS or tm):
+- One container restricted to CPUs 0,2,...,14 (the 1507215 cpuset):
+  `-np 1 --map-by ppr:1:node:PE=8 --bind-to core` completes; Open MPI reports
+  "MCW rank 0 is not bound (or bound to all available processors)", i.e. PE=8
+  equal to the whole cpuset makes rank binding a no-op; OpenMP still binds the
+  8 threads to distinct CPUs and the probe passes. PE=9 is rejected at once.
+- Two containers (docker/twonode/run.sh), same cpusets, ssh launch: place_1x8,
+  2x4, 4x2 and 8x1 all PASS in 2-3 s; the whole revised twonode.pbs passes
+  all 13 gates (artifacts/local/runs/simulated-twonode-*), and diag.pbs runs
+  every step (artifacts/local/runs/simulated-diag-*; d8 skipped, no pbs_tmrsh).
+- So the stall does not reproduce locally. Not reproduced, hence untested:
+  PBS tm launching, PBS cgroups, Open MPI 4.1.6 and its UCX/libfabric
+  transports, and the IN-node topology (2 sockets, 2 NUMA domains).
+- Code review: no probe or solver path makes some ranks skip a collective or
+  exit early; pass/fail is broadcast from rank 0, and bh_hybrid aborts all
+  ranks on an exception. placement_check now agrees on the thread count
+  before MPI_Gather (a mismatch was erroneous, not a clean failure).
+
+Unconfirmed Vanda-specific hypotheses for the diagnostic job to separate:
+(a) tm launch or wire-up stalls for this mapping; (b) binding a rank to all
+8 cores of the chunk's cpuset behaves differently under PBS cgroups/tm; (c)
+the probe stalls after start (MPI_Init, OpenMP start or a collective); (d) an
+intermittent fault not tied to PE=8.
+
+Changes made for this (30 Oct):
+- jobs/vanda/gates.sh: every gate has a time limit (timeout in its own
+  process group, TERM then KILL), a snapshot of process state, wait channels
+  and stacks (gdb if present) on every node shortly before the limit, and a
+  cleanup check on every node after the gate (tests/toolchain/leftover_check.sh,
+  TERM then KILL, then re-check). Unverifiable cleanup stops the job (exit 6);
+  a failed critical gate stops it (exit 5); dependants of a failed gate are
+  skipped; limits never exceed the remaining walltime minus a reserve.
+  Fault-injection test tests/jobs/gates_selftest.sh: 22/22 PASS in the
+  two-container simulation (two-node hang, TERM-ignoring stray on node2,
+  dependencies, walltime budget, unverifiable cleanup, critical failure).
+- placement_check: PLACEMENT_TRACE=1 writes flushed, rank-labelled stage
+  lines (start with OS affinity, MPI_Init, OpenMP team, each collective,
+  MPI_Finalize); result lines are line-buffered.
+- twonode.pbs and correctness.pbs use the gate library; in twonode.pbs the
+  1x8 placement now runs last, hybrid needs serial and recorder needs
+  place_2x4. Shared setup moved to jobs/vanda/multinode_setup.sh.
+- jobs/vanda/diag.pbs: the diagnostic job (one factor per step, see header).

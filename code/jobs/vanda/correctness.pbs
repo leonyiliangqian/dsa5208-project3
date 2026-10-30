@@ -14,6 +14,7 @@ set -uo pipefail
 cd "${PBS_O_WORKDIR:?run under PBS, from the code/ directory}"
 
 JOB=${PBS_JOBID%%.*}
+JOB_START_S=$(date +%s)
 RUN_ID=${RUN_ID:-correctness-$(date -u +%Y%m%dT%H%M%SZ)-$JOB}
 # RUNS_ROOT is overridden only for local simulation, so it never mixes with cluster evidence.
 OUT=${RUNS_ROOT:-artifacts/cluster/runs}/$RUN_ID
@@ -65,33 +66,33 @@ echo "environment recorded in $OUT/env/environment.txt"
 BIN=bin/vanda-$JOB
 export CXXFLAGS="-O3 -std=c++17 -Wall -Wextra -march=native"
 NCPUS_ALLOC=${NCPUS:-8}
-: > "$OUT/gates.txt"
+export OUT BIN
+# Time limits: about 10x the durations in job 1503779 (all gates 70 s).
+WALLTIME_S=$(sed -n 's/^#PBS -l walltime=\([0-9]*\):\([0-9]*\):\([0-9]*\).*/\1 \2 \3/p' "$0" \
+             | awk '{print $1*3600 + $2*60 + $3}')
+WALLTIME_S=${WALLTIME_S:-1800}
+LEFTOVER_PATTERN="vanda-$JOB/"
+export LEFTOVER_JOBID=${PBS_JOBID:-}
+source jobs/vanda/gates.sh
 
-gate() {  # gate <name> <command...>: run, log, record PASS/FAIL, never abort
-    local name=$1; shift
-    echo; echo "===== gate $name: $*"
-    if "$@" > "$OUT/gate_$name.log" 2>&1; then status=PASS; else status=FAIL; fi
-    tail -n 25 "$OUT/gate_$name.log"
-    echo "$name $status" | tee -a "$OUT/gates.txt"
-}
-
-gate build      make BIN="$BIN" all hybrid
-gate toolchain  make BIN="$BIN" toolchain
-gate place_2x4  make BIN="$BIN" placement PLACE_R=2 PLACE_T=4
-gate place_4x2  make BIN="$BIN" placement PLACE_R=4 PLACE_T=2
-gate place_8x1  make BIN="$BIN" placement PLACE_R=8 PLACE_T=1
-gate serial     make BIN="$BIN" EVIDENCE="$OUT" check
-gate hybrid     make BIN="$BIN" EVIDENCE="$OUT" check-hybrid \
+gate build     240 critical    make BIN="$BIN" all hybrid
+gate toolchain  90 critical    make BIN="$BIN" toolchain
+gate place_2x4  60 independent make BIN="$BIN" placement PLACE_R=2 PLACE_T=4
+gate place_4x2  60 independent make BIN="$BIN" placement PLACE_R=4 PLACE_T=2
+gate place_8x1  60 independent make BIN="$BIN" placement PLACE_R=8 PLACE_T=1
+gate serial    240 independent make BIN="$BIN" EVIDENCE="$OUT" check
+need serial hybrid && \
+gate hybrid    600 independent make BIN="$BIN" EVIDENCE="$OUT" check-hybrid \
                     MPIRUN_FLAGS="--bind-to none" HYBRID_GATE_ARGS="--max-cores $NCPUS_ALLOC"
-gate sanitize   make BIN="$BIN" sanitize
+gate sanitize  300 independent make BIN="$BIN" sanitize
 
 # One recorded hybrid run with bound placement, to exercise the run recorder
-# under PBS. A smoke test, not a measurement.
-gate recorder env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
+# under PBS. A smoke test, not a measurement. Same mapping as place_2x4.
+need place_2x4 recorder && \
+gate recorder  120 independent env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
     python3 scripts/run_case.py --out "$OUT" --case smoke_bound_2x4 --rep 1 --allocated-cores 8 \
     --launcher "mpirun -np 2 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES" \
     -- "$BIN/bh_hybrid" --n 20000 --steps 2 --schedule dynamic --chunk 64
 
-echo; echo "===== summary"; cat "$OUT/gates.txt"
-echo "end=$(date -Is)"
-! grep -q FAIL "$OUT/gates.txt"
+all_passed && finish 0
+finish 1

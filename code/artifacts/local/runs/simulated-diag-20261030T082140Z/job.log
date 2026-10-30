@@ -1,0 +1,284 @@
+run_id=simulated-diag-20261030T082140Z job=simdiag.local host=node1 start=2026-10-30T08:21:40+00:00 source_rev=unset
+nodes=2 launcher=simulated mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH
+walltime_s=1200 cleanup_reserve_s=150 remote_exec=ssh -o BatchMode=yes
+head_entry=node1 pbs_tmrsh=
+
+===== gate allocation (critical, limit 90s) 08:21:41: bash jobs/vanda/allocation_check.sh artifacts/local/runs/simulated-diag-20261030T082140Z 2 simulated
+
+	node1: flags=0x11 slots=8 max_slots=0 slots_inuse=0 state=UP
+	node2: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UNKNOWN
+======================   ALLOCATED NODES   ======================
+=================================================================
+node node1 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<mpirun<bash<timeout<bash<bash isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+node node2 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<orted<sh<sshd<sshd isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+allocation hosts=['node1', 'node2'] head=node1 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=simulated plm_selected=['rsh', 'rsh'] ras_selected=[] remote_ancestry=['bash<orted<sh<sshd<sshd'] remote_pbs_mom_visible=[False]
+recorded_only models=['Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz'] mixed_models=False isa_lists_equal=True
+two_hosts=ok cpus_8_each=ok arch_x86_64=ok
+allocation PASS
+allocation PASS rc=0 secs=1 
+
+===== gate build (critical, limit 120s) 08:21:43: make BIN=bin/vanda-simdiag bin/vanda-simdiag/placement_check
+mkdir -p bin/vanda-simdiag
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simdiag/placement_check tests/toolchain/placement_check.cpp
+build PASS rc=0 secs=1 
+
+===== gate d1_launch_only (independent, limit 60s) 08:21:45: mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none hostname
+[node1:00324] Warning: could not find environment variable "LD_LIBRARY_PATH"
+node1
+node2
+d1_launch_only PASS rc=0 secs=1 
+
+===== gate d2_bind_pe4 (independent, limit 60s) 08:21:46: mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings hostname
+[node1:00425] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  /usr/bin/hostname
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+node1
+[node1:00425] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././.]
+[node1:00425] MCW rank 1 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B]
+node1
+[node2:00205] MCW rank 2 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././.]
+[node2:00205] MCW rank 3 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B]
+node2
+node2
+[node1:00425] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00425] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+d2_bind_pe4 PASS rc=0 secs=1 
+
+===== gate d3_bind_pe8 (independent, limit 60s) 08:21:48: mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings --display-map hostname
+
+ =============================================================
+ Data for JOB [18815,1] offset 0 Total slots allocated 16
+
+ ========================   JOB MAP   ========================
+
+ Data for node: node1	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [18815,1] App: 0 Process rank: 0 Bound: N/A
+
+ Data for node: node2	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [18815,1] App: 0 Process rank: 1 Bound: UNBOUND
+
+ =============================================================
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  /usr/bin/hostname
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:00535] MCW rank 0 is not bound (or bound to all available processors)
+node1
+[node2:00257] MCW rank 1 is not bound (or bound to all available processors)
+node2
+[node1:00535] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:00535] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+d3_bind_pe8 PASS rc=0 secs=1 
+
+===== gate d4_probe_pe4 (independent, limit 60s) 08:21:49: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=4 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simdiag/placement_check
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+trace t=1793348511.584 host=node1 rank=1 pid=658 stage=bcast_begin 
+trace t=1793348511.585 host=node1 rank=1 pid=658 stage=finalize_begin verdict=PASS
+trace t=1793348511.584 host=node1 rank=0 pid=657 stage=bcast_begin 
+trace t=1793348511.585 host=node1 rank=0 pid=657 stage=finalize_begin verdict=PASS
+trace t=1793348511.585 host=node2 rank=3 pid=312 stage=finalize_begin verdict=PASS
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348511.585 host=node2 rank=2 pid=311 stage=finalize_begin verdict=PASS
+trace t=1793348511.632 host=node2 rank=3 pid=312 stage=finalize_done 
+trace t=1793348511.633 host=node2 rank=2 pid=311 stage=finalize_done 
+trace t=1793348511.635 host=node1 rank=1 pid=658 stage=finalize_done 
+trace t=1793348511.636 host=node1 rank=0 pid=657 stage=finalize_done 
+[node1:00652] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00652] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+d4_probe_pe4 PASS rc=0 secs=2 
+
+===== gate d5_probe_pe8 (independent, limit 60s) 08:21:52: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH --mca plm_base_verbose 10 --mca odls_base_verbose 10 --mca rmaps_base_verbose 10 -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings --display-map -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simdiag/placement_check
+trace t=1793348514.117 host=node1 rank=0 pid=793 stage=finalize_begin verdict=PASS
+trace t=1793348514.117 host=node2 rank=1 pid=373 stage=finalize_begin verdict=PASS
+trace t=1793348514.170 host=node1 rank=0 pid=793 stage=finalize_done 
+trace t=1793348514.170 host=node2 rank=1 pid=373 stage=finalize_done 
+[node1:00788] [[18556,0],0] odls:wait_local_proc child process [[18556,1],0] pid 793 terminated
+[node2:00370] [[18556,0],1] odls:wait_local_proc child process [[18556,1],1] pid 373 terminated
+[node1:00788] [[18556,0],0] plm:base:receive update proc state command from [[18556,0],1]
+[node1:00788] [[18556,0],0] plm:base:receive got update_proc_state for job [18556,1]
+[node2:00370] mca: base: close: component rsh closed
+[node2:00370] mca: base: close: unloading component rsh
+[node2:00370] mca: base: close: component default closed
+[node2:00370] mca: base: close: unloading component default
+[node1:00788] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:00788] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[node1:00788] mca: base: close: component default closed
+[node1:00788] mca: base: close: unloading component default
+[node1:00788] mca: base: close: component mindist closed
+[node1:00788] mca: base: close: unloading component mindist
+[node1:00788] mca: base: close: component rank_file closed
+[node1:00788] mca: base: close: unloading component rank_file
+[node1:00788] mca: base: close: component resilient closed
+[node1:00788] mca: base: close: unloading component resilient
+[node1:00788] mca: base: close: component round_robin closed
+[node1:00788] mca: base: close: unloading component round_robin
+[node1:00788] mca: base: close: component ppr closed
+[node1:00788] mca: base: close: unloading component ppr
+[node1:00788] mca: base: close: component seq closed
+[node1:00788] mca: base: close: unloading component seq
+[node1:00788] mca: base: close: component rsh closed
+[node1:00788] mca: base: close: unloading component rsh
+d5_probe_pe8 PASS rc=0 secs=2 
+
+===== gate d6_probe_pe8_head (independent, limit 60s) 08:21:54: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=1 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 1 --host node1 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simdiag/placement_check
+  Application name:  bin/vanda-simdiag/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:00930] MCW rank 0 is not bound (or bound to all available processors)
+trace t=1793348514.861 host=node1 rank=0 pid=934 stage=start affinity=0 omp_num_threads=8
+trace t=1793348514.861 host=node1 rank=0 pid=934 stage=mpi_init_begin 
+trace t=1793348515.095 host=node1 rank=0 pid=934 stage=mpi_init_done size=1 provided=1
+trace t=1793348515.095 host=node1 rank=0 pid=934 stage=allreduce_threads_begin threads=8
+trace t=1793348515.095 host=node1 rank=0 pid=934 stage=allreduce_threads_done min=8 max=8
+trace t=1793348515.095 host=node1 rank=0 pid=934 stage=omp_begin 
+trace t=1793348515.096 host=node1 rank=0 pid=934 stage=omp_team_started team=8
+trace t=1793348515.496 host=node1 rank=0 pid=934 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=1 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348515.496 host=node1 rank=0 pid=934 stage=gather_begin 
+trace t=1793348515.496 host=node1 rank=0 pid=934 stage=gather_done 
+trace t=1793348515.496 host=node1 rank=0 pid=934 stage=bcast_begin 
+trace t=1793348515.496 host=node1 rank=0 pid=934 stage=finalize_begin verdict=PASS
+trace t=1793348515.545 host=node1 rank=0 pid=934 stage=finalize_done 
+d6_probe_pe8_head PASS rc=0 secs=1 
+
+===== gate d7_probe_nobind (independent, limit 60s) 08:21:56: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simdiag/placement_check
+trace t=1793348518.050 host=node2 rank=1 pid=472 stage=gather_done 
+trace t=1793348518.050 host=node2 rank=1 pid=472 stage=bcast_begin 
+trace t=1793348518.063 host=node1 rank=0 pid=1084 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+trace t=1793348518.063 host=node1 rank=0 pid=1084 stage=gather_begin 
+trace t=1793348518.063 host=node1 rank=0 pid=1084 stage=gather_done 
+trace t=1793348518.063 host=node1 rank=0 pid=1084 stage=bcast_begin 
+trace t=1793348518.064 host=node1 rank=0 pid=1084 stage=finalize_begin verdict=PASS
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348518.064 host=node2 rank=1 pid=472 stage=finalize_begin verdict=PASS
+trace t=1793348518.117 host=node1 rank=0 pid=1084 stage=finalize_done 
+trace t=1793348518.118 host=node2 rank=1 pid=472 stage=finalize_done 
+d7_probe_nobind PASS rc=0 secs=2 
+d8_probe_pe8_tmrsh SKIP rc=- secs=0 pbs_tmrsh not found
+
+===== gate d9_probe_pe8_repeat (independent, limit 60s) 08:21:58: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-simdiag/placement_check
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=gather_begin 
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+trace t=1793348520.450 host=node1 rank=0 pid=1244 stage=bcast_begin 
+trace t=1793348520.451 host=node1 rank=0 pid=1244 stage=finalize_begin verdict=PASS
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793348520.451 host=node2 rank=1 pid=532 stage=finalize_begin verdict=PASS
+trace t=1793348520.504 host=node2 rank=1 pid=532 stage=finalize_done 
+trace t=1793348520.509 host=node1 rank=0 pid=1244 stage=finalize_done 
+[node1:01239] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:01239] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+d9_probe_pe8_repeat PASS rc=0 secs=2 
+== gate_d4_probe_pe4
+   last rank=0 host=node1 stage=finalize_done
+   last rank=1 host=node1 stage=finalize_done
+   last rank=2 host=node2 stage=finalize_done
+   last rank=3 host=node2 stage=finalize_done
+== gate_d5_probe_pe8
+   last rank=0 host=node1 stage=finalize_done
+   last rank=1 host=node2 stage=finalize_done
+== gate_d6_probe_pe8_head
+   last rank=0 host=node1 stage=finalize_done
+== gate_d7_probe_nobind
+   last rank=0 host=node1 stage=finalize_done
+   last rank=1 host=node2 stage=finalize_done
+== gate_d9_probe_pe8_repeat
+   last rank=0 host=node1 stage=finalize_done
+   last rank=1 host=node2 stage=finalize_done
+
+===== summary 08:22:01
+allocation PASS rc=0 secs=1 
+build PASS rc=0 secs=1 
+d1_launch_only PASS rc=0 secs=1 
+d2_bind_pe4 PASS rc=0 secs=1 
+d3_bind_pe8 PASS rc=0 secs=1 
+d4_probe_pe4 PASS rc=0 secs=2 
+d5_probe_pe8 PASS rc=0 secs=2 
+d6_probe_pe8_head PASS rc=0 secs=1 
+d7_probe_nobind PASS rc=0 secs=2 
+d8_probe_pe8_tmrsh SKIP rc=- secs=0 pbs_tmrsh not found
+d9_probe_pe8_repeat PASS rc=0 secs=2 
+end=2026-10-30T08:22:01+00:00

@@ -1,0 +1,83 @@
+== date
+2026-10-30T08:22:28+00:00
+== host
+b20758e916bb
+== pbs
+NCPUS=8
+PBS_JOBID=simcorr.local
+PBS_NODEFILE=/tmp/nf
+PBS_O_WORKDIR=/work/code
+== nodefile
+      8 b20758e916bb
+== cpus_allowed
+Cpus_allowed_list:	0-15
+Mems_allowed_list:	0
+== nproc
+16
+== lscpu
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           39 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  16
+On-line CPU(s) list:                     0-15
+Vendor ID:                               GenuineIntel
+Model name:                              Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+CPU family:                              6
+Model:                                   158
+Thread(s) per core:                      1
+Core(s) per socket:                      16
+Socket(s):                               1
+Stepping:                                13
+BogoMIPS:                                4607.99
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch pti fsgsbase bmi1 avx2 smep bmi2 erms rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 arat
+L1d cache:                               512 KiB (16 instances)
+L1i cache:                               512 KiB (16 instances)
+L2 cache:                                4 MiB (16 instances)
+L3 cache:                                16 MiB (1 instance)
+Vulnerability Gather data sampling:      Unknown: Dependent on hypervisor status
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Mitigation; Aligned branch/return thunks
+Vulnerability Itlb multihit:             Processor vulnerable
+Vulnerability L1tf:                      Mitigation; PTE Inversion
+Vulnerability Mds:                       Vulnerable: Clear CPU buffers attempted, no microcode; SMT Host state unknown
+Vulnerability Meltdown:                  Mitigation; PTI
+Vulnerability Mmio stale data:           Vulnerable: Clear CPU buffers attempted, no microcode; SMT Host state unknown
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Vulnerable
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Vulnerable
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Retpoline
+Vulnerability Srbds:                     Unknown: Dependent on hypervisor status
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+== numactl
+jobs/vanda/correctness.pbs: line 52: numactl: command not found
+== memory
+jobs/vanda/correctness.pbs: line 53: free: command not found
+== os
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+7.0.12-linuxkit
+== modules
+jobs/vanda/correctness.pbs: line 55: module: command not found
+== compilers
+g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+g++ -I/usr/lib/x86_64-linux-gnu/openmpi/include -I/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi_cxx -lmpi
+== mpi
+mpirun (Open MPI) 4.1.4
+
+== ompi_info
+                Open MPI: 4.1.4
+          Thread support: posix (MPI_THREAD_MULTIPLE: yes, OPAL support: yes, OMPI progress: no, ORTE progress: yes, Event lib: yes)
+== python
+Python 3.11.2
+== source
+submitted_from_rev=unset
+jobs/vanda/correctness.pbs: line 60: git: command not found
+jobs/vanda/correctness.pbs: line 60: git: command not found

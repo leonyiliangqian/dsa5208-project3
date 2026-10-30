@@ -1,0 +1,39 @@
+== after allocation 08:24:22
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after build 08:24:29
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after flags 08:24:30
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after toolchain 08:24:32
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after internode_2 08:24:35
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after internode_16 08:24:37
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after place_2x4 08:24:42
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after place_4x2 08:24:44
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after place_8x1 08:24:47
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after serial 08:24:48
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after hybrid 08:26:09
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after recorder 08:26:12
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
+== after place_1x8 08:26:15
+leftover_check host=node1 found=0 remaining=0 CLEAN
+leftover_check host=node2 found=0 remaining=0 CLEAN
