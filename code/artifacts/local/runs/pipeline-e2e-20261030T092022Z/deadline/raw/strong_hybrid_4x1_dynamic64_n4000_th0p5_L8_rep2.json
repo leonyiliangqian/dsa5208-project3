@@ -1,0 +1,51 @@
+{
+  "case": "strong_hybrid_4x1_dynamic64_n4000_th0p5_L8",
+  "rep": 2,
+  "ok": false,
+  "skipped": true,
+  "problems": [
+    "skipped: not enough time before the job deadline"
+  ],
+  "command": [
+    "mpirun",
+    "-np",
+    "4",
+    "--map-by",
+    "ppr:4:node:PE=1",
+    "--bind-to",
+    "core",
+    "-x",
+    "OMP_NUM_THREADS",
+    "-x",
+    "OMP_PROC_BIND",
+    "-x",
+    "OMP_PLACES",
+    "bin/e2e/bh_hybrid",
+    "--n",
+    "4000",
+    "--theta",
+    "0.5",
+    "--leaf-size",
+    "8",
+    "--steps",
+    "2",
+    "--warmup",
+    "1",
+    "--seed",
+    "42",
+    "--schedule",
+    "dynamic",
+    "--chunk",
+    "64"
+  ],
+  "allocated_cores": 4,
+  "timeout_s": 120,
+  "tags": {
+    "study": "strong",
+    "manifest_id": "local-e2e-v1",
+    "manifest_sha256": "afbdefeb799c73d2fb9c1db39f83cd5056e2fef43e3e2606cebc0bc8951afd12",
+    "manifest_status": "local pipeline test only: tiny inputs in Docker, never results",
+    "scale": "1"
+  },
+  "result": null
+}

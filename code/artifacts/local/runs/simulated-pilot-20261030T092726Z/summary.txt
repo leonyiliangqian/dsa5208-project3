@@ -1,0 +1,15 @@
+simulated-pilot-20261030T092726Z: 31 records, 1 failed, 14 configurations
+  bh_hybrid n=2000 1x2 P=2 dynamic/64 reps=2 wall_med=0.0174s [0.0172,0.0177]
+  bh_hybrid n=4000 1x1 P=1 dynamic/64 reps=2 wall_med=0.0915s [0.0915,0.0915] speedup=0.99 eff=0.99
+  bh_hybrid n=4000 1x2 P=2 dynamic/64 reps=2 wall_med=0.0479s [0.0478,0.0480] speedup=1.90 eff=0.95
+  bh_hybrid n=4000 2x1 P=2 dynamic/64 reps=2 wall_med=0.0489s [0.0471,0.0507] speedup=1.86 eff=0.93
+  bh_hybrid n=4000 1x4 P=4 dynamic/64 reps=2 wall_med=0.0254s [0.0250,0.0257] speedup=3.59 eff=0.90
+  bh_hybrid n=4000 1x4 P=4 guided/0 reps=2 wall_med=0.0264s [0.0252,0.0276] speedup=3.44 eff=0.86
+  bh_hybrid n=4000 1x4 P=4 static/0 reps=2 wall_med=0.0257s [0.0257,0.0258] speedup=3.54 eff=0.88
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=4 wall_med=0.0258s [0.0255,0.0262] speedup=3.53 eff=0.88
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0563s [0.0526,0.0599]
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0141s [0.0139,0.0144]
+  bh_hybrid n=4000 4x1 P=4 dynamic/64 reps=2 wall_med=0.0260s [0.0253,0.0267] speedup=3.50 eff=0.87
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.0887s [0.0882,0.0893]
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.1019s [0.1016,0.1021]
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.0910s [0.0901,0.0918]

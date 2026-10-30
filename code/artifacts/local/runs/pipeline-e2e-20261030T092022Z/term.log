@@ -1,0 +1,2 @@
+manifest local-e2e-term (local pipeline test only) sha256=3babef338a33 runs=1 worst_case_s=615 scale=1
+term_hybrid_2x1_dynamic64_n400000_th0p5_L8_rep1: exit=1 ok=False wall_s=None problems=['exit 1', 'no result line']

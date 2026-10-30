@@ -1,0 +1,40 @@
+[node1:05202] Warning: could not find environment variable "LD_LIBRARY_PATH"
+ Data for JOB [24378,1] offset 0 Total slots allocated 16
+
+ ========================   JOB MAP   ========================
+
+ Data for node: node1	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [24378,1] App: 0 Process rank: 0 Bound: UNBOUND
+
+ Data for node: node2	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [24378,1] App: 0 Process rank: 1 Bound: N/A
+
+ =============================================================
+ Data for JOB [24378,1] offset 0 Total slots allocated 16
+
+ ========================   JOB MAP   ========================
+
+ Data for node: node1	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [24378,1] App: 0 Process rank: 0 Bound: N/A
+
+ Data for node: node2	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [24378,1] App: 0 Process rank: 1 Bound: UNBOUND
+
+ =============================================================
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  /usr/bin/hostname
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:05202] MCW rank 0 is not bound (or bound to all available processors)
+node1
+[node2:02826] MCW rank 1 is not bound (or bound to all available processors)
+node2
+[node1:05202] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:05202] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

@@ -1,0 +1,11 @@
+date_utc=2026-10-30T09:20:22Z
+source_git_rev=fc338c5f0848964886cc6a816b2c400d55d68f7d source_dirty=0
+environment=local Docker container, 16 CPUs; pipeline test, not a measurement
+mpirun (Open MPI) 4.1.4
+c++ (Debian 12.2.0-14+deb12u1) 12.2.0
+afbdefeb799c73d2fb9c1db39f83cd5056e2fef43e3e2606cebc0bc8951afd12  manifests/local_e2e.json
+7747f9715c9d07861ca69b31a25ccecb5f944e342c9a6885c50fbbfbf1c26a10  scripts/run_manifest.py
+19cbedcb6bf37e431d158a1b7751514a9b33193fc9d8c7d23b1642342e0a247b  scripts/run_case.py
+7d62216289905c883b1a1875ea018724dad4c46c23e68a30368d7d364cb10355  scripts/analyze.py
+146e4bddfa46f2a8acac3a38631834b954215aa41d07fd5ffcece7348d7251d4  scripts/report_figures.py
+8923fa32cb0b1c01577077a3a184902a4f2de7f6a21c9a908c5bd9d6c7956bec  tests/pipeline_e2e.sh

@@ -1,0 +1,43 @@
+== snapshot host=node1 t=1793352081.452
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     22       0      22 Ss   do_wait                                00:06 bash -c SOURCE_GIT_REV=fc338c5f0848964886cc6a816b2c400d55d68f7d SOURCE_DIRTY=0 bash tests/jobs/gates_selftest.sh 2>&1 | tail -1 export SOURCE_GIT_
+     28      22      22 S    do_wait                                00:06  \_ bash tests/jobs/gates_selftest.sh
+     45      28      22 S    do_wait                                00:06  |   \_ bash -c source jobs/vanda/gates.sh;  gate hang 12 required mpirun --hostfile $PBS_NODEFILE -np 2 --map-by node bash -c 'exec -a vanda-self
+     56      45      56 Ss   do_wait                                00:06  |       \_ bash jobs/vanda/snapshot_watch.sh 6 hang
+     73      56      73 S    sigsuspend.isra.0                      00:00  |       |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+     74      73      73 S    do_wait                                00:00  |       |       \_ bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+     79      74      73 R    -                                      00:00  |       |           \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+     80      74      73 S    anon_pipe_read                         00:00  |       |           \_ cut -c1-220
+     57      45      57 S    sigsuspend.isra.0                      00:06  |       \_ timeout -k 5 12 mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/hang sleep 600
+     59      57      57 Sl   poll_schedule_timeout.constprop.       00:06  |           \_ mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/hang sleep 600
+     63      59      63 S    poll_schedule_timeout.constprop.       00:05  |               \_ /usr/bin/ssh -x node2 ( test ! -r ./.profile || . ./.profile;  orted -mca ess "env" -mca ess_base_jobid "1263730688" -mca ess_
+     64      59      64 S    hrtimer_nanosleep                      00:05  |               \_ vanda-selftest/hang 600
+     29      22      22 S    anon_pipe_read                         00:06  \_ tail -1
+-- pid=45 comm=bash State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=45 state=S wchan=do_wait
+-- pid=57 comm=timeout State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=57 state=S wchan=sigsuspend.isra.0
+-- pid=59 comm=mpirun State: S (sleeping) Threads: 4 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=59 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=60 state=S wchan=do_epoll_wait
+   tid=61 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=62 state=S wchan=poll_schedule_timeout.constprop.0
+-- pid=64 comm=sleep State: S (sleeping) Threads: 1 Cpus_allowed_list: 0 
+   tid=64 state=S wchan=hrtimer_nanosleep
+== snapshot host=node2 t=1793352081.947
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     33      27      27 S    -                                      00:00 sshd: dev@notty
+     34      33      34 Ss   do_wait                                00:00  \_ sh -c bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+     35      34      34 S    do_wait                                00:00      \_ bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+     40      35      34 R    -                                      00:00          \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+     41      35      34 S    anon_pipe_read                         00:00          \_ cut -c1-220
+     21      15      15 S    -                                      00:05 sshd: dev@notty
+     22      21      22 Ss   do_wait                                00:05  \_ sh -c ( test ! -r ./.profile || . ./.profile;  orted -mca ess "env" -mca ess_base_jobid "1263730688" -mca ess_base_vpid 1 -mca ess_base_num_pr
+     23      22      22 Sl   poll_schedule_timeout.constprop.       00:05      \_ orted -mca ess env -mca ess_base_jobid 1263730688 -mca ess_base_vpid 1 -mca ess_base_num_procs 2 -mca orte_node_regex node[1:1-2]@0(2) -mc
+     26      23      26 S    hrtimer_nanosleep                      00:05          \_ vanda-selftest/hang 600
+-- pid=23 comm=orted State: S (sleeping) Threads: 3 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=23 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=24 state=S wchan=do_epoll_wait
+   tid=25 state=S wchan=poll_schedule_timeout.constprop.0
+-- pid=26 comm=sleep State: S (sleeping) Threads: 1 Cpus_allowed_list: 0 
+   tid=26 state=S wchan=hrtimer_nanosleep

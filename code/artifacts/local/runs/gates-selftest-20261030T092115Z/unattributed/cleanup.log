@@ -1,0 +1,4 @@
+== after quick 09:21:49
+leftover host=node1 unattributed (not killed): 849 mpirun /work/code/bin/selftest-fake/mpirun 600 
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=1 UNCERTAIN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

@@ -1,0 +1,10 @@
+== after allocation 09:28:10
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 09:28:16
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after placement 09:28:19
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after runs 09:28:39
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after analyze 09:28:39
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

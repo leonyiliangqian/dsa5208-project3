@@ -1,0 +1,22 @@
+[node1:05094] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  /usr/bin/hostname
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+node1
+[node1:05094] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././.]
+[node1:05094] MCW rank 1 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B]
+node1
+[node2:02759] MCW rank 2 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]]: [B/B/B/B/./././.]
+[node2:02759] MCW rank 3 bound to socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [././././B/B/B/B]
+node2
+node2
+[node1:05094] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:05094] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

@@ -1,0 +1,11 @@
+
+===== gate crit (critical, limit 20s) 09:24:24: false
+crit FAIL rc=1 secs=0 kind=critical 
+STOP: critical gate crit FAIL; later gates would not mean what they claim
+
+===== summary 09:24:25
+crit FAIL rc=1 secs=0 kind=critical 
+verdict required_or_critical=1 not_passed=1 optional: none
+  not passed: crit FAIL rc=1 secs=0 kind=critical 
+verdict FAIL
+end=2026-10-30T09:24:25+00:00 elapsed_s=1 walltime_s=900

@@ -1,0 +1,94 @@
+run_id=simulated-bench2-20261030T092111Z job=simbench2.local host=node1 start=2026-10-30T09:26:39+00:00 source_rev=fc338c5f0848964886cc6a816b2c400d55d68f7d
+manifest=manifests/local_sim_twonode.json scale=1 placement_override=2 4 sim_cpus_per_node=8
+nodes=2 launcher=hostfile mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH
+manifest_status=frozen: local two-container simulation test only, never results sha256=0b769239ff7c0303c121c31d6bb51a76cc04f1f09349cb6028ef99dc415dec97
+walltime_s=3600 end_reserve_s=60 gate_overhead_s=140 remote_exec=ssh -o BatchMode=yes
+
+===== gate allocation (critical, limit 90s) 09:26:39: env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh artifacts/local/runs/simulated-bench2-20261030T092111Z 2 hostfile
+
+	node1: flags=0x11 slots=8 max_slots=0 slots_inuse=0 state=UP
+	node2: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UNKNOWN
+======================   ALLOCATED NODES   ======================
+=================================================================
+node node1 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<mpirun<bash<timeout<bash<bash pbs_jobid_env=yes isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+node node2 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<orted<sh<sshd<sshd pbs_jobid_env=yes isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+allocation hosts=['node1', 'node2'] head=node1 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=hostfile plm_selected=['rsh', 'rsh'] ras_selected=[] remote_ancestry=['bash<orted<sh<sshd<sshd'] remote_pbs_mom_visible=[False]
+recorded_only models=['Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok one_cpu_model=ok
+allocation PASS
+allocation PASS rc=0 secs=2 kind=critical 
+
+===== gate build (critical, limit 300s) 09:26:41: make BIN=bin/vanda-simbench2 all hybrid
+mkdir -p bin/vanda-simbench2
+g++ -O3 -std=c++17 -Wall -Wextra -march=native -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-simbench2/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=native -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-simbench2/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=7 kind=critical 
+
+===== gate placement (critical, limit 90s) 09:26:48: make BIN=bin/vanda-simbench2 MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793352411.547 host=node1 rank=0 pid=6290 stage=bcast_begin 
+trace t=1793352411.547 host=node1 rank=0 pid=6290 stage=finalize_begin verdict=PASS
+trace t=1793352411.547 host=node1 rank=1 pid=6291 stage=finalize_begin verdict=PASS
+trace t=1793352411.548 host=node2 rank=2 pid=3413 stage=finalize_begin verdict=PASS
+trace t=1793352411.548 host=node2 rank=3 pid=3414 stage=finalize_begin verdict=PASS
+trace t=1793352411.599 host=node1 rank=0 pid=6290 stage=finalize_done 
+trace t=1793352411.603 host=node2 rank=2 pid=3413 stage=finalize_done 
+trace t=1793352411.604 host=node2 rank=3 pid=3414 stage=finalize_done 
+trace t=1793352411.607 host=node1 rank=1 pid=6291 stage=finalize_done 
+[node1:06285] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:06285] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+placement PASS rc=0 secs=3 kind=critical 
+
+===== gate runs (required, limit 3387s) 09:26:52: python3 scripts/run_manifest.py manifests/local_sim_twonode.json --out artifacts/local/runs/simulated-bench2-20261030T092111Z --bin bin/vanda-simbench2 --mpirun mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH --cores-per-node 8 --nodes 2 --first-cpu 0 --deadline 1793355539 --scale 1
+strong_serial_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.094669
+strong_hybrid_2x1_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.110326
+strong_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.042139
+ranks_threads_hybrid_2x4_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.037013
+weak_hybrid_2x2_2nodes_dynamic64_n2000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.022563
+weak_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.04217
+strong_serial_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.091716
+strong_hybrid_2x1_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.102355
+strong_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.042017
+ranks_threads_hybrid_2x4_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.041578
+weak_hybrid_2x2_2nodes_dynamic64_n2000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.026051
+weak_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.046798
+manifest local-sim-twonode-v1 (frozen: local two-container simulation test only, never results) sha256=0b769239ff7c runs=12 worst_case_s=1620 scale=1
+runs PASS rc=0 secs=17 kind=required limit cut from 99999s to 3387s (worst-case overhead 140s) to fit the walltime
+
+===== gate analyze (required, limit 120s) 09:27:10: python3 scripts/analyze.py artifacts/local/runs/simulated-bench2-20261030T092111Z
+simulated-bench2-20261030T092111Z: 12 records, 0 failed, 5 configurations
+  bh_hybrid n=2000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0243s [0.0226,0.0261]
+  bh_hybrid n=4000 2x1 P=2 dynamic/64 reps=2 wall_med=0.1063s [0.1024,0.1103] speedup=0.88 eff=0.44
+  bh_hybrid n=4000 2x4 P=8 dynamic/64 reps=2 wall_med=0.0393s [0.0370,0.0416] speedup=2.37 eff=0.30
+  bh_hybrid n=4000 4x2 P=8 dynamic/64 reps=4 wall_med=0.0422s [0.0420,0.0468] speedup=2.21 eff=0.28
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.0932s [0.0917,0.0947]
+analyze PASS rc=0 secs=0 kind=required 
+
+===== summary 09:27:11
+allocation PASS rc=0 secs=2 kind=critical 
+build PASS rc=0 secs=7 kind=critical 
+placement PASS rc=0 secs=3 kind=critical 
+runs PASS rc=0 secs=17 kind=required limit cut from 99999s to 3387s (worst-case overhead 140s) to fit the walltime
+analyze PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=5 not_passed=0 optional: none
+verdict PASS
+end=2026-10-30T09:27:11+00:00 elapsed_s=32 walltime_s=3600

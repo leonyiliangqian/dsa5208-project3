@@ -1,0 +1,4 @@
+{"id": "local-e2e-term", "status": "local pipeline test only",
+ "defaults": {"theta": 0.5, "leaf_size": 8, "steps": 200, "warmup": 1, "seed": 42, "schedule": "dynamic",
+              "chunk": 64, "nodes": 1, "reps": 1, "timeout_s": 600, "n": 400000},
+ "cases": [{"study": "term", "program": "hybrid", "ranks": 2, "threads": 1}]}

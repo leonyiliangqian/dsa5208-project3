@@ -1,0 +1,18 @@
+== after build 09:27:34
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after toolchain 09:27:35
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_2x4 09:27:38
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_4x2 09:27:39
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_8x1 09:27:40
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after serial 09:27:41
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after hybrid 09:28:00
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after sanitize 09:28:08
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after recorder 09:28:09
+leftover_check host=f7c5a9e00367 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

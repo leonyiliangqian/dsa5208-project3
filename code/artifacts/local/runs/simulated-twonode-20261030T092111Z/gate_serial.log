@@ -1,0 +1,29 @@
+python3 tests/validate_serial.py --binary bin/vanda-simtwonode/bh_serial \
+    --out artifacts/local/runs/simulated-twonode-20261030T092111Z/serial_validation_vanda-simtwonode.json
+self_test case=empty n=0 leaf_size=1 nodes=0 PASS
+self_test case=empty n=0 leaf_size=8 nodes=0 PASS
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.222e-14 mean_rel_err=1.478e-15 max_abs_err=2.536e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.230e-14 mean_rel_err=1.479e-15 max_abs_err=2.590e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)

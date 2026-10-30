@@ -1,0 +1,26 @@
+== snapshot host=node1 t=1793352153.766
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     22       0      22 Ss   do_wait                                01:18 bash -c SOURCE_GIT_REV=fc338c5f0848964886cc6a816b2c400d55d68f7d SOURCE_DIRTY=0 bash tests/jobs/gates_selftest.sh 2>&1 | tail -1 export SOURCE_GIT_
+     28      22      22 S    do_wait                                01:18  \_ bash tests/jobs/gates_selftest.sh
+   1586      28      22 S    do_wait                                00:37  |   \_ bash -c source jobs/vanda/gates.sh;  gate long 600 required bash -c 'exec -a vanda-selftest/long sleep 600' gate next 600 required true   
+   1597    1586    1597 Ss   do_wait                                00:37  |       \_ bash jobs/vanda/snapshot_watch.sh 37 long
+   1609    1597    1609 S    sigsuspend.isra.0                      00:00  |       |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1610    1609    1609 S    do_wait                                00:00  |       |       \_ bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1615    1610    1609 R    -                                      00:00  |       |           \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+   1616    1610    1609 S    anon_pipe_read                         00:00  |       |           \_ cut -c1-220
+   1598    1586    1598 S    sigsuspend.isra.0                      00:37  |       \_ timeout -k 5 45 bash -c exec -a vanda-selftest/long sleep 600
+   1599    1598    1598 S    hrtimer_nanosleep                      00:37  |           \_ vanda-selftest/long 600
+     29      22      22 S    anon_pipe_read                         01:18  \_ tail -1
+-- pid=1586 comm=bash State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1586 state=S wchan=do_wait
+-- pid=1598 comm=timeout State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1598 state=S wchan=sigsuspend.isra.0
+-- pid=1599 comm=sleep State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1599 state=S wchan=hrtimer_nanosleep
+== snapshot host=node2 t=1793352154.256
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+    878     872     872 S    -                                      00:00 sshd: dev@notty
+    879     878     879 Ss   do_wait                                00:00  \_ sh -c bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+    880     879     879 S    do_wait                                00:00      \_ bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+    885     880     879 R    -                                      00:00          \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+    886     880     879 S    anon_pipe_read                         00:00          \_ cut -c1-220

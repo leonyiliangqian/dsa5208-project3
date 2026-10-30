@@ -1,0 +1,9 @@
+build PASS rc=0 secs=7 kind=critical 
+toolchain PASS rc=0 secs=1 kind=critical 
+place_2x4 PASS rc=0 secs=3 kind=required 
+place_4x2 PASS rc=0 secs=1 kind=required 
+place_8x1 PASS rc=0 secs=1 kind=required 
+serial PASS rc=0 secs=1 kind=required 
+hybrid PASS rc=0 secs=19 kind=required 
+sanitize PASS rc=0 secs=8 kind=required 
+recorder PASS rc=0 secs=1 kind=required 

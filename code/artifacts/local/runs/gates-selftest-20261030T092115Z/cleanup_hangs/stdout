@@ -1,0 +1,15 @@
+
+===== gate first (required, limit 20s) 09:22:42: true
+first PASS rc=0 secs=0 kind=required 
+== after first 09:22:42
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+STOP: could not verify that gate first left no processes of this job on every node
+cleanup FAIL rc=- secs=0 kind=critical after first
+
+===== summary 09:22:53
+first PASS rc=0 secs=0 kind=required 
+cleanup FAIL rc=- secs=0 kind=critical after first
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: cleanup FAIL rc=- secs=0 kind=critical after first
+verdict FAIL
+end=2026-10-30T09:22:53+00:00 elapsed_s=11 walltime_s=900

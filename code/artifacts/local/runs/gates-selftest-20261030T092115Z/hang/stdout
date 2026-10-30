@@ -1,0 +1,14 @@
+
+===== gate hang (required, limit 12s) 09:21:15: mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/hang sleep 600
+hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+
+===== gate after (required, limit 30s) 09:21:30: true
+after PASS rc=0 secs=0 kind=required 
+
+===== summary 09:21:30
+hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+after PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+verdict FAIL
+end=2026-10-30T09:21:30+00:00 elapsed_s=15 walltime_s=900

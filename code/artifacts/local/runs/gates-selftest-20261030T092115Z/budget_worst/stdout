@@ -1,0 +1,16 @@
+
+===== gate long (required, limit 45s) 09:22:53: bash -c exec -a vanda-selftest/long sleep 600
+long TIMEOUT rc=124 secs=50 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+== after long 09:23:43
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+STOP: could not verify that gate long left no processes of this job on every node
+cleanup FAIL rc=- secs=0 kind=critical after long
+
+===== summary 09:24:23
+long TIMEOUT rc=124 secs=50 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+cleanup FAIL rc=- secs=0 kind=critical after long
+verdict required_or_critical=2 not_passed=2 optional: none
+  not passed: long TIMEOUT rc=124 secs=50 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+  not passed: cleanup FAIL rc=- secs=0 kind=critical after long
+verdict FAIL
+end=2026-10-30T09:24:23+00:00 elapsed_s=90 walltime_s=230

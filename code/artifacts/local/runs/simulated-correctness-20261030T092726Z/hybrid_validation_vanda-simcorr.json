@@ -1,0 +1,346 @@
+{
+  "timestamp_utc": "2026-10-30T09:28:00.419725+00:00",
+  "kind": "local development validation; not Atlas/Vanda performance evidence",
+  "platform": "Linux-7.0.12-linuxkit-x86_64-with-glibc2.36",
+  "mpirun_flags": "--bind-to none",
+  "suite": "single",
+  "expect_hosts": 0,
+  "source_sha256": {
+    "common/nbody.hpp": "7f8fe48d54052d1733e1829467f85bcedf60a959ba06d5c365f3289b5dc9529b",
+    "common/run_support.hpp": "0339cf997feed049f442322382ba801ce0e715add459694304721b12d44af81c",
+    "serial/barnes_hut.cpp": "e892786da703c7b619fe37e2ce551f1b9729eb0fae5ab4b7ad7226f52b92a617",
+    "hybrid/bh_hybrid.cpp": "980e1488f3caa76b11cbf12444cb3a70c707e29eb1e663713044317bb50df450"
+  },
+  "binary_sha256": {
+    "bh_serial": "ecc6893bd1679e5280e9acad0de377beff89b3a3e96db80223c33f8dc1c5b637",
+    "bh_hybrid": "26e9a92f40b551ff464235566e43a06344fc9a5e69923cad1d78b84d90dfa9e9"
+  },
+  "tolerances": {
+    "acceleration_1_step": [
+      1e-12,
+      1e-14
+    ],
+    "trajectory_10_steps": [
+      1e-10,
+      1e-13
+    ]
+  },
+  "cases": [
+    {
+      "case": "1x1_static",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 1,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "1x4_static",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 1,
+      "threads": 4,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "1x4_dynamic1",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 1,
+      "threads": 4,
+      "schedule": "dynamic",
+      "chunk": 1,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "dynamic"
+    },
+    {
+      "case": "2x1_static",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 2,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "3x2_dynamic16",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 3,
+      "threads": 2,
+      "schedule": "dynamic",
+      "chunk": 16,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "dynamic"
+    },
+    {
+      "case": "4x2_guided",
+      "n": 2000,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 4,
+      "threads": 2,
+      "schedule": "guided",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "guided"
+    },
+    {
+      "case": "theta0_3x2",
+      "n": 1500,
+      "steps": 1,
+      "theta": 0.0,
+      "leaf_size": 8,
+      "ranks": 3,
+      "threads": 2,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "leaf1_2x2",
+      "n": 1500,
+      "steps": 1,
+      "theta": 0.7,
+      "leaf_size": 1,
+      "ranks": 2,
+      "threads": 2,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "traj_1x1",
+      "n": 2000,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 1,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "traj_1x4_dynamic",
+      "n": 2000,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 1,
+      "threads": 4,
+      "schedule": "dynamic",
+      "chunk": 8,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "dynamic"
+    },
+    {
+      "case": "traj_3x2_static",
+      "n": 2001,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 3,
+      "threads": 2,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "traj_4x2_guided",
+      "n": 2003,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 4,
+      "threads": 2,
+      "schedule": "guided",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "guided"
+    },
+    {
+      "case": "uneven_n7_4ranks",
+      "n": 7,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 2,
+      "ranks": 4,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "zero_owned_n3_5ranks",
+      "n": 3,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 5,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "singleton_3ranks",
+      "n": 1,
+      "steps": 5,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 3,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "f7c5a9e00367"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    }
+  ],
+  "repeat_bitwise_identical": true,
+  "negative_control_detected": true,
+  "failures": []
+}

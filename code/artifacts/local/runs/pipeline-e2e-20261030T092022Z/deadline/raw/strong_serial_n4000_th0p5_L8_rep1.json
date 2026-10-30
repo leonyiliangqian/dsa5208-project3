@@ -1,0 +1,34 @@
+{
+  "case": "strong_serial_n4000_th0p5_L8",
+  "rep": 1,
+  "ok": false,
+  "skipped": true,
+  "problems": [
+    "skipped: not enough time before the job deadline"
+  ],
+  "command": [
+    "bin/e2e/bh_serial",
+    "--n",
+    "4000",
+    "--theta",
+    "0.5",
+    "--leaf-size",
+    "8",
+    "--steps",
+    "2",
+    "--warmup",
+    "1",
+    "--seed",
+    "42"
+  ],
+  "allocated_cores": 1,
+  "timeout_s": 120,
+  "tags": {
+    "study": "strong",
+    "manifest_id": "local-e2e-v1",
+    "manifest_sha256": "afbdefeb799c73d2fb9c1db39f83cd5056e2fef43e3e2606cebc0bc8951afd12",
+    "manifest_status": "local pipeline test only: tiny inputs in Docker, never results",
+    "scale": "1"
+  },
+  "result": null
+}

@@ -115,6 +115,26 @@ Writing rules we have followed: no number typed by hand into results; local
 timings never reported as performance; no cause claimed without evidence (e.g.
 the energy plateau and the 1507215 stall are explicitly unexplained).
 
+## Verification done for this handoff (30 Oct, local only)
+
+From a fresh clone of commit `fc338c5` (tracked tree clean):
+
+| Check | Result |
+|---|---|
+| `make check` on macOS (serial gate) | PASS |
+| `make check check-hybrid` in Docker (serial + 15-configuration hybrid gate) | PASS |
+| `tests/pipeline_e2e.sh` (manifest -> runs -> analysis -> figures; timeout, deadline, interruption, refusal) | 26/26 PASS |
+| `tests/jobs/gates_selftest.sh` on two simulated nodes | 42/42 PASS |
+| Simulated `twonode`, `diag`, `correctness`, `bench2` jobs | verdict PASS (diag: optional d8 SKIP, no pbs_tmrsh locally) |
+| Simulated `pilot` job (local test manifest) | runs gate FAIL only because the test manifest contains a deliberate 3 s timeout probe |
+| Report: pdfLaTeX `-shell-escape` + biber in `code/docker/tex` | compiles, 5 pages, no errors or undefined references; one 5.5 pt overfull box in the existing `generated/hybrid_table.tex` |
+
+Evidence: `code/artifacts/local/runs/*-20261030T092*` (each records commit
+`fc338c5`). These are simulations and tests, never measurements.
+
+Overleaf needs `-shell-escape` for the `minted` package, which Overleaf
+enables by default.
+
 ## Checking the code yourself
 
 ```sh

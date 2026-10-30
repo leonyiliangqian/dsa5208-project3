@@ -1,0 +1,6 @@
+simulated-bench2-20261030T092111Z: 12 records, 0 failed, 5 configurations
+  bh_hybrid n=2000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0243s [0.0226,0.0261]
+  bh_hybrid n=4000 2x1 P=2 dynamic/64 reps=2 wall_med=0.1063s [0.1024,0.1103] speedup=0.88 eff=0.44
+  bh_hybrid n=4000 2x4 P=8 dynamic/64 reps=2 wall_med=0.0393s [0.0370,0.0416] speedup=2.37 eff=0.30
+  bh_hybrid n=4000 4x2 P=8 dynamic/64 reps=4 wall_med=0.0422s [0.0420,0.0468] speedup=2.21 eff=0.28
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.0932s [0.0917,0.0947]

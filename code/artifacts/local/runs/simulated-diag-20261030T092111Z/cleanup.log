@@ -1,0 +1,30 @@
+== after allocation 09:26:19
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 09:26:21
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d1_launch_only 09:26:23
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d2_bind_pe4 09:26:25
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d3_bind_pe8 09:26:26
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d4_probe_pe4 09:26:29
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d5_probe_pe8 09:26:31
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d6_probe_pe8_head 09:26:33
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d7_probe_nobind 09:26:35
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d9_probe_pe8_repeat 09:26:38
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

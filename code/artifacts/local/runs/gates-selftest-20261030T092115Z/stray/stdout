@@ -1,0 +1,13 @@
+
+===== gate stray (required, limit 30s) 09:21:32: ssh -o BatchMode=yes node2 setsid bash -c 'trap "" TERM; exec -a vanda-selftest/stray sleep 600' </dev/null >/dev/null 2>&1 &
+stray PASS rc=0 secs=0 kind=required 
+
+===== gate stray_jobid (required, limit 30s) 09:21:38: ssh -o BatchMode=yes node2 setsid bash -c 'trap "" TERM; exec /work/code/bin/selftest-fake/orted 600' </dev/null >/dev/null 2>&1 &
+stray_jobid PASS rc=0 secs=0 kind=required 
+
+===== summary 09:21:44
+stray PASS rc=0 secs=0 kind=required 
+stray_jobid PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=2 not_passed=0 optional: none
+verdict PASS
+end=2026-10-30T09:21:44+00:00 elapsed_s=12 walltime_s=900

@@ -1,0 +1,47 @@
+[f7c5a9e00367:01671] mca: base: components_register: registering framework plm components
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component slurm
+[f7c5a9e00367:01671] mca: base: components_register: component slurm register function successful
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component isolated
+[f7c5a9e00367:01671] mca: base: components_register: component isolated has no register or open function
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component rsh
+[f7c5a9e00367:01671] mca: base: components_register: component rsh register function successful
+[f7c5a9e00367:01671] mca: base: components_open: opening plm components
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component slurm
+[f7c5a9e00367:01671] mca: base: components_open: component slurm open function successful
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component isolated
+[f7c5a9e00367:01671] mca: base: components_open: component isolated open function successful
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component rsh
+[f7c5a9e00367:01671] mca: base: components_open: component rsh open function successful
+[f7c5a9e00367:01671] mca:base:select: Auto-selecting plm components
+[f7c5a9e00367:01671] mca:base:select:(  plm) Querying component [slurm]
+[f7c5a9e00367:01671] mca:base:select:(  plm) Querying component [isolated]
+[f7c5a9e00367:01671] mca:base:select:(  plm) Query of component [isolated] set priority to 0
+[f7c5a9e00367:01671] mca:base:select:(  plm) Querying component [rsh]
+[f7c5a9e00367:01671] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[f7c5a9e00367:01671] mca:base:select:(  plm) Selected component [rsh]
+[f7c5a9e00367:01671] mca: base: close: component slurm closed
+[f7c5a9e00367:01671] mca: base: close: unloading component slurm
+[f7c5a9e00367:01671] mca: base: close: component isolated closed
+[f7c5a9e00367:01671] mca: base: close: unloading component isolated
+[f7c5a9e00367:01671] mca: base: components_register: registering framework ras components
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component simulator
+[f7c5a9e00367:01671] mca: base: components_register: component simulator register function successful
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component gridengine
+[f7c5a9e00367:01671] mca: base: components_register: component gridengine register function successful
+[f7c5a9e00367:01671] mca: base: components_register: found loaded component slurm
+[f7c5a9e00367:01671] mca: base: components_register: component slurm register function successful
+[f7c5a9e00367:01671] mca: base: components_open: opening ras components
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component simulator
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component gridengine
+[f7c5a9e00367:01671] mca: base: components_open: component gridengine open function successful
+[f7c5a9e00367:01671] mca: base: components_open: found loaded component slurm
+[f7c5a9e00367:01671] mca: base: components_open: component slurm open function successful
+[f7c5a9e00367:01671] mca:base:select: Auto-selecting ras components
+[f7c5a9e00367:01671] mca:base:select:(  ras) Querying component [simulator]
+[f7c5a9e00367:01671] mca:base:select:(  ras) Querying component [gridengine]
+[f7c5a9e00367:01671] mca:base:select:(  ras) Querying component [slurm]
+[f7c5a9e00367:01671] mca:base:select:(  ras) No component selected!
+[f7c5a9e00367:01671] Warning: could not find environment variable "LD_LIBRARY_PATH"
+[f7c5a9e00367:01671] [[15586,0],0] complete_setup on job [15586,1]
+[f7c5a9e00367:01671] mca: base: close: component rsh closed
+[f7c5a9e00367:01671] mca: base: close: unloading component rsh

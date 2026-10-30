@@ -20,7 +20,7 @@ RUN_ID=${RUN_ID:-correctness-$(date -u +%Y%m%dT%H%M%SZ)-$JOB}
 OUT=${RUNS_ROOT:-artifacts/cluster/runs}/$RUN_ID
 mkdir -p "$OUT/env"
 exec > >(tee "$OUT/job.log") 2>&1
-echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is)"
+echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is) source_rev=${SOURCE_GIT_REV:-unset}"
 
 # ---------------------------------------------------------------- modules
 MPI_MODULE=${MPI_MODULE:-OpenMPI/4.1.6-GCC-13.2.0}

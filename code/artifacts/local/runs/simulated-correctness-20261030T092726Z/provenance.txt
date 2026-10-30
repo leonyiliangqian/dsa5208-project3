@@ -1,0 +1,3 @@
+source_git_rev=fc338c5 (run from a clean clone of commit fc338c5, tracked tree clean)
+environment=local Docker container, simulated PBS environment; not Vanda evidence
+note: correctness.pbs at fc338c5 did not print source_rev in job.log; fixed in the next commit

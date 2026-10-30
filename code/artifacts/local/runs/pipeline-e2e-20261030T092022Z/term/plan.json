@@ -1,0 +1,45 @@
+{
+  "manifest": "artifacts/local/runs/pipeline-e2e-20261030T092022Z/term_manifest.json",
+  "manifest_id": "local-e2e-term",
+  "manifest_status": "local pipeline test only",
+  "manifest_sha256": "3babef338a33712998d97b8e665ac1b10bc2fe85e131e46562dc6a1492f84ab6",
+  "scale": 1,
+  "nodes": 1,
+  "cores_per_node": 16,
+  "deadline": null,
+  "runs": [
+    {
+      "case": "term_hybrid_2x1_dynamic64_n400000_th0p5_L8",
+      "rep": 1,
+      "study": "term",
+      "program": "hybrid",
+      "launcher": "mpirun -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/e2e/bh_hybrid",
+        "--n",
+        "400000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "200",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 600
+    }
+  ]
+}
