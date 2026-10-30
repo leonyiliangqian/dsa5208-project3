@@ -96,7 +96,9 @@ tol = hybrid["tolerances"]
     f"${tol['acceleration_1_step'][0]:g}|a|+{tol['acceleration_1_step'][1]:g}\\max|a|$; ten steps "
     f"${tol['trajectory_10_steps'][0]:g}|x|+{tol['trajectory_10_steps'][1]:g}\\max|x|$. "
     + where + "}\n"
-    "\\label{tab:hybrid}\n\\begin{tabular}{llrrrl}\n\\hline\n"
+    # Six columns overflowed the two-column layout by 5.5 pt at the default
+    # 6 pt column separation; 4 pt fits without shrinking the font.
+    "\\label{tab:hybrid}\n\\setlength{\\tabcolsep}{4pt}\n\\begin{tabular}{llrrrl}\n\\hline\n"
     "ranks$\\times$thr. & schedule & $N$ & steps & max diff & \\\\\n\\hline\n"
     + "\n".join(rows) + "\n\\hline\n\\end{tabular}\n\\end{table}\n")
 (out / "hybrid_extras.tex").write_text(

@@ -140,7 +140,7 @@ From a fresh clone of commit `fc338c5` (tracked tree clean):
 | `tests/jobs/gates_selftest.sh` on two simulated nodes | 42/42 PASS |
 | Simulated `twonode`, `diag`, `correctness`, `bench2` jobs | verdict PASS (diag: optional d8 SKIP, no pbs_tmrsh locally) |
 | Simulated `pilot` job (local test manifest) | runs gate FAIL only because the test manifest contains a deliberate 3 s timeout probe |
-| Report: pdfLaTeX `-shell-escape` + biber in `code/docker/tex` | compiles, 5 pages, no errors or undefined references; one 5.5 pt overfull box in the existing `generated/hybrid_table.tex` |
+| Report: pdfLaTeX `-shell-escape` + biber in `code/docker/tex` | compiles, 5 pages, no errors, undefined references or overfull boxes (the 5.5 pt overflow in `generated/hybrid_table.tex` was fixed on 30 Oct by narrower column spacing in `report_tables.py`; regenerated from Vanda job 1503779, numbers unchanged) |
 
 Evidence: `code/artifacts/local/runs/*-20261030T092*` (each records commit
 `fc338c5`). These are simulations and tests, never measurements.
