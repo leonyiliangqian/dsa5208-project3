@@ -1,0 +1,13 @@
+
+===== gate long (required, limit 45s) 08:47:58: bash -c exec -a vanda-selftest/long sleep 600
+long TIMEOUT rc=124 secs=45 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+next SKIP rc=- secs=0 kind=required no time left before the walltime (worst-case overhead 125s)
+
+===== summary 08:48:44
+long TIMEOUT rc=124 secs=45 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+next SKIP rc=- secs=0 kind=required no time left before the walltime (worst-case overhead 125s)
+verdict required_or_critical=2 not_passed=2 optional: none
+  not passed: long TIMEOUT rc=124 secs=45 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+  not passed: next SKIP rc=- secs=0 kind=required no time left before the walltime (worst-case overhead 125s)
+verdict FAIL
+end=2026-10-30T08:48:44+00:00 elapsed_s=46 walltime_s=230

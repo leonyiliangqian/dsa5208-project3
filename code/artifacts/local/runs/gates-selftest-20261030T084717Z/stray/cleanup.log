@@ -1,0 +1,8 @@
+== after stray 08:47:34
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover host=node2 owned: 241 sleep vanda-selftest/stray 600 
+leftover_check host=node2 owned_found=1 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after stray_jobid 08:47:40
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover host=node2 owned: 345 orted /work/code/bin/selftest-fake/orted 600 
+leftover_check host=node2 owned_found=1 owned_remaining=0 foreign=0 unattributed=0 CLEAN

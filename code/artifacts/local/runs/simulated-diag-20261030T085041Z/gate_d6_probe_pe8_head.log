@@ -1,0 +1,37 @@
+[node1:03068] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  bin/vanda-simdiag/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:03068] MCW rank 0 is not bound (or bound to all available processors)
+trace t=1793350382.608 host=node1 rank=0 pid=3073 stage=start affinity=0 omp_num_threads=8
+trace t=1793350382.608 host=node1 rank=0 pid=3073 stage=mpi_init_begin 
+trace t=1793350382.841 host=node1 rank=0 pid=3073 stage=mpi_init_done size=1 provided=1
+trace t=1793350382.841 host=node1 rank=0 pid=3073 stage=allreduce_threads_begin threads=8
+trace t=1793350382.841 host=node1 rank=0 pid=3073 stage=allreduce_threads_done min=8 max=8
+trace t=1793350382.841 host=node1 rank=0 pid=3073 stage=omp_begin 
+trace t=1793350382.842 host=node1 rank=0 pid=3073 stage=omp_team_started team=8
+trace t=1793350383.242 host=node1 rank=0 pid=3073 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+trace t=1793350383.242 host=node1 rank=0 pid=3073 stage=gather_begin 
+trace t=1793350383.242 host=node1 rank=0 pid=3073 stage=gather_done 
+trace t=1793350383.242 host=node1 rank=0 pid=3073 stage=bcast_begin 
+trace t=1793350383.242 host=node1 rank=0 pid=3073 stage=finalize_begin verdict=PASS
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=1 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350383.287 host=node1 rank=0 pid=3073 stage=finalize_done 

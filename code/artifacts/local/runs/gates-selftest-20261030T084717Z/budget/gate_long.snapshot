@@ -1,0 +1,24 @@
+== snapshot host=node1 t=1793350115.689
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     22       0      22 Ss   do_wait                                01:18 bash tests/jobs/gates_selftest.sh
+   1382      22      22 S    do_wait                                00:37  \_ bash -c source jobs/vanda/gates.sh;  gate long 600 required bash -c 'exec -a vanda-selftest/long sleep 600' gate next 600 required true       
+   1393    1382    1393 Ss   do_wait                                00:37      \_ bash jobs/vanda/snapshot_watch.sh 37 long
+   1405    1393    1405 S    sigsuspend.isra.0                      00:00      |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1406    1405    1405 S    do_wait                                00:00      |       \_ bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1411    1406    1405 R    -                                      00:00      |           \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+   1412    1406    1405 S    anon_pipe_read                         00:00      |           \_ cut -c1-220
+   1394    1382    1394 S    sigsuspend.isra.0                      00:37      \_ timeout -k 5 45 bash -c exec -a vanda-selftest/long sleep 600
+   1395    1394    1394 S    hrtimer_nanosleep                      00:37          \_ vanda-selftest/long 600
+-- pid=1382 comm=bash State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1382 state=S wchan=do_wait
+-- pid=1394 comm=timeout State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1394 state=S wchan=sigsuspend.isra.0
+-- pid=1395 comm=sleep State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1395 state=S wchan=hrtimer_nanosleep
+== snapshot host=node2 t=1793350116.115
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+    879     873     873 S    -                                      00:00 sshd: dev@notty
+    880     879     880 Ss   do_wait                                00:00  \_ sh -c bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+    881     880     880 S    do_wait                                00:00      \_ bash /work/code/tests/toolchain/proc_snapshot.sh vanda-selftest/
+    886     881     880 R    -                                      00:00          \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+    887     881     880 S    anon_pipe_read                         00:00          \_ cut -c1-220

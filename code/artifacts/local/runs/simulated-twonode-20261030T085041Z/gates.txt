@@ -1,0 +1,13 @@
+allocation PASS rc=0 secs=1 kind=critical 
+build PASS rc=0 secs=7 kind=critical 
+flags PASS rc=0 secs=0 kind=critical 
+toolchain PASS rc=0 secs=1 kind=critical 
+internode_2 PASS rc=0 secs=2 kind=critical 
+internode_16 PASS rc=0 secs=2 kind=required 
+place_2x4 PASS rc=0 secs=3 kind=required 
+place_4x2 PASS rc=0 secs=2 kind=required 
+place_8x1 PASS rc=0 secs=2 kind=required 
+serial PASS rc=0 secs=1 kind=required 
+hybrid PASS rc=0 secs=82 kind=required 
+recorder PASS rc=0 secs=4 kind=required 
+place_1x8 PASS rc=0 secs=2 kind=required 

@@ -1,0 +1,49 @@
+[node1:03183] Warning: could not find environment variable "LD_LIBRARY_PATH"
+trace t=1793350385.038 host=node1 rank=0 pid=3189 stage=start affinity=0 omp_num_threads=8
+trace t=1793350385.038 host=node1 rank=0 pid=3189 stage=mpi_init_begin 
+trace t=1793350385.059 host=node2 rank=1 pid=2036 stage=start affinity=0 omp_num_threads=8
+trace t=1793350385.059 host=node2 rank=1 pid=2036 stage=mpi_init_begin 
+[node1:03189] MCW rank 0 bound to socket 0[core 0[hwt 0]]: [B/././././././.]
+[node2:02036] MCW rank 1 bound to socket 0[core 0[hwt 0]]: [B/././././././.]
+trace t=1793350385.360 host=node1 rank=0 pid=3189 stage=mpi_init_done size=2 provided=1
+trace t=1793350385.361 host=node1 rank=0 pid=3189 stage=allreduce_threads_begin threads=8
+trace t=1793350385.360 host=node2 rank=1 pid=2036 stage=mpi_init_done size=2 provided=1
+trace t=1793350385.361 host=node2 rank=1 pid=2036 stage=allreduce_threads_begin threads=8
+trace t=1793350385.373 host=node2 rank=1 pid=2036 stage=allreduce_threads_done min=8 max=8
+trace t=1793350385.373 host=node2 rank=1 pid=2036 stage=omp_begin 
+trace t=1793350385.374 host=node2 rank=1 pid=2036 stage=omp_team_started team=8
+trace t=1793350385.379 host=node1 rank=0 pid=3189 stage=allreduce_threads_done min=8 max=8
+trace t=1793350385.379 host=node1 rank=0 pid=3189 stage=omp_begin 
+trace t=1793350385.380 host=node1 rank=0 pid=3189 stage=omp_team_started team=8
+trace t=1793350385.777 host=node2 rank=1 pid=2036 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793350385.778 host=node2 rank=1 pid=2036 stage=gather_begin 
+trace t=1793350385.778 host=node2 rank=1 pid=2036 stage=gather_done 
+trace t=1793350385.784 host=node1 rank=0 pid=3189 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793350385.784 host=node1 rank=0 pid=3189 stage=gather_begin 
+trace t=1793350385.784 host=node1 rank=0 pid=3189 stage=gather_done 
+trace t=1793350385.778 host=node2 rank=1 pid=2036 stage=bcast_begin 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+trace t=1793350385.785 host=node1 rank=0 pid=3189 stage=bcast_begin 
+trace t=1793350385.785 host=node1 rank=0 pid=3189 stage=finalize_begin verdict=PASS
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350385.786 host=node2 rank=1 pid=2036 stage=finalize_begin verdict=PASS
+trace t=1793350385.843 host=node2 rank=1 pid=2036 stage=finalize_done 
+trace t=1793350385.847 host=node1 rank=0 pid=3189 stage=finalize_done 

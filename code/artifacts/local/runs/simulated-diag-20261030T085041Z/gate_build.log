@@ -1,0 +1,2 @@
+mkdir -p bin/vanda-simdiag
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simdiag/placement_check tests/toolchain/placement_check.cpp

@@ -1,0 +1,2 @@
+long TIMEOUT rc=124 secs=45 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+next SKIP rc=- secs=0 kind=required no time left before the walltime (worst-case overhead 125s)

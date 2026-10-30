@@ -1,0 +1,17 @@
+
+===== gate base (required, limit 30s) 08:47:56: false
+base FAIL rc=1 secs=1 kind=required 
+dependant SKIP rc=- secs=0 kind=required needs base to pass
+
+===== gate other (required, limit 30s) 08:47:57: true
+other PASS rc=0 secs=0 kind=required 
+
+===== summary 08:47:58
+base FAIL rc=1 secs=1 kind=required 
+dependant SKIP rc=- secs=0 kind=required needs base to pass
+other PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=3 not_passed=2 optional: none
+  not passed: base FAIL rc=1 secs=1 kind=required 
+  not passed: dependant SKIP rc=- secs=0 kind=required needs base to pass
+verdict FAIL
+end=2026-10-30T08:47:58+00:00 elapsed_s=2 walltime_s=900

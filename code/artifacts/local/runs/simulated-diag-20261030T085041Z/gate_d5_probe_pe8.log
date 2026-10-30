@@ -1,0 +1,343 @@
+[node1:02952] mca: base: components_register: registering framework plm components
+[node1:02952] mca: base: components_register: found loaded component slurm
+[node1:02952] mca: base: components_register: component slurm register function successful
+[node1:02952] mca: base: components_register: found loaded component isolated
+[node1:02952] mca: base: components_register: component isolated has no register or open function
+[node1:02952] mca: base: components_register: found loaded component rsh
+[node1:02952] mca: base: components_register: component rsh register function successful
+[node1:02952] mca: base: components_open: opening plm components
+[node1:02952] mca: base: components_open: found loaded component slurm
+[node1:02952] mca: base: components_open: component slurm open function successful
+[node1:02952] mca: base: components_open: found loaded component isolated
+[node1:02952] mca: base: components_open: component isolated open function successful
+[node1:02952] mca: base: components_open: found loaded component rsh
+[node1:02952] mca: base: components_open: component rsh open function successful
+[node1:02952] mca:base:select: Auto-selecting plm components
+[node1:02952] mca:base:select:(  plm) Querying component [slurm]
+[node1:02952] mca:base:select:(  plm) Querying component [isolated]
+[node1:02952] mca:base:select:(  plm) Query of component [isolated] set priority to 0
+[node1:02952] mca:base:select:(  plm) Querying component [rsh]
+[node1:02952] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[node1:02952] mca:base:select:(  plm) Selected component [rsh]
+[node1:02952] mca: base: close: component slurm closed
+[node1:02952] mca: base: close: unloading component slurm
+[node1:02952] mca: base: close: component isolated closed
+[node1:02952] mca: base: close: unloading component isolated
+[node1:02952] mca: base: components_register: registering framework rmaps components
+[node1:02952] mca: base: components_register: found loaded component mindist
+[node1:02952] mca: base: components_register: component mindist register function successful
+[node1:02952] mca: base: components_register: found loaded component rank_file
+[node1:02952] mca: base: components_register: component rank_file register function successful
+[node1:02952] mca: base: components_register: found loaded component resilient
+[node1:02952] mca: base: components_register: component resilient register function successful
+[node1:02952] mca: base: components_register: found loaded component round_robin
+[node1:02952] mca: base: components_register: component round_robin register function successful
+[node1:02952] mca: base: components_register: found loaded component ppr
+[node1:02952] mca: base: components_register: component ppr register function successful
+[node1:02952] mca: base: components_register: found loaded component seq
+[node1:02952] mca: base: components_register: component seq register function successful
+[node1:02952] [[16608,0],0] rmaps:base set policy with ppr:1:node:PE=8 device NONNULL
+[node1:02952] [[16608,0],0] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[node1:02952] [[16608,0],0] rmaps:base check modifiers with PE=8
+[node1:02952] [[16608,0],0] rmaps:base setting pe/rank to 8
+[node1:02952] mca: base: components_open: opening rmaps components
+[node1:02952] mca: base: components_open: found loaded component mindist
+[node1:02952] mca: base: components_open: component mindist open function successful
+[node1:02952] mca: base: components_open: found loaded component rank_file
+[node1:02952] mca: base: components_open: component rank_file open function successful
+[node1:02952] mca: base: components_open: found loaded component resilient
+[node1:02952] mca: base: components_open: component resilient open function successful
+[node1:02952] mca: base: components_open: found loaded component round_robin
+[node1:02952] mca: base: components_open: component round_robin open function successful
+[node1:02952] mca: base: components_open: found loaded component ppr
+[node1:02952] mca: base: components_open: component ppr open function successful
+[node1:02952] mca: base: components_open: found loaded component seq
+[node1:02952] mca: base: components_open: component seq open function successful
+[node1:02952] mca:rmaps:select: checking available component mindist
+[node1:02952] mca:rmaps:select: Querying component [mindist]
+[node1:02952] mca:rmaps:select: checking available component rank_file
+[node1:02952] mca:rmaps:select: Querying component [rank_file]
+[node1:02952] mca:rmaps:select: checking available component resilient
+[node1:02952] mca:rmaps:select: Querying component [resilient]
+[node1:02952] mca:rmaps:select: checking available component round_robin
+[node1:02952] mca:rmaps:select: Querying component [round_robin]
+[node1:02952] mca:rmaps:select: checking available component ppr
+[node1:02952] mca:rmaps:select: Querying component [ppr]
+[node1:02952] mca:rmaps:select: checking available component seq
+[node1:02952] mca:rmaps:select: Querying component [seq]
+[node1:02952] [[16608,0],0]: Final mapper priorities
+[node1:02952] 	Mapper: ppr Priority: 90
+[node1:02952] 	Mapper: seq Priority: 60
+[node1:02952] 	Mapper: resilient Priority: 40
+[node1:02952] 	Mapper: mindist Priority: 20
+[node1:02952] 	Mapper: round_robin Priority: 10
+[node1:02952] 	Mapper: rank_file Priority: 0
+[node1:02952] mca: base: components_register: registering framework odls components
+[node1:02952] mca: base: components_register: found loaded component default
+[node1:02952] mca: base: components_register: component default register function successful
+[node1:02952] mca: base: components_register: found loaded component pspawn
+[node1:02952] mca: base: components_register: component pspawn has no register or open function
+[node1:02952] mca: base: components_open: opening odls components
+[node1:02952] mca: base: components_open: found loaded component default
+[node1:02952] mca: base: components_open: component default open function successful
+[node1:02952] mca: base: components_open: found loaded component pspawn
+[node1:02952] mca: base: components_open: component pspawn open function successful
+[node1:02952] mca:base:select: Auto-selecting odls components
+[node1:02952] mca:base:select:( odls) Querying component [default]
+[node1:02952] mca:base:select:( odls) Query of component [default] set priority to 10
+[node1:02952] mca:base:select:( odls) Querying component [pspawn]
+[node1:02952] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[node1:02952] mca:base:select:( odls) Selected component [default]
+[node1:02952] mca: base: close: component pspawn closed
+[node1:02952] mca: base: close: unloading component pspawn
+[node1:02952] Warning: could not find environment variable "LD_LIBRARY_PATH"
+[node1:02952] [[16608,0],0] rmaps:base set policy with ppr:1:node:PE=8 device NULL
+[node1:02952] [[16608,0],0] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[node1:02952] [[16608,0],0] rmaps:base check modifiers with PE=8
+[node1:02952] [[16608,0],0] rmaps:base setting pe/rank to 8
+[node1:02952] [[16608,0],0] plm:rsh: final template argv:
+	/usr/bin/ssh <template> ( test ! -r ./.profile || . ./.profile;           PATH=/usr/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/lib:${LD_LIBRARY_PATH:-} ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/lib:${DYLD_LIBRARY_PATH:-} ; export DYLD_LIBRARY_PATH ;   /usr/bin/orted -mca orte_report_bindings "1" -mca ess "env" -mca ess_base_jobid "1088421888" -mca ess_base_vpid "<template>" -mca ess_base_num_procs "2" -mca orte_node_regex "node[1:1-2]@0(2)" -mca orte_hnp_uri "1088421888.0;tcp://172.18.0.2:34515" --mca plm_base_verbose "10" --mca odls_base_verbose "10" --mca rmaps_base_verbose "10" -mca plm "rsh" --tree-spawn -mca routed "radix" -mca orte_parent_uri "1088421888.0;tcp://172.18.0.2:34515" -mca rmaps_base_mapping_policy "ppr:1:node:PE=8" -mca hwloc_base_binding_policy "core" -mca hwloc_base_report_bindings "1" -mca rmaps_base_display_map "1" -mca pmix "^s1,s2,cray,isolated" )
+[node2:01904] mca: base: components_register: registering framework plm components
+[node2:01904] mca: base: components_register: found loaded component rsh
+[node2:01904] mca: base: components_register: component rsh register function successful
+[node2:01904] mca: base: components_open: opening plm components
+[node2:01904] mca: base: components_open: found loaded component rsh
+[node2:01904] mca: base: components_open: component rsh open function successful
+[node2:01904] mca:base:select: Auto-selecting plm components
+[node2:01904] mca:base:select:(  plm) Querying component [rsh]
+[node2:01904] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[node2:01904] mca:base:select:(  plm) Selected component [rsh]
+[node2:01904] mca: base: components_register: registering framework odls components
+[node2:01904] mca: base: components_register: found loaded component default
+[node2:01904] mca: base: components_register: component default register function successful
+[node2:01904] mca: base: components_register: found loaded component pspawn
+[node2:01904] mca: base: components_register: component pspawn has no register or open function
+[node2:01904] mca: base: components_open: opening odls components
+[node2:01904] mca: base: components_open: found loaded component default
+[node2:01904] mca: base: components_open: component default open function successful
+[node2:01904] mca: base: components_open: found loaded component pspawn
+[node2:01904] mca: base: components_open: component pspawn open function successful
+[node2:01904] mca:base:select: Auto-selecting odls components
+[node2:01904] mca:base:select:( odls) Querying component [default]
+[node2:01904] mca:base:select:( odls) Query of component [default] set priority to 10
+[node2:01904] mca:base:select:( odls) Querying component [pspawn]
+[node2:01904] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[node2:01904] mca:base:select:( odls) Selected component [default]
+[node2:01904] mca: base: close: component pspawn closed
+[node2:01904] mca: base: close: unloading component pspawn
+[node2:01904] mca: base: components_register: registering framework rmaps components
+[node2:01904] mca: base: components_register: found loaded component mindist
+[node2:01904] mca: base: components_register: component mindist register function successful
+[node2:01904] mca: base: components_register: found loaded component rank_file
+[node2:01904] mca: base: components_register: component rank_file register function successful
+[node2:01904] mca: base: components_register: found loaded component resilient
+[node2:01904] mca: base: components_register: component resilient register function successful
+[node2:01904] mca: base: components_register: found loaded component round_robin
+[node2:01904] mca: base: components_register: component round_robin register function successful
+[node2:01904] mca: base: components_register: found loaded component ppr
+[node2:01904] mca: base: components_register: component ppr register function successful
+[node2:01904] mca: base: components_register: found loaded component seq
+[node2:01904] mca: base: components_register: component seq register function successful
+[node2:01904] [[16608,0],1] rmaps:base set policy with ppr:1:node:PE=8 device NONNULL
+[node2:01904] [[16608,0],1] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[node2:01904] [[16608,0],1] rmaps:base check modifiers with PE=8
+[node2:01904] [[16608,0],1] rmaps:base setting pe/rank to 8
+[node2:01904] mca: base: components_open: opening rmaps components
+[node2:01904] mca: base: components_open: found loaded component mindist
+[node2:01904] mca: base: components_open: component mindist open function successful
+[node2:01904] mca: base: components_open: found loaded component rank_file
+[node2:01904] mca: base: components_open: component rank_file open function successful
+[node2:01904] mca: base: components_open: found loaded component resilient
+[node2:01904] mca: base: components_open: component resilient open function successful
+[node2:01904] mca: base: components_open: found loaded component round_robin
+[node2:01904] mca: base: components_open: component round_robin open function successful
+[node2:01904] mca: base: components_open: found loaded component ppr
+[node2:01904] mca: base: components_open: component ppr open function successful
+[node2:01904] mca: base: components_open: found loaded component seq
+[node2:01904] mca: base: components_open: component seq open function successful
+[node2:01904] mca:rmaps:select: checking available component mindist
+[node2:01904] mca:rmaps:select: Querying component [mindist]
+[node2:01904] mca:rmaps:select: checking available component rank_file
+[node2:01904] mca:rmaps:select: Querying component [rank_file]
+[node2:01904] mca:rmaps:select: checking available component resilient
+[node2:01904] mca:rmaps:select: Querying component [resilient]
+[node2:01904] mca:rmaps:select: checking available component round_robin
+[node2:01904] mca:rmaps:select: Querying component [round_robin]
+[node2:01904] mca:rmaps:select: checking available component ppr
+[node2:01904] mca:rmaps:select: Querying component [ppr]
+[node2:01904] mca:rmaps:select: checking available component seq
+[node2:01904] mca:rmaps:select: Querying component [seq]
+[node2:01904] [[16608,0],1]: Final mapper priorities
+[node2:01904] 	Mapper: ppr Priority: 90
+[node2:01904] 	Mapper: seq Priority: 60
+[node2:01904] 	Mapper: resilient Priority: 40
+[node2:01904] 	Mapper: mindist Priority: 20
+[node2:01904] 	Mapper: round_robin Priority: 10
+[node2:01904] 	Mapper: rank_file Priority: 0
+[node1:02952] mca:rmaps: mapping job [16608,1]
+[node1:02952] mca:rmaps: setting mapping policies for job [16608,1] nprocs 2
+[node1:02952] mca:rmaps:ppr: mapping job [16608,1] with ppr 1:node
+[node1:02952] mca:rmaps:ppr: job [16608,1] assigned policy BYNODE:NOOVERSUBSCRIBE
+[node1:02952] AVAILABLE NODES FOR MAPPING:
+[node1:02952]     node: node1 daemon: 0
+[node1:02952]     node: node2 daemon: 1
+[node1:02952] mca:rmaps: assigning locations for job [16608,1]
+[node1:02952] mca:rmaps:ppr: assigning locations for job [16608,1] with ppr 1:node policy BYNODE:NOOVERSUBSCRIBE
+[node1:02952] [[16608,0],0] complete_setup on job [16608,1]
+[node1:02952] RANKING POLICY: SLOT
+[node1:02952] mca:rmaps:base: computing vpids by slot for job [16608,1]
+[node1:02952] mca:rmaps:base: assigning rank 0 to node node1
+[node1:02952] mca:rmaps:base: assigning rank 1 to node node2
+[node1:02952] mca:rmaps: compute bindings for job [16608,1] with policy CORE[4008]
+[node1:02952] mca:rmaps: computing bindings for job [16608,1]
+[node1:02952] [[16608,0],0] reset_usage: node node1 has 1 procs on it
+[node1:02952] [[16608,0],0] reset_usage: ignoring proc [[16608,1],0]
+[node1:02952] [[16608,0],0] bind_depth: 5
+[node1:02952] mca:rmaps: bind downward for job [16608,1] with bindings CORE
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] GOT 1 CPUS
+[node1:02952] [[16608,0],0] PROC [[16608,1],0] BITMAP 0,2,4,6,8,10,12,14
+[node1:02952] [[16608,0],0] PROC [[16608,1],0] ON node1 IS NOT BOUND
+ Data for JOB [16608,1] offset 0 Total slots allocated 16
+
+ ========================   JOB MAP   ========================
+
+ Data for node: node1	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [16608,1] App: 0 Process rank: 0 Bound: UNBOUND
+
+ Data for node: node2	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [16608,1] App: 0 Process rank: 1 Bound: N/A
+
+ =============================================================
+[node1:02952] [[16608,0],0] local:launch
+[node1:02952] [[16608,0],0] odls:dispatch [[16608,1],0] to thread 0
+[node1:02952] [[16608,0],0] odls:launch spawning child [[16608,1],0]
+[node2:01904] mca:rmaps: assigning locations for job [16608,1]
+[node2:01904] mca:rmaps:ppr: assigning locations for job [16608,1] with ppr 1:node policy BYNODE:NOOVERSUBSCRIBE
+[node2:01904] RANKING POLICY: SLOT
+[node2:01904] mca:rmaps:base: computing vpids by slot for job [16608,1]
+[node2:01904] mca:rmaps:base: assigning rank 0 to node node1
+[node2:01904] mca:rmaps:base: assigning rank 1 to node node2
+[node2:01904] mca:rmaps: compute bindings for job [16608,1] with policy CORE[4008]
+[node2:01904] mca:rmaps: computing bindings for job [16608,1]
+[node2:01904] [[16608,0],1] reset_usage: node node2 has 1 procs on it
+[node2:01904] [[16608,0],1] reset_usage: ignoring proc [[16608,1],1]
+[node2:01904] [[16608,0],1] bind_depth: 5
+[node2:01904] mca:rmaps: bind downward for job [16608,1] with bindings CORE
+ Data for JOB [16608,1] offset 0 Total slots allocated 16
+
+ ========================   JOB MAP   ========================
+
+ Data for node: node1	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [16608,1] App: 0 Process rank: 0 Bound: N/A
+
+ Data for node: node2	Num slots: 8	Max slots: 0	Num procs: 1
+ 	Process OMPI jobid: [16608,1] App: 0 Process rank: 1 Bound: UNBOUND
+
+ =============================================================
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] GOT 1 CPUS
+[node2:01904] [[16608,0],1] PROC [[16608,1],1] BITMAP 0,2,4,6,8,10,12,14
+[node2:01904] [[16608,0],1] PROC [[16608,1],1] ON node2 IS NOT BOUND
+[node2:01904] [[16608,0],1] local:launch
+[node2:01904] [[16608,0],1] odls:dispatch [[16608,1],1] to thread 0
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  bin/vanda-simdiag/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node2:01904] [[16608,0],1] odls:launch spawning child [[16608,1],1]
+[node1:02952] MCW rank 0 is not bound (or bound to all available processors)
+[node2:01904] MCW rank 1 is not bound (or bound to all available processors)
+[node1:02952] [[16608,0],0] plm:base:receive update proc state command from [[16608,0],1]
+[node1:02952] [[16608,0],0] plm:base:receive got update_proc_state for job [16608,1]
+trace t=1793350381.002 host=node1 rank=0 pid=2958 stage=start affinity=0 omp_num_threads=8
+trace t=1793350381.002 host=node1 rank=0 pid=2958 stage=mpi_init_begin 
+trace t=1793350381.024 host=node2 rank=1 pid=1907 stage=start affinity=0 omp_num_threads=8
+trace t=1793350381.024 host=node2 rank=1 pid=1907 stage=mpi_init_begin 
+trace t=1793350381.281 host=node1 rank=0 pid=2958 stage=mpi_init_done size=2 provided=1
+trace t=1793350381.282 host=node1 rank=0 pid=2958 stage=allreduce_threads_begin threads=8
+trace t=1793350381.281 host=node2 rank=1 pid=1907 stage=mpi_init_done size=2 provided=1
+trace t=1793350381.281 host=node2 rank=1 pid=1907 stage=allreduce_threads_begin threads=8
+trace t=1793350381.297 host=node1 rank=0 pid=2958 stage=allreduce_threads_done min=8 max=8
+trace t=1793350381.297 host=node1 rank=0 pid=2958 stage=omp_begin 
+trace t=1793350381.298 host=node1 rank=0 pid=2958 stage=omp_team_started team=8
+trace t=1793350381.291 host=node2 rank=1 pid=1907 stage=allreduce_threads_done min=8 max=8
+trace t=1793350381.291 host=node2 rank=1 pid=1907 stage=omp_begin 
+trace t=1793350381.292 host=node2 rank=1 pid=1907 stage=omp_team_started team=8
+trace t=1793350381.697 host=node2 rank=1 pid=1907 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793350381.697 host=node2 rank=1 pid=1907 stage=gather_begin 
+trace t=1793350381.707 host=node1 rank=0 pid=2958 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793350381.707 host=node1 rank=0 pid=2958 stage=gather_begin 
+trace t=1793350381.707 host=node1 rank=0 pid=2958 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350381.698 host=node2 rank=1 pid=1907 stage=gather_done 
+trace t=1793350381.708 host=node1 rank=0 pid=2958 stage=bcast_begin 
+trace t=1793350381.698 host=node2 rank=1 pid=1907 stage=bcast_begin 
+trace t=1793350381.708 host=node1 rank=0 pid=2958 stage=finalize_begin verdict=PASS
+trace t=1793350381.709 host=node2 rank=1 pid=1907 stage=finalize_begin verdict=PASS
+trace t=1793350381.761 host=node2 rank=1 pid=1907 stage=finalize_done 
+trace t=1793350381.763 host=node1 rank=0 pid=2958 stage=finalize_done 
+[node2:01904] [[16608,0],1] odls:wait_local_proc child process [[16608,1],1] pid 1907 terminated
+[node1:02952] [[16608,0],0] plm:base:receive update proc state command from [[16608,0],1]
+[node1:02952] [[16608,0],0] plm:base:receive got update_proc_state for job [16608,1]
+[node1:02952] [[16608,0],0] odls:wait_local_proc child process [[16608,1],0] pid 2958 terminated
+[node2:01904] mca: base: close: component rsh closed
+[node2:01904] mca: base: close: unloading component rsh
+[node2:01904] mca: base: close: component default closed
+[node2:01904] mca: base: close: unloading component default
+[node1:02952] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:02952] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+[node1:02952] mca: base: close: component default closed
+[node1:02952] mca: base: close: unloading component default
+[node1:02952] mca: base: close: component mindist closed
+[node1:02952] mca: base: close: unloading component mindist
+[node1:02952] mca: base: close: component rank_file closed
+[node1:02952] mca: base: close: unloading component rank_file
+[node1:02952] mca: base: close: component resilient closed
+[node1:02952] mca: base: close: unloading component resilient
+[node1:02952] mca: base: close: component round_robin closed
+[node1:02952] mca: base: close: unloading component round_robin
+[node1:02952] mca: base: close: component ppr closed
+[node1:02952] mca: base: close: unloading component ppr
+[node1:02952] mca: base: close: component seq closed
+[node1:02952] mca: base: close: unloading component seq
+[node1:02952] mca: base: close: component rsh closed
+[node1:02952] mca: base: close: unloading component rsh

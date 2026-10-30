@@ -1,0 +1,285 @@
+run_id=simulated-twonode-20261030T085041Z job=simtwonode.local host=node1 start=2026-10-30T08:50:45+00:00 source_rev=f36c0e9d12842d653bce56ac0739ac422abdcc56
+nodes=2 launcher=simulated mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH
+walltime_s=1800 end_reserve_s=60 gate_overhead_s=140 remote_exec=ssh -o BatchMode=yes
+
+===== gate allocation (critical, limit 90s) 08:50:46: bash jobs/vanda/allocation_check.sh artifacts/local/runs/simulated-twonode-20261030T085041Z 2 simulated
+
+	node1: flags=0x11 slots=8 max_slots=0 slots_inuse=0 state=UP
+	node2: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UNKNOWN
+======================   ALLOCATED NODES   ======================
+=================================================================
+node node1 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<mpirun<bash<timeout<bash<bash pbs_jobid_env=yes isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+node node2 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<orted<sh<sshd<sshd pbs_jobid_env=yes isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+allocation hosts=['node1', 'node2'] head=node1 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=simulated plm_selected=['rsh', 'rsh'] ras_selected=[] remote_ancestry=['bash<orted<sh<sshd<sshd'] remote_pbs_mom_visible=[False]
+recorded_only models=['Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+two_hosts=ok cpus_8_each=ok arch_x86_64=ok
+allocation PASS
+allocation PASS rc=0 secs=1 kind=critical 
+
+===== gate build (critical, limit 240s) 08:50:48: make BIN=bin/vanda-simtwonode all hybrid
+mkdir -p bin/vanda-simtwonode
+g++ -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-simtwonode/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-simtwonode/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=7 kind=critical 
+
+===== gate flags (critical, limit 60s) 08:50:56: bash jobs/vanda/flags_check.sh
+CXXFLAGS=-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+== mpicxx -show
+g++ -I/usr/lib/x86_64-linux-gnu/openmpi/include -I/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi -L/usr/lib/x86_64-linux-gnu/openmpi/lib -lmpi_cxx -lmpi
+== resolved target
+  -march=                     		x86-64
+  -mtune=                     		generic
+== ISA macros defined by these flags
+none
+== embedded in binaries
+bin/vanda-simtwonode/bh_serial: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+bin/vanda-simtwonode/bh_hybrid: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+flags PASS rc=0 secs=0 kind=critical 
+
+===== gate toolchain (critical, limit 90s) 08:50:57: make BIN=bin/vanda-simtwonode toolchain
+g++ -O2 -fopenmp -o bin/vanda-simtwonode/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simtwonode/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simtwonode/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-simtwonode/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-simtwonode/mpi_check
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.4, package: Debian OpenMPI, ident: 4.1.4, repo rev: v4.1.4, May 26
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-simtwonode/hybrid_check
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
+toolchain PASS rc=0 secs=1 kind=critical 
+
+===== gate internode_2 (critical, limit 90s) 08:50:59: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=2 INTERNODE_HOSTS=2
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-simtwonode/internode_check tests/toolchain/internode_check.cpp
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 2 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-simtwonode/internode_check
+[node1:00635] Warning: could not find environment variable "LD_LIBRARY_PATH"
+internode_check ranks=2 hosts=2 [node1,node2] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0312 allgatherv_1000003x3_max_s=0.0257 expect_hosts=2 PASS
+internode_2 PASS rc=0 secs=2 kind=critical 
+
+===== gate internode_16 (required, limit 90s) 08:51:02: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=16 INTERNODE_HOSTS=2
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 16 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-simtwonode/internode_check
+[node1:00746] Warning: could not find environment variable "LD_LIBRARY_PATH"
+internode_check ranks=16 hosts=2 [node1,node2] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.1274 allgatherv_1000003x3_max_s=0.2650 expect_hosts=2 PASS
+internode_16 PASS rc=0 secs=2 kind=required 
+
+===== gate place_2x4 (required, limit 60s) 08:51:05: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350268.585 host=node1 rank=0 pid=890 stage=bcast_begin 
+trace t=1793350268.585 host=node1 rank=0 pid=890 stage=finalize_begin verdict=PASS
+trace t=1793350268.585 host=node2 rank=3 pid=454 stage=gather_done 
+trace t=1793350268.585 host=node2 rank=3 pid=454 stage=bcast_begin 
+trace t=1793350268.585 host=node2 rank=2 pid=453 stage=finalize_begin verdict=PASS
+trace t=1793350268.588 host=node1 rank=1 pid=891 stage=finalize_begin verdict=PASS
+trace t=1793350268.588 host=node2 rank=3 pid=454 stage=finalize_begin verdict=PASS
+trace t=1793350268.634 host=node1 rank=0 pid=890 stage=finalize_done 
+trace t=1793350268.634 host=node2 rank=3 pid=454 stage=finalize_done 
+trace t=1793350268.637 host=node1 rank=1 pid=891 stage=finalize_done 
+trace t=1793350268.637 host=node2 rank=2 pid=453 stage=finalize_done 
+[node1:00885] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00885] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_2x4 PASS rc=0 secs=3 kind=required 
+
+===== gate place_4x2 (required, limit 60s) 08:51:09: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+placement host=node2 rank=7 thread=1 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+trace t=1793350271.230 host=node1 rank=0 pid=1011 stage=gather_done 
+trace t=1793350271.230 host=node1 rank=2 pid=1013 stage=gather_done 
+trace t=1793350271.230 host=node1 rank=2 pid=1013 stage=bcast_begin 
+trace t=1793350271.230 host=node1 rank=3 pid=1014 stage=gather_begin 
+trace t=1793350271.230 host=node1 rank=3 pid=1014 stage=gather_done 
+trace t=1793350271.230 host=node1 rank=3 pid=1014 stage=bcast_begin 
+trace t=1793350271.230 host=node1 rank=0 pid=1011 stage=bcast_begin 
+placement_check ranks=8 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350271.230 host=node1 rank=0 pid=1011 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node1 rank=2 pid=1013 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node1 rank=3 pid=1014 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node1 rank=1 pid=1012 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node2 rank=5 pid=531 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node2 rank=4 pid=530 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node2 rank=6 pid=532 stage=finalize_begin verdict=PASS
+trace t=1793350271.230 host=node2 rank=7 pid=533 stage=finalize_begin verdict=PASS
+trace t=1793350271.280 host=node2 rank=5 pid=531 stage=finalize_done 
+trace t=1793350271.281 host=node1 rank=2 pid=1013 stage=finalize_done 
+trace t=1793350271.281 host=node2 rank=6 pid=532 stage=finalize_done 
+trace t=1793350271.281 host=node2 rank=4 pid=530 stage=finalize_done 
+trace t=1793350271.283 host=node1 rank=1 pid=1012 stage=finalize_done 
+trace t=1793350271.283 host=node1 rank=0 pid=1011 stage=finalize_done 
+trace t=1793350271.285 host=node2 rank=7 pid=533 stage=finalize_done 
+trace t=1793350271.286 host=node1 rank=3 pid=1014 stage=finalize_done 
+[node1:01006] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:01006] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_4x2 PASS rc=0 secs=2 kind=required 
+
+===== gate place_8x1 (required, limit 60s) 08:51:12: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+trace t=1793350274.343 host=node1 rank=0 pid=1136 stage=finalize_begin verdict=PASS
+trace t=1793350274.342 host=node1 rank=2 pid=1138 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node1 rank=4 pid=1140 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node1 rank=7 pid=1150 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node2 rank=12 pid=615 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node2 rank=14 pid=617 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node2 rank=13 pid=616 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node2 rank=15 pid=618 stage=finalize_begin verdict=PASS
+trace t=1793350274.343 host=node2 rank=10 pid=613 stage=finalize_begin verdict=PASS
+trace t=1793350274.344 host=node2 rank=9 pid=612 stage=finalize_begin verdict=PASS
+trace t=1793350274.344 host=node2 rank=11 pid=614 stage=finalize_begin verdict=PASS
+trace t=1793350274.344 host=node2 rank=8 pid=611 stage=finalize_begin verdict=PASS
+trace t=1793350274.395 host=node1 rank=1 pid=1137 stage=finalize_done 
+trace t=1793350274.396 host=node1 rank=3 pid=1139 stage=finalize_done 
+trace t=1793350274.397 host=node1 rank=6 pid=1147 stage=finalize_done 
+trace t=1793350274.397 host=node1 rank=0 pid=1136 stage=finalize_done 
+trace t=1793350274.399 host=node1 rank=5 pid=1143 stage=finalize_done 
+trace t=1793350274.400 host=node1 rank=7 pid=1150 stage=finalize_done 
+trace t=1793350274.399 host=node2 rank=13 pid=616 stage=finalize_done 
+trace t=1793350274.403 host=node1 rank=4 pid=1140 stage=finalize_done 
+trace t=1793350274.400 host=node2 rank=12 pid=615 stage=finalize_done 
+trace t=1793350274.403 host=node1 rank=2 pid=1138 stage=finalize_done 
+trace t=1793350274.400 host=node2 rank=8 pid=611 stage=finalize_done 
+trace t=1793350274.400 host=node2 rank=9 pid=612 stage=finalize_done 
+trace t=1793350274.402 host=node2 rank=11 pid=614 stage=finalize_done 
+trace t=1793350274.403 host=node2 rank=15 pid=618 stage=finalize_done 
+trace t=1793350274.403 host=node2 rank=14 pid=617 stage=finalize_done 
+trace t=1793350274.406 host=node2 rank=10 pid=613 stage=finalize_done 
+[node1:01131] 15 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:01131] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_8x1 PASS rc=0 secs=2 kind=required 
+
+===== gate serial (required, limit 240s) 08:51:15: make BIN=bin/vanda-simtwonode EVIDENCE=artifacts/local/runs/simulated-twonode-20261030T085041Z check
+python3 tests/validate_serial.py --binary bin/vanda-simtwonode/bh_serial \
+    --out artifacts/local/runs/simulated-twonode-20261030T085041Z/serial_validation_vanda-simtwonode.json
+self_test case=empty n=0 leaf_size=1 nodes=0 PASS
+self_test case=empty n=0 leaf_size=8 nodes=0 PASS
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.222e-14 mean_rel_err=1.478e-15 max_abs_err=2.536e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.230e-14 mean_rel_err=1.479e-15 max_abs_err=2.590e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)
+serial PASS rc=0 secs=1 kind=required 
+
+===== gate hybrid (required, limit 600s) 08:51:17: make BIN=bin/vanda-simtwonode EVIDENCE=artifacts/local/runs/simulated-twonode-20261030T085041Z check-hybrid MPIRUN=mpirun MPIRUN_FLAGS=--prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -x OMP_NUM_THREADS --map-by node --bind-to none HYBRID_GATE_ARGS=--max-cores 16 --suite multinode --expect-hosts 2
+    --out artifacts/local/runs/simulated-twonode-20261030T085041Z/hybrid_validation_vanda-simtwonode.json --max-cores 16 --suite multinode --expect-hosts 2
+hybrid case=1x1_static n=2000 steps=1 ranks=1 threads=1 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_static n=2000 steps=1 ranks=1 threads=4 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_dynamic1 n=2000 steps=1 ranks=1 threads=4 schedule=dynamic/1 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=2x1_static n=2000 steps=1 ranks=2 threads=1 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=3x2_dynamic16 n=2000 steps=1 ranks=3 threads=2 schedule=dynamic/16 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=4x2_guided n=2000 steps=1 ranks=4 threads=2 schedule=guided/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=theta0_3x2 n=1500 steps=1 ranks=3 threads=2 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=leaf1_2x2 n=1500 steps=1 ranks=2 threads=2 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x1 n=2000 steps=10 ranks=1 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x4_dynamic n=2000 steps=10 ranks=1 threads=4 schedule=dynamic/8 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_3x2_static n=2001 steps=10 ranks=3 threads=2 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_4x2_guided n=2003 steps=10 ranks=4 threads=2 schedule=guided/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=uneven_n7_4ranks n=7 steps=10 ranks=4 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=zero_owned_n3_5ranks n=3 steps=10 ranks=5 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=singleton_3ranks n=1 steps=5 ranks=3 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_2x8_static n=20011 steps=1 ranks=2 threads=8 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_4x4_dynamic64 n=20011 steps=10 ranks=4 threads=4 schedule=dynamic/64 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_8x2_guided n=20003 steps=10 ranks=8 threads=2 schedule=guided/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_16x1_static n=2003 steps=10 ranks=16 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_6x2_dynamic1 n=1001 steps=10 ranks=6 threads=2 schedule=dynamic/1 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_zero_owned_16x1 n=10 steps=10 ranks=16 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_theta0_4x4 n=4001 steps=1 ranks=4 threads=4 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)
+hybrid PASS rc=0 secs=82 kind=required 
+
+===== gate recorder (required, limit 120s) 08:52:39: env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores python3 scripts/run_case.py --out artifacts/local/runs/simulated-twonode-20261030T085041Z --case smoke_bound_2node_4x4 --rep 1 --allocated-cores 16 --launcher mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -- bin/vanda-simtwonode/bh_hybrid --n 50000 --steps 2 --schedule dynamic --chunk 64
+smoke_bound_2node_4x4_rep1: exit=0 ok=True wall_s=1.195159
+recorder PASS rc=0 secs=4 kind=required 
+
+===== gate place_1x8 (required, limit 60s) 08:52:44: make BIN=bin/vanda-simtwonode MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793350365.883 host=node1 rank=0 pid=2041 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793350365.878 host=node2 rank=1 pid=1394 stage=gather_done 
+trace t=1793350365.883 host=node1 rank=0 pid=2041 stage=bcast_begin 
+trace t=1793350365.883 host=node1 rank=0 pid=2041 stage=finalize_begin verdict=PASS
+trace t=1793350365.878 host=node2 rank=1 pid=1394 stage=bcast_begin 
+trace t=1793350365.884 host=node2 rank=1 pid=1394 stage=finalize_begin verdict=PASS
+trace t=1793350365.934 host=node1 rank=0 pid=2041 stage=finalize_done 
+trace t=1793350365.939 host=node2 rank=1 pid=1394 stage=finalize_done 
+[node1:02036] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:02036] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+place_1x8 PASS rc=0 secs=2 kind=required 
+
+===== summary 08:52:46
+allocation PASS rc=0 secs=1 kind=critical 
+build PASS rc=0 secs=7 kind=critical 
+flags PASS rc=0 secs=0 kind=critical 
+toolchain PASS rc=0 secs=1 kind=critical 
+internode_2 PASS rc=0 secs=2 kind=critical 
+internode_16 PASS rc=0 secs=2 kind=required 
+place_2x4 PASS rc=0 secs=3 kind=required 
+place_4x2 PASS rc=0 secs=2 kind=required 
+place_8x1 PASS rc=0 secs=2 kind=required 
+serial PASS rc=0 secs=1 kind=required 
+hybrid PASS rc=0 secs=82 kind=required 
+recorder PASS rc=0 secs=4 kind=required 
+place_1x8 PASS rc=0 secs=2 kind=required 
+verdict required_or_critical=13 not_passed=0 optional: none
+verdict PASS
+end=2026-10-30T08:52:46+00:00 elapsed_s=121 walltime_s=1800

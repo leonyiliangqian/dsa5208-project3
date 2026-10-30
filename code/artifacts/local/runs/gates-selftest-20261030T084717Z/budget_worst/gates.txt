@@ -1,0 +1,2 @@
+long TIMEOUT rc=124 secs=51 kind=required limit cut from 600s to 45s (worst-case overhead 125s) to fit the walltime; no completion within 45s
+cleanup FAIL rc=- secs=0 kind=critical after long

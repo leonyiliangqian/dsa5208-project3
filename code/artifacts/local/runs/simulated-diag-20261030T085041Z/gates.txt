@@ -1,0 +1,11 @@
+allocation PASS rc=0 secs=1 kind=critical 
+build PASS rc=0 secs=2 kind=critical 
+d1_launch_only PASS rc=0 secs=2 kind=required 
+d2_bind_pe4 PASS rc=0 secs=2 kind=required 
+d3_bind_pe8 PASS rc=0 secs=1 kind=required 
+d4_probe_pe4 PASS rc=0 secs=2 kind=required 
+d5_probe_pe8 PASS rc=0 secs=2 kind=required 
+d6_probe_pe8_head PASS rc=0 secs=1 kind=required 
+d7_probe_nobind PASS rc=0 secs=2 kind=required 
+d8_probe_pe8_tmrsh SKIP rc=- secs=0 kind=optional pbs_tmrsh not found
+d9_probe_pe8_repeat PASS rc=0 secs=2 kind=required 
