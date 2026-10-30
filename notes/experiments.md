@@ -246,3 +246,14 @@ Changes made for this (30 Oct):
 Fault-injection evidence: artifacts/local/runs/gates-selftest-* (results.txt,
 provenance.txt with source revision and file hashes, one directory per
 scenario).
+
+### Diagnostic preflight, 30 Oct 16:59 SGT (read-only; nothing transferred or submitted)
+
+Existing SSH master; no credentials entered. Notice unchanged (scheduling
+stopped 29 Oct 18:00, access stops 31 Oct 06:00, release 2 Nov 17:00).
+`scheduling = False`, server Idle: remote work stopped. auto_free and
+cpu_parallel enabled/started, queue_charge_rate = 0; no jobs of mine queued.
+Balance not read: the allocation-manager session has expired (`amgr login`
+needed). Record: code/artifacts/cluster/discovery/vanda_prediag_checks_*.txt.
+Local dry run for diag.pbs at e43b561 prints the expected qsub command;
+directives select=2:ncpus=8:mpiprocs=8:mem=4gb, place=scatter, 00:20:00.

@@ -1,0 +1,26 @@
+Fri Oct 30 04:59:19 PM +08 2026
+stdct-login-01
+== motd notice
+           HPC Scheduled Maintenance
+1.  Thu, 29-Oct, 6:00PM:  Stop job scheduling
+2.  Sat, 31-Oct, 6:00AM:  Stop cluster access and terminate running jobs
+3.  Mon, 2-Nov,  5:00PM:  Release of HPC system
+== server
+    server_state = Idle
+    scheduling = False
+== queues
+Queue: auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+Queue: cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== my jobs
+== balance (no login attempted)
+   #  amgr login 
