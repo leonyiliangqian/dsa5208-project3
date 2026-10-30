@@ -17,6 +17,19 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - Every cluster job needs Leon's approval before submission (charging and site
   rules). Nothing below may be submitted without it.
 
+## What you can write now, and what must wait
+
+**Write now** (evidence exists): Introduction (minus findings); Problem and
+Method; Parallel Implementation; Correctness for one node (Vanda job 1503779)
+and the honest status of the two-node attempts; Computing Environment (node
+types, build policy, placement); Experimental Methodology (timing, metrics,
+planned studies, bounded runs, provenance); design Limitations; AI usage draft.
+
+**Must wait for Vanda measurements**: the findings sentence in the
+Introduction; leaf size and frozen manifest values; two-node correctness;
+every Results subsection (figures and tables fill automatically from
+`report_figures.py`); Discussion, measured Limitations and Conclusion.
+
 ## What is verified, and where the evidence is
 
 Genuine Vanda evidence lives only under `code/artifacts/cluster/`. Everything

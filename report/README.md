@@ -15,7 +15,9 @@ Group members: Yan Yixin, Zhang Yue, Leon Yiliang Qian (names and IDs to be conf
 The group compiles in Overleaf, as for Project 2. Upload this whole `report/`
 folder (keeping `generated/`, `figures/` and `rho-class/` as subfolders) to the
 Overleaf project, or sync it. Settings: compiler pdfLaTeX, main document
-`main.tex`; Overleaf runs biber automatically for biblatex. No local TeX
+`main.tex`; Overleaf runs biber automatically for biblatex. The class uses
+`minted`, which needs shell escape (on by default in Overleaf). Locally:
+`code/docker/tex` compiles it (`pdflatex -shell-escape`, `biber`). No local TeX
 installation is needed.
 
 ## Regenerating content from evidence

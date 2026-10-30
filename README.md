@@ -1,7 +1,6 @@
 # DSA5208 Project 3: MPI+OpenMP Barnes–Hut
 
 Due **13 November 2026, 23:59 Singapore time**. Worth **35 points**.
-Optional progress report: **before 30 October**; prepare by 29 October if using it.
 
 Existing group listing: Yan Yixin, Zhang Yue, Leon Yiliang Qian. Confirm the
 membership and student IDs in `report/main.tex` before submission.
@@ -27,27 +26,52 @@ membership and student IDs in `report/main.tex` before submission.
 - Report: method, parallel design, correctness (Vanda) and methodology drafted
   in `report/` for Overleaf; results slots fill from Vanda runs only.
 
+## Limitations at this point (read before writing)
+
+- Single-node correctness passed on Vanda (job 1503779).
+- **Two-node solver correctness is unverified** (jobs 1506687 and 1507215 did
+  not reach the solver comparison; evidence kept).
+- **Local Docker simulations are tests, not Vanda performance results.**
+- **No formal cluster scaling measurement has been collected.**
+- Vanda scheduling was confirmed disabled for maintenance (30 Oct); reopening
+  was announced for **2 November 17:00 SGT**. Every cluster job needs Leon's
+  approval first.
+
 ## Start here
 
 ```sh
 cd code
-make check                        # serial gate (macOS or Linux)
-docker/run.sh make check-hybrid   # hybrid gate in the Linux container
+make check                                   # serial gate (macOS or Linux)
+docker/run.sh make check check-hybrid        # serial + hybrid gates in Linux (Docker)
+docker/run.sh bash tests/pipeline_e2e.sh     # measurement pipeline on tiny inputs
+docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'   # job gate library, two simulated nodes
 ```
 
-See [code/README.md](code/README.md) for outputs and limitations.
+Report figures and tables are generated, never typed: `code/scripts/report_tables.py`
+(validation tables, from the Vanda correctness run) and `code/scripts/report_figures.py`
+(scaling results, from Vanda runs only). See [HANDOFF.md](HANDOFF.md) for the
+commands and [code/README.md](code/README.md) for details.
+
+## Evidence
+
+| Where | What | Status |
+|---|---|---|
+| [code/artifacts/cluster/](code/artifacts/cluster/) | Genuine Vanda runs (passed and failed jobs), PBS logs, site and charging checks | cluster evidence |
+| [code/artifacts/local/](code/artifacts/local/) | macOS/Docker validation, simulations and pipeline tests | local only, never results |
 
 | File | Purpose |
 |---|---|
+| [HANDOFF.md](HANDOFF.md) | State of the work, evidence, commands after reopening, pending report items |
 | [notes/assignment_brief.txt](notes/assignment_brief.txt) | Assignment wording |
 | [notes/project3_prep.md](notes/project3_prep.md) | Requirements, milestones and blockers |
-| [notes/design.md](notes/design.md) | Existing algorithm design and staged scope |
-| [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol |
+| [notes/design.md](notes/design.md) | Algorithm design and staged scope |
+| [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol; every Vanda job and finding |
+| [notes/experiment_manifest.md](notes/experiment_manifest.md) | Study design (machine-readable plans in `code/manifests/`) |
 | [notes/ai_usage.md](notes/ai_usage.md) | AI-use record and declaration draft |
-| [notes/cluster_access.md](notes/cluster_access.md) | Login, project transfer and discovery steps |
-| [notes/progress_report_draft.md](notes/progress_report_draft.md) | Optional progress report, draft only |
-| [code/](code/) | Serial source and validation runner |
-| [report/](report/) | Overleaf-ready report source; method/validation drafted, results pending |
+| [notes/cluster_access.md](notes/cluster_access.md) | Vanda runbook |
+| [notes/progress_report_draft.md](notes/progress_report_draft.md) | Optional progress report draft (not sent) |
+| [code/](code/) | C++17 serial and MPI+OpenMP solvers, tests, measurement pipeline, Vanda jobs |
+| [report/](report/) | Overleaf-ready report source; method and validation drafted, results pending |
 
 ## Submission
 
