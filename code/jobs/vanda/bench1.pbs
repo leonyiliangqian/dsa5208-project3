@@ -1,0 +1,17 @@
+#!/bin/bash
+# Formal single-node measurements from a FROZEN manifest (default
+# manifests/studies_single_node.json, which is still proposed, so this job
+# refuses to run until the manifest is frozen after the pilot). The walltime
+# is a placeholder to be set from pilot timings before approval.
+# Submit only after approval, through jobs/vanda/submit.sh.
+#
+#PBS -N p3_bench1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+
+RUN_PREFIX=bench1
+MANIFEST=${MANIFEST:-manifests/studies_single_node.json}
+EXPECT_NODES=1 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=1
+source jobs/vanda/measure.sh

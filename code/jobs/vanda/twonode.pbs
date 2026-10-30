@@ -46,7 +46,8 @@ echo "walltime_s=$WALLTIME_S end_reserve_s=$END_RESERVE_S gate_overhead_s=$(gate
 # Fail fast: without two distinct hosts, the expected 8 CPUs per node and a
 # verified PBS launch, nothing after this point would mean what it claims;
 # the failed check's output stays in gate_allocation.log, env/ and gates.txt.
-gate allocation   90 critical bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
+gate allocation   90 critical env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 \
+    bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
 gate build       240 critical make BIN="$BIN" all hybrid
 gate flags        60 critical bash jobs/vanda/flags_check.sh
 gate toolchain    90 critical make BIN="$BIN" toolchain

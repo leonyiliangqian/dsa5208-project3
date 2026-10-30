@@ -1,4 +1,4 @@
-# Multi-node job setup shared by twonode.pbs and diag.pbs (source it from the
+# Job setup shared by twonode.pbs, diag.pbs and measure.sh (source it from the
 # code/ directory with OUT set): load modules, choose and force the PBS tm
 # launcher (sets MPI, LAUNCH, NODES, PREFIX), and record the environment in
 # OUT/env/environment.txt.
@@ -27,7 +27,8 @@ python3 -c 'import sys; sys.exit(sys.version_info < (3, 7))' \
 # for both node discovery (ras) and launch (plm), so mpirun fails rather than
 # falling back; the allocation check then confirms from mpirun's own
 # component-selection log and the remote process ancestry that tm was used.
-# REQUIRE_PBS_TM=0 is for local simulation only (no PBS there).
+# REQUIRE_PBS_TM=0 launches from the node file instead: single-node jobs
+# (nothing remote to launch) and local simulation (no PBS).
 [ -d /opt/pbs/lib ] && export LD_LIBRARY_PATH=/opt/pbs/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 REQUIRE_PBS_TM=${REQUIRE_PBS_TM:-1}
 NODES=$(sort -u "${PBS_NODEFILE:-/dev/null}" | wc -l)
@@ -35,7 +36,7 @@ PREFIX=${EBROOTOPENMPI:-$(dirname "$(dirname "$(command -v mpirun)")")}
 if [ "$REQUIRE_PBS_TM" = 1 ]; then
     LAUNCH=tm; LAUNCH_FLAGS="--mca plm tm --mca ras tm"
 else
-    LAUNCH=simulated; LAUNCH_FLAGS="--hostfile $PBS_NODEFILE"
+    LAUNCH=hostfile; LAUNCH_FLAGS="--hostfile $PBS_NODEFILE"
 fi
 MPI="mpirun --prefix $PREFIX $LAUNCH_FLAGS -x PATH -x LD_LIBRARY_PATH"
 echo "nodes=$NODES launcher=$LAUNCH mpirun_base=$MPI"

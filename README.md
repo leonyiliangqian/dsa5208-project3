@@ -6,6 +6,8 @@ Optional progress report: **before 30 October**; prepare by 29 October if using 
 Existing group listing: Yan Yixin, Zhang Yue, Leon Yiliang Qian. Confirm the
 membership and student IDs in `report/main.tex` before submission.
 
+**Teammates writing the report: start with [HANDOFF.md](HANDOFF.md).**
+
 ## Current state (30 October 2026)
 
 - Topic: Barnes–Hut n-body, C++17, MPI+OpenMP.
@@ -20,8 +22,10 @@ membership and student IDs in `report/main.tex` before submission.
   have time limits and cleanup checks, and a small diagnostic job
   (`code/jobs/vanda/diag.pbs`) is prepared but not submitted. Benchmarks start
   after the 2 Nov 17:00 reopening. See notes/experiments.md and notes/cluster_access.md.
+- Measurement pipeline complete and tested locally (manifests, time-limited runs,
+  analysis, report figures/tables); no performance measurement exists yet.
 - Report: method, parallel design, correctness (Vanda) and methodology drafted
-  in `report/` for Overleaf; scaling results pending.
+  in `report/` for Overleaf; results slots fill from Vanda runs only.
 
 ## Start here
 

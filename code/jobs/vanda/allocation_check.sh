@@ -7,6 +7,11 @@
 # under tm, mpirun's log selecting the tm launcher with the remote process
 # started by orted and not through sshd. Models and ISA flags are recorded
 # only; mixed models are allowed here and make a job unusable for timing.
+# Environment: ALLOC_EXPECT_NODES (required) is the number of distinct hosts
+# the job must have; ALLOC_CPUS_PER_NODE (default 8) is the exact cpuset size
+# expected on every node; ALLOC_SAME_MODEL=1 (timing jobs) also requires one
+# CPU model on all nodes. With one node the host and launcher checks reduce
+# to "one host" and are not about remote processes.
 # Writes OUT/env/nodes.txt and OUT/env/launch_verbose.txt.
 set -o pipefail
 OUT=${1:?OUT} NODES=${2:?NODES} LAUNCH=${3:?LAUNCH}
@@ -14,9 +19,11 @@ OUT=${1:?OUT} NODES=${2:?NODES} LAUNCH=${3:?LAUNCH}
 $MPI --mca plm_base_verbose 10 --mca ras_base_verbose 10 -np "$NODES" --map-by ppr:1:node \
     --bind-to none bash tests/toolchain/node_report.sh \
     2> "$OUT/env/launch_verbose.txt" | sort | tee "$OUT/env/nodes.txt"
-python3 - "$OUT/env/nodes.txt" "$NODES" "$OUT/env/launch_verbose.txt" "$LAUNCH" "$(hostname -s)" <<'EOF'
+python3 - "$OUT/env/nodes.txt" "$NODES" "$OUT/env/launch_verbose.txt" "$LAUNCH" "$(hostname -s)" \
+    "${ALLOC_CPUS_PER_NODE:-8}" "${ALLOC_SAME_MODEL:-0}" "${ALLOC_EXPECT_NODES:?set ALLOC_EXPECT_NODES}" <<'EOF'
 import re, sys
 nodes, want, verbose, launch, head = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5]
+per_node, same_model, expect = int(sys.argv[6]), sys.argv[7] == "1", int(sys.argv[8])
 lines = [l for l in open(nodes) if l.startswith("node ")]
 def field(l, k):
     m = re.search(rf"\b{k}=(\S*)", l)
@@ -36,11 +43,13 @@ log = open(verbose, errors="replace").read()
 selected = {k: re.findall(rf"\(\s*{k}\) Selected component \[(\w+)\]", log) for k in ("plm", "ras")}
 remote = [field(l, "ancestry") for l in lines if l.split()[1] != head]
 checks = {
-    "two_hosts": len(hosts) == want == 2 and len(lines) == want,
-    "cpus_8_each": len(cpus) == want and all(c == 8 for c in cpus),
+    f"{expect}_hosts": len(hosts) == expect == want and len(lines) == expect,
+    f"cpus_{per_node}_each": len(cpus) == want and all(c == per_node for c in cpus),
     "arch_x86_64": archs == {"x86_64"},
 }
-if launch == "tm":
+if same_model:
+    checks["one_cpu_model"] = len(models) == 1 and models[0] != ""
+if launch == "tm" and want > 1:
     checks["plm_tm_selected"] = selected["plm"] == ["tm"]
     checks["remote_orted_not_sshd"] = len(remote) == want - 1 and all(
         "orted" in a.split("<") and "sshd" not in a.split("<") for a in remote)

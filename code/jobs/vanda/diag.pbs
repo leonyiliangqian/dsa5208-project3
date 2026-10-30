@@ -64,7 +64,8 @@ else
 fi
 echo "head_entry=$HEAD_ENTRY pbs_tmrsh=${TMRSH:+yes}"
 
-gate allocation  90 critical bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
+gate allocation  90 critical env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 \
+    bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
 gate build      120 critical make BIN="$BIN" "$BIN/placement_check"
 
 gate d1_launch_only 60 required $MPI -np 2 --map-by ppr:1:node --bind-to none hostname

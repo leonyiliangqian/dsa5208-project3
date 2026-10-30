@@ -8,11 +8,13 @@ C++17 Barnes–Hut gravitational n-body simulation, serial and MPI+OpenMP.
 | `common/run_support.hpp` | Shared CLI options/validation, state dump, JSON helpers |
 | `serial/barnes_hut.cpp` | Serial driver (`bh_serial`): speedup denominator, `--self-test`, `--validate` |
 | `hybrid/bh_hybrid.cpp` | MPI+OpenMP driver (`bh_hybrid`); 1 rank = OpenMP only, 1 thread = MPI only |
-| `tests/` | Serial gate, hybrid gate, energy/timestep study, toolchain probes |
-| `scripts/` | Preflight, cluster discovery, `run_case.py` (one recorded run), `analyze.py`, local pilot |
-| `docker/` | Debian GCC 12 + Open MPI 4.1 development image and `run.sh` wrapper |
-| `artifacts/local/` | Local development evidence (macOS and Docker). Not cluster results |
-| `artifacts/cluster/` | Formal Atlas/Vanda runs (none yet) |
+| `tests/` | Serial gate, hybrid gate, energy/timestep study, toolchain probes, `pipeline_e2e.sh`, `jobs/gates_selftest.sh` |
+| `scripts/` | `run_case.py` (one recorded, time-limited run), `run_manifest.py` (all runs of a manifest), `analyze.py`, `report_figures.py`, `report_tables.py`, preflight, discovery |
+| `manifests/` | Machine-readable experiment plans (pilot, proposed formal studies, local test manifests) |
+| `jobs/vanda/` | PBS jobs, gate library, submission wrapper (see below) |
+| `docker/` | Development image and `run.sh`; `twonode/` two-container simulation; `tex/` LaTeX compile test |
+| `artifacts/local/` | Local development evidence and simulations (macOS and Docker). Never cluster results |
+| `artifacts/cluster/` | Genuine Vanda evidence only: job runs, PBS logs, site checks |
 
 ## Build and check
 
@@ -106,26 +108,49 @@ reduced with MPI_MAX, plus the traverse mean for the imbalance ratio max/mean.
 Serial times the same region and phases with `steady_clock`. Use serial
 Barnes–Hut, never direct summation, as the speedup denominator.
 
+## Measurement pipeline
+
+```sh
+python3 scripts/run_manifest.py manifests/<m>.json --out <run dir> --bin <bin dir> \
+    [--mpirun ...] [--cores-per-node C] [--nodes K] [--first-cpu CPU] [--deadline EPOCH] [--plan-only]
+python3 scripts/analyze.py <run dir> [<run dir> ...] [--out <dir>]     # summary.csv/json
+python3 scripts/report_figures.py <summary.json> [...]                 # -> ../report/generated/
+```
+
+A manifest lists cases; list-valued fields are swept. Repetitions are
+interleaved. Every run has its own timeout and runs in its own process group
+(TERM, then KILL); a run that cannot finish before the deadline is recorded as
+skipped. Each record carries the manifest id and sha256, study tag, command,
+allocated cores, CPU model, source and binary hashes, compiler, MPI and flags.
+`analyze.py` groups repetitions by every setting that can change a timing and
+computes speedup only against a serial baseline with the same problem, CPU
+model, source tree and flags. `report_figures.py` writes pgfplots figures and
+tables; it refuses inputs outside `artifacts/cluster/` unless `--allow-local`
+with an `--out` outside `report/generated/`, and then marks every caption
+LOCAL PIPELINE TEST.
+
+Tests: `docker/run.sh bash tests/pipeline_e2e.sh` (manifest -> runs -> analysis
+-> figures on tiny inputs, timeout, deadline, interruption and refusal paths);
+`docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'` (gate library fault
+injection on two simulated nodes).
+
 ## Vanda (PBS)
 
-`jobs/vanda/preflight.sh` (read-only login-node checks), `jobs/vanda/submit.sh`
-(requires explicit `--queue` and `--project`; dry run unless `--yes`) and
-`jobs/vanda/correctness.pbs` (8 cores, 30 min: builds on the compute node with
-`OpenMPI/4.1.6-GCC-13.2.0`, records the environment, runs toolchain probes,
-bound placement checks 2x4/4x2/8x1, serial and hybrid gates, sanitizer and one
-recorded smoke run into `artifacts/cluster/runs/<RUN_ID>/`). `make placement`
-runs the placement probe locally. Step-by-step: `../notes/cluster_access.md`.
+Every job is submitted only through `jobs/vanda/submit.sh <job> --queue auto_free
+--no-project` (dry run unless `--yes`), which records the login node's commit as
+`SOURCE_GIT_REV` (compute nodes have no git). Jobs build on the compute node and
+run their steps as gates (`jobs/vanda/gates.sh`): each has a time limit, a
+process snapshot before expiry and an ownership-checked cleanup on every node
+after it; kinds are critical, required and optional. Step-by-step:
+`../notes/cluster_access.md`.
 
-- `jobs/vanda/twonode.pbs`: 2 nodes x 8 cores (`place=scatter`), 30 min. Checks
-  each node's allowed CPUs and CPU model, inter-node MPI (`make internode`),
-  bound placement 1x8/2x4/4x2/8x1 per node on both hosts, and the hybrid gate with
-  `--suite multinode --expect-hosts 2` (every multi-rank run must report two hosts).
-  Vanda's Open MPI has no PBS `tm` launcher, so the job uses `--hostfile
-  $PBS_NODEFILE`, `pbs_tmrsh` when present, `--prefix` and `-x PATH -x LD_LIBRARY_PATH`.
-- `jobs/vanda/pilot.pbs`: 1 node x 64 cores, 60 min. Serial time and memory
-  against N, hybrid range at N = 1e6, schedules, leaf size, accuracy against
-  cost; one repetition each, to size the manifest (`../notes/experiment_manifest.md`).
-- `submit.sh` passes the login node's git commit as `SOURCE_GIT_REV`, because
-  compute nodes have no git; run records fall back to it.
+| Job | Request | Purpose | Status |
+|---|---|---|---|
+| `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node | PASSED as job 1503779 |
+| `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, forced PBS tm launch | 1506687 stopped at allocation, 1507215 stalled; unverified |
+| `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | prepared, awaiting approval |
+| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | prepared, NOT approved |
+| `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
 
-Results: correctness job 1503779 (one node) passed; no performance measurements yet.
+Results so far: correctness job 1503779 (one node) passed; no performance
+measurement exists.

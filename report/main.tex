@@ -5,6 +5,8 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{multirow}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
 \setlength{\columnsep}{0.25in}
 % Visible marker for content that depends on Atlas/Vanda runs; none may remain at submission.
 \newcommand{\pending}[1]{\textcolor{red}{\textbf{[PENDING: #1]}}}
@@ -172,16 +174,48 @@ $P$ is the number of physical cores allocated to a run, normally ranks $\times$ 
 \item Weak scaling with $N \propto P$ and fixed threads per rank.
 \item Accuracy against cost across $\theta$, reported separately from scaling.
 \end{enumerate}
-Problem sizes, step counts and core counts will be chosen from pilot runs within the cluster's memory and time limits and then frozen in a manifest. \pending{manifest.} Each configuration is run at least three times. We report the median with the minimum and maximum, and failed runs are kept and listed.
+Problem sizes, step counts and core counts will be chosen from pilot runs within the cluster's memory and time limits and then frozen in a manifest: a machine-readable file in the code repository whose identifier and checksum every run record carries. Formal measurement jobs refuse a manifest that is not frozen. \pending{frozen manifest (sizes, step counts, core counts) after the pilot.} Each configuration is run at least three times. We report the median with the minimum and maximum, and failed runs are kept and listed.
 
 \subsection{Bounded Runs and Failed Runs}
-A step that never finishes must not consume a whole allocation silently, as the stalled placement probe did in job 1507215. Every step of a correctness or diagnostic job now has its own time limit, about ten times its observed duration. Before each step the limit is shortened, if necessary, so that the step's worst case, including the time to stop it, record process states and check every node, still ends before the allocation does; a step with too little time left is skipped. This is a bounded best effort rather than a guarantee: work outside the steps is not limited, and a process that cannot be killed would still run on. Shortly before a limit expires, the state of every process on every node is recorded. After every step, processes it left behind are terminated on every node, but only those that can be shown to belong to the job, and their absence is checked. If that check fails, or an MPI process of unknown ownership remains, the job stops, because later steps might share the cores with stray processes. Steps that depend on a failed step are skipped. Each step is classed as critical, required or optional; a run passes only if every critical and required step passes, while optional comparisons are listed without deciding the outcome. Timed-out, failed and skipped steps are kept in the record. \pending{the same treatment for the measurement jobs.}
+A step that never finishes must not consume a whole allocation silently, as the stalled placement probe did in job 1507215. Every step of a correctness or diagnostic job now has its own time limit, about ten times its observed duration. Before each step the limit is shortened, if necessary, so that the step's worst case, including the time to stop it, record process states and check every node, still ends before the allocation does; a step with too little time left is skipped. This is a bounded best effort rather than a guarantee: work outside the steps is not limited, and a process that cannot be killed would still run on. Shortly before a limit expires, the state of every process on every node is recorded. After every step, processes it left behind are terminated on every node, but only those that can be shown to belong to the job, and their absence is checked. If that check fails, or an MPI process of unknown ownership remains, the job stops, because later steps might share the cores with stray processes. Steps that depend on a failed step are skipped. Each step is classed as critical, required or optional; a run passes only if every critical and required step passes, while optional comparisons are listed without deciding the outcome. Timed-out, failed and skipped steps are kept in the record. Measurement jobs run the same way, and within them every timed run has its own time limit; a run that could not finish before the job's deadline is recorded as skipped rather than started.
 
 \subsection{Provenance}
 Each run writes its own record: exact command, scheduler job ID, nodes, CPU model, allocated cores, OpenMP settings, source revision with a hash of the source tree, binary hash, compiler, flags and MPI library, raw output and the program's result. Summaries, tables and figures are regenerated from these records by scripts, never copied by hand. Records are grouped by every setting that can change a timing, including placement and build, before medians are taken.
 
 \section{Results}
-\pending{strong scaling, efficiency, ranks $\times$ threads, scheduling, weak scaling, phase breakdown and accuracy--cost figures from Atlas/Vanda runs.}
+% Each fragment below is written by code/scripts/report_figures.py from
+% analysed Vanda runs (artifacts/cluster/) only; until it exists the slot
+% shows a pending marker. Do not type numbers into these slots by hand.
+\newcommand{\resultslot}[2]{\IfFileExists{generated/#1.tex}{\input{generated/#1.tex}}{\pending{#2}}}
+\pending{no scaling measurement has run yet: every figure and table in this section awaits Vanda jobs after the 2 Nov reopening.}
+
+\subsection{Strong Scaling}
+\resultslot{fig_strong_speedup}{strong-scaling speedup figure (study 1).}
+\resultslot{fig_strong_efficiency}{strong-scaling efficiency figure (study 1).}
+\pending{interpretation of the strong-scaling results.}
+
+\subsection{Ranks and Threads}
+\resultslot{tab_ranks_threads}{ranks $\times$ threads table (study 2).}
+\pending{interpretation.}
+
+\subsection{OpenMP Schedule}
+\resultslot{tab_schedule}{schedule and chunk table (study 3).}
+\pending{interpretation.}
+
+\subsection{Weak Scaling}
+\resultslot{fig_weak_efficiency}{weak-scaling efficiency figure (study 4).}
+\pending{interpretation, including memory per rank.}
+
+\subsection{Where the Time Goes}
+\resultslot{fig_phases}{phase breakdown figure.}
+\pending{interpretation.}
+
+\subsection{Accuracy and Cost}
+\resultslot{tab_accuracy_cost}{accuracy against cost table (study 6).}
+\pending{interpretation.}
+
+\subsection{Failed and Skipped Runs}
+\resultslot{tab_failed_runs}{table of failed, timed-out and skipped runs.}
 
 \section{Discussion}
 \subsection{What the Results Support}

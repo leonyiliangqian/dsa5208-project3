@@ -1,5 +1,11 @@
 # Experiment manifest — PROPOSED, not frozen
 
+Machine-readable versions (what the jobs actually run): `code/manifests/`
+`pilot_single_node.json` (the pilot), `studies_single_node.json` and
+`studies_two_node.json` (formal studies, status proposed; `bench1.pbs` and
+`bench2.pbs` refuse to run them until their status starts with `frozen`).
+`local_*.json` are local test manifests only.
+
 Status (29 Oct 2026): proposal only. N_s, N_w and step counts are placeholders
 until the single-node pilot (`code/jobs/vanda/pilot.pbs`) measures runtime and
 memory on Vanda. No formal benchmark has run. Freeze this file (record the

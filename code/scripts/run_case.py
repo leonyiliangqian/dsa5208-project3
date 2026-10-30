@@ -21,6 +21,7 @@ import os
 from pathlib import Path
 import platform
 import shlex
+import signal
 import socket
 import subprocess
 import sys
@@ -53,6 +54,45 @@ def source_state():
     return {"git_rev": rev, "source_tree_sha256": h.hexdigest(), "git_dirty": bool(dirty)}
 
 
+def run_bounded(argv, timeout, grace):
+    """Run argv in its own process group. On timeout the whole group (launcher,
+    ranks, helpers) gets SIGTERM, then SIGKILL after grace seconds, so mpirun
+    can still shut down its remote daemons. Returns (code, stdout, stderr,
+    timed_out, signal_used)."""
+    p = subprocess.Popen(argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                         start_new_session=True)
+
+    def forward(signum, _frame):
+        # The job (e.g. a gate's time limit) is stopping this recorder: pass
+        # the signal to the run's own process group so nothing is orphaned.
+        try:
+            os.killpg(p.pid, signum)
+        except ProcessLookupError:
+            pass
+    signal.signal(signal.SIGTERM, forward)
+    signal.signal(signal.SIGINT, forward)
+    try:
+        out, err = p.communicate(timeout=timeout)
+        return p.returncode, out, err, False, None
+    except subprocess.TimeoutExpired:
+        pass
+    used = "SIGTERM"
+    try:
+        os.killpg(p.pid, signal.SIGTERM)
+    except ProcessLookupError:
+        pass
+    try:
+        out, err = p.communicate(timeout=grace)
+    except subprocess.TimeoutExpired:
+        used = "SIGKILL"
+        try:
+            os.killpg(p.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        out, err = p.communicate()
+    return 124, out or "", (err or "") + f"\nTIMEOUT after {timeout}s ({used})\n", True, used
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True, help="run directory, e.g. artifacts/cluster/runs/<RUN_ID>")
@@ -61,7 +101,11 @@ def main():
     ap.add_argument("--launcher", default="", help="MPI launcher prefix; empty for serial")
     ap.add_argument("--allocated-cores", type=int, required=True,
                     help="physical cores allocated to this run; the P in efficiency S/P")
-    ap.add_argument("--timeout", type=int, default=7200)
+    ap.add_argument("--timeout", type=int, default=7200,
+                    help="seconds before the run's process group gets TERM (then KILL after --grace)")
+    ap.add_argument("--grace", type=int, default=15)
+    ap.add_argument("--tag", action="append", default=[], metavar="KEY=VALUE",
+                    help="metadata recorded with the run (e.g. study=strong, manifest=<file>)")
     ap.add_argument("cmd", nargs=argparse.REMAINDER)
     a = ap.parse_args()
     cmd = a.cmd[1:] if a.cmd and a.cmd[0] == "--" else a.cmd
@@ -75,15 +119,12 @@ def main():
     if record_path.exists():
         sys.exit(f"refusing to overwrite {record_path}")
 
+    tags = dict(t.split("=", 1) for t in a.tag if "=" in t)
     full = shlex.split(a.launcher) + cmd
     started = datetime.datetime.now(datetime.timezone.utc)
-    try:
-        r = subprocess.run(full, capture_output=True, text=True, timeout=a.timeout)
-        code, out, err = r.returncode, r.stdout, r.stderr
-    except subprocess.TimeoutExpired as e:
-        code, out, err = 124, e.stdout or "", (e.stderr or "") + f"\nTIMEOUT after {a.timeout}s"
-    (raw / f"{stem}.stdout").write_text(out if isinstance(out, str) else out.decode())
-    (raw / f"{stem}.stderr").write_text(err if isinstance(err, str) else err.decode())
+    code, out, err, timed_out, kill_signal = run_bounded(full, a.timeout, a.grace)
+    (raw / f"{stem}.stdout").write_text(out)
+    (raw / f"{stem}.stderr").write_text(err)
 
     result = None
     for line in (out if isinstance(out, str) else "").splitlines():
@@ -93,6 +134,8 @@ def main():
     # A run is usable only if it exited cleanly, reported a result, kept its
     # replicated state consistent and actually ran the requested thread count.
     problems = []
+    if timed_out:
+        problems.append(f"timed out after {a.timeout}s ({kill_signal})")
     if code != 0:
         problems.append(f"exit {code}")
     if result is None:
@@ -110,6 +153,9 @@ def main():
         "started_utc": started.isoformat(),
         "local_time": datetime.datetime.now().astimezone().isoformat(),
         "command": full, "allocated_cores": a.allocated_cores,
+        "timeout_s": a.timeout, "timed_out": timed_out, "kill_signal": kill_signal,
+        "elapsed_s": round((datetime.datetime.now(datetime.timezone.utc) - started).total_seconds(), 3),
+        "tags": tags, "run_marker": os.environ.get("P3_RUN_MARKER"),
         "scheduler_job_id": os.environ.get("SLURM_JOB_ID") or os.environ.get("PBS_JOBID"),
         "scheduler_nodelist": os.environ.get("SLURM_JOB_NODELIST") or sh("cat $PBS_NODEFILE 2>/dev/null | sort -u | paste -sd,"),
         "launch_host": socket.gethostname(), "platform": platform.platform(),

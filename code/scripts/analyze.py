@@ -16,6 +16,10 @@ Failed repetitions are listed, never silently dropped.
 
   analyze.py artifacts/cluster/runs/<RUN_ID>
 writes <run>/summary.csv and <run>/summary.json.
+  analyze.py RUN_DIR [RUN_DIR ...] --out DIR
+combines several run directories (e.g. one study split over jobs) into
+DIR/summary.{csv,json}; records keep their run directory in `runs`.
+Skipped and timed-out runs appear under "failed" with their reasons.
 """
 import csv
 import json
@@ -48,11 +52,18 @@ def config_of(rec):
             *placement_of(rec), *build_of(rec))
 
 
-def main(run_dir):
-    run = Path(run_dir)
-    records = [json.loads(p.read_text()) for p in sorted((run / "raw").glob("*.json"))]
+def main(run_dirs, out_dir=None):
+    runs = [Path(d) for d in run_dirs]
+    run = Path(out_dir) if out_dir else runs[0]
+    run.mkdir(parents=True, exist_ok=True)
+    records = []
+    for d in runs:
+        for p in sorted((d / "raw").glob("*.json")):
+            rec = json.loads(p.read_text())
+            rec["_run"] = d.name
+            records.append(rec)
     if not records:
-        sys.exit(f"no raw records in {run / 'raw'}")
+        sys.exit(f"no raw records in {[str(d / 'raw') for d in runs]}")
     failed = [r for r in records if not r.get("ok")]
     groups = {}
     for rec in records:
@@ -77,7 +88,12 @@ def main(run_dir):
         launcher, bind, places = placement_of(recs[0])
         row.update(launcher=launcher, omp_proc_bind=bind, omp_places=places,
                    cpu_model=cpu, source_tree_sha256=tree, cxxflags=flags,
-                   cases=",".join(sorted({r["case"] for r in recs})))
+                   cases=",".join(sorted({r["case"] for r in recs})),
+                   studies=",".join(sorted({r.get("tags", {}).get("study", "") for r in recs} - {""})),
+                   runs=",".join(sorted({r["_run"] for r in recs})))
+        if all(x.get("peak_rss_mib_rank_max") is not None for x in res):
+            row["peak_rss_mib_rank_max"] = max(x["peak_rss_mib_rank_max"] for x in res)
+            row["peak_rss_mib_rank_sum"] = max(x.get("peak_rss_mib_rank_sum", 0) for x in res)
         rows.append(row)
 
     # One serial baseline per (problem, build); two would make speedup ambiguous.
@@ -101,8 +117,10 @@ def main(run_dir):
         w.writeheader()
         w.writerows(rows)
     (run / "summary.json").write_text(json.dumps(
-        {"run": run.name, "records": len(records),
-         "failed": [{"case": r["case"], "rep": r["rep"], "problems": r.get("problems")} for r in failed],
+        {"run": run.name, "inputs": [str(d) for d in runs], "records": len(records),
+         "failed": [{"case": r["case"], "rep": r["rep"], "run": r["_run"], "problems": r.get("problems"),
+                     "skipped": bool(r.get("skipped")), "timed_out": bool(r.get("timed_out"))}
+                    for r in failed],
          "rows": rows}, indent=2) + "\n")
     print(f"{run.name}: {len(records)} records, {len(failed)} failed, {len(rows)} configurations")
     for r in rows:
@@ -113,6 +131,12 @@ def main(run_dir):
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
+    args = sys.argv[1:]
+    out = None
+    if "--out" in args:
+        i = args.index("--out")
+        out = args[i + 1]
+        del args[i:i + 2]
+    if not args or (len(args) > 1 and out is None):
         sys.exit(__doc__)
-    main(sys.argv[1])
+    main(args, out)
