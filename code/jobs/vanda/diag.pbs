@@ -8,7 +8,7 @@
 # match; memory is cut to what the probe needs (1507215 peaked at 69 MB).
 # Each step changes one thing, runs under its own time limit with a process
 # snapshot before expiry and a cleanup check after, and the job continues
-# past a stalled step:
+# past a stalled step. All steps are required except d8 (optional):
 #   d1 launch only (no binding, no MPI program)        -> tm launch itself
 #   d2 bind ppr:2:node:PE=4, hostname                    -> binding, part of cpuset
 #   d3 bind ppr:1:node:PE=8, hostname                    -> binding, whole cpuset
@@ -16,7 +16,7 @@
 #   d5 traced probe 1 x PE=8 per node, launcher verbose  -> the 1507215 configuration
 #   d6 traced probe 1 x PE=8, head node only             -> one node vs two
 #   d7 traced probe 1 per node, --bind-to none, 8 threads-> without MPI binding
-#   d8 traced probe 1 x PE=8 per node via pbs_tmrsh      -> tm plm vs rsh agent
+#   d8 traced probe 1 x PE=8 per node via pbs_tmrsh      -> tm plm vs rsh agent (optional)
 #   d9 d5 repeated without verbose output                -> repeatability
 # The probe's trace lines show, per rank, the last stage reached (start,
 # MPI_Init, OpenMP team, each collective, MPI_Finalize).
@@ -50,7 +50,7 @@ WALLTIME_S=${WALLTIME_S:-1200}
 LEFTOVER_PATTERN="vanda-$JOB/"
 export LEFTOVER_JOBID=${PBS_JOBID:-}
 source jobs/vanda/gates.sh
-echo "walltime_s=$WALLTIME_S cleanup_reserve_s=$CLEANUP_RESERVE_S remote_exec=$REMOTE_EXEC"
+echo "walltime_s=$WALLTIME_S end_reserve_s=$END_RESERVE_S gate_overhead_s=$(gate_overhead_s) remote_exec=$REMOTE_EXEC"
 
 HEAD_ENTRY=$(sort -u "$PBS_NODEFILE" | while read -r h; do
     [ "$(short "$h")" = "$(short "$(hostname)")" ] && echo "$h"; done)
@@ -67,27 +67,29 @@ echo "head_entry=$HEAD_ENTRY pbs_tmrsh=${TMRSH:+yes}"
 gate allocation  90 critical bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
 gate build      120 critical make BIN="$BIN" "$BIN/placement_check"
 
-gate d1_launch_only 60 independent $MPI -np 2 --map-by ppr:1:node --bind-to none hostname
-gate d2_bind_pe4    60 independent $MPI -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings hostname
-gate d3_bind_pe8    60 independent $MPI -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings \
+gate d1_launch_only 60 required $MPI -np 2 --map-by ppr:1:node --bind-to none hostname
+gate d2_bind_pe4    60 required $MPI -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings hostname
+gate d3_bind_pe8    60 required $MPI -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings \
                                    --display-map hostname
-gate d4_probe_pe4   60 independent env $PROBE_ENV OMP_NUM_THREADS=4 PLACEMENT_EXPECT_HOSTS=2 \
+gate d4_probe_pe4   60 required env $PROBE_ENV OMP_NUM_THREADS=4 PLACEMENT_EXPECT_HOSTS=2 \
     $MPI -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings $PROBE_X "$BIN/placement_check"
-gate d5_probe_pe8   60 independent env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
+gate d5_probe_pe8   60 required env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
     $MPI $VERBOSE -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings --display-map \
     $PROBE_X "$BIN/placement_check"
-gate d6_probe_pe8_head 60 independent env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=1 \
+gate d6_probe_pe8_head 60 required env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=1 \
     $MPI -np 1 --host "$HEAD_ENTRY" --map-by ppr:1:node:PE=8 --bind-to core --report-bindings \
     $PROBE_X "$BIN/placement_check"
-gate d7_probe_nobind 60 independent env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
+gate d7_probe_nobind 60 required env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
     $MPI -np 2 --map-by ppr:1:node --bind-to none --report-bindings $PROBE_X "$BIN/placement_check"
+# Optional comparison: needs pbs_tmrsh, which may be absent; its result is
+# listed but does not decide the verdict.
 if [ -n "$TMRSH" ]; then
-    gate d8_probe_pe8_tmrsh 60 independent env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
+    gate d8_probe_pe8_tmrsh 60 optional env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
         $TMRSH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings $PROBE_X "$BIN/placement_check"
 else
-    echo "d8_probe_pe8_tmrsh SKIP rc=- secs=0 pbs_tmrsh not found" | tee -a "$OUT/gates.txt"
+    skip d8_probe_pe8_tmrsh optional "pbs_tmrsh not found"
 fi
-gate d9_probe_pe8_repeat 60 independent env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
+gate d9_probe_pe8_repeat 60 required env $PROBE_ENV OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 \
     $MPI -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings $PROBE_X "$BIN/placement_check"
 
 # Last stage reached by each rank in each probe step, for reading the result.
@@ -96,5 +98,5 @@ for f in "$OUT"/gate_d*_probe*.log; do
     grep '^trace ' "$f" | awk '{r=$4" "$3; s[r]=$6} END {for (k in s) print "   last", k, s[k]}' | sort
 done | tee "$OUT/trace_summary.txt"
 
-all_passed && finish 0
+verdict >/dev/null && finish 0
 finish 1

@@ -77,22 +77,22 @@ source jobs/vanda/gates.sh
 
 gate build     240 critical    make BIN="$BIN" all hybrid
 gate toolchain  90 critical    make BIN="$BIN" toolchain
-gate place_2x4  60 independent make BIN="$BIN" placement PLACE_R=2 PLACE_T=4
-gate place_4x2  60 independent make BIN="$BIN" placement PLACE_R=4 PLACE_T=2
-gate place_8x1  60 independent make BIN="$BIN" placement PLACE_R=8 PLACE_T=1
-gate serial    240 independent make BIN="$BIN" EVIDENCE="$OUT" check
-need serial hybrid && \
-gate hybrid    600 independent make BIN="$BIN" EVIDENCE="$OUT" check-hybrid \
+gate place_2x4  60 required make BIN="$BIN" placement PLACE_R=2 PLACE_T=4
+gate place_4x2  60 required make BIN="$BIN" placement PLACE_R=4 PLACE_T=2
+gate place_8x1  60 required make BIN="$BIN" placement PLACE_R=8 PLACE_T=1
+gate serial    240 required make BIN="$BIN" EVIDENCE="$OUT" check
+need serial hybrid required && \
+gate hybrid    600 required make BIN="$BIN" EVIDENCE="$OUT" check-hybrid \
                     MPIRUN_FLAGS="--bind-to none" HYBRID_GATE_ARGS="--max-cores $NCPUS_ALLOC"
-gate sanitize  300 independent make BIN="$BIN" sanitize
+gate sanitize  300 required make BIN="$BIN" sanitize
 
 # One recorded hybrid run with bound placement, to exercise the run recorder
 # under PBS. A smoke test, not a measurement. Same mapping as place_2x4.
-need place_2x4 recorder && \
-gate recorder  120 independent env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
+need place_2x4 recorder required && \
+gate recorder  120 required env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
     python3 scripts/run_case.py --out "$OUT" --case smoke_bound_2x4 --rep 1 --allocated-cores 8 \
     --launcher "mpirun -np 2 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES" \
     -- "$BIN/bh_hybrid" --n 20000 --steps 2 --schedule dynamic --chunk 64
 
-all_passed && finish 0
+verdict >/dev/null && finish 0
 finish 1

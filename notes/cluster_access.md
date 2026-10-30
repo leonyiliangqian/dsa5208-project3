@@ -95,11 +95,14 @@ compile on compute nodes (login and compute architectures differ).
 6. **Results.** The job writes `artifacts/cluster/runs/correctness-<UTC>-<jobid>/`
    (`job.log`, `gates.txt`, one log per gate, environment record, validation
    JSON) and a PBS log in `artifacts/cluster/logs/`. `gates.txt` must list every
-   gate as PASS. Each line reads `NAME PASS|FAIL|TIMEOUT|SKIP rc=.. secs=..`;
+   critical and required gate as PASS (optional gates are listed in the
+   `verdict` line but do not decide it). Each line reads
+   `NAME PASS|FAIL|TIMEOUT|SKIP rc=.. secs=.. kind=critical|required|optional`;
    every gate has a time limit (jobs/vanda/gates.sh), a timed-out gate leaves
    `gate_NAME.snapshot` (process states on every node) and `cleanup.log` shows
    the leftover-process check after each gate. Exit 5 = a critical gate did not
-   pass; exit 6 = cleanup could not be verified (the job stopped). Bring the directory back with
+   pass; exit 6 = cleanup could not be verified, including an MPI process of
+   unknown ownership on a node, which is reported but never killed. Bring the directory back with
    `tar czf ~/correctness.tgz artifacts/cluster` and download it via OnDemand or
    `scp NUSNETID@vanda.nus.edu.sg:~/correctness.tgz .`,
    then unpack it into `code/` on the Mac.

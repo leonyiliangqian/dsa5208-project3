@@ -200,13 +200,11 @@ Changes made for this (30 Oct):
 - jobs/vanda/gates.sh: every gate has a time limit (timeout in its own
   process group, TERM then KILL), a snapshot of process state, wait channels
   and stacks (gdb if present) on every node shortly before the limit, and a
-  cleanup check on every node after the gate (tests/toolchain/leftover_check.sh,
-  TERM then KILL, then re-check). Unverifiable cleanup stops the job (exit 6);
-  a failed critical gate stops it (exit 5); dependants of a failed gate are
-  skipped; limits never exceed the remaining walltime minus a reserve.
-  Fault-injection test tests/jobs/gates_selftest.sh: 22/22 PASS in the
-  two-container simulation (two-node hang, TERM-ignoring stray on node2,
-  dependencies, walltime budget, unverifiable cleanup, critical failure).
+  cleanup check on every node after the gate (tests/toolchain/leftover_check.sh).
+  Unverifiable cleanup stops the job (exit 6); a failed critical gate stops
+  it (exit 5); dependants of a failed gate are skipped.
+- Revised 30 Oct after review (see "Gate library review" below): ownership-
+  based cleanup, required/optional gate kinds, worst-case time accounting.
 - placement_check: PLACEMENT_TRACE=1 writes flushed, rank-labelled stage
   lines (start with OS affinity, MPI_Init, OpenMP team, each collective,
   MPI_Finalize); result lines are line-buffered.
@@ -214,3 +212,37 @@ Changes made for this (30 Oct):
   1x8 placement now runs last, hybrid needs serial and recorder needs
   place_2x4. Shared setup moved to jobs/vanda/multinode_setup.sh.
 - jobs/vanda/diag.pbs: the diagnostic job (one factor per step, see header).
+
+### Gate library review (30 Oct, local; supersedes the 22/22 self-test above)
+
+1. Cleanup ownership. leftover_check.sh now kills only processes positively
+   owned by the job: PBS_JOBID equal to the job's, or P3_RUN_MARKER (unique
+   per run, exported by gates.sh) equal to the run's, or a command line
+   containing the job-unique binary path (bin/vanda-JOB/). Processes with a
+   different PBS_JOBID are foreign and ignored. MPI launchers/daemons with no
+   marker, or whose environment cannot be read, are unattributed: never
+   killed, re-checked after 3 s, and if still present the node reports
+   UNCERTAIN and the job stops (exit 6), since it cannot show the cores are
+   free of its own strays. Assumption to verify on Vanda: processes started
+   by PBS tm on the second node carry PBS_JOBID (node_report.sh now records
+   pbs_jobid_env per node). If they do not, a leftover remote orted would be
+   unattributed and the job would stop rather than kill it.
+2. Gate kinds. critical (stop on anything but PASS), required (continue;
+   FAIL, TIMEOUT or SKIP prevents an overall PASS) and optional (listed in
+   the verdict, never decides it). In diag.pbs only d8 (pbs_tmrsh comparison)
+   is optional; a missing pbs_tmrsh is recorded as `d8 SKIP kind=optional`.
+3. Time accounting. Worst case per gate on N nodes: limit + GATE_GRACE_S
+   (20) + N*(SNAPSHOT_NODE_S+2)+2 (watcher allowed to finish after a timeout,
+   12 s per node) + N*(CLEANUP_NODE_S+5) (sequential cleanup, 40 s per node):
+   limit + 140 s for N=2. Before each gate the limit is cut so the worst case
+   ends END_RESERVE_S (60 s) before the walltime; with under 20 s left the
+   gate is skipped. The snapshot watcher now runs in its own process group
+   (setsid) and the group is removed before cleanup. This is bounded best
+   effort, not a guarantee: the clock starts when the script starts (PBS
+   starts earlier), module loading, the environment record and the final
+   summary are not bounded, and a process in uninterruptible sleep survives
+   KILL. The earlier statement that limits "never exceed the remaining
+   walltime" ignored the grace, snapshot and cleanup time and is withdrawn.
+Fault-injection evidence: artifacts/local/runs/gates-selftest-* (results.txt,
+provenance.txt with source revision and file hashes, one directory per
+scenario).

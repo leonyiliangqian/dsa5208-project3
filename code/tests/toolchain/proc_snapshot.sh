@@ -23,7 +23,7 @@ for d in /proc/[0-9]*; do
             "$(sed 's/.*) //' "$t/stat" 2>/dev/null | cut -d' ' -f1)" "$(cat "$t/wchan" 2>/dev/null)"
     done
     if command -v gdb >/dev/null 2>&1; then
-        timeout 20 gdb -batch -nx -p "$pid" -ex 'thread apply all bt 12' 2>&1 \
+        timeout -k 1 4 gdb -batch -nx -p "$pid" -ex 'thread apply all bt 12' 2>&1 \
             | grep -E '^(Thread|#)' | head -60 | sed 's/^/   /'
     fi
 done

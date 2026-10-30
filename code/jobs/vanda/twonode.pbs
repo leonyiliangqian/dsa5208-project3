@@ -41,7 +41,7 @@ WALLTIME_S=${WALLTIME_S:-1800}
 LEFTOVER_PATTERN="vanda-$JOB/"
 export LEFTOVER_JOBID=${PBS_JOBID:-}
 source jobs/vanda/gates.sh
-echo "walltime_s=$WALLTIME_S cleanup_reserve_s=$CLEANUP_RESERVE_S remote_exec=$REMOTE_EXEC"
+echo "walltime_s=$WALLTIME_S end_reserve_s=$END_RESERVE_S gate_overhead_s=$(gate_overhead_s) remote_exec=$REMOTE_EXEC"
 
 # Fail fast: without two distinct hosts, the expected 8 CPUs per node and a
 # verified PBS launch, nothing after this point would mean what it claims;
@@ -51,27 +51,27 @@ gate build       240 critical make BIN="$BIN" all hybrid
 gate flags        60 critical bash jobs/vanda/flags_check.sh
 gate toolchain    90 critical make BIN="$BIN" toolchain
 gate internode_2  90 critical make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=2 INTERNODE_HOSTS=2
-gate internode_16 90 independent make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=16 INTERNODE_HOSTS=2
-gate place_2x4    60 independent make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
-gate place_4x2    60 independent make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
-gate place_8x1    60 independent make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
-gate serial      240 independent make BIN="$BIN" EVIDENCE="$OUT" check
+gate internode_16 90 required make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=16 INTERNODE_HOSTS=2
+gate place_2x4    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+gate place_4x2    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+gate place_8x1    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+gate serial      240 required make BIN="$BIN" EVIDENCE="$OUT" check
 # Round-robin mapping spreads every multi-rank case over both nodes; the gate
 # requires each such run to report two hosts. It compares against the serial
 # program, so it is only meaningful once the serial gate has passed.
-need serial hybrid && \
-gate hybrid      600 independent make BIN="$BIN" EVIDENCE="$OUT" check-hybrid MPIRUN=mpirun \
+need serial hybrid required && \
+gate hybrid      600 required make BIN="$BIN" EVIDENCE="$OUT" check-hybrid MPIRUN=mpirun \
                       MPIRUN_FLAGS="${MPI#mpirun } -x OMP_NUM_THREADS --map-by node --bind-to none" \
                       HYBRID_GATE_ARGS="--max-cores 16 --suite multinode --expect-hosts 2"
 # Same ppr:2:node:PE=4 mapping as place_2x4.
-need place_2x4 recorder && \
-gate recorder    120 independent env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
+need place_2x4 recorder required && \
+gate recorder    120 required env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
     python3 scripts/run_case.py --out "$OUT" --case smoke_bound_2node_4x4 --rep 1 --allocated-cores 16 \
     --launcher "$MPI -np 4 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES" \
     -- "$BIN/bh_hybrid" --n 50000 --steps 2 --schedule dynamic --chunk 64
 # Last: the configuration that stalled in job 1507215 (one rank per node,
 # PE=8 = the whole per-node cpuset), so a repeat cannot disturb the gates above.
-gate place_1x8    60 independent make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+gate place_1x8    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
 
-all_passed && finish 0
+verdict >/dev/null && finish 0
 finish 1

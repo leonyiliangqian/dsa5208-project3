@@ -10,7 +10,7 @@ project=$(cd "$here/../../.." && pwd)
 image=dsa5208-p3-twonode:bookworm
 cpus=${TWONODE_CPUSET:-0,2,4,6,8,10,12,14}
 docker image inspect dsa5208-p3-dev:bookworm >/dev/null 2>&1 || docker build -t dsa5208-p3-dev:bookworm "$here/.."
-docker image inspect "$image" >/dev/null 2>&1 || docker build -t "$image" "$here"
+docker build -q -t "$image" "$here" >/dev/null   # cached unless the Dockerfile changed
 net=p3-twonode-$$
 docker network create "$net" >/dev/null
 cleanup() { docker rm -f node1 node2 >/dev/null 2>&1 || true; docker network rm "$net" >/dev/null 2>&1 || true; }

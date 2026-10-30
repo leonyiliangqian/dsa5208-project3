@@ -51,7 +51,8 @@ pbs_mom = [("pbs_mom" in a.split("<")) for a in remote]
 print(f"allocation hosts={sorted(hosts)} head={head} allowed_cpus={cpus} archs={sorted(archs)}")
 print(f"launcher={launch} plm_selected={selected['plm']} ras_selected={selected['ras']} "
       f"remote_ancestry={remote} remote_pbs_mom_visible={pbs_mom}")
-print(f"recorded_only models={models} mixed_models={len(models) > 1} isa_lists_equal={len(isas) == 1}")
+print(f"recorded_only models={models} mixed_models={len(models) > 1} isa_lists_equal={len(isas) == 1} "
+      f"pbs_jobid_env={[field(l, 'pbs_jobid_env') for l in lines]}")
 print(" ".join(f"{k}={'ok' if v else 'FAIL'}" for k, v in checks.items()))
 print("allocation", "PASS" if ok else "FAIL")
 sys.exit(0 if ok else 1)
