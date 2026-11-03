@@ -26,7 +26,8 @@ cp /bin/sleep "$FAKE/orted"; cp /bin/sleep "$FAKE/mpirun"
     echo "environment=local Docker two-container simulation (docker/twonode), ssh launch; not PBS, not Vanda"
     echo "host=$(hostname) kernel=$(uname -r)"
     mpirun --version 2>&1 | head -1
-    sha256sum jobs/vanda/gates.sh jobs/vanda/snapshot_watch.sh tests/toolchain/leftover_check.sh \
+    sha256sum jobs/vanda/gates.sh jobs/vanda/snapshot_watch.sh jobs/vanda/remote_capture.sh \
+        tests/toolchain/run_to_file.sh tests/toolchain/leftover_check.sh \
         tests/toolchain/proc_snapshot.sh tests/jobs/gates_selftest.sh docker/twonode/Dockerfile docker/twonode/run.sh
 } > "$OUTROOT/provenance.txt"
 
@@ -161,6 +162,20 @@ check "cleanup_hangs: STOP message"            has 'STOP: could not verify' "$SC
 check "cleanup_hangs: second not run"          lacks '^second ' "$SC_OUT/gates.txt"
 # first gate ~0 s + node1 cleanup (seconds) + node2 bound 10+5 s
 check "cleanup_hangs: bounded (${SC_SECS}s <= 30)" test "$SC_SECS" -le 30
+
+# 6c. Remote output goes to the job's output file, not to the caller's stdout,
+#     as pbs_tmrsh does (job 1513781). Reports must still reach cleanup.log and
+#     the snapshot, and the gates after the first must run.
+printf '#!/bin/bash\nexec ssh -o BatchMode=yes "$@" >> %s/tm_job.OU 2>&1\n' "$FAKE" > "$FAKE/tm_exec"; chmod +x "$FAKE/tm_exec"
+REMOTE_EXEC=$FAKE/tm_exec scenario tm_output "
+gate hang 12 required mpirun --hostfile \$PBS_NODEFILE -np 2 --map-by node bash -c 'exec -a ${PAT}tmhang sleep 600'
+gate after 30 required true"
+check "tm_output: not stopped by cleanup (exit 1)" test "$SC_RC" -eq 1
+check "tm_output: later gate ran"              has '^after PASS ' "$SC_OUT/gates.txt"
+check "tm_output: 2 CLEAN after hang"          test "$(sed -n '/^== after hang /,/^== after after /p' "$SC_OUT/cleanup.log" | grep -c ' CLEAN$')" -eq 2
+check "tm_output: 2 CLEAN after later gate"    test "$(sed -n '/^== after after /,$p' "$SC_OUT/cleanup.log" | grep -c ' CLEAN$')" -eq 2
+check "tm_output: snapshot of both nodes"      test "$(grep -c '^== snapshot host=' "$SC_OUT/gate_hang.snapshot")" -eq 2
+check "tm_output: no report file left"         test -z "$(find "$SC_OUT" -name '.remote.*')"
 
 # 6a. Worst case at the end of the budget: the gate times out at its cut
 #     limit while the remote snapshot and the remote cleanup both hang until

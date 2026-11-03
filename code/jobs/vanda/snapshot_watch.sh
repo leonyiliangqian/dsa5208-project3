@@ -10,12 +10,13 @@
 delay=${1:?delay} label=${2:?label}
 sleep "$delay"
 short() { echo "${1%%.*}" | tr '[:upper:]' '[:lower:]'; }
+source jobs/vanda/remote_capture.sh
 me=$(short "$(hostname)")
 for h in $(sort -u "${PBS_NODEFILE:-/dev/null}"); do
     if [ "$(short "$h")" = "$me" ]; then
         timeout -k 2 "$SNAPSHOT_NODE_S" bash tests/toolchain/proc_snapshot.sh "$LEFTOVER_PATTERN"
     else
-        timeout -k 2 "$SNAPSHOT_NODE_S" $REMOTE_EXEC "$h" \
+        remote_capture 2 "$SNAPSHOT_NODE_S" "$h" \
             bash "$PWD/tests/toolchain/proc_snapshot.sh" "$LEFTOVER_PATTERN"
     fi
 done >> "$OUT/gate_$label.snapshot" 2>&1
