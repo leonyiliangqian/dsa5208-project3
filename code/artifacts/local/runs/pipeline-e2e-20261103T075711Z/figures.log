@@ -1,0 +1,1 @@
+wrote 12 fragments to /work/code/artifacts/local/runs/pipeline-e2e-20261103T075711Z/figures: fig_serial_n.tex, fig_strong_runtime.tex, fig_strong_speedup.tex, fig_strong_efficiency.tex, tab_ranks_threads.tex, tab_schedule.tex, fig_weak_runtime.tex, fig_weak_efficiency.tex, fig_phases.tex, fig_comm_fraction.tex, tab_accuracy_cost.tex, tab_failed_runs.tex [LOCAL PIPELINE TEST]
