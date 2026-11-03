@@ -12,7 +12,7 @@ Deadline stays 13 November 2026, 23:59 SGT until a new date is confirmed.
 | 5 | Explain the algorithm | Report sections on Problem and Method | Drafted |
 | 5 | Serial runtime against N | Study 0, log-log, with fitted slope | Figure code and manifest ready; no measurement |
 | 10 | MPI to at least 256 cores: strong, weak, speedup, efficiency, communication | Studies 1 and 4, MPI-only series, one job | **Blocked**: queue and charge decision, two-node correctness |
-| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready; **GPU kernel not written** |
+| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready; GPU kernel written, **never run on a GPU** |
 | 5 | Overall discussion | After results | Not started |
 
 Also required: define non-standard terms; explain how the Plummer positions and
@@ -54,18 +54,23 @@ Communication analysis: `exchange_s` times the per-step `MPI_Allgatherv`.
 | 4 | Weak | Adds MPI-only from P0 = 1; both series to 256 |
 | 7 | GPU | New, below |
 
-## Study 7: GPU proposal
+## Study 7: GPU test
 
-Offload the existing force traversal with OpenMP `target`, so X stays one programming
-model on CPU and GPU. It fits: tree nodes are a flat vector, children are indices, and
-the traversal stack is bounded. New code, not written yet, and it cannot run on this Mac.
+`code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP `target`. The tree is built on
+the host with the existing `Octree`; the serial and hybrid solvers are unchanged and stay the
+CPU baselines. **Real GPU execution is unverified: this code has never been compiled by `nvc++`
+or run on a GPU.** Local tests used GCC 12 without offload support, so target regions ran on the
+host and transfers did nothing.
 
-| Step | What | Why it is meaningful |
-|---|---|---|
-| G0 | `OMP_TARGET_OFFLOAD=MANDATORY`, device check, `nvidia-smi` record | A silent fallback to CPU would make every GPU number false |
-| G1 | theta=0 against direct summation; theta=0.5 against the CPU traversal, tolerance fixed in advance | Same two independent references as the CPU validation |
-| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the same chunk, same compiler; transfer and kernel timed separately | Shows where the GPU wins and what transfers cost |
-| G3 | Optional: 2 ranks and 2 GPUs on one node, exchanging device buffers | The only step that exercises CUDA-aware MPI; a host-side exchange would not |
+| Step | What | Why it is meaningful | State |
+|---|---|---|---|
+| G0 | Kernel on a device with separate memory; `--require-device`; `nvidia-smi` sampling during a run | A silent fallback to CPU would make every GPU number false. GCC 12 ignored `OMP_TARGET_OFFLOAD=MANDATORY` with no device, so that variable alone proves nothing | Logic tested locally; needs a GPU |
+| G1 | theta=0 against direct summation; theta>0 against the host tree; closed-form pair; trajectory against `bh_serial`; reused device buffers with a growing tree | Independent references. Limits fixed before any device run: 1e-10, 1e-12, 1e-10 | Pass with host fallback; needs a GPU |
+| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the chunk, same binary, one kernel; flatten, transfer and kernel timed separately | Shows where the GPU wins and what transfers cost | Timers exist; runner support and manifest to add after G1 |
+| G3 | Optional: 2 ranks and 2 GPUs on one node, exchanging device buffers | The only step that would exercise CUDA-aware MPI | Not written |
+
+Errors that need separate device memory, such as a missing transfer or a wrong map clause,
+cannot be seen with host fallback. G1 on a GPU is the first real test of them.
 
 Site facts: `auto_free` routes to `gpu`, charge rate 0, 1 to 2 GPUs, at most 36 CPUs per
 job; node names are `gn-a40-*`, 2 GPUs per node. Most GPUs showed as busy on 3 Nov.
@@ -80,15 +85,17 @@ confirm on a GPU node in G0.
 
 ## Job proposals, in order. None approved
 
+Revisions and exact commands are in [approval_requests.md](approval_requests.md).
+
 | # | Job | Request | Queue, rate | Depends on |
 |---|---|---|---|---|
-| 1 | `diag` rerun | 2 x 8 cores, 4 GB each, 20 min | `auto_free`, 0 | Fix merged and a new clone |
+| 1 | `diag` rerun | 2 x 8 cores, 4 GB each, 20 min | `auto_free`, 0 | Ready |
 | 2 | `twonode` correctness | 2 x 8 cores, 16 GB each, 30 min | `auto_free`, 0 | Job 1 understood |
 | 3 | `pilot` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | Job 2 passes |
-| 4 | GPU G0 and G1 | 1 GPU, 36 cores, 30 min (memory from G0 sizing) | `auto_free`, 0 | GPU kernel written |
+| 4 | `gpu_validate` (G0 and G1) | 1 GPU, 36 cores, 60 GB, 30 min | `auto_free`, 0 | Ready |
 | 5 | 4-node pilot, including a 256-rank hybrid-against-serial comparison | 4 x 64 cores, 30 min, about 128 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 2, balance, charge approval |
 | 6 | `bench4` formal series | 4 x 64 cores, walltime from job 5 | `auto` -> `batch_cpu`, 1 | Manifests frozen, charge approval |
-| 7 | GPU G2 | 1 GPU, 36 cores, walltime from job 4 | `auto_free`, 0 | Job 4 passes |
+| 7 | GPU G2 | 1 GPU, 36 cores, walltime from job 4 | `auto_free`, 0 | Job 4 passes, runner support added |
 
 Job 2 on the free pool does not establish correctness on `cpu_node` nodes, so job 5
 repeats the comparison there.

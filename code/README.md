@@ -154,3 +154,18 @@ after it; kinds are critical, required and optional. Step-by-step:
 
 Results so far: correctness job 1503779 (one node) passed; no performance
 measurement exists.
+
+## OpenMP target solver (GPU not yet verified)
+
+`gpu/bh_gpu.cpp` offloads the force traversal; the tree is built on the host. `--backend device`
+uses `target`, and `--backend cpu` runs the same kernel on host threads. `--require-device` exits 7
+unless the kernel ran on a device with separate memory. A compiler without offload support runs
+target regions on the host, so `make check-gpu` then tests logic only. It has not been built with
+`nvc++` or run on a GPU; `jobs/vanda/gpu_validate.pbs` is the proposed first test.
+
+```sh
+docker/run.sh make check-gpu                                   # local, no GPU
+make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" \
+    GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node, not yet run
+```
+

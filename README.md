@@ -65,6 +65,7 @@ commands and [code/README.md](code/README.md) for details.
 | [notes/assignment_brief.txt](notes/assignment_brief.txt) | Assignment wording |
 | [notes/project_memory.md](notes/project_memory.md) | Lecture 12 requirements and grading |
 | [notes/requirements_plan.md](notes/requirements_plan.md) | Rubric, 256-core check, GPU proposal, job proposals |
+| [notes/approval_requests.md](notes/approval_requests.md) | Exact job commands awaiting approval |
 | [notes/project3_prep.md](notes/project3_prep.md) | Requirements, milestones and blockers |
 | [notes/design.md](notes/design.md) | Algorithm design and staged scope |
 | [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol; every Vanda job and finding |
