@@ -3,6 +3,18 @@
 Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 **Mon 2 Nov 17:00 SGT**. Report due **13 Nov 2026 23:59 SGT**.
 
+## Update, 3 November 2026 (read this first)
+
+- **New requirements:** [notes/project_memory.md](notes/project_memory.md) records Lecture 12.
+  [notes/requirements_plan.md](notes/requirements_plan.md) maps the rubric to the plan and lists
+  the 256-core check, GPU proposal and job proposals. Where this file differs, those win.
+- **Vanda reopened.** Diagnostic job 1513781 ran once on 3 Nov and stopped after its allocation
+  gate because `pbs_tmrsh` does not return remote output, so one node's CLEAN report was lost.
+  Build and d1-d9 never ran: **the 1507215 stall is still unexplained and two-node solver
+  correctness is still unverified.** Do not resubmit 1513781; a rerun is a new approval.
+- **Fix:** commit 563d198, merged to `main`. Tested locally only; not yet tried on Vanda.
+- **Still no GPU code and no scaling measurement.** 256 cores do not fit the free queue.
+
 ## The short version
 
 - The code is complete for the baseline: serial Barnes–Hut, MPI+OpenMP
@@ -85,6 +97,7 @@ Then, in order, each after approval and after the previous one is understood:
 | Freeze manifests | edit sizes in `manifests/studies_*.json` from pilot timings, set `"status": "frozen <date> <commit>"`, commit | — |
 | Formal single node | `submit.sh bench1 ...` (set walltime from the pilot first) | 1 x 64 cores |
 | Formal two node | `submit.sh bench2 ...` (only after two-node correctness) | 2 x 64 cores, one CPU model |
+| 256-core series | `submit.sh bench4 ...` (replaces bench2 for the graded curves; charged queue, see requirements_plan.md) | 4 x 64 cores, one CPU model |
 
 All use `--queue auto_free --no-project` (zero charge rate; verify on the day).
 Bring results back with `tar czf` of `artifacts/cluster/runs/<run>` and the

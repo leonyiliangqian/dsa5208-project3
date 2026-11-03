@@ -63,6 +63,8 @@ commands and [code/README.md](code/README.md) for details.
 |---|---|
 | [HANDOFF.md](HANDOFF.md) | State of the work, evidence, commands after reopening, pending report items |
 | [notes/assignment_brief.txt](notes/assignment_brief.txt) | Assignment wording |
+| [notes/project_memory.md](notes/project_memory.md) | Lecture 12 requirements and grading |
+| [notes/requirements_plan.md](notes/requirements_plan.md) | Rubric, 256-core check, GPU proposal, job proposals |
 | [notes/project3_prep.md](notes/project3_prep.md) | Requirements, milestones and blockers |
 | [notes/design.md](notes/design.md) | Algorithm design and staged scope |
 | [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol; every Vanda job and finding |
@@ -79,6 +81,9 @@ Submit a PDF covering the algorithm, design choices, validation, scaling and
 efficiency, runtime figures from **Atlas or Vanda**, and AI usage. Include names
 and student IDs for group work. Real-data conclusions apply only if real data
 is used; the current design uses synthetic inputs.
+
+Lecture 12: include source code; exclude logs and terminal output
+(`code/scripts/package_submission.sh` builds the source package from the committed tree).
 
 The brief also requires source code and a run README, although the listed upload
 type is PDF. Confirm the source delivery mechanism with the lecturer or Canvas;
