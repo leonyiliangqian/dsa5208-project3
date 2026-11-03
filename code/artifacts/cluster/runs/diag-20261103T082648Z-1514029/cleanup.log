@@ -1,0 +1,33 @@
+== after allocation 16:26:57
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 16:27:02
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d1_launch_only 16:27:07
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d2_bind_pe4 16:28:09
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d3_bind_pe8 16:29:12
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d4_probe_pe4 16:30:15
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d5_probe_pe8 16:31:17
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d6_probe_pe8_head 16:31:21
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d7_probe_nobind 16:31:27
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d8_probe_pe8_tmrsh 16:31:33
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after d9_probe_pe8_repeat 16:32:36
+leftover_check host=IN-006 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-007 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

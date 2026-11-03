@@ -1,0 +1,97 @@
+[IN-006:1624170] mca: base: components_register: registering framework plm components
+[IN-006:1624170] mca: base: components_register: found loaded component tm
+[IN-006:1624170] mca: base: components_register: component tm register function successful
+[IN-006:1624170] mca: base: components_open: opening plm components
+[IN-006:1624170] mca: base: components_open: found loaded component tm
+[IN-006:1624170] mca: base: components_open: component tm open function successful
+[IN-006:1624170] mca:base:select: Auto-selecting plm components
+[IN-006:1624170] mca:base:select:(  plm) Querying component [tm]
+[IN-006:1624170] mca:base:select:(  plm) Query of component [tm] set priority to 75
+[IN-006:1624170] mca:base:select:(  plm) Selected component [tm]
+[IN-006:1624170] mca: base: components_register: registering framework rmaps components
+[IN-006:1624170] mca: base: components_register: found loaded component rank_file
+[IN-006:1624170] mca: base: components_register: component rank_file register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component mindist
+[IN-006:1624170] mca: base: components_register: component mindist register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component seq
+[IN-006:1624170] mca: base: components_register: component seq register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component round_robin
+[IN-006:1624170] mca: base: components_register: component round_robin register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component resilient
+[IN-006:1624170] mca: base: components_register: component resilient register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component ppr
+[IN-006:1624170] mca: base: components_register: component ppr register function successful
+[IN-006:1624170] [[40552,0],0] rmaps:base set policy with ppr:1:node:PE=8 device NONNULL
+[IN-006:1624170] [[40552,0],0] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[IN-006:1624170] [[40552,0],0] rmaps:base check modifiers with PE=8
+[IN-006:1624170] [[40552,0],0] rmaps:base setting pe/rank to 8
+[IN-006:1624170] mca: base: components_open: opening rmaps components
+[IN-006:1624170] mca: base: components_open: found loaded component rank_file
+[IN-006:1624170] mca: base: components_open: component rank_file open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component mindist
+[IN-006:1624170] mca: base: components_open: component mindist open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component seq
+[IN-006:1624170] mca: base: components_open: component seq open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component round_robin
+[IN-006:1624170] mca: base: components_open: component round_robin open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component resilient
+[IN-006:1624170] mca: base: components_open: component resilient open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component ppr
+[IN-006:1624170] mca: base: components_open: component ppr open function successful
+[IN-006:1624170] mca:rmaps:select: checking available component rank_file
+[IN-006:1624170] mca:rmaps:select: Querying component [rank_file]
+[IN-006:1624170] mca:rmaps:select: checking available component mindist
+[IN-006:1624170] mca:rmaps:select: Querying component [mindist]
+[IN-006:1624170] mca:rmaps:select: checking available component seq
+[IN-006:1624170] mca:rmaps:select: Querying component [seq]
+[IN-006:1624170] mca:rmaps:select: checking available component round_robin
+[IN-006:1624170] mca:rmaps:select: Querying component [round_robin]
+[IN-006:1624170] mca:rmaps:select: checking available component resilient
+[IN-006:1624170] mca:rmaps:select: Querying component [resilient]
+[IN-006:1624170] mca:rmaps:select: checking available component ppr
+[IN-006:1624170] mca:rmaps:select: Querying component [ppr]
+[IN-006:1624170] [[40552,0],0]: Final mapper priorities
+[IN-006:1624170] 	Mapper: ppr Priority: 90
+[IN-006:1624170] 	Mapper: seq Priority: 60
+[IN-006:1624170] 	Mapper: resilient Priority: 40
+[IN-006:1624170] 	Mapper: mindist Priority: 20
+[IN-006:1624170] 	Mapper: round_robin Priority: 10
+[IN-006:1624170] 	Mapper: rank_file Priority: 0
+[IN-006:1624170] mca: base: components_register: registering framework odls components
+[IN-006:1624170] mca: base: components_register: found loaded component default
+[IN-006:1624170] mca: base: components_register: component default register function successful
+[IN-006:1624170] mca: base: components_register: found loaded component pspawn
+[IN-006:1624170] mca: base: components_register: component pspawn has no register or open function
+[IN-006:1624170] mca: base: components_open: opening odls components
+[IN-006:1624170] mca: base: components_open: found loaded component default
+[IN-006:1624170] mca: base: components_open: component default open function successful
+[IN-006:1624170] mca: base: components_open: found loaded component pspawn
+[IN-006:1624170] mca: base: components_open: component pspawn open function successful
+[IN-006:1624170] mca:base:select: Auto-selecting odls components
+[IN-006:1624170] mca:base:select:( odls) Querying component [default]
+[IN-006:1624170] mca:base:select:( odls) Query of component [default] set priority to 10
+[IN-006:1624170] mca:base:select:( odls) Querying component [pspawn]
+[IN-006:1624170] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[IN-006:1624170] mca:base:select:( odls) Selected component [default]
+[IN-006:1624170] mca: base: close: component pspawn closed
+[IN-006:1624170] mca: base: close: unloading component pspawn
+[IN-006:1624170] [[40552,0],0] rmaps:base set policy with ppr:1:node:PE=8 device NULL
+[IN-006:1624170] [[40552,0],0] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[IN-006:1624170] [[40552,0],0] rmaps:base check modifiers with PE=8
+[IN-006:1624170] [[40552,0],0] rmaps:base setting pe/rank to 8
+[IN-006:1624170] mca: base: close: component default closed
+[IN-006:1624170] mca: base: close: unloading component default
+[IN-006:1624170] mca: base: close: component rank_file closed
+[IN-006:1624170] mca: base: close: unloading component rank_file
+[IN-006:1624170] mca: base: close: component mindist closed
+[IN-006:1624170] mca: base: close: unloading component mindist
+[IN-006:1624170] mca: base: close: component seq closed
+[IN-006:1624170] mca: base: close: unloading component seq
+[IN-006:1624170] mca: base: close: component round_robin closed
+[IN-006:1624170] mca: base: close: unloading component round_robin
+[IN-006:1624170] mca: base: close: component resilient closed
+[IN-006:1624170] mca: base: close: unloading component resilient
+[IN-006:1624170] mca: base: close: component ppr closed
+[IN-006:1624170] mca: base: close: unloading component ppr
+[IN-006:1624170] mca: base: close: component tm closed
+[IN-006:1624170] mca: base: close: unloading component tm

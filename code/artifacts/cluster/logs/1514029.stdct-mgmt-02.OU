@@ -1,0 +1,302 @@
+run_id=diag-20261103T082648Z-1514029 job=1514029.stdct-mgmt-02 host=IN-006 start=2026-11-03T16:26:48+08:00 source_rev=aa763c99c573398ae787881991e39787465bf054
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=tm mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH
+walltime_s=1200 end_reserve_s=60 gate_overhead_s=140 remote_exec=pbs_tmrsh
+head_entry=in-006.stdct.loc pbs_tmrsh=yes
+
+===== gate allocation (critical, limit 90s) 16:26:52: env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/diag-20261103T082648Z-1514029 2 tm
+[IN-006:1588937] mca: base: components_register: registering framework plm components
+[IN-006:1588937] mca: base: components_register: found loaded component rsh
+[IN-006:1588937] mca: base: components_register: component rsh register function successful
+[IN-006:1588937] mca: base: components_open: opening plm components
+[IN-006:1588937] mca: base: components_open: found loaded component rsh
+[IN-006:1588937] mca: base: components_open: component rsh open function successful
+[IN-006:1588937] mca:base:select: Auto-selecting plm components
+[IN-006:1588937] mca:base:select:(  plm) Querying component [rsh]
+[IN-006:1588937] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-006:1588937] mca:base:select:(  plm) Selected component [rsh]
+[IN-007:912800] mca: base: components_register: registering framework plm components
+[IN-007:912800] mca: base: components_register: found loaded component rsh
+[IN-007:912800] mca: base: components_register: component rsh register function successful
+[IN-007:912800] mca: base: components_open: opening plm components
+[IN-007:912800] mca: base: components_open: found loaded component rsh
+[IN-007:912800] mca: base: components_open: component rsh open function successful
+[IN-007:912800] mca:base:select: Auto-selecting plm components
+[IN-007:912800] mca:base:select:(  plm) Querying component [rsh]
+[IN-007:912800] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-007:912800] mca:base:select:(  plm) Selected component [rsh]
+[IN-006:1588937] mca: base: close: component rsh closed
+[IN-006:1588937] mca: base: close: unloading component rsh
+[IN-007:912800] mca: base: close: component rsh closed
+[IN-007:912800] mca: base: close: unloading component rsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	in-006: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+	in-007: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+node IN-006 allowed=41,43,45,47,49,51,53,55 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node IN-007 allowed=37,39,41,43,45,47,49,51 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['IN-006', 'IN-007'] head=IN-006 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=tm plm_selected=['tm'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_tm_selected=ok remote_orted_not_sshd=ok
+allocation PASS
+allocation PASS rc=0 secs=5 kind=critical 
+
+===== gate build (critical, limit 120s) 16:26:59: make BIN=bin/vanda-1514029 bin/vanda-1514029/placement_check
+mkdir -p bin/vanda-1514029
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1514029/placement_check tests/toolchain/placement_check.cpp
+build PASS rc=0 secs=3 kind=critical 
+
+===== gate d1_launch_only (required, limit 60s) 16:27:04: mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none hostname
+IN-006
+IN-007
+d1_launch_only PASS rc=0 secs=2 kind=required 
+
+===== gate d2_bind_pe4 (required, limit 60s) 16:27:09: mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings hostname
+d2_bind_pe4 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+
+===== gate d3_bind_pe8 (required, limit 60s) 16:28:12: mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings --display-map hostname
+d3_bind_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+
+===== gate d4_probe_pe4 (required, limit 60s) 16:29:14: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=4 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+d4_probe_pe4 TIMEOUT rc=124 secs=61 kind=required no completion within 60s
+
+===== gate d5_probe_pe8 (required, limit 60s) 16:30:17: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH --mca plm_base_verbose 10 --mca odls_base_verbose 10 --mca rmaps_base_verbose 10 -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings --display-map -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+[IN-006:1624301] mca: base: components_register: registering framework plm components
+[IN-006:1624301] mca: base: components_register: found loaded component rsh
+[IN-006:1624301] mca: base: components_register: component rsh register function successful
+[IN-006:1624301] mca: base: components_open: opening plm components
+[IN-006:1624301] mca: base: components_open: found loaded component rsh
+[IN-006:1624301] mca: base: components_open: component rsh open function successful
+[IN-006:1624301] mca:base:select: Auto-selecting plm components
+[IN-006:1624301] mca:base:select:(  plm) Querying component [rsh]
+[IN-006:1624301] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-006:1624301] mca:base:select:(  plm) Selected component [rsh]
+[IN-007:914075] mca: base: components_register: registering framework plm components
+[IN-007:914075] mca: base: components_register: found loaded component rsh
+[IN-007:914075] mca: base: components_register: component rsh register function successful
+[IN-007:914075] mca: base: components_open: opening plm components
+[IN-007:914075] mca: base: components_open: found loaded component rsh
+[IN-007:914075] mca: base: components_open: component rsh open function successful
+[IN-007:914075] mca:base:select: Auto-selecting plm components
+[IN-007:914075] mca:base:select:(  plm) Querying component [rsh]
+[IN-007:914075] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-007:914075] mca:base:select:(  plm) Selected component [rsh]
+[IN-006:1624301] mca: base: components_register: registering framework odls components
+[IN-006:1624301] mca: base: components_register: found loaded component default
+[IN-006:1624301] mca: base: components_register: component default register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component pspawn
+[IN-006:1624301] mca: base: components_register: component pspawn has no register or open function
+[IN-006:1624301] mca: base: components_open: opening odls components
+[IN-006:1624301] mca: base: components_open: found loaded component default
+[IN-006:1624301] mca: base: components_open: component default open function successful
+[IN-006:1624301] mca: base: components_open: found loaded component pspawn
+[IN-006:1624301] mca: base: components_open: component pspawn open function successful
+[IN-006:1624301] mca:base:select: Auto-selecting odls components
+[IN-006:1624301] mca:base:select:( odls) Querying component [default]
+[IN-006:1624301] mca:base:select:( odls) Query of component [default] set priority to 10
+[IN-006:1624301] mca:base:select:( odls) Querying component [pspawn]
+[IN-006:1624301] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[IN-006:1624301] mca:base:select:( odls) Selected component [default]
+[IN-006:1624301] mca: base: close: component pspawn closed
+[IN-006:1624301] mca: base: close: unloading component pspawn
+[IN-006:1624301] mca: base: components_register: registering framework rmaps components
+[IN-006:1624301] mca: base: components_register: found loaded component rank_file
+[IN-006:1624301] mca: base: components_register: component rank_file register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component mindist
+[IN-006:1624301] mca: base: components_register: component mindist register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component seq
+[IN-006:1624301] mca: base: components_register: component seq register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component round_robin
+[IN-006:1624301] mca: base: components_register: component round_robin register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component resilient
+[IN-006:1624301] mca: base: components_register: component resilient register function successful
+[IN-006:1624301] mca: base: components_register: found loaded component ppr
+[IN-006:1624301] mca: base: components_register: component ppr register function successful
+[IN-006:1624301] [[40552,0],1] rmaps:base set policy with ppr:1:node:PE=8 device NONNULL
+[IN-006:1624301] [[40552,0],1] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[IN-006:1624301] [[40552,0],1] rmaps:base check modifiers with PE=8
+[IN-006:1624301] [[40552,0],1] rmaps:base setting pe/rank to 8
+[IN-007:914075] mca: base: components_register: registering framework odls components
+[IN-007:914075] mca: base: components_register: found loaded component default
+[IN-007:914075] mca: base: components_register: component default register function successful
+[IN-007:914075] mca: base: components_register: found loaded component pspawn
+[IN-007:914075] mca: base: components_register: component pspawn has no register or open function
+[IN-007:914075] mca: base: components_open: opening odls components
+[IN-007:914075] mca: base: components_open: found loaded component default
+[IN-007:914075] mca: base: components_open: component default open function successful
+[IN-007:914075] mca: base: components_open: found loaded component pspawn
+[IN-007:914075] mca: base: components_open: component pspawn open function successful
+[IN-007:914075] mca:base:select: Auto-selecting odls components
+[IN-007:914075] mca:base:select:( odls) Querying component [default]
+[IN-007:914075] mca:base:select:( odls) Query of component [default] set priority to 10
+[IN-007:914075] mca:base:select:( odls) Querying component [pspawn]
+[IN-007:914075] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[IN-007:914075] mca:base:select:( odls) Selected component [default]
+[IN-007:914075] mca: base: close: component pspawn closed
+[IN-007:914075] mca: base: close: unloading component pspawn
+[IN-007:914075] mca: base: components_register: registering framework rmaps components
+[IN-007:914075] mca: base: components_register: found loaded component rank_file
+[IN-007:914075] mca: base: components_register: component rank_file register function successful
+[IN-007:914075] mca: base: components_register: found loaded component mindist
+[IN-007:914075] mca: base: components_register: component mindist register function successful
+[IN-007:914075] mca: base: components_register: found loaded component seq
+[IN-007:914075] mca: base: components_register: component seq register function successful
+[IN-007:914075] mca: base: components_register: found loaded component round_robin
+[IN-007:914075] mca: base: components_register: component round_robin register function successful
+[IN-007:914075] mca: base: components_register: found loaded component resilient
+[IN-007:914075] mca: base: components_register: component resilient register function successful
+[IN-007:914075] mca: base: components_register: found loaded component ppr
+[IN-007:914075] mca: base: components_register: component ppr register function successful
+[IN-007:914075] [[40552,0],2] rmaps:base set policy with ppr:1:node:PE=8 device NONNULL
+[IN-007:914075] [[40552,0],2] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[IN-007:914075] [[40552,0],2] rmaps:base check modifiers with PE=8
+[IN-007:914075] [[40552,0],2] rmaps:base setting pe/rank to 8
+[IN-006:1624170] mca: base: components_open: found loaded component pspawn
+[IN-006:1624170] mca: base: components_open: component pspawn open function successful
+[IN-006:1624170] mca:base:select: Auto-selecting odls components
+[IN-006:1624170] mca:base:select:( odls) Querying component [default]
+[IN-006:1624170] mca:base:select:( odls) Query of component [default] set priority to 10
+[IN-006:1624170] mca:base:select:( odls) Querying component [pspawn]
+[IN-006:1624170] mca:base:select:( odls) Query of component [pspawn] set priority to 1
+[IN-006:1624170] mca:base:select:( odls) Selected component [default]
+[IN-006:1624170] mca: base: close: component pspawn closed
+[IN-006:1624170] mca: base: close: unloading component pspawn
+[IN-006:1624170] [[40552,0],0] rmaps:base set policy with ppr:1:node:PE=8 device NULL
+[IN-006:1624170] [[40552,0],0] rmaps:base policy ppr modifiers 1:node:PE=8 provided
+[IN-006:1624170] [[40552,0],0] rmaps:base check modifiers with PE=8
+[IN-006:1624170] [[40552,0],0] rmaps:base setting pe/rank to 8
+[IN-006:1624170] mca: base: close: component default closed
+[IN-006:1624170] mca: base: close: unloading component default
+[IN-006:1624170] mca: base: close: component rank_file closed
+[IN-006:1624170] mca: base: close: unloading component rank_file
+[IN-006:1624170] mca: base: close: component mindist closed
+[IN-006:1624170] mca: base: close: unloading component mindist
+[IN-006:1624170] mca: base: close: component seq closed
+[IN-006:1624170] mca: base: close: unloading component seq
+[IN-006:1624170] mca: base: close: component round_robin closed
+[IN-006:1624170] mca: base: close: unloading component round_robin
+[IN-006:1624170] mca: base: close: component resilient closed
+[IN-006:1624170] mca: base: close: unloading component resilient
+[IN-006:1624170] mca: base: close: component ppr closed
+[IN-006:1624170] mca: base: close: unloading component ppr
+[IN-006:1624170] mca: base: close: component tm closed
+[IN-006:1624170] mca: base: close: unloading component tm
+d5_probe_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+
+===== gate d6_probe_pe8_head (required, limit 60s) 16:31:20: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=1 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 1 --host in-006.stdct.loc --map-by ppr:1:node:PE=8 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+--------------------------------------------------------------------------
+All nodes which are allocated for this job are already filled.
+--------------------------------------------------------------------------
+d6_probe_pe8_head FAIL rc=1 secs=1 kind=required 
+
+===== gate d7_probe_nobind (required, limit 60s) 16:31:23: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=omp_done thread_cpus=37,39,41,43,45,47,49,51
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=gather_begin 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=gather_done 
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=gather_done 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=bcast_begin 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=finalize_begin verdict=PASS
+placement host=IN-006 rank=0 thread=0 cpu=41 mask_cpus=1
+placement host=IN-006 rank=0 thread=1 cpu=43 mask_cpus=1
+placement host=IN-006 rank=0 thread=2 cpu=45 mask_cpus=1
+placement host=IN-006 rank=0 thread=3 cpu=47 mask_cpus=1
+placement host=IN-006 rank=0 thread=4 cpu=49 mask_cpus=1
+placement host=IN-006 rank=0 thread=5 cpu=51 mask_cpus=1
+placement host=IN-006 rank=0 thread=6 cpu=53 mask_cpus=1
+placement host=IN-006 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-007 rank=1 thread=0 cpu=37 mask_cpus=1
+placement host=IN-007 rank=1 thread=1 cpu=39 mask_cpus=1
+placement host=IN-007 rank=1 thread=2 cpu=41 mask_cpus=1
+placement host=IN-007 rank=1 thread=3 cpu=43 mask_cpus=1
+placement host=IN-007 rank=1 thread=4 cpu=45 mask_cpus=1
+placement host=IN-007 rank=1 thread=5 cpu=47 mask_cpus=1
+placement host=IN-007 rank=1 thread=6 cpu=49 mask_cpus=1
+placement host=IN-007 rank=1 thread=7 cpu=51 mask_cpus=1
+placement_host host=IN-006 threads=8 distinct_cpus=8
+placement_host host=IN-007 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=bcast_begin 
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=finalize_begin verdict=PASS
+trace t=1793694687.309 host=IN-006 rank=0 pid=1628940 stage=finalize_done 
+trace t=1793694687.310 host=IN-007 rank=1 pid=914557 stage=finalize_done 
+d7_probe_nobind PASS rc=0 secs=4 kind=required 
+
+===== gate d8_probe_pe8_tmrsh (optional, limit 60s) 16:31:30: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514029.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+trace t=1793694693.482 host=IN-006 rank=0 pid=1630021 stage=gather_done 
+trace t=1793694693.481 host=IN-007 rank=1 pid=914716 stage=omp_done thread_cpus=37,39,41,43,45,47,49,51
+trace t=1793694693.481 host=IN-007 rank=1 pid=914716 stage=gather_begin 
+trace t=1793694693.481 host=IN-007 rank=1 pid=914716 stage=gather_done 
+trace t=1793694693.481 host=IN-007 rank=1 pid=914716 stage=bcast_begin 
+placement host=IN-006 rank=0 thread=0 cpu=41 mask_cpus=1
+placement host=IN-006 rank=0 thread=1 cpu=43 mask_cpus=1
+placement host=IN-006 rank=0 thread=2 cpu=45 mask_cpus=1
+placement host=IN-006 rank=0 thread=3 cpu=47 mask_cpus=1
+placement host=IN-006 rank=0 thread=4 cpu=49 mask_cpus=1
+placement host=IN-006 rank=0 thread=5 cpu=51 mask_cpus=1
+placement host=IN-006 rank=0 thread=6 cpu=53 mask_cpus=1
+placement host=IN-006 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-007 rank=1 thread=0 cpu=37 mask_cpus=1
+placement host=IN-007 rank=1 thread=1 cpu=39 mask_cpus=1
+placement host=IN-007 rank=1 thread=2 cpu=41 mask_cpus=1
+placement host=IN-007 rank=1 thread=3 cpu=43 mask_cpus=1
+placement host=IN-007 rank=1 thread=4 cpu=45 mask_cpus=1
+placement host=IN-007 rank=1 thread=5 cpu=47 mask_cpus=1
+placement host=IN-007 rank=1 thread=6 cpu=49 mask_cpus=1
+placement host=IN-007 rank=1 thread=7 cpu=51 mask_cpus=1
+placement_host host=IN-006 threads=8 distinct_cpus=8
+trace t=1793694693.482 host=IN-006 rank=0 pid=1630021 stage=bcast_begin 
+placement_host host=IN-007 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793694693.482 host=IN-006 rank=0 pid=1630021 stage=finalize_begin verdict=PASS
+trace t=1793694693.482 host=IN-007 rank=1 pid=914716 stage=finalize_begin verdict=PASS
+trace t=1793694693.526 host=IN-006 rank=0 pid=1630021 stage=finalize_done 
+trace t=1793694693.527 host=IN-007 rank=1 pid=914716 stage=finalize_done 
+d8_probe_pe8_tmrsh PASS rc=0 secs=3 kind=optional 
+
+===== gate d9_probe_pe8_repeat (required, limit 60s) 16:31:36: env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=8 PLACEMENT_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514029/placement_check
+d9_probe_pe8_repeat TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+== gate_d4_probe_pe4
+== gate_d5_probe_pe8
+== gate_d6_probe_pe8_head
+== gate_d7_probe_nobind
+   last rank=0 host=IN-006 stage=finalize_done
+   last rank=1 host=IN-007 stage=finalize_done
+== gate_d8_probe_pe8_tmrsh
+   last rank=0 host=IN-006 stage=finalize_done
+   last rank=1 host=IN-007 stage=finalize_done
+== gate_d9_probe_pe8_repeat
+
+===== summary 16:32:39
+allocation PASS rc=0 secs=5 kind=critical 
+build PASS rc=0 secs=3 kind=critical 
+d1_launch_only PASS rc=0 secs=2 kind=required 
+d2_bind_pe4 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d3_bind_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d4_probe_pe4 TIMEOUT rc=124 secs=61 kind=required no completion within 60s
+d5_probe_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d6_probe_pe8_head FAIL rc=1 secs=1 kind=required 
+d7_probe_nobind PASS rc=0 secs=4 kind=required 
+d8_probe_pe8_tmrsh PASS rc=0 secs=3 kind=optional 
+d9_probe_pe8_repeat TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+verdict required_or_critical=10 not_passed=6 optional: d8_probe_pe8_tmrsh=PASS
+  not passed: d2_bind_pe4 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+  not passed: d3_bind_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+  not passed: d4_probe_pe4 TIMEOUT rc=124 secs=61 kind=required no completion within 60s
+  not passed: d5_probe_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+  not passed: d6_probe_pe8_head FAIL rc=1 secs=1 kind=required 
+  not passed: d9_probe_pe8_repeat TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+verdict FAIL
+end=2026-11-03T16:32:39+08:00 elapsed_s=351 walltime_s=1200

@@ -314,3 +314,45 @@ from stdout as pbs_tmrsh does: verdict PASS, all steps reached, 20 of 20 CLEAN r
 no pbs_tmrsh). Evidence: artifacts/local/runs/simulated-diag-tmoutput-20261103-56d3de5. This does
 not reproduce the 1507215 stall and is not a Vanda result.
 
+### Diagnostic job 1514029, 3 Nov 16:26 SGT (fixed harness; stall reproduced)
+
+Submitted once from a clean clone of aa763c9: auto_free routed to cpu_parallel, no -P,
+select=2:ncpus=8:mpiprocs=8:mem=4gb, place=scatter, 00:20:00; charge rate 0 on the job record. Ran on
+IN-006 and IN-007, both Gold 6438N, 5 min 52 s, Exit_status 1 (verdict FAIL, by design when required
+steps do not pass). Evidence: artifacts/cluster/runs/diag-20261103T082648Z-1514029/ and
+artifacts/cluster/logs/1514029.stdct-mgmt-02.OU. Balance not read (no amgr session).
+
+| Step | Launch | Mapping | Program | Result |
+|---|---|---|---|---|
+| allocation | tm | ppr:1:node, no binding | report | PASS |
+| d1 | tm | ppr:1:node, bind none | hostname | PASS |
+| d2 | tm | ppr:2:node:PE=4, bind core | hostname | TIMEOUT 60 s, no output |
+| d3 | tm | ppr:1:node:PE=8, bind core | hostname | TIMEOUT 60 s, no output |
+| d4 | tm | ppr:2:node:PE=4, bind core | probe | TIMEOUT 60 s, no trace |
+| d5 | tm | ppr:1:node:PE=8, bind core | probe | TIMEOUT 60 s, no trace |
+| d6 | tm | --host head, PE=8 | probe | FAIL: "already filled" |
+| d7 | tm | ppr:1:node, bind none | probe, 8 threads | PASS |
+| d8 | pbs_tmrsh | ppr:1:node:PE=8, bind core | probe | PASS (optional step, once) |
+| d9 | tm | ppr:1:node:PE=8, bind core | probe | TIMEOUT 60 s, no trace |
+
+Shown:
+- The remote-report fix works under real pbs_tmrsh: 22 of 22 reports CLEAN, so the run directory
+  is writable and readable across the two nodes. Every step ran past each stall.
+- The 1507215 stall reproduces on another node pair: all five tm launches with a PE mapping and core
+  binding hang, while all tm launches without them pass.
+- It is not specific to the whole cpuset (PE=4 hangs too), and not to MPI or our code (hostname hangs,
+  and the probes print no trace, not even stage=start).
+- In d5 both daemons started: their rmaps messages are in the .OU, and tm launches one on each node,
+  including the head. By the 52 s snapshot no orted appears on either node and mpirun is idle in poll.
+- The same PE=8 mapping and binding runs when launched through pbs_tmrsh.
+
+Not shown:
+- The root cause, or why the daemons were gone. Whether PE or --bind-to core is the trigger: no step
+  separates them.
+- That pbs_tmrsh works repeatedly, with PE below the cpuset size, or with several ranks per node. d8 ran
+  once, and with PE=8 mpirun reports the rank as "not bound" because the mask is the whole cpuset.
+- One node against two: d6 failed on our own command, as --host gives one slot and PE=8 needs eight.
+- **Two-node solver correctness: no solver ran.** No timing was measured.
+
+Local simulations could not show any of this: Docker uses ssh and no tm.
+

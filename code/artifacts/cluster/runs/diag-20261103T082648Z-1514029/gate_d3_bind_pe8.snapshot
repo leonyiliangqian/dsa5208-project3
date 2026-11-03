@@ -1,0 +1,42 @@
+== snapshot host=IN-006 t=1793694544.250
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+1588348 1588346 1588348 Ss   do_wait                                02:16 /bin/bash /var/spool/pbs/mom_priv/jobs/1514029.stdct-mgmt-02.SC
+1588532 1588348 1588348 S    do_wait                                02:16  \_ /bin/bash /var/spool/pbs/mom_priv/jobs/1514029.stdct-mgmt-02.SC
+1588534 1588532 1588348 S    pipe_read                              02:16  |   \_ tee artifacts/cluster/runs/diag-20261103T082648Z-1514029/job.log
+1607761 1588348 1607761 Ss   do_wait                                00:52  \_ bash jobs/vanda/snapshot_watch.sh 52 d3_bind_pe8
+1621407 1607761 1621407 S    sigsuspend                             00:00  |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-1514029/
+1621408 1621407 1621407 S    do_wait                                00:00  |       \_ bash tests/toolchain/proc_snapshot.sh vanda-1514029/
+1621413 1621408 1621407 R    -                                      00:00  |           \_ ps -u 26435 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+1621414 1621408 1621407 S    pipe_read                              00:00  |           \_ cut -c1-220
+1607762 1588348 1607762 S    sigsuspend                             00:52  \_ timeout -k 20 60 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRA
+1607763 1607762 1607762 Sl   do_poll.constprop.0                    00:52      \_ mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 2
+-- pid=1607763 comm=mpirun State: S (sleeping) Threads: 3 Cpus_allowed_list: 41,43,45,47,49,51,53,55 
+   tid=1607763 state=S wchan=do_poll.constprop.0
+   tid=1607766 state=S wchan=ep_poll
+   tid=1607767 state=S wchan=do_select
+   Thread 3 (Thread 0x15554ffff640 (LWP 1607767) "mpirun"):
+   #0  0x0000155554f5022d in select () from /lib64/libc.so.6
+   #1  0x0000155554201ac2 in listen_thread (obj=<optimized out>) at oob_tcp_listener.c:705
+   #2  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #3  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 2 (Thread 0x15555441f640 (LWP 1607766) "mpirun"):
+   #0  0x0000155554f5a21e in epoll_wait () from /lib64/libc.so.6
+   #1  0x00001555551622e4 in epoll_dispatch (base=0x4aa8e0, tv=<optimized out>) at epoll.c:465
+   #2  0x0000155555158c85 in event_base_loop (base=0x4aa8e0, flags=flags@entry=1) at event.c:1992
+   #3  0x0000155554559631 in progress_engine (obj=<optimized out>) at runtime/pmix_progress_threads.c:230
+   #4  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #5  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 1 (Thread 0x155554e4b4c0 (LWP 1607763) "mpirun"):
+   #0  0x0000155554f4d9ff in poll () from /lib64/libc.so.6
+   #1  0x00001555551616f5 in poll_dispatch (base=0x460d90, tv=0x0) at poll.c:182
+   #2  0x0000155555158c85 in event_base_loop (base=0x460d90, flags=flags@entry=1) at event.c:1992
+   #3  0x000000000040133a in orterun (argc=<optimized out>, argv=0x7fffffff5a38) at orterun.c:179
+   #4  0x0000155554e75590 in __libc_start_call_main () from /lib64/libc.so.6
+   #5  0x0000155554e75640 in __libc_start_main_impl () from /lib64/libc.so.6
+   #6  0x000000000040114e in _start ()
+== snapshot host=IN-007 t=1793694545.526
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+ 913620  913619  913620 Ss   do_wait                                00:00 bash /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/tests/toolchain/run_to_file.sh /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/artifact
+ 913669  913620  913620 S    do_wait                                00:00  \_ bash /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/tests/toolchain/proc_snapshot.sh vanda-1514029/
+ 913674  913669  913620 R    -                                      00:00      \_ ps -u 26435 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+ 913675  913669  913620 S    pipe_read                              00:00      \_ cut -c1-220

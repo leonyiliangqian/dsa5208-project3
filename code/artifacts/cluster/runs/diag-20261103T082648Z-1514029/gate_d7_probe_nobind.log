@@ -1,0 +1,48 @@
+trace t=1793694685.809 host=IN-006 rank=0 pid=1628940 stage=start affinity=41 omp_num_threads=8
+trace t=1793694685.809 host=IN-006 rank=0 pid=1628940 stage=mpi_init_begin 
+trace t=1793694685.841 host=IN-007 rank=1 pid=914557 stage=start affinity=37 omp_num_threads=8
+trace t=1793694685.841 host=IN-007 rank=1 pid=914557 stage=mpi_init_begin 
+[IN-006:1628940] MCW rank 0 bound to socket 1[core 0[hwt 0]]: [][B/././././././.]
+[IN-007:914557] MCW rank 1 bound to socket 1[core 0[hwt 0]]: [][B/././././././.]
+trace t=1793694686.853 host=IN-007 rank=1 pid=914557 stage=mpi_init_done size=2 provided=1
+trace t=1793694686.853 host=IN-007 rank=1 pid=914557 stage=allreduce_threads_begin threads=8
+trace t=1793694686.853 host=IN-006 rank=0 pid=1628940 stage=mpi_init_done size=2 provided=1
+trace t=1793694686.853 host=IN-006 rank=0 pid=1628940 stage=allreduce_threads_begin threads=8
+trace t=1793694686.864 host=IN-007 rank=1 pid=914557 stage=allreduce_threads_done min=8 max=8
+trace t=1793694686.864 host=IN-007 rank=1 pid=914557 stage=omp_begin 
+trace t=1793694686.864 host=IN-006 rank=0 pid=1628940 stage=allreduce_threads_done min=8 max=8
+trace t=1793694686.864 host=IN-006 rank=0 pid=1628940 stage=omp_begin 
+trace t=1793694686.864 host=IN-006 rank=0 pid=1628940 stage=omp_team_started team=8
+trace t=1793694686.864 host=IN-007 rank=1 pid=914557 stage=omp_team_started team=8
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=omp_done thread_cpus=41,43,45,47,49,51,53,55
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=gather_begin 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=omp_done thread_cpus=37,39,41,43,45,47,49,51
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=gather_begin 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=gather_done 
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=gather_done 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=bcast_begin 
+trace t=1793694687.264 host=IN-007 rank=1 pid=914557 stage=finalize_begin verdict=PASS
+placement host=IN-006 rank=0 thread=0 cpu=41 mask_cpus=1
+placement host=IN-006 rank=0 thread=1 cpu=43 mask_cpus=1
+placement host=IN-006 rank=0 thread=2 cpu=45 mask_cpus=1
+placement host=IN-006 rank=0 thread=3 cpu=47 mask_cpus=1
+placement host=IN-006 rank=0 thread=4 cpu=49 mask_cpus=1
+placement host=IN-006 rank=0 thread=5 cpu=51 mask_cpus=1
+placement host=IN-006 rank=0 thread=6 cpu=53 mask_cpus=1
+placement host=IN-006 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-007 rank=1 thread=0 cpu=37 mask_cpus=1
+placement host=IN-007 rank=1 thread=1 cpu=39 mask_cpus=1
+placement host=IN-007 rank=1 thread=2 cpu=41 mask_cpus=1
+placement host=IN-007 rank=1 thread=3 cpu=43 mask_cpus=1
+placement host=IN-007 rank=1 thread=4 cpu=45 mask_cpus=1
+placement host=IN-007 rank=1 thread=5 cpu=47 mask_cpus=1
+placement host=IN-007 rank=1 thread=6 cpu=49 mask_cpus=1
+placement host=IN-007 rank=1 thread=7 cpu=51 mask_cpus=1
+placement_host host=IN-006 threads=8 distinct_cpus=8
+placement_host host=IN-007 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=bcast_begin 
+trace t=1793694687.264 host=IN-006 rank=0 pid=1628940 stage=finalize_begin verdict=PASS
+trace t=1793694687.309 host=IN-006 rank=0 pid=1628940 stage=finalize_done 
+trace t=1793694687.310 host=IN-007 rank=1 pid=914557 stage=finalize_done 

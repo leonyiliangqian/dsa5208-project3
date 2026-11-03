@@ -1,0 +1,47 @@
+== snapshot host=IN-006 t=1793694606.981
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+1588348 1588346 1588348 Ss   do_wait                                03:19 /bin/bash /var/spool/pbs/mom_priv/jobs/1514029.stdct-mgmt-02.SC
+1588532 1588348 1588348 S    do_wait                                03:19  \_ /bin/bash /var/spool/pbs/mom_priv/jobs/1514029.stdct-mgmt-02.SC
+1588534 1588532 1588348 S    pipe_read                              03:19  |   \_ tee artifacts/cluster/runs/diag-20261103T082648Z-1514029/job.log
+1621878 1588348 1621878 Ss   do_wait                                00:52  \_ bash jobs/vanda/snapshot_watch.sh 52 d4_probe_pe4
+1623303 1621878 1623303 S    sigsuspend                             00:00  |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-1514029/
+1623304 1623303 1623303 S    do_wait                                00:00  |       \_ bash tests/toolchain/proc_snapshot.sh vanda-1514029/
+1623309 1623304 1623303 R    -                                      00:00  |           \_ ps -u 26435 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+1623310 1623304 1623303 S    pipe_read                              00:00  |           \_ cut -c1-220
+1621879 1588348 1621879 S    sigsuspend                             00:52  \_ timeout -k 20 60 env OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 PLACEMENT_TRACE=1 OMP_NUM_THREADS=4 PLACEMENT_EXPECT_HOSTS=
+1621880 1621879 1621879 Sl   do_poll.constprop.0                    00:52      \_ mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH -np 4
+-- pid=1621879 comm=timeout State: S (sleeping) Threads: 1 Cpus_allowed_list: 41,43,45,47,49,51,53,55 
+   tid=1621879 state=S wchan=sigsuspend
+   Thread 1 (Thread 0x1555552fbb80 (LWP 1621879) "timeout"):
+   #0  0x000015555533b9ac in sigsuspend () from /lib64/libc.so.6
+   #1  0x0000555555556f6e in main ()
+-- pid=1621880 comm=mpirun State: S (sleeping) Threads: 3 Cpus_allowed_list: 41,43,45,47,49,51,53,55 
+   tid=1621880 state=S wchan=do_poll.constprop.0
+   tid=1621883 state=S wchan=ep_poll
+   tid=1621884 state=S wchan=do_select
+   Thread 3 (Thread 0x15554ffff640 (LWP 1621884) "mpirun"):
+   #0  0x0000155554f5022d in select () from /lib64/libc.so.6
+   #1  0x0000155554201ac2 in listen_thread (obj=<optimized out>) at oob_tcp_listener.c:705
+   #2  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #3  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 2 (Thread 0x15555441f640 (LWP 1621883) "mpirun"):
+   #0  0x0000155554f5a21e in epoll_wait () from /lib64/libc.so.6
+   #1  0x00001555551622e4 in epoll_dispatch (base=0x4aade0, tv=<optimized out>) at epoll.c:465
+   #2  0x0000155555158c85 in event_base_loop (base=0x4aade0, flags=flags@entry=1) at event.c:1992
+   #3  0x0000155554559631 in progress_engine (obj=<optimized out>) at runtime/pmix_progress_threads.c:230
+   #4  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #5  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 1 (Thread 0x155554e4b4c0 (LWP 1621880) "mpirun"):
+   #0  0x0000155554f4d9ff in poll () from /lib64/libc.so.6
+   #1  0x00001555551616f5 in poll_dispatch (base=0x4617c0, tv=0x0) at poll.c:182
+   #2  0x0000155555158c85 in event_base_loop (base=0x4617c0, flags=flags@entry=1) at event.c:1992
+   #3  0x000000000040133a in orterun (argc=<optimized out>, argv=0x7fffffff58c8) at orterun.c:179
+   #4  0x0000155554e75590 in __libc_start_call_main () from /lib64/libc.so.6
+   #5  0x0000155554e75640 in __libc_start_main_impl () from /lib64/libc.so.6
+   #6  0x000000000040114e in _start ()
+== snapshot host=IN-007 t=1793694608.525
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+ 913910  913909  913910 Ss   do_wait                                00:01 bash /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/tests/toolchain/run_to_file.sh /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/artifact
+ 913960  913910  913910 S    do_wait                                00:00  \_ bash /nfs/home/svu/leonyil.qian/dsa5208-p3-aa763c9/code/tests/toolchain/proc_snapshot.sh vanda-1514029/
+ 913965  913960  913910 R    -                                      00:00      \_ ps -u 26435 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+ 913966  913960  913910 S    pipe_read                              00:00      \_ cut -c1-220

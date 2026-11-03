@@ -1,0 +1,11 @@
+allocation PASS rc=0 secs=5 kind=critical 
+build PASS rc=0 secs=3 kind=critical 
+d1_launch_only PASS rc=0 secs=2 kind=required 
+d2_bind_pe4 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d3_bind_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d4_probe_pe4 TIMEOUT rc=124 secs=61 kind=required no completion within 60s
+d5_probe_pe8 TIMEOUT rc=124 secs=60 kind=required no completion within 60s
+d6_probe_pe8_head FAIL rc=1 secs=1 kind=required 
+d7_probe_nobind PASS rc=0 secs=4 kind=required 
+d8_probe_pe8_tmrsh PASS rc=0 secs=3 kind=optional 
+d9_probe_pe8_repeat TIMEOUT rc=124 secs=60 kind=required no completion within 60s

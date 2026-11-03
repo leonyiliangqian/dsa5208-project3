@@ -12,7 +12,10 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   gate because `pbs_tmrsh` does not return remote output, so one node's CLEAN report was lost.
   Build and d1-d9 never ran: **the 1507215 stall is still unexplained and two-node solver
   correctness is still unverified.** Do not resubmit 1513781; a rerun is a new approval.
-- **Fix:** commit 563d198, merged to `main`. Tested locally only; not yet tried on Vanda.
+- **Fix:** commit 563d198, on `main`. Confirmed on Vanda by job 1514029 (22 of 22 CLEAN reports).
+- **Stall narrowed by job 1514029:** tm launch with a PE mapping and core binding hangs, even for
+  `hostname`; tm without them passes, and one pbs_tmrsh run with PE=8 passes. Root cause unknown. No solver
+  ran, so two-node solver correctness is still unverified. See `notes/experiments.md`.
 - **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (on `main`).
   **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
