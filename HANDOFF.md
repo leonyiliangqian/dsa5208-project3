@@ -14,15 +14,17 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   correctness is still unverified.** Do not resubmit 1513781; a rerun is a new approval.
 - **Fix:** commit 563d198, on `main`. Confirmed on Vanda by job 1514029 (22 of 22 CLEAN reports).
 - **Stall narrowed by job 1514029:** tm launch with a PE mapping and core binding hangs, even for
-  `hostname`; tm without them passes, and one pbs_tmrsh run with PE=8 passes. Root cause unknown. No solver
-  ran, so two-node solver correctness is still unverified. See `notes/experiments.md`.
-- **Launcher:** `MPI_LAUNCHER=pbs_tmrsh` is now the default for `twonode` and multi-node `measure`, and
-  it never falls back to ssh. Tested locally with a stand-in only. It has one passing launch on Vanda,
-  without its two new options; reliability and root cause remain unproven.
+  `hostname`; tm without them passes. Root cause unknown, and job 1514458 did not use tm.
+- **Two-node correctness passed once, job 1514458 (commit 0b1f36b, `pbs_tmrsh`):** 17 of 17 gates; 22 of 22
+  hybrid-serial cases matched exactly, 17 across both nodes. That comparison ran **unbound**. Bound evidence is
+  separate: placement probes and one smoke run, none compared with serial. One job on one node pair; it does not
+  cover 64-core nodes, more than 2 nodes or the charged pool. See `notes/experiments.md`.
+- **Stale JSON label:** that run's validation JSON says `kind: local development validation`. It ran on Vanda.
+  The files stay unchanged; validators now record `execution_context`. Do not edit the originals.
 - **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (on `main`).
   **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
-- **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md).
+- **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
 
 ## The short version
 
@@ -30,8 +32,8 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   replicated-tree solver, validation, and the whole measurement pipeline
   (manifests, runner, analysis, report figure and table generation).
 - **Verified on Vanda:** single-node correctness (job 1503779, all 9 gates pass).
-- **Not verified on Vanda:** two-node correctness (two attempts, neither reached
-  the solver comparison).
+- **Verified once on Vanda:** two-node correctness, unbound comparison (job 1514458).
+- **Not verified:** a bound result against serial, or anything beyond two 8-core allocations.
 - **No performance measurement exists.** Every scaling figure and table in the
   report is still a red `\pending` slot, filled automatically once Vanda jobs
   have run.
@@ -42,7 +44,7 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 
 **Write now** (evidence exists): Introduction (minus findings); Problem and
 Method; Parallel Implementation; Correctness for one node (Vanda job 1503779)
-and the honest status of the two-node attempts; Computing Environment (node
+and two nodes (job 1514458, unbound); Computing Environment (node
 types, build policy, placement); Experimental Methodology (timing, metrics,
 planned studies, bounded runs, provenance); design Limitations; AI usage draft.
 
@@ -63,8 +65,9 @@ presented as a cluster result.
 | Hybrid = serial, bitwise, 15 configurations (1–5 ranks, 1–4 threads, 3 schedules, uneven N, ranks owning nothing) | same run, `hybrid_validation_vanda-1503779.json` | **Vanda** |
 | Placement: one thread per core, bound, inside the PBS cpuset | same run, `gate_place_*.log` | **Vanda** |
 | Two hosts, exact 8-CPU cpusets, PBS tm launching, MPI data exchange between nodes (2 and 16 ranks) | `code/artifacts/cluster/runs/twonode-20261029T071525Z-1507215/` | **Vanda** (job then stalled) |
+| Two-node hybrid = serial, exact, 22 cases (17 across both hosts), **unbound**; 8 bound placement probes and one bound smoke run, not compared with serial | `code/artifacts/cluster/runs/twonode-20261103T102750Z-1514458/` | **Vanda**, IN-002 + IN-005 |
 | Mixed CPU models in the free pool (Platinum 8452Y and Gold 6438N) | `code/artifacts/cluster/runs/twonode-20261029T053005Z-1506687/` | **Vanda** (job stopped by design) |
-| Zero charge (balance 10000.0 after jobs 1503779 and 1506687; 1507215 not yet re-checked) | `code/artifacts/cluster/discovery/` | **Vanda** |
+| Zero charge (balance 10000.0 after jobs 1503779 and 1506687; later jobs not re-checked, queue rate 0 at submission) | `code/artifacts/cluster/discovery/` | **Vanda** |
 | Energy behaviour vs dt and theta; leaf-size and binding observations; mutation check | `code/artifacts/local/` | local only |
 | Gate library fault injection 42/42; simulated twonode/diag/correctness/pilot/bench2 jobs; pipeline end to end 26/26 | `code/artifacts/local/runs/gates-selftest-*`, `simulated-*`, `pipeline-e2e-*` | local Docker simulation, **not** measurements |
 
@@ -73,10 +76,8 @@ generated from the Vanda correctness run by `code/scripts/report_tables.py`.
 
 ## What is missing
 
-1. **Two-node correctness.** Job 1507215 stalled in a placement probe (one rank
-   per node bound to all 8 cores) and hit its walltime before the hybrid–serial
-   comparison. Cause unknown; it does not reproduce locally. A small diagnostic
-   job (`code/jobs/vanda/diag.pbs`) is ready, awaiting approval.
+1. **Bound two-node comparison against serial.** Not done; job 1514458's comparison was unbound. The tm stall
+   from 1507215 and 1514029 is unexplained and avoided by using `pbs_tmrsh`.
 2. **Credit balance after job 1507215.** Needs `amgr login` (Leon's password).
 3. **Single-node pilot** (`pilot.pbs`, 64 cores, 1 h). Not approved yet.
 4. **Formal measurements** (strong, ranks x threads, schedule, weak, leaf,
@@ -96,16 +97,14 @@ bash jobs/vanda/submit.sh diag    --queue auto_free --no-project          # dry 
 bash jobs/vanda/submit.sh diag    --queue auto_free --no-project --yes    # ONLY after approval
 ```
 
-Then, in order, each after approval and after the previous one is understood:
+Diagnostic and two-node correctness are done. Then, in order, each after approval and after the previous one is understood:
 
 | Step | Command (from `code/`) | Request |
 |---|---|---|
-| Diagnostic | `submit.sh diag ...` | 2 x 8 cores, 4 GB, 20 min |
-| Two-node correctness | `submit.sh twonode ...` | 2 x 8 cores, 16 GB, 30 min |
 | Pilot | `submit.sh pilot ...` | 1 x 64 cores, 120 GB, 60 min |
 | Freeze manifests | edit sizes in `manifests/studies_*.json` from pilot timings, set `"status": "frozen <date> <commit>"`, commit | — |
 | Formal single node | `submit.sh bench1 ...` (set walltime from the pilot first) | 1 x 64 cores |
-| Formal two node | `submit.sh bench2 ...` (only after two-node correctness) | 2 x 64 cores, one CPU model |
+| Formal two node | `submit.sh bench2 ...` | 2 x 64 cores, one CPU model |
 | 256-core series | `submit.sh bench4 ...` (replaces bench2 for the graded curves; charged queue, see requirements_plan.md) | 4 x 64 cores, one CPU model |
 
 All use `--queue auto_free --no-project` (zero charge rate; verify on the day).
@@ -128,18 +127,17 @@ python3 scripts/report_figures.py artifacts/cluster/analysis/formal/summary.json
 
 Source: `report/main.tex` (compile in Overleaf; see `report/README.md`). Drafted:
 Introduction (minus findings), Problem and Method, Parallel Implementation,
-Correctness (single node, from Vanda), Computing Environment, Experimental
+Correctness (one and two nodes, from Vanda), Computing Environment, Experimental
 Methodology (timing, metrics, planned studies, bounded runs, provenance),
 Limitations (design part), AI usage statement (draft).
 
-Red `\pending{...}` markers (19) still to resolve:
+Red `\pending{...}` markers still to resolve:
 
 | Section | Pending |
 |---|---|
 | Submission overview | how source is submitted (ask lecturer); "Atlas or Vanda" -> Vanda |
 | Introduction | main measured findings (2–3 sentences) |
 | Serial Baseline | leaf size re-tuned on the cluster (pilot) |
-| Correctness | two-node hybrid–serial comparison and the diagnostic outcome |
 | Computing Environment | memory per node, interconnect, single-node-type enforcement, nodes used |
 | Planned Studies | frozen manifest values |
 | Results (7 slots) | figures/tables fill automatically from `report_figures.py`; interpretation text per subsection |

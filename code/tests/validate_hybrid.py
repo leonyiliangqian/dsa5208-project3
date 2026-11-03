@@ -25,6 +25,8 @@ import platform
 import subprocess
 import tempfile
 
+from execution_context import execution_context
+
 ACC_TOL = (1e-12, 1e-14)
 TRAJ_TOL = (1e-10, 1e-13)
 
@@ -227,7 +229,7 @@ sources = sorted(root.glob("common/*.hpp")) + [root / "serial/barnes_hut.cpp",
                                                 root / "hybrid/bh_hybrid.cpp"]
 evidence = {
     "timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-    "kind": "local development validation; not Atlas/Vanda performance evidence",
+    **execution_context(),
     "platform": platform.platform(),
     "mpirun_flags": opts.mpirun_flags, "suite": opts.suite, "expect_hosts": opts.expect_hosts,
     "source_sha256": {str(f.relative_to(root)): hashlib.sha256(f.read_bytes()).hexdigest()

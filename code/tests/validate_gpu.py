@@ -26,6 +26,8 @@ import subprocess
 import sys
 import tempfile
 
+from execution_context import execution_context
+
 ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 ap.add_argument("--serial", required=True)
 ap.add_argument("--gpu", required=True)
@@ -155,7 +157,7 @@ Path(a.out).write_text(json.dumps({
     "real_gpu_executed": bool(a.expect_device and not failed),
     "cxx": a.cxx, "cxxflags": a.cxxflags, "device_probe": info,
     "mandatory_without_device_rc": None if a.expect_device else mandatory_without_device_rc,
-    "source_git_rev": os.environ.get("SOURCE_GIT_REV", "unknown"),
+    **execution_context(),
     "checks": checks, "failed": failed}, indent=1) + "\n")
 print(f"{'PASS' if not failed else 'FAIL'}: GPU gate, {len(checks)} checks, {len(failed)} failed")
 sys.exit(1 if failed else 0)

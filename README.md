@@ -15,12 +15,11 @@ membership and student IDs in `report/main.tex` before submission.
   locally (Docker) and on a Vanda compute node.
 - Vanda (PBS) correctness job 1503779 passed all 9 gates on node IN-003 (8 cores,
   zero-rate `auto_free`).
-- Two-node solver correctness on Vanda is **unverified**: job 1506687 stopped at
-  the allocation check; job 1507215 verified two hosts, the 8-CPU cpusets and PBS
-  tm launching, then stalled in a placement probe until the walltime. Gates now
-  have time limits and cleanup checks, and a small diagnostic job
-  (`code/jobs/vanda/diag.pbs`) is prepared but not submitted. Benchmarks start
-  after the 2 Nov 17:00 reopening. See notes/experiments.md and notes/cluster_access.md.
+- Two-node correctness job 1514458 passed all 17 gates on Vanda: 22 of 22 hybrid-serial
+  cases matched exactly, 17 across both nodes, all **unbound**. Binding was checked only by
+  separate placement probes and one bound smoke run, not against serial. One job, and the
+  1514029 tm hang is unexplained; multi-node jobs use `pbs_tmrsh`.
+  See notes/experiments.md and notes/cluster_access.md.
 - Measurement pipeline complete and tested locally (manifests, time-limited runs,
   analysis, report figures/tables); no performance measurement exists yet.
 - Report: method, parallel design, correctness (Vanda) and methodology drafted
@@ -29,13 +28,11 @@ membership and student IDs in `report/main.tex` before submission.
 ## Limitations at this point (read before writing)
 
 - Single-node correctness passed on Vanda (job 1503779).
-- **Two-node solver correctness is unverified** (jobs 1506687 and 1507215 did
-  not reach the solver comparison; evidence kept).
+- **Two-node correctness rests on one job (1514458) on one pair of nodes**, with the
+  serial comparison unbound; no bound result has been compared with serial.
 - **Local Docker simulations are tests, not Vanda performance results.**
 - **No formal cluster scaling measurement has been collected.**
-- Vanda scheduling was confirmed disabled for maintenance (30 Oct); reopening
-  was announced for **2 November 17:00 SGT**. Every cluster job needs Leon's
-  approval first.
+- Every cluster job needs Leon's approval first; see notes/approval_requests.md.
 
 ## Start here
 

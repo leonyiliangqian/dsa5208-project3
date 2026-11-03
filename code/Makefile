@@ -18,7 +18,7 @@ EVIDENCE ?= artifacts/local
 
 .DEFAULT_GOAL := all
 
-.PHONY: help all hybrid gpu check-gpu clean check check-hybrid preflight sanitize toolchain placement internode
+.PHONY: help all hybrid gpu check-gpu clean check check-context check-hybrid preflight sanitize toolchain placement internode
 
 help:       ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -50,6 +50,9 @@ $(BIN):
 check: $(BIN)/bh_serial  ## Serial gate: edge cases, argument rejection, theta=0 vs direct
 	$(PYTHON) tests/validate_serial.py --binary $(BIN)/bh_serial \
 	    --out $(EVIDENCE)/serial_validation_$(notdir $(BIN)).json
+
+check-context: $(BIN)/bh_serial  ## Validators label where they ran (local or PBS batch)
+	$(PYTHON) tests/test_execution_context.py --serial $(BIN)/bh_serial
 
 # Debug build with AddressSanitizer and UndefinedBehaviorSanitizer; never timed.
 SANFLAGS := -O1 -g -std=c++17 -Wall -Wextra -fno-omit-frame-pointer -fsanitize=address,undefined -fno-sanitize-recover=undefined

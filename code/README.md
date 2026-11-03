@@ -147,8 +147,8 @@ after it; kinds are critical, required and optional. Step-by-step:
 | Job | Request | Purpose | Status |
 |---|---|---|---|
 | `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node | PASSED as job 1503779 |
-| `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, forced PBS tm launch | 1506687 stopped at allocation, 1507215 stalled; unverified |
-| `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | prepared, awaiting approval |
+| `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch | PASSED as job 1514458 (comparison unbound; 1506687 and 1507215 did not reach it) |
+| `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
 | `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | prepared, NOT approved |
 | `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
 

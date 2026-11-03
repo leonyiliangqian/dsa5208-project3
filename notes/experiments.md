@@ -99,6 +99,7 @@ showed the default bound the rank to one hardware thread.
 | 28 Oct 20:24 | 1503779.stdct-mgmt-02 | d959217 | 1 x 8 CPUs, 16 GB, 30 min | auto_free -> cpu_parallel, no -P | First correctness job | Ran 20:31–20:32 on IN-003, Exit_status 0; all 9 gates PASS |
 | 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | Ran 13:30-13:31 on CN-161 + IN-002; Exit_status 5: allocation check stopped the job before compiling (CPU models differ) |
 | 29 Oct 15:15 | 1507215.stdct-mgmt-02 | 494af8b | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness, portable build, forced tm launch | Ran 15:15-15:47 on IN-011 + IN-013; Exit_status -29 (killed at the 30 min walltime). Gates allocation, build, flags, toolchain, internode_2, internode_16 PASS; place_1x8 hung with no output; later gates not run |
+| 3 Nov 18:27 | 1514458.stdct-mgmt-02 | 0b1f36b | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness, pbs_tmrsh launch | Ran 18:27-18:31 on IN-002 + IN-005; Exit_status 0; all 17 gates PASS. Hybrid comparison unbound |
 
 Charging basis: site `hpc cpu` instructions present `-q auto_free` without
 `-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
@@ -377,3 +378,33 @@ Not shown: anything about real pbs_tmrsh. The stand-in cannot pass the real ance
 only been run on canned records. Reliability and the root cause of the tm hang remain unproven; the route has
 one passing launch on Vanda (d8, job 1514029), without these two options.
 
+### Two-node correctness job 1514458, 3 Nov 18:27 SGT (one submission, passed)
+
+Commit 0b1f36b, clean clone, rate 0, 3 min 39 s of 30 min, IN-002 + IN-005 (both Gold 6438N), Exit_status 0.
+Balance not read (no amgr session). Evidence: artifacts/cluster/runs/twonode-20261103T102750Z-1514458/,
+artifacts/cluster/logs/1514458.stdct-mgmt-02.OU, and discovery/vanda_*0b1f36b*. All 30 files were byte-identical
+to the Vanda copies before commit. No timing from this job is a measurement.
+
+**Unbound comparison against serial.** `gate_hybrid.log` and `hybrid_validation_vanda-1514458.json`: 22 of 22
+cases within tolerance, every difference 0.0; 17 cases on both hosts, up to 16 ranks and N=20011; repeat runs
+bitwise identical; negative control detected. Its flags include `--map-by node --bind-to none`.
+
+**Separate bound checks, none compared with serial.** Eight placement probes passed, each with one CPU per thread:
+PE=4 and PE=8 three times each, plus 4x2 and 8x1. They run a probe program, not the solver. `recorder` ran the
+solver once, bound, 4 ranks x 4 threads, N=50000, 2 steps, and recorded exit 0 and `ok`. Nothing here shows that
+a bound run gives the serial answer.
+
+**Launcher.** Remote ancestry `bash<orted<pbs_shepherd<pbs_mom`, agent `/opt/pbs/bin/pbs_tmrsh`, plm rsh, no
+`--daemonize`, 8 CPUs per node, PBS_JOBID on both nodes, 34 of 34 leftover checks CLEAN. First run of the ancestry
+check on a real launch, and first Vanda run of no-tree-spawn and attached daemons.
+
+**Stale label in the original JSON.** Both validation files in this run say `"kind": "local development validation;
+not Atlas/Vanda performance evidence"`. That string was hard-coded in the validators, so it is wrong about where
+they ran; `env/environment.txt` (PBS_ENVIRONMENT=PBS_BATCH, this PBS_JOBID) and the run directory show Vanda. The
+same string is in older cluster runs. It correctly says these are not performance evidence. The files are
+kept unchanged (sha256: hybrid 9a0bf35e, serial 456f3f26). Validators after 0f57fc6 write `execution_context`
+from the environment; tests/test_execution_context.py covers this. Those later files will not match these
+in schema, and that fix has not run on PBS: a fake PBS environment in Docker is all that has exercised it.
+
+Not shown: reliability (one job, one node pair), the cause of the tm hang (tm was not used), more than 2 nodes,
+full 64-core nodes, Platinum 8452Y nodes, or the charged cpu_node pool.

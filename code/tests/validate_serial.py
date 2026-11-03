@@ -11,6 +11,8 @@ from pathlib import Path
 import re
 import subprocess
 
+from execution_context import execution_context
+
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("--binary", required=True, help="bh_serial executable to test")
@@ -51,7 +53,7 @@ for leaf_size in (1, 8):
                      "stdout": run.stdout})
 sources = [root / "serial/barnes_hut.cpp", root / "common/nbody.hpp"]
 result = {"timestamp_utc": datetime.datetime.now(datetime.timezone.utc).isoformat(),
-          "kind": "local development validation; not Atlas/Vanda performance evidence",
+          **execution_context(),
           "source_sha256": {str(f.relative_to(root)): hashlib.sha256(f.read_bytes()).hexdigest()
                             for f in sources},
           "platform": platform.platform(), "binary": str(Path(binary).relative_to(root)),
