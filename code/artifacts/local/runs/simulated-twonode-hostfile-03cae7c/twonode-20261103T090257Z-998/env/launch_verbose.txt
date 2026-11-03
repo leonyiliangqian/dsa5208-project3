@@ -1,0 +1,65 @@
+[node1:00089] mca: base: components_register: registering framework plm components
+[node1:00089] mca: base: components_register: found loaded component slurm
+[node1:00089] mca: base: components_register: component slurm register function successful
+[node1:00089] mca: base: components_register: found loaded component isolated
+[node1:00089] mca: base: components_register: component isolated has no register or open function
+[node1:00089] mca: base: components_register: found loaded component rsh
+[node1:00089] mca: base: components_register: component rsh register function successful
+[node1:00089] mca: base: components_open: opening plm components
+[node1:00089] mca: base: components_open: found loaded component slurm
+[node1:00089] mca: base: components_open: component slurm open function successful
+[node1:00089] mca: base: components_open: found loaded component isolated
+[node1:00089] mca: base: components_open: component isolated open function successful
+[node1:00089] mca: base: components_open: found loaded component rsh
+[node1:00089] mca: base: components_open: component rsh open function successful
+[node1:00089] mca:base:select: Auto-selecting plm components
+[node1:00089] mca:base:select:(  plm) Querying component [slurm]
+[node1:00089] mca:base:select:(  plm) Querying component [isolated]
+[node1:00089] mca:base:select:(  plm) Query of component [isolated] set priority to 0
+[node1:00089] mca:base:select:(  plm) Querying component [rsh]
+[node1:00089] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[node1:00089] mca:base:select:(  plm) Selected component [rsh]
+[node1:00089] mca: base: close: component slurm closed
+[node1:00089] mca: base: close: unloading component slurm
+[node1:00089] mca: base: close: component isolated closed
+[node1:00089] mca: base: close: unloading component isolated
+[node1:00089] mca: base: components_register: registering framework ras components
+[node1:00089] mca: base: components_register: found loaded component simulator
+[node1:00089] mca: base: components_register: component simulator register function successful
+[node1:00089] mca: base: components_register: found loaded component gridengine
+[node1:00089] mca: base: components_register: component gridengine register function successful
+[node1:00089] mca: base: components_register: found loaded component slurm
+[node1:00089] mca: base: components_register: component slurm register function successful
+[node1:00089] mca: base: components_open: opening ras components
+[node1:00089] mca: base: components_open: found loaded component simulator
+[node1:00089] mca: base: components_open: found loaded component gridengine
+[node1:00089] mca: base: components_open: component gridengine open function successful
+[node1:00089] mca: base: components_open: found loaded component slurm
+[node1:00089] mca: base: components_open: component slurm open function successful
+[node1:00089] mca:base:select: Auto-selecting ras components
+[node1:00089] mca:base:select:(  ras) Querying component [simulator]
+[node1:00089] mca:base:select:(  ras) Querying component [gridengine]
+[node1:00089] mca:base:select:(  ras) Querying component [slurm]
+[node1:00089] mca:base:select:(  ras) No component selected!
+[node1:00089] Warning: could not find environment variable "LD_LIBRARY_PATH"
+[node1:00089] [[19249,0],0] plm:rsh: final template argv:
+	/usr/bin/ssh <template> ( test ! -r ./.profile || . ./.profile;           PATH=/usr/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/usr/lib:${LD_LIBRARY_PATH:-} ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/usr/lib:${DYLD_LIBRARY_PATH:-} ; export DYLD_LIBRARY_PATH ;   /usr/bin/orted -mca ess "env" -mca ess_base_jobid "1261502464" -mca ess_base_vpid "<template>" -mca ess_base_num_procs "2" -mca orte_node_regex "node[1:1-2]@0(2)" -mca orte_hnp_uri "1261502464.0;tcp://172.18.0.2:50337" --mca plm_base_verbose "10" --mca ras_base_verbose "10" -mca plm "rsh" --tree-spawn -mca routed "radix" -mca orte_parent_uri "1261502464.0;tcp://172.18.0.2:50337" -mca rmaps_base_mapping_policy "ppr:1:node" -mca hwloc_base_binding_policy "none" -mca pmix "^s1,s2,cray,isolated" )
+[node2:00023] mca: base: components_register: registering framework plm components
+[node2:00023] mca: base: components_register: found loaded component rsh
+[node2:00023] mca: base: components_register: component rsh register function successful
+[node2:00023] mca: base: components_open: opening plm components
+[node2:00023] mca: base: components_open: found loaded component rsh
+[node2:00023] mca: base: components_open: component rsh open function successful
+[node2:00023] mca:base:select: Auto-selecting plm components
+[node2:00023] mca:base:select:(  plm) Querying component [rsh]
+[node2:00023] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[node2:00023] mca:base:select:(  plm) Selected component [rsh]
+[node1:00089] [[19249,0],0] complete_setup on job [19249,1]
+[node1:00089] [[19249,0],0] plm:base:receive update proc state command from [[19249,0],1]
+[node1:00089] [[19249,0],0] plm:base:receive got update_proc_state for job [19249,1]
+[node1:00089] [[19249,0],0] plm:base:receive update proc state command from [[19249,0],1]
+[node1:00089] [[19249,0],0] plm:base:receive got update_proc_state for job [19249,1]
+[node2:00023] mca: base: close: component rsh closed
+[node2:00023] mca: base: close: unloading component rsh
+[node1:00089] mca: base: close: component rsh closed
+[node1:00089] mca: base: close: unloading component rsh

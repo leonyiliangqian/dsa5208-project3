@@ -1,0 +1,16 @@
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/hang/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+
+===== gate launch (required, limit 15s) 08:58:36: mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/hang/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none hostname
+[node1:02178] Warning: could not find environment variable "LD_LIBRARY_PATH"
+launch TIMEOUT rc=124 secs=15 kind=required no completion within 15s
+
+===== gate after (required, limit 20s) 08:58:52: true
+after PASS rc=0 secs=0 kind=required 
+
+===== summary 08:58:53
+launch TIMEOUT rc=124 secs=15 kind=required no completion within 15s
+after PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: launch TIMEOUT rc=124 secs=15 kind=required no completion within 15s
+verdict FAIL
+end=2026-11-03T08:58:53+00:00 elapsed_s=18 walltime_s=900

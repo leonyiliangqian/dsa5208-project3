@@ -1,0 +1,4 @@
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /usr --hostfile /tmp/nodefile -x PATH -x LD_LIBRARY_PATH -np 16 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-998/internode_check
+[node1:00773] Warning: could not find environment variable "LD_LIBRARY_PATH"
+internode_check ranks=16 hosts=2 [node1,node2] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.1861 allgatherv_1000003x3_max_s=0.4558 expect_hosts=2 PASS

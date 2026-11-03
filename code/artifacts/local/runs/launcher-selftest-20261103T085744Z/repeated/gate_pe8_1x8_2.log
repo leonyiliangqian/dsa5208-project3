@@ -1,0 +1,67 @@
+OMP_NUM_THREADS=8 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    PLACEMENT_EXPECT_HOSTS=2 PLACEMENT_TRACE=1 \
+    mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node:PE=8 \
+    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/launcher-test/placement_check
+[node1:00899] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node1
+  Application name:  bin/launcher-test/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node1:00899] MCW rank 0 is not bound (or bound to all available processors)
+[node2:00620] MCW rank 1 is not bound (or bound to all available processors)
+trace t=1793696288.601 host=node1 rank=0 pid=904 stage=start affinity=0 omp_num_threads=8
+trace t=1793696288.601 host=node1 rank=0 pid=904 stage=mpi_init_begin 
+trace t=1793696288.625 host=node2 rank=1 pid=623 stage=start affinity=0 omp_num_threads=8
+trace t=1793696288.625 host=node2 rank=1 pid=623 stage=mpi_init_begin 
+trace t=1793696288.900 host=node1 rank=0 pid=904 stage=mpi_init_done size=2 provided=1
+trace t=1793696288.900 host=node1 rank=0 pid=904 stage=allreduce_threads_begin threads=8
+trace t=1793696288.900 host=node2 rank=1 pid=623 stage=mpi_init_done size=2 provided=1
+trace t=1793696288.900 host=node2 rank=1 pid=623 stage=allreduce_threads_begin threads=8
+trace t=1793696288.907 host=node2 rank=1 pid=623 stage=allreduce_threads_done min=8 max=8
+trace t=1793696288.907 host=node2 rank=1 pid=623 stage=omp_begin 
+trace t=1793696288.908 host=node2 rank=1 pid=623 stage=omp_team_started team=8
+trace t=1793696288.914 host=node1 rank=0 pid=904 stage=allreduce_threads_done min=8 max=8
+trace t=1793696288.914 host=node1 rank=0 pid=904 stage=omp_begin 
+trace t=1793696288.914 host=node1 rank=0 pid=904 stage=omp_team_started team=8
+trace t=1793696289.312 host=node2 rank=1 pid=623 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793696289.312 host=node2 rank=1 pid=623 stage=gather_begin 
+trace t=1793696289.323 host=node1 rank=0 pid=904 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793696289.323 host=node1 rank=0 pid=904 stage=gather_begin 
+trace t=1793696289.323 host=node1 rank=0 pid=904 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793696289.313 host=node2 rank=1 pid=623 stage=gather_done 
+trace t=1793696289.324 host=node1 rank=0 pid=904 stage=bcast_begin 
+trace t=1793696289.324 host=node1 rank=0 pid=904 stage=finalize_begin verdict=PASS
+trace t=1793696289.313 host=node2 rank=1 pid=623 stage=bcast_begin 
+trace t=1793696289.324 host=node2 rank=1 pid=623 stage=finalize_begin verdict=PASS
+trace t=1793696289.372 host=node1 rank=0 pid=904 stage=finalize_done 
+trace t=1793696289.379 host=node2 rank=1 pid=623 stage=finalize_done 
+[node1:00899] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:00899] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages

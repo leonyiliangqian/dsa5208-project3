@@ -356,3 +356,24 @@ Not shown:
 
 Local simulations could not show any of this: Docker uses ssh and no tm.
 
+### pbs_tmrsh launcher option, local tests, 3 Nov (not Vanda)
+
+`MPI_LAUNCHER=pbs_tmrsh` uses the rsh launcher with pbs_tmrsh as its agent. It differs from d8 in two
+ways, chosen deliberately and not yet run on Vanda: no tree spawn, and attached daemons (the rsh launch
+line otherwise includes --daemonize, which could take a daemon out of its PBS task). A missing or
+non-executable agent stops the job at setup with no ssh fallback. Cleanup and snapshots use the same agent.
+
+The allocation gate decides from where the remote process runs: under orted and pbs_mom, not sshd, with
+PBS_JOBID and the exact cpuset. Log lines can only reject another agent or --daemonize, because the template
+line's wording has not been seen on Vanda and daemons may log through the launcher.
+
+Local results at 03cae7c, using a stand-in named pbs_tmrsh that calls ssh:
+- tests/jobs/launcher_selftest.sh 61/61: 12 repeated mappings over two hosts (PE=4, 2, 1, 8, three times each);
+  no plain ssh; agent failing, hanging or broken for cleanup; rank failure; daemon killed mid-run; refusals.
+- gates_selftest 48/48. twonode through the stand-in stops at allocation, exit 5, because the daemon descends from
+  sshd. twonode on the hostfile route passes all 17 gates.
+
+Not shown: anything about real pbs_tmrsh. The stand-in cannot pass the real ancestry check, so that check has
+only been run on canned records. Reliability and the root cause of the tm hang remain unproven; the route has
+one passing launch on Vanda (d8, job 1514029), without these two options.
+

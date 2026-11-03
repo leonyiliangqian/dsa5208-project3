@@ -16,6 +16,9 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Stall narrowed by job 1514029:** tm launch with a PE mapping and core binding hangs, even for
   `hostname`; tm without them passes, and one pbs_tmrsh run with PE=8 passes. Root cause unknown. No solver
   ran, so two-node solver correctness is still unverified. See `notes/experiments.md`.
+- **Launcher:** `MPI_LAUNCHER=pbs_tmrsh` is now the default for `twonode` and multi-node `measure`, and
+  it never falls back to ssh. Tested locally with a stand-in only. It has one passing launch on Vanda,
+  without its two new options; reliability and root cause remain unproven.
 - **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (on `main`).
   **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.

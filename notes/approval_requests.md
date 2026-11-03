@@ -23,20 +23,32 @@ git clone -b main ~/dsa5208-p3-$REV.bundle ~/dsa5208-p3-$REV && cd ~/dsa5208-p3-
 git log --oneline -1
 ```
 
-## 1. Diagnostic rerun (new job ID; 1513781 stays as it is)
+## 1. Two-node correctness
 
-The local rehearsal from a clean clone passes, but that is not Vanda.
-Request: 2 x 8 cores, 4 GB each, `place=scatter`, 20 min, `auto_free`, no `-P`, charge rate 0.
+Not a benchmark. Diagnostic 1514029 is done; see `experiments.md`.
+Request: 2 x 8 cores, 16 GB each, `place=scatter`, 30 min, `auto_free`, no `-P`, charge rate 0.
+Launcher: `pbs_tmrsh` (the `twonode.pbs` default).
 
 ```sh
-bash jobs/vanda/submit.sh diag --queue auto_free --no-project        # dry run
-bash jobs/vanda/submit.sh diag --queue auto_free --no-project --yes  # only after approval
+bash jobs/vanda/submit.sh twonode --queue auto_free --no-project        # dry run
+bash jobs/vanda/submit.sh twonode --queue auto_free --no-project --yes  # only after approval
 ```
 
-Success means every step ran and left a clean report on both nodes, so the stall can be
-compared step by step. d5 and d9 are the setup that stalled in job 1507215, and either result is
-useful. A pass does not establish two-node solver correctness; that is the separate `twonode` job.
-If the job stops at `cleanup` again, the read-back over Vanda's shared filesystem failed.
+| Gate | Kind | Question |
+|---|---|---|
+| `allocation` | critical | Two hosts, exact 8-CPU cpusets, remote daemon under `pbs_mom` and not `sshd`, `PBS_JOBID` on both |
+| `build`, `flags`, `toolchain` | critical | Portable build on the node; OpenMP and MPI work |
+| `internode_2` / `internode_16` | critical / required | Data exchange across hosts |
+| `place_2x4_1..3` | required | PE=4, repeated: this mapping hung under tm |
+| `place_4x2`, `place_8x1` | required | Other per-node mappings |
+| `serial`, `hybrid` | required | Serial gate, then hybrid results against serial across both nodes |
+| `recorder` | required | A bound PE=4 solver run through the measurement recorder |
+| `place_1x8_1..3` | required | PE=8, repeated: the mapping from job 1507215 |
+
+How to read the result: `allocation` failing on `remote_under_pbs_mom` means the daemons may run outside PBS
+ownership, and nothing else in the job can run. Three passes of each mapping are evidence for this route, not
+proof it is reliable, and they would not explain the tm hang. This route adds two options d8 did not use.
+A pass on these nodes does not cover the charged `cpu_node` pool. A failure is not retried automatically.
 
 ## 2. GPU validation
 

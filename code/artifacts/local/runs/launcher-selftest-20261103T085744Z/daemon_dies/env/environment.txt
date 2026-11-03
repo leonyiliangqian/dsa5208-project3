@@ -1,0 +1,81 @@
+== date
+2026-11-03T08:59:00+00:00
+== head
+node1
+== launcher
+launch=pbs_tmrsh nodes=2
+mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+== pbs
+PBS_JOBID=launcher.sim
+PBS_NODEFILE=/tmp/nodefile
+PBS_TMRSH_BIN=/work/code/bin/launcher-fake/agent/pbs_tmrsh
+SOURCE_GIT_REV=03cae7c
+== nodefile
+      8 node1
+      8 node2
+== head cpus_allowed
+Cpus_allowed_list:	0,2,4,6,8,10,12,14
+Mems_allowed_list:	0
+== head lscpu
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           39 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  16
+On-line CPU(s) list:                     0-15
+Vendor ID:                               GenuineIntel
+Model name:                              Intel(R) Core(TM) i9-9880H CPU @ 2.30GHz
+CPU family:                              6
+Model:                                   158
+Thread(s) per core:                      1
+Core(s) per socket:                      16
+Socket(s):                               1
+Stepping:                                13
+BogoMIPS:                                4605.29
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid pni pclmulqdq ssse3 fma cx16 pcid sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm abm 3dnowprefetch pti fsgsbase bmi1 avx2 smep bmi2 erms rdseed adx smap clflushopt xsaveopt xsavec xgetbv1 arat
+L1d cache:                               512 KiB (16 instances)
+L1i cache:                               512 KiB (16 instances)
+L2 cache:                                4 MiB (16 instances)
+L3 cache:                                16 MiB (1 instance)
+Vulnerability Gather data sampling:      Unknown: Dependent on hypervisor status
+Vulnerability Ghostwrite:                Not affected
+Vulnerability Indirect target selection: Mitigation; Aligned branch/return thunks
+Vulnerability Itlb multihit:             Processor vulnerable
+Vulnerability L1tf:                      Mitigation; PTE Inversion
+Vulnerability Mds:                       Vulnerable: Clear CPU buffers attempted, no microcode; SMT Host state unknown
+Vulnerability Meltdown:                  Mitigation; PTI
+Vulnerability Mmio stale data:           Vulnerable: Clear CPU buffers attempted, no microcode; SMT Host state unknown
+Vulnerability Old microcode:             Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Vulnerable
+Vulnerability Spec rstack overflow:      Not affected
+Vulnerability Spec store bypass:         Vulnerable
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Retpoline
+Vulnerability Srbds:                     Unknown: Dependent on hypervisor status
+Vulnerability Tsa:                       Not affected
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+== os
+PRETTY_NAME="Debian GNU/Linux 12 (bookworm)"
+NAME="Debian GNU/Linux"
+VERSION_ID="12"
+VERSION="12 (bookworm)"
+7.0.12-linuxkit
+== modules
+jobs/vanda/multinode_setup.sh: line 76: module: command not found
+== compilers
+g++ (Debian 12.2.0-14+deb12u1) 12.2.0
+== mpi
+mpirun (Open MPI) 4.1.4
+
+== ompi_info plm/ras (listing only; the selection log is env/launch_verbose.txt)
+                 MCA plm: slurm (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+                 MCA plm: isolated (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+                 MCA plm: rsh (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+                 MCA ras: simulator (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+                 MCA ras: gridengine (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+                 MCA ras: slurm (MCA v2.1.0, API v2.0.0, Component v4.1.4)
+== Open MPI's own build flags (the library, not this project's code)
+== python
+Python 3.11.2

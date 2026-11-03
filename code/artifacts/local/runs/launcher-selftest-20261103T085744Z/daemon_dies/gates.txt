@@ -1,0 +1,2 @@
+dies FAIL rc=205 secs=4 kind=required 
+after PASS rc=0 secs=1 kind=required 

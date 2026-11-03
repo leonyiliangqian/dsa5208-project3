@@ -1,0 +1,1 @@
+FATAL: MPI_LAUNCHER=pbs_tmrsh but no executable pbs_tmrsh ('/tmp/not_executable'); not falling back to ssh

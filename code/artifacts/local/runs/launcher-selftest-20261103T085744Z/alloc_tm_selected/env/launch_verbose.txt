@@ -1,0 +1,3 @@
+[h:1] mca:base:select:(  plm) Selected component [tm]
+[h:1] [[1,0],0] plm:rsh: final template argv:
+	/opt/pbs/bin/pbs_tmrsh <template> orted -mca ess env

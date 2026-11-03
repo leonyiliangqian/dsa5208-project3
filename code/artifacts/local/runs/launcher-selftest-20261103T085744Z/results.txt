@@ -1,0 +1,69 @@
+== scenario repeated exit=0 elapsed_s=37
+PASS repeated: 12 of 12 mappings pass
+PASS repeated: verdict PASS
+PASS repeated: launched through the agent
+PASS repeated: plain ssh never called
+PASS repeated: both nodes clean after every gate
+PASS repeated: pe4_2x4_1 ran on both hosts, bound
+PASS repeated: pe2_4x2_2 ran on both hosts, bound
+PASS repeated: pe1_8x1_3 ran on both hosts, bound
+PASS repeated: pe8_1x8_3 ran on both hosts, bound
+== scenario launch exit=0 elapsed_s=11
+PASS launch: verdict PASS
+PASS launch: rsh launcher selected
+PASS launch: agent runs the daemons
+PASS launch: no --daemonize
+PASS launch: remote daemon still has its starter as parent
+PASS refuse missing: exit 3
+PASS refuse missing: says no ssh fallback
+PASS refuse missing: stops at setup
+PASS refuse missing: plain ssh never called
+PASS refuse not_executable: exit 3
+PASS refuse not_executable: says no ssh fallback
+PASS refuse not_executable: stops at setup
+PASS refuse not_executable: plain ssh never called
+PASS refuse empty: exit 3
+PASS refuse empty: says no ssh fallback
+PASS refuse empty: stops at setup
+PASS refuse empty: plain ssh never called
+PASS refuse MPI_LAUNCHER=ssh: exit 3
+== scenario agent_fails exit=1 elapsed_s=3
+PASS agent_fails: gate FAIL
+PASS agent_fails: later gate ran
+PASS agent_fails: verdict FAIL
+PASS agent_fails: plain ssh never called
+PASS agent_fails: agent was tried
+== scenario agent_hangs exit=1 elapsed_s=18
+PASS agent_hangs: gate did not pass
+PASS agent_hangs: later gate ran
+PASS agent_hangs: bounded (18s <= 90)
+PASS agent_hangs: plain ssh never called
+PASS agent_hangs: both nodes clean
+== scenario cleanup_broken exit=6 elapsed_s=1
+PASS cleanup_broken: exit 6
+PASS cleanup_broken: second not run
+PASS cleanup_broken: plain ssh never called
+== scenario rank_fails exit=1 elapsed_s=6
+PASS rank_fails: gate FAIL
+PASS rank_fails: both nodes clean
+== scenario daemon_dies exit=1 elapsed_s=9
+PASS daemon_dies: gate did not pass
+PASS daemon_dies: later gate ran
+PASS daemon_dies: both nodes clean
+PASS daemon_dies: no rank left on node2
+PASS daemon_dies: no rank left on node1
+PASS allocation good: exit 0 (got 0)
+PASS allocation via_sshd: exit 1 (got 1)
+PASS allocation ssh_agent: exit 1 (got 1)
+PASS allocation daemonized: exit 1 (got 1)
+PASS allocation tm_selected: exit 1 (got 1)
+PASS allocation no_log: exit 1 (got 1)
+PASS allocation template_wording_absent: exit 0 (got 0)
+PASS allocation daemons_also_log: exit 0 (got 0)
+PASS allocation daemonized_leaves_pbs: exit 1 (got 1)
+PASS allocation outside_pbs: exit 1 (got 1)
+PASS allocation no_jobid: exit 1 (got 1)
+PASS allocation wrong_cpuset: exit 1 (got 1)
+PASS allocation one_host: exit 1 (got 1)
+PASS allocation tm_mode_unchanged: exit 0 (got 0)
+launcher_selftest passed=61 failed=0 PASS

@@ -1,0 +1,1 @@
+allocation FAIL rc=1 secs=2 kind=critical 

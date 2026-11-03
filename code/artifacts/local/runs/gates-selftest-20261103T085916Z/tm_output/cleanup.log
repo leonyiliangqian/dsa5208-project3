@@ -1,0 +1,6 @@
+== after hang 09:01:10
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after after 09:01:11
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

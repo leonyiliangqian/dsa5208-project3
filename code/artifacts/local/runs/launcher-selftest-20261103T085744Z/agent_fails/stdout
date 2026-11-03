@@ -1,0 +1,39 @@
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/broken/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+
+===== gate launch (required, limit 30s) 08:58:33: mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/broken/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none hostname
+[node1:01911] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+ORTE was unable to reliably start one or more daemons.
+This usually is caused by:
+
+* not finding the required libraries and/or binaries on
+  one or more nodes. Please check your PATH and LD_LIBRARY_PATH
+  settings, or configure OMPI with --enable-orterun-prefix-by-default
+
+* lack of authority to execute on one or more specified nodes.
+  Please verify your allocation and authorities.
+
+* the inability to write startup files into /tmp (--tmpdir/orte_tmpdir_base).
+  Please check with your sys admin to determine the correct location to use.
+
+*  compilation of the orted with dynamic libraries when static are required
+  (e.g., on Cray). Please check your configure cmd line and consider using
+  one of the contrib/platform definitions for your system type.
+
+* an inability to create a connection back to mpirun due to a
+  lack of common network interfaces and/or no route found between
+  them. Please check network connectivity (including firewalls
+  and network routing requirements).
+--------------------------------------------------------------------------
+launch FAIL rc=1 secs=1 kind=required 
+
+===== gate after (required, limit 20s) 08:58:34: true
+after PASS rc=0 secs=0 kind=required 
+
+===== summary 08:58:35
+launch FAIL rc=1 secs=1 kind=required 
+after PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: launch FAIL rc=1 secs=1 kind=required 
+verdict FAIL
+end=2026-11-03T08:58:35+00:00 elapsed_s=3 walltime_s=900

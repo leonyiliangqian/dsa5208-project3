@@ -1,0 +1,3 @@
+#!/bin/bash
+cat artifacts/local/runs/launcher-selftest-20261103T085744Z/alloc_no_log/in_nodes
+cat artifacts/local/runs/launcher-selftest-20261103T085744Z/alloc_no_log/in_log >&2

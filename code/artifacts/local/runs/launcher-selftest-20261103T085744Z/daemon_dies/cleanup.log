@@ -1,0 +1,7 @@
+== after dies 08:59:05
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover host=node2 owned: 1524 sleep launcher-test/rank 300 
+leftover_check host=node2 owned_found=1 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after after 08:59:09
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

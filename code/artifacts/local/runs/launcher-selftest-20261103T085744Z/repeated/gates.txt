@@ -1,0 +1,12 @@
+pe4_2x4_1 PASS rc=0 secs=2 kind=required 
+pe2_4x2_1 PASS rc=0 secs=2 kind=required 
+pe1_8x1_1 PASS rc=0 secs=2 kind=required 
+pe8_1x8_1 PASS rc=0 secs=2 kind=required 
+pe4_2x4_2 PASS rc=0 secs=2 kind=required 
+pe2_4x2_2 PASS rc=0 secs=3 kind=required 
+pe1_8x1_2 PASS rc=0 secs=3 kind=required 
+pe8_1x8_2 PASS rc=0 secs=2 kind=required 
+pe4_2x4_3 PASS rc=0 secs=2 kind=required 
+pe2_4x2_3 PASS rc=0 secs=3 kind=required 
+pe1_8x1_3 PASS rc=0 secs=3 kind=required 
+pe8_1x8_3 PASS rc=0 secs=3 kind=required 

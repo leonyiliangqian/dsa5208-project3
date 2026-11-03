@@ -1,0 +1,8 @@
+node node1 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=no isa=a
+node other allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=no isa=a
+allocation hosts=['node1', 'other'] head=node1 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh'] ras_selected=[] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only template_line_seen=True
+recorded_only models=['m'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['no', 'no']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=ok remote_under_pbs_mom=ok pbs_jobid_on_every_node=FAIL
+allocation FAIL

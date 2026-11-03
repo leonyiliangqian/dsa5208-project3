@@ -1,0 +1,2 @@
+launch FAIL rc=1 secs=1 kind=required 
+after PASS rc=0 secs=0 kind=required 
