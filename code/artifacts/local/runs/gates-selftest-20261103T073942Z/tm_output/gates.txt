@@ -1,0 +1,2 @@
+hang TIMEOUT rc=124 secs=15 kind=required no completion within 12s
+after PASS rc=0 secs=1 kind=required 

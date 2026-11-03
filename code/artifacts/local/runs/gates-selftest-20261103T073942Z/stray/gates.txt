@@ -1,0 +1,2 @@
+stray PASS rc=0 secs=1 kind=required 
+stray_jobid PASS rc=0 secs=1 kind=required 

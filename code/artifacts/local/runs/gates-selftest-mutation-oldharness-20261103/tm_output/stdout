@@ -1,0 +1,16 @@
+
+===== gate hang (required, limit 12s) 07:44:54: mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/tmhang sleep 600
+hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+== after hang 07:45:08
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+STOP: could not verify that gate hang left no processes of this job on every node
+cleanup FAIL rc=- secs=0 kind=critical after hang
+
+===== summary 07:45:08
+hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+cleanup FAIL rc=- secs=0 kind=critical after hang
+verdict required_or_critical=2 not_passed=2 optional: none
+  not passed: hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+  not passed: cleanup FAIL rc=- secs=0 kind=critical after hang
+verdict FAIL
+end=2026-11-03T07:45:08+00:00 elapsed_s=14 walltime_s=900

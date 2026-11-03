@@ -1,0 +1,3 @@
+req PASS rc=0 secs=1 kind=required 
+opt FAIL rc=1 secs=1 kind=optional 
+opt_tool SKIP rc=- secs=0 kind=optional tool not found
