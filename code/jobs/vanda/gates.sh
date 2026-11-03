@@ -60,6 +60,8 @@ short() { echo "${1%%.*}" | tr '[:upper:]' '[:lower:]'; }
 
 node_count() { sort -u "${PBS_NODEFILE:-/dev/null}" | wc -l | tr -d ' '; }
 
+source jobs/vanda/remote_capture.sh
+
 # Worst-case seconds a gate needs beyond its own limit (see header).
 gate_overhead_s() {
     local n; n=$(node_count)
@@ -97,7 +99,7 @@ cleanup_all() {
             timeout -k 5 "$CLEANUP_NODE_S" bash tests/toolchain/leftover_check.sh "$LEFTOVER_PATTERN" \
                 >> "$OUT/cleanup.log" 2>&1 || rc=1
         else
-            timeout -k 5 "$CLEANUP_NODE_S" $REMOTE_EXEC "$h" env LEFTOVER_JOBID="${LEFTOVER_JOBID:-}" \
+            remote_capture 5 "$CLEANUP_NODE_S" "$h" env LEFTOVER_JOBID="${LEFTOVER_JOBID:-}" \
                 P3_RUN_MARKER="$P3_RUN_MARKER" bash "$PWD/tests/toolchain/leftover_check.sh" \
                 "$LEFTOVER_PATTERN" >> "$OUT/cleanup.log" 2>&1 || rc=1
         fi

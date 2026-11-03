@@ -71,6 +71,13 @@
       "threads": 8,
       "n": 6400000,
       "timeout_s": 1800
+    },
+    {
+      "study": "weak",
+      "program": "hybrid",
+      "ranks": 128,
+      "threads": 1,
+      "n": 6400000
     }
   ]
 }

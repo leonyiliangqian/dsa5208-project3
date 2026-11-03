@@ -1,0 +1,15 @@
+
+===== gate req (required, limit 30s) 07:40:21: true
+req PASS rc=0 secs=1 kind=required 
+
+===== gate opt (optional, limit 30s) 07:40:22: false
+opt FAIL rc=1 secs=1 kind=optional 
+opt_tool SKIP rc=- secs=0 kind=optional tool not found
+
+===== summary 07:40:23
+req PASS rc=0 secs=1 kind=required 
+opt FAIL rc=1 secs=1 kind=optional 
+opt_tool SKIP rc=- secs=0 kind=optional tool not found
+verdict required_or_critical=1 not_passed=0 optional: opt=FAIL opt_tool=SKIP
+verdict PASS
+end=2026-11-03T07:40:23+00:00 elapsed_s=2 walltime_s=900

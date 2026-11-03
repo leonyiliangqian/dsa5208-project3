@@ -1,0 +1,24 @@
+== snapshot host=node1 t=1793691900.139
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     21       0      21 Ss   do_wait                                01:44 bash tests/jobs/gates_selftest.sh
+   1721      21      21 S    do_wait                                00:06  \_ bash -c source jobs/vanda/gates.sh;  gate hang 12 required mpirun --hostfile $PBS_NODEFILE -np 2 --map-by node bash -c 'exec -a vanda-selftest
+   1732    1721    1732 Ss   do_wait                                00:06      \_ bash jobs/vanda/snapshot_watch.sh 6 hang
+   1749    1732    1749 S    sigsuspend.isra.0                      00:00      |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1750    1749    1749 S    do_wait                                00:00      |       \_ bash tests/toolchain/proc_snapshot.sh vanda-selftest/
+   1755    1750    1749 R    -                                      00:00      |           \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+   1756    1750    1749 S    anon_pipe_read                         00:00      |           \_ cut -c1-220
+   1733    1721    1733 S    sigsuspend.isra.0                      00:06      \_ timeout -k 5 12 mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/tmhang sleep 600
+   1734    1733    1733 Sl   poll_schedule_timeout.constprop.       00:06          \_ mpirun --hostfile /tmp/nodefile -np 2 --map-by node bash -c exec -a vanda-selftest/tmhang sleep 600
+   1739    1734    1739 S    poll_schedule_timeout.constprop.       00:05              \_ /usr/bin/ssh -x node2 ( test ! -r ./.profile || . ./.profile;  orted -mca ess "env" -mca ess_base_jobid "1303248896" -mca ess_base
+   1740    1734    1740 S    hrtimer_nanosleep                      00:05              \_ vanda-selftest/tmhang 600
+-- pid=1721 comm=bash State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1721 state=S wchan=do_wait
+-- pid=1733 comm=timeout State: S (sleeping) Threads: 1 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1733 state=S wchan=sigsuspend.isra.0
+-- pid=1734 comm=mpirun State: S (sleeping) Threads: 4 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=1734 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=1736 state=S wchan=do_epoll_wait
+   tid=1737 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=1738 state=S wchan=poll_schedule_timeout.constprop.0
+-- pid=1740 comm=sleep State: S (sleeping) Threads: 1 Cpus_allowed_list: 0 
+   tid=1740 state=S wchan=hrtimer_nanosleep

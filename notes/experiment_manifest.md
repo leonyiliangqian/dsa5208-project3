@@ -12,6 +12,11 @@ memory on Vanda. No formal benchmark has run. Freeze this file (record the
 commit) before the first formal job, and change it afterwards only by adding a
 dated amendment.
 
+**Amendment, 3 Nov 2026 (still proposed):** Lecture 12 requires serial runtime against N,
+MPI strong and weak scaling to at least 256 cores, and a GPU test. The tables below stop at
+128 and are superseded on those points by [requirements_plan.md](requirements_plan.md) and
+`code/manifests/studies_four_node.json`. The queue row below does not hold at 256 cores.
+
 ## Fixed for every formal run
 
 | Setting | Value |

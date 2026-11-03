@@ -1,0 +1,2 @@
+quick PASS rc=0 secs=0 kind=required 
+cleanup FAIL rc=- secs=0 kind=critical after quick

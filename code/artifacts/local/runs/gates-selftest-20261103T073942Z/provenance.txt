@@ -1,0 +1,14 @@
+date_utc=2026-11-03T07:39:42Z
+source_git_rev=563d198 source_dirty=0
+environment=local Docker two-container simulation (docker/twonode), ssh launch; not PBS, not Vanda
+host=node1 kernel=7.0.12-linuxkit
+mpirun (Open MPI) 4.1.4
+144bceba60aefc1a450bd49bef8ef7bff07b21c4d1ce3b7e71a8081b0622c7bb  jobs/vanda/gates.sh
+b55f4a44a10f559f84c9a18fdcb90dd2a87a1c162b2f004de56a9a3301395144  jobs/vanda/snapshot_watch.sh
+bef754f04d53ade1fc1d4c3c2e1ad93ba6dbcefe537f4399c86c554ce20c31b5  jobs/vanda/remote_capture.sh
+ef653af3416ff4dc5f06f55c9b8f0d5088e11afa98e204c7909429cc87b59680  tests/toolchain/run_to_file.sh
+19864e756836ee2494006e58eacdeb90d160ee40ccbf70d05cda37952b568acf  tests/toolchain/leftover_check.sh
+8c36b8aa38363f9a531188c05909fb4280b1056d03c3fa275ca6275be588ade8  tests/toolchain/proc_snapshot.sh
+eba6498fe5a9ff3322de9dfd82156d11e188143c342ffff03f44e5ada8a3ba3c  tests/jobs/gates_selftest.sh
+3f5b6c4bd5a406ce9981a109cdf6bf4b8a2c801d5be91653e37000927953d2c8  docker/twonode/Dockerfile
+49c3383ef77690ae3f44e021b8e3f32337434074b64ae9a0d8c644f9fb326bb8  docker/twonode/run.sh

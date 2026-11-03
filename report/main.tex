@@ -189,7 +189,12 @@ Each run writes its own record: exact command, scheduler job ID, nodes, CPU mode
 \newcommand{\resultslot}[2]{\IfFileExists{generated/#1.tex}{\input{generated/#1.tex}}{\pending{#2}}}
 \pending{no scaling measurement has run yet: every figure and table in this section awaits Vanda jobs after the 2 Nov reopening.}
 
+\subsection{Serial Runtime against Problem Size}
+\resultslot{fig_serial_n}{serial runtime against $N$, log--log axes (study 0).}
+\pending{interpretation against the expected $O(N\log N)$ cost.}
+
 \subsection{Strong Scaling}
+\resultslot{fig_strong_runtime}{strong-scaling runtime figure to at least 256 cores (study 1).}
 \resultslot{fig_strong_speedup}{strong-scaling speedup figure (study 1).}
 \resultslot{fig_strong_efficiency}{strong-scaling efficiency figure (study 1).}
 \pending{interpretation of the strong-scaling results.}
@@ -203,12 +208,17 @@ Each run writes its own record: exact command, scheduler job ID, nodes, CPU mode
 \pending{interpretation.}
 
 \subsection{Weak Scaling}
+\resultslot{fig_weak_runtime}{weak-scaling runtime figure to at least 256 cores (study 4).}
 \resultslot{fig_weak_efficiency}{weak-scaling efficiency figure (study 4).}
 \pending{interpretation, including memory per rank.}
 
 \subsection{Where the Time Goes}
-\resultslot{fig_phases}{phase breakdown figure.}
-\pending{interpretation.}
+\resultslot{fig_phases}{phase times against core count.}
+\resultslot{fig_comm_fraction}{share of runtime spent in the position exchange.}
+\pending{interpretation: how communication affects runtime as core count grows.}
+
+\subsection{GPU Test}
+\pending{at least one GPU test is required even with X = OpenMP (Lecture 12). GPU kernel and measurements do not exist yet; see the requirements plan in the notes.}
 
 \subsection{Accuracy and Cost}
 \resultslot{tab_accuracy_cost}{accuracy against cost table (study 6).}

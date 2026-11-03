@@ -1,0 +1,61 @@
+== scenario hang exit=1 elapsed_s=16
+PASS hang: TIMEOUT recorded
+PASS hang: snapshot taken on both nodes
+PASS hang: snapshot saw the hung rank
+PASS hang: both nodes CLEAN after it
+PASS hang: later gate ran
+PASS hang: required TIMEOUT -> verdict FAIL
+PASS hang: no rank left on either node
+PASS hang: no watcher/snapshot process left
+PASS after: no snapshot for a quick gate
+== scenario stray exit=0 elapsed_s=13
+PASS stray: path-owned stray killed (node2)
+PASS stray: jobid-owned orted found
+PASS stray: verdict PASS (exit 0)
+PASS stray: nothing left
+PASS stray: fake orted gone
+== scenario foreign exit=0 elapsed_s=1
+PASS foreign: reported as foreign, CLEAN
+PASS foreign: job verdict PASS
+PASS foreign: unrelated orted still alive
+== scenario unattributed exit=6 elapsed_s=4
+PASS unattributed: reported, not killed
+PASS unattributed: node1 UNCERTAIN
+PASS unattributed: job stopped, exit 6
+PASS unattributed: later gate not run
+PASS unattributed: process still alive
+== scenario optional exit=0 elapsed_s=2
+PASS optional: optional FAIL/SKIP listed
+PASS optional: verdict PASS (exit 0)
+== scenario deps exit=1 elapsed_s=2
+PASS deps: dependant SKIP recorded
+PASS deps: unrelated gate ran
+PASS deps: required FAIL/SKIP -> exit 1
+== scenario budget exit=1 elapsed_s=46
+PASS budget: limit cut to fit (got 45s)
+PASS budget: next gate skipped, no time
+PASS budget: finished within 230-60 s (46s)
+PASS budget: verdict FAIL (exit 1)
+== scenario cleanup_hangs exit=6 elapsed_s=10
+PASS cleanup_hangs: exit 6
+PASS cleanup_hangs: STOP message
+PASS cleanup_hangs: second not run
+PASS cleanup_hangs: bounded (10s <= 30)
+== scenario tm_output exit=1 elapsed_s=16
+PASS tm_output: not stopped by cleanup (exit 1)
+PASS tm_output: later gate ran
+PASS tm_output: 2 CLEAN after hang
+PASS tm_output: 2 CLEAN after later gate
+PASS tm_output: snapshot of both nodes
+PASS tm_output: no report file left
+== scenario budget_worst exit=6 elapsed_s=91
+PASS budget_worst: gate TIMEOUT
+PASS budget_worst: stopped on cleanup, exit 6
+PASS budget_worst: within 230-60 s (91s)
+== scenario short_limit exit=0 elapsed_s=1
+PASS short_limit: ran and passed
+== scenario critical exit=5 elapsed_s=1
+PASS critical: exit 5
+PASS critical: later not run
+PASS end: no watcher/snapshot process left
+gates_selftest passed=48 failed=0 PASS

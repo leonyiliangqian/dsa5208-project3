@@ -14,17 +14,22 @@ report/generated/; such fragments carry a LOCAL PIPELINE TEST banner in
 every caption. Each fragment starts with a comment naming its inputs.
 
 Fragments (written only when the data exist):
-  fig_strong_speedup.tex, fig_strong_efficiency.tex  study "strong"
+Axes for time, problem size and core count are logarithmic (Lecture 12).
+  fig_serial_n.tex                                   study "serial_n" (+ the strong serial row)
+  fig_strong_runtime.tex, fig_strong_speedup.tex,
+  fig_strong_efficiency.tex                          study "strong"
   tab_ranks_threads.tex                              study "ranks_threads" (+ strong rows at the same P)
   tab_schedule.tex                                   study "schedule"
-  fig_weak_efficiency.tex                            study "weak" (P0 = smallest P, stated)
+  fig_weak_runtime.tex, fig_weak_efficiency.tex      study "weak" (per T; P0 = smallest P, stated)
   fig_phases.tex                                     strong-study hybrid rows, phase medians
+  fig_comm_fraction.tex                              exchange time / wall time, strong and weak
   tab_accuracy_cost.tex                              studies "accuracy" (validate) and "theta"
   tab_failed_runs.tex                                every failed, timed-out or skipped run
 """
 import argparse
 import datetime
 import json
+import math
 from pathlib import Path
 import re
 import sys
@@ -72,11 +77,12 @@ def label(r):
     return f"{r['ranks']}$\\times${r['threads']}"
 
 
-def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, legend="north west"):
+def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=False, legend="north west"):
     lines = ["\\begin{figure}[t]", "\\centering", "\\begin{tikzpicture}",
              "\\begin{axis}[width=0.9\\columnwidth, height=0.65\\columnwidth, "
              f"xlabel={{{xlabel}}}, ylabel={{{ylabel}}}, "
              + ("xmode=log, log basis x=2, " if logx else "")
+             + ("ymode=log, " if logy else "")
              + f"legend pos={legend}, legend cell align=left, grid=major, grid style={{gray!25}}]"]
     for name, pts in series:
         coords = " ".join(f"({x:g},{y:.4g})" for x, y in pts)
@@ -98,19 +104,23 @@ def strong(rows, w):
     by_t = {}
     for r in pts:
         by_t.setdefault(r["threads"], []).append(r)
-    series_s, series_e = [], []
+    series_t, series_s, series_e = [], [], []
     for t, rs in sorted(by_t.items()):
         rs.sort(key=lambda r: r["cores"])
         name = "MPI only ($T=1$)" if t == 1 else f"$T={t}$ threads per rank"
+        series_t.append((name, [(r["cores"], r["wall_median_s"]) for r in rs]))
         series_s.append((name, [(r["cores"], r["speedup_vs_serial"]) for r in rs]))
         series_e.append((name, [(r["cores"], r["efficiency"]) for r in rs]))
     pmax = max(r["cores"] for r in pts)
     n = sorted({r["n"] for r in pts})
     base = (f"$N={','.join(map(str, n))}$, median of repetitions; serial Barnes--Hut baseline on the same "
             "CPU model and build.")
+    w.write("fig_strong_runtime.tex", fig_xy(
+        series_t, "allocated cores $P$", "timed-region wall time (s)", w.caption("Strong-scaling runtime. " + base),
+        "fig:strong-runtime", logy=True, legend="north east"))
     w.write("fig_strong_speedup.tex", fig_xy(
         series_s, "allocated cores $P$", "speedup $S(P)$", w.caption("Strong-scaling speedup. " + base),
-        "fig:strong-speedup", ideal=[(1, 1), (pmax, pmax)]))
+        "fig:strong-speedup", ideal=[(1, 1), (pmax, pmax)], logy=True))
     w.write("fig_strong_efficiency.tex", fig_xy(
         series_e, "allocated cores $P$", "efficiency $E(P)$", w.caption("Strong-scaling efficiency. " + base),
         "fig:strong-efficiency", ideal=[(1, 1), (pmax, 1)], legend="south west"))
@@ -170,42 +180,86 @@ def schedule(rows, w):
           "tab:schedule", ["ranks$\\times$threads", "schedule", "chunk", "wall (s)", "imbalance"], body)
 
 
-def weak(rows, w):
-    rs = sorted((r for r in rows if has_study(r, "weak")), key=lambda r: r["cores"])
-    if len(rs) < 2:
+def serial_n(rows, w):
+    rs = [r for r in rows if r["program"] == "bh_serial"
+          and (has_study(r, "serial_n") or has_study(r, "strong"))]
+    if len({r["n"] for r in rs}) < 2:
         return
-    p0 = rs[0]
-    pts = [(r["cores"], p0["wall_median_s"] / r["wall_median_s"]) for r in rs]
-    per_core = sorted({r["n"] // r["cores"] for r in rs})
+    if len({(r["theta"], r["leaf_size"], r["steps"], r["cpu_model"]) for r in rs}) > 1:
+        sys.exit("serial_n: rows differ in theta, leaf size, steps or CPU model; split the input")
+    rs.sort(key=lambda r: r["n"])
+    xs = [math.log(r["n"]) for r in rs]
+    ys = [math.log(r["wall_median_s"]) for r in rs]
+    mx, my = sum(xs) / len(xs), sum(ys) / len(ys)
+    slope = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
+    r0 = rs[0]
+    w.write("fig_serial_n.tex", fig_xy(
+        [("serial Barnes--Hut", [(r["n"], r["wall_median_s"]) for r in rs])],
+        "particles $N$", "timed-region wall time (s)",
+        w.caption(f"Serial runtime against problem size, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, "
+                  f"{r0['steps']} timed steps, median of repetitions. Least-squares slope on the log--log axes: "
+                  f"{slope:.3f}."), "fig:serial-n", logy=True))
+
+
+def weak(rows, w):
+    by_t = {}
+    for r in rows:
+        if has_study(r, "weak"):
+            by_t.setdefault(r["threads"], []).append(r)
+    by_t = {t: sorted(rs, key=lambda r: r["cores"]) for t, rs in by_t.items() if len(rs) >= 2}
+    if not by_t:
+        return
+    name = lambda t: "MPI only ($T=1$)" if t == 1 else f"$T={t}$ threads per rank"
+    runtime, eff, ends, notes = [], [], set(), []
+    for t, rs in sorted(by_t.items()):
+        p0 = rs[0]
+        runtime.append((name(t), [(r["cores"], r["wall_median_s"]) for r in rs]))
+        eff.append((name(t), [(r["cores"], p0["wall_median_s"] / r["wall_median_s"]) for r in rs]))
+        ends |= {p0["cores"], rs[-1]["cores"]}
+        per_core = sorted({r["n"] // r["cores"] for r in rs})
+        notes.append(f"$T={t}$: $P_0={p0['cores']}$, $N_0={p0['n']}$, {', '.join(map(str, per_core))} particles per core")
+    base = "; ".join(notes) + ". Constant particles per core is not constant work per core."
+    w.write("fig_weak_runtime.tex", fig_xy(
+        runtime, "allocated cores $P$", "timed-region wall time (s)",
+        w.caption("Weak-scaling runtime. " + base), "fig:weak-runtime", logy=True))
     w.write("fig_weak_efficiency.tex", fig_xy(
-        [("weak efficiency", pts)], "allocated cores $P$", "$T(P_0,N_0)/T(P,N)$",
-        w.caption(f"Weak-scaling efficiency with baseline $P_0={p0['cores']}$, $N_0={p0['n']}$ "
-                  f"({', '.join(map(str, per_core))} particles per core), threads per rank "
-                  f"{sorted({r['threads'] for r in rs})}. Constant particles per core is not constant work "
-                  "per core."), "fig:weak", ideal=[(p0["cores"], 1), (rs[-1]["cores"], 1)], legend="south west"))
+        eff, "allocated cores $P$", "$T(P_0,N_0)/T(P,N)$", w.caption("Weak-scaling efficiency. " + base),
+        "fig:weak", ideal=[(min(ends), 1), (max(ends), 1)], legend="south west"))
 
 
 def phases(rows, w):
-    rs = sorted((r for r in rows if has_study(r, "strong") and r["program"] == "bh_hybrid"),
-                key=lambda r: (r["threads"], r["cores"]))
+    rs = [r for r in rows if has_study(r, "strong") and r["program"] == "bh_hybrid"]
     if not rs:
         return
+    t = min(r["threads"] for r in rs)
+    rs = sorted((r for r in rs if r["threads"] == t), key=lambda r: r["cores"])
     names = [("integrate_median_s", "integrate"), ("exchange_median_s", "exchange"),
              ("build_median_s", "tree build"), ("traverse_median_s", "traversal")]
-    syms = ",".join("{" + f"{r['ranks']}x{r['threads']}" + "}" for r in rs)
-    lines = ["\\begin{figure}[t]", "\\centering", "\\begin{tikzpicture}",
-             "\\begin{axis}[ybar stacked, width=0.9\\columnwidth, height=0.65\\columnwidth, bar width=6pt, "
-             f"symbolic x coords={{{syms}}}, xtick=data, x tick label style={{rotate=60, anchor=east, font=\\scriptsize}}, "
-             "ylabel={median phase time (s)}, legend style={font=\\scriptsize}, legend pos=north east]"]
-    for key, nm in names:
-        coords = " ".join(f"({r['ranks']}x{r['threads']},{r[key]:.4g})" for r in rs)
-        lines.append(f"\\addplot coordinates {{{coords}}};")
-        lines.append(f"\\addlegendentry{{{nm}}}")
-    lines += ["\\end{axis}", "\\end{tikzpicture}",
-              "\\caption{" + w.caption("Phase breakdown of the strong-scaling hybrid runs (ranks$\\times$threads). "
-                                       "Each phase is the maximum over ranks, so the stack need not equal the wall time.") + "}",
-              "\\label{fig:phases}", "\\end{figure}", ""]
-    w.write("fig_phases.tex", "\n".join(lines))
+    # A phase measured as exactly zero (no exchange on one rank) cannot sit on a log axis.
+    series = [(nm, [(r["cores"], r[key]) for r in rs if r[key] > 0]) for key, nm in names]
+    w.write("fig_phases.tex", fig_xy(
+        [s for s in series if s[1]], "allocated cores $P$", "median phase time (s)",
+        w.caption(f"Phase times of the strong-scaling runs with $T={t}$. Each phase is the maximum over ranks, "
+                  "so the phases need not sum to the wall time; zero values are omitted from the log axis."),
+        "fig:phases", logy=True, legend="south west"))
+
+
+def comm_fraction(rows, w):
+    series = []
+    for study in ("strong", "weak"):
+        by_t = {}
+        for r in rows:
+            if has_study(r, study) and r["program"] == "bh_hybrid":
+                by_t.setdefault(r["threads"], []).append(r)
+        for t, rs in sorted(by_t.items()):
+            rs.sort(key=lambda r: r["cores"])
+            series.append((f"{study}, $T={t}$", [(r["cores"], r["exchange_median_s"] / r["wall_median_s"]) for r in rs]))
+    if series:
+        w.write("fig_comm_fraction.tex", fig_xy(
+            series, "allocated cores $P$", "exchange time / wall time",
+            w.caption("Share of the timed region spent in the per-step position exchange "
+                      "(\\texttt{MPI\\_Allgatherv}), maximum over ranks divided by wall time."),
+            "fig:comm-fraction"))
 
 
 def accuracy(rows, inputs, w):
@@ -262,11 +316,13 @@ def main():
             sys.exit("refusing to write local/simulated results into report/generated/")
     out.mkdir(parents=True, exist_ok=True)
     w = Writer(out, inputs, bool(non_cluster))
+    serial_n(rows, w)
     strong(rows, w)
     ranks_threads(rows, w)
     schedule(rows, w)
     weak(rows, w)
     phases(rows, w)
+    comm_fraction(rows, w)
     accuracy(rows, inputs, w)
     failed_runs(failed, w)
     print(f"wrote {len(w.written)} fragments to {out}: {', '.join(w.written)}"

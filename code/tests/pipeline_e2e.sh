@@ -38,7 +38,7 @@ rc=$?
 check "runner reports failure because of the timeout probe (exit 1)" test "$rc" -eq 1
 check "plan and manifest copy written" test -s "$OUT/run/plan.json" -a -s "$OUT/run/manifest.json"
 n_raw=$(ls "$OUT"/run/raw/*.json | wc -l); n_val=$(ls "$OUT"/run/validate/*.json | wc -l)
-check "31 timed records + 2 validate records (got $n_raw + $n_val)" test "$n_raw" -eq 31 -a "$n_val" -eq 2
+check "35 timed records + 2 validate records (got $n_raw + $n_val)" test "$n_raw" -eq 35 -a "$n_val" -eq 2
 probe=$OUT/run/raw/timeout_probe_serial_n2000000_th0p5_L8_rep1.json
 check "timeout probe recorded as timed out with SIGTERM" python3 -c "
 import json,sys; d=json.load(open('$probe')); sys.exit(not (d['timed_out'] and d['kill_signal']=='SIGTERM' and not d['ok'] and d['elapsed_s'] < 20))"
@@ -58,7 +58,7 @@ python3 scripts/run_manifest.py manifests/local_e2e.json --out "$OUT/deadline" -
     --cores-per-node "$(nproc)" --deadline "$(( $(date +%s) + 30 ))" > "$OUT/deadline.log" 2>&1
 check "deadline: every run recorded as skipped" python3 -c "
 import json,glob,sys; r=[json.load(open(f)) for f in glob.glob('$OUT/deadline/*/*.json')]
-sys.exit(not (len(r)==33 and all(x.get('skipped') for x in r)))"
+sys.exit(not (len(r)==37 and all(x.get('skipped') for x in r)))"
 
 # 2b. The job stops the runner mid-run (as a gate time limit does): TERM must
 #     reach the run in progress, a hybrid MPI run in its own process group.
@@ -91,16 +91,23 @@ import json,sys; d=json.load(open('$OUT/run/summary.json'))
 sys.exit(not (len(d['failed'])==1 and d['failed'][0]['timed_out'] and any('speedup_vs_serial' in r for r in d['rows'])))"
 python3 scripts/analyze.py "$OUT/run" "$OUT/deadline" --out "$OUT/combined" > "$OUT/analyze_combined.log" 2>&1
 check "analyze: combining run directories" python3 -c "
-import json,sys; d=json.load(open('$OUT/combined/summary.json')); sys.exit(not (len(d['inputs'])==2 and len(d['failed'])==32))"
+import json,sys; d=json.load(open('$OUT/combined/summary.json')); sys.exit(not (len(d['inputs'])==2 and len(d['failed'])==36))"
 
 python3 scripts/report_figures.py "$OUT/run/summary.json" > "$OUT/refuse1.log" 2>&1
 check "figures: local input refused without --allow-local" test $? -ne 0
 python3 scripts/report_figures.py "$OUT/run/summary.json" --allow-local --out ../report/generated > "$OUT/refuse2.log" 2>&1
 check "figures: local input refused into report/generated" test $? -ne 0
 python3 scripts/report_figures.py "$OUT/run/summary.json" --allow-local --out "$OUT/figures" > "$OUT/figures.log" 2>&1
-for f in fig_strong_speedup fig_strong_efficiency tab_ranks_threads tab_schedule fig_weak_efficiency \
-         fig_phases tab_accuracy_cost tab_failed_runs; do
+for f in fig_serial_n fig_strong_runtime fig_strong_speedup fig_strong_efficiency tab_ranks_threads tab_schedule \
+         fig_weak_runtime fig_weak_efficiency fig_phases fig_comm_fraction tab_accuracy_cost tab_failed_runs; do
     check "figures: $f.tex written with LOCAL banner" grep -q 'LOCAL PIPELINE TEST' "$OUT/figures/$f.tex"
+done
+for f in fig_serial_n fig_strong_runtime fig_weak_runtime fig_phases; do
+    check "figures: $f.tex has log time axis" grep -q 'ymode=log' "$OUT/figures/$f.tex"
+done
+for f in fig_serial_n fig_strong_runtime fig_strong_speedup fig_strong_efficiency fig_weak_runtime \
+         fig_weak_efficiency fig_phases fig_comm_fraction; do
+    check "figures: $f.tex has log x axis" grep -q 'xmode=log' "$OUT/figures/$f.tex"
 done
 check "figures: failed-run table names the probe" grep -q 'timeout\\_probe' "$OUT/figures/tab_failed_runs.tex"
 check "figures: braces balanced in every fragment" python3 -c "

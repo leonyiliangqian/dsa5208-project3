@@ -1,0 +1,2 @@
+hang TIMEOUT rc=124 secs=14 kind=required no completion within 12s
+cleanup FAIL rc=- secs=0 kind=critical after hang

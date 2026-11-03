@@ -1,0 +1,17 @@
+
+===== gate quick (required, limit 30s) 07:40:17: true
+quick PASS rc=0 secs=0 kind=required 
+== after quick 07:40:17
+leftover host=node1 unattributed (not killed): 773 mpirun /work/code/bin/selftest-fake/mpirun 600 
+leftover_check host=node1 owned_found=0 owned_remaining=0 foreign=0 unattributed=1 UNCERTAIN
+leftover_check host=node2 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+STOP: could not verify that gate quick left no processes of this job on every node
+cleanup FAIL rc=- secs=0 kind=critical after quick
+
+===== summary 07:40:21
+quick PASS rc=0 secs=0 kind=required 
+cleanup FAIL rc=- secs=0 kind=critical after quick
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: cleanup FAIL rc=- secs=0 kind=critical after quick
+verdict FAIL
+end=2026-11-03T07:40:21+00:00 elapsed_s=4 walltime_s=900

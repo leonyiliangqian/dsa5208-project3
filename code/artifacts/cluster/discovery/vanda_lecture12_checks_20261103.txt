@@ -1,0 +1,105 @@
+2026-11-03T15:45:40+08:00
+read-only: no job submitted, no amgr login, nothing changed
+== server
+    server_state = Scheduling
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 2
+    resources_min.nodect = 1
+    resources_default.mem = 20gb
+    resources_default.ncpus = 2
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== queue gpu
+    resources_max.ncpus = 36
+    resources_max.ngpus = 2
+    resources_max.walltime = 48:00:00
+    resources_min.ngpus = 1
+    resources_min.nodect = 1
+    resources_default.mem = 240gb
+    resources_default.ncpus = 36
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = gpu_free
+    max_run = [u:PBS_GENERIC=2]
+    enabled = True
+    started = True
+== queue batch_cpu
+    resources_max.ncpus = 720
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 240:00:00
+    resources_min.ncpus = 1
+    resources_min.nodect = 1
+    resources_default.queue_charge_rate = 1
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_node
+    max_run = [u:PBS_GENERIC=6]
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== queue batch_gpu
+    resources_max.ncpus = 720
+    resources_max.ngpus = 2
+    resources_max.nodect = 2
+    resources_max.walltime = 168:00:00
+    resources_min.ngpus = 1
+    resources_min.nodect = 1
+    resources_default.queue_charge_rate = 1
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = gpu_node
+    max_run = [u:PBS_GENERIC=4]
+    enabled = True
+    started = True
+== queue auto
+    resources_default.queue_charge_rate = 1
+    route_destinations = batch_cpu,batch_gpu
+    enabled = True
+    started = True
+== node_pool counts (vnodes)
+cpu_free 72
+cpu_node 555
+gpu_amd_free 4
+gpu_free 27
+gpu_node 148
+large_mem 6
+== hpc project
+ To check PBS Project, credits and members, run this command in terminal first:
+   #  amgr login 
+ Please enter with your NUS password to login.
+== module nvhpc-hpcx-cuda12/26.1 (queried on login node)
+/app1/admin/shared/apps/nvhpc/26.1/Linux_x86_64/26.1/comm_libs/12.9/hpcx/hpcx-2.25.1/ompi/bin/mpirun
+/cm/shared/apps/nvhpc/26.1/Linux_x86_64/26.1/compilers/bin/nvc++
+mpirun (Open MPI) 4.1.9a1
+MCA plm: rsh
+MCA plm: slurm
+MCA plm: isolated
+MCA ras: simulator
+MCA ras: slurm
+mca:mpi:base:param:mpi_built_with_cuda_support:value:true
+== module OpenMPI/4.1.4-NVHPC-22.7-CUDA-11.7.0 (queried on login node)
+/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.4-NVHPC-22.7-CUDA-11.7.0/bin/mpirun
+/app1/ebapps/arches/flat-avx2/software/NVHPC/22.7-CUDA-11.7.0/Linux_x86_64/22.7/compilers/bin/nvc++
+mpirun (Open MPI) 4.1.4
+MCA plm: rsh
+MCA plm: slurm
+MCA plm: isolated
+MCA plm: tm
+MCA ras: simulator
+MCA ras: tm
+MCA ras: slurm
+mca:mpi:base:param:mpi_built_with_cuda_support:value:true

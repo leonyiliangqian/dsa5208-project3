@@ -1,0 +1,16 @@
+combined: 70 records, 36 failed, 15 configurations
+  bh_serial n=1000 1x1 P=1 -/0 reps=2 wall_med=0.0116s [0.0113,0.0119]
+  bh_hybrid n=2000 1x2 P=2 dynamic/64 reps=2 wall_med=0.0181s [0.0181,0.0181]
+  bh_hybrid n=4000 1x1 P=1 dynamic/64 reps=2 wall_med=0.1135s [0.0993,0.1276] speedup=1.08 eff=1.08
+  bh_hybrid n=4000 1x2 P=2 dynamic/64 reps=2 wall_med=0.0562s [0.0533,0.0591] speedup=2.18 eff=1.09
+  bh_hybrid n=4000 2x1 P=2 dynamic/64 reps=2 wall_med=0.0654s [0.0630,0.0677] speedup=1.87 eff=0.94
+  bh_hybrid n=4000 1x4 P=4 dynamic/64 reps=2 wall_med=0.0302s [0.0294,0.0310] speedup=4.05 eff=1.01
+  bh_hybrid n=4000 1x4 P=4 guided/0 reps=2 wall_med=0.0283s [0.0280,0.0286] speedup=4.33 eff=1.08
+  bh_hybrid n=4000 1x4 P=4 static/0 reps=2 wall_med=0.0296s [0.0296,0.0296] speedup=4.14 eff=1.04
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=4 wall_med=0.0280s [0.0262,0.0322] speedup=4.38 eff=1.09
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0624s [0.0617,0.0632]
+  bh_hybrid n=4000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0161s [0.0140,0.0183]
+  bh_hybrid n=4000 4x1 P=4 dynamic/64 reps=2 wall_med=0.0339s [0.0285,0.0393] speedup=3.61 eff=0.90
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.0885s [0.0884,0.0885]
+  bh_serial n=4000 1x1 P=1 -/0 reps=2 wall_med=0.1051s [0.1040,0.1062]
+  bh_serial n=4000 1x1 P=1 -/0 reps=4 wall_med=0.1224s [0.1002,0.1496]

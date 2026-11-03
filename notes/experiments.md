@@ -283,3 +283,15 @@ multi-node run on Vanda. snapshot_watch.sh has the same pattern, so remote
 snapshots would be lost too. Every multi-node job using gates.sh (twonode, measure)
 would stop the same way. Balance not read (no amgr session).
 
+### Local validation of the remote-report fix, 3 Nov (not Vanda)
+
+Branch fix/tm-remote-report, 563d198. The self-test gained `tm_output`, a transport that
+sends remote output away from the caller's stdout, as pbs_tmrsh does. Fixed library: 48/48
+(artifacts/local/runs/gates-selftest-20261103T073942Z). Old library with the same test:
+43/48, tm_output exit 6, the job 1513781 failure (gates-selftest-mutation-oldharness-20261103).
+Not shown yet: read-back over Vanda's NFS under real pbs_tmrsh. A missing report still stops
+the job, so a failure there is safe but would stop the job again.
+
+Read-only site checks for Lecture 12, same day: discovery/vanda_lecture12_checks_20261103.txt.
+Plan and proposals: requirements_plan.md.
+

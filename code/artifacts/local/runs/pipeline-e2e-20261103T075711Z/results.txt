@@ -1,0 +1,43 @@
+PASS build
+PASS runner reports failure because of the timeout probe (exit 1)
+PASS plan and manifest copy written
+PASS 35 timed records + 2 validate records (got 35 + 2)
+PASS timeout probe recorded as timed out with SIGTERM
+PASS no bh_serial left running after the timeout
+PASS records carry manifest id, sha256 and study tags
+PASS deadline: every run recorded as skipped
+PASS TERM to runner: runner exits 143 (got 143)
+PASS TERM to runner: no bh_hybrid or mpirun left
+PASS TERM to runner: interrupted run recorded, not ok
+PASS analyze: summary written
+PASS analyze: 1 failed run (the probe), speedups present
+PASS analyze: combining run directories
+PASS figures: local input refused without --allow-local
+PASS figures: local input refused into report/generated
+PASS figures: fig_serial_n.tex written with LOCAL banner
+PASS figures: fig_strong_runtime.tex written with LOCAL banner
+PASS figures: fig_strong_speedup.tex written with LOCAL banner
+PASS figures: fig_strong_efficiency.tex written with LOCAL banner
+PASS figures: tab_ranks_threads.tex written with LOCAL banner
+PASS figures: tab_schedule.tex written with LOCAL banner
+PASS figures: fig_weak_runtime.tex written with LOCAL banner
+PASS figures: fig_weak_efficiency.tex written with LOCAL banner
+PASS figures: fig_phases.tex written with LOCAL banner
+PASS figures: fig_comm_fraction.tex written with LOCAL banner
+PASS figures: tab_accuracy_cost.tex written with LOCAL banner
+PASS figures: tab_failed_runs.tex written with LOCAL banner
+PASS figures: fig_serial_n.tex has log time axis
+PASS figures: fig_strong_runtime.tex has log time axis
+PASS figures: fig_weak_runtime.tex has log time axis
+PASS figures: fig_phases.tex has log time axis
+PASS figures: fig_serial_n.tex has log x axis
+PASS figures: fig_strong_runtime.tex has log x axis
+PASS figures: fig_strong_speedup.tex has log x axis
+PASS figures: fig_strong_efficiency.tex has log x axis
+PASS figures: fig_weak_runtime.tex has log x axis
+PASS figures: fig_weak_efficiency.tex has log x axis
+PASS figures: fig_phases.tex has log x axis
+PASS figures: fig_comm_fraction.tex has log x axis
+PASS figures: failed-run table names the probe
+PASS figures: braces balanced in every fragment
+pipeline_e2e passed=42 failed=0 PASS
