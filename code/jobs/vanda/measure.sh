@@ -30,6 +30,8 @@ echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is) source_
 echo "manifest=$MANIFEST scale=${PILOT_SCALE:-1} placement_override=${PILOT_PLACEMENT:-none} sim_cpus_per_node=${SIM_CPUS_PER_NODE:-none}"
 
 [ "$EXPECT_NODES" -gt 1 ] || export REQUIRE_PBS_TM=${REQUIRE_PBS_TM:-0}
+# tm launches with binding hang on Vanda (job 1514029). Blocked until twonode passes.
+[ "${REQUIRE_PBS_TM:-1}" = 1 ] && export MPI_LAUNCHER=${MPI_LAUNCHER:-pbs_tmrsh}
 source jobs/vanda/multinode_setup.sh
 {
     echo "== numactl"; numactl --hardware 2>&1 || true

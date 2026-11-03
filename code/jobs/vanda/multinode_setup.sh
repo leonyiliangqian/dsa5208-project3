@@ -27,17 +27,39 @@ python3 -c 'import sys; sys.exit(sys.version_info < (3, 7))' \
 # for both node discovery (ras) and launch (plm), so mpirun fails rather than
 # falling back; the allocation check then confirms from mpirun's own
 # component-selection log and the remote process ancestry that tm was used.
-# REQUIRE_PBS_TM=0 launches from the node file instead: single-node jobs
-# (nothing remote to launch) and local simulation (no PBS).
+# MPI_LAUNCHER chooses the launch route; a route that cannot be used stops the job.
+#   tm         mpirun's PBS tm launcher. Job 1514029: every tm launch with a PE mapping
+#              and core binding hung on Vanda, even hostname; cause unknown.
+#   pbs_tmrsh  mpirun's rsh launcher with pbs_tmrsh as its only agent, so daemons
+#              start as PBS tasks. One run passed in job 1514029; reliability unproven.
+#              Daemons stay attached so PBS keeps owning them, and only mpirun starts
+#              them, the launch path job 1514029 did not exercise beyond two nodes.
+#   hostfile   node file only: single-node jobs and local simulation (no PBS).
+# REQUIRE_PBS_TM=0 selects hostfile unless MPI_LAUNCHER says otherwise.
 [ -d /opt/pbs/lib ] && export LD_LIBRARY_PATH=/opt/pbs/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 REQUIRE_PBS_TM=${REQUIRE_PBS_TM:-1}
+if [ "$REQUIRE_PBS_TM" = 1 ]; then MPI_LAUNCHER=${MPI_LAUNCHER:-tm}; else MPI_LAUNCHER=${MPI_LAUNCHER:-hostfile}; fi
 NODES=$(sort -u "${PBS_NODEFILE:-/dev/null}" | wc -l)
 PREFIX=${EBROOTOPENMPI:-$(dirname "$(dirname "$(command -v mpirun)")")}
-if [ "$REQUIRE_PBS_TM" = 1 ]; then
-    LAUNCH=tm; LAUNCH_FLAGS="--mca plm tm --mca ras tm"
-else
-    LAUNCH=hostfile; LAUNCH_FLAGS="--hostfile $PBS_NODEFILE"
-fi
+case $MPI_LAUNCHER in
+    tm)
+        LAUNCH=tm; LAUNCH_FLAGS="--mca plm tm --mca ras tm" ;;
+    pbs_tmrsh)
+        PBS_TMRSH_BIN=${PBS_TMRSH_BIN:-$(command -v pbs_tmrsh || true)}
+        if [ -z "$PBS_TMRSH_BIN" ] || [ ! -x "$PBS_TMRSH_BIN" ]; then
+            echo "FATAL: MPI_LAUNCHER=pbs_tmrsh but no executable pbs_tmrsh ('$PBS_TMRSH_BIN'); not falling back to ssh"
+            exit 3
+        fi
+        # Cleanup and snapshots use the same route.
+        export REMOTE_EXEC=${REMOTE_EXEC:-$PBS_TMRSH_BIN}
+        LAUNCH=pbs_tmrsh
+        LAUNCH_FLAGS="--hostfile $PBS_NODEFILE --mca plm rsh --mca plm_rsh_agent $PBS_TMRSH_BIN"
+        LAUNCH_FLAGS="$LAUNCH_FLAGS --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1" ;;
+    hostfile)
+        LAUNCH=hostfile; LAUNCH_FLAGS="--hostfile $PBS_NODEFILE" ;;
+    *)
+        echo "FATAL: unknown MPI_LAUNCHER '$MPI_LAUNCHER'"; exit 3 ;;
+esac
 MPI="mpirun --prefix $PREFIX $LAUNCH_FLAGS -x PATH -x LD_LIBRARY_PATH"
 echo "nodes=$NODES launcher=$LAUNCH mpirun_base=$MPI"
 

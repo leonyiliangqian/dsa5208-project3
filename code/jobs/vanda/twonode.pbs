@@ -23,6 +23,8 @@ mkdir -p "$OUT/env"
 exec > >(tee "$OUT/job.log") 2>&1
 echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is) source_rev=${SOURCE_GIT_REV:-unset}"
 
+# tm launches with binding hang on Vanda (job 1514029). REQUIRE_PBS_TM=0 is local simulation.
+[ "${REQUIRE_PBS_TM:-1}" = 1 ] && export MPI_LAUNCHER=${MPI_LAUNCHER:-pbs_tmrsh}
 source jobs/vanda/multinode_setup.sh
 
 # ---------------------------------------------------------------- gates
@@ -53,7 +55,10 @@ gate flags        60 critical bash jobs/vanda/flags_check.sh
 gate toolchain    90 critical make BIN="$BIN" toolchain
 gate internode_2  90 critical make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=2 INTERNODE_HOSTS=2
 gate internode_16 90 required make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP=16 INTERNODE_HOSTS=2
-gate place_2x4    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+# Repeated because one passing launch in job 1514029 says little about reliability.
+gate place_2x4_1  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+gate place_2x4_2  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+gate place_2x4_3  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
 gate place_4x2    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
 gate place_8x1    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
 gate serial      240 required make BIN="$BIN" EVIDENCE="$OUT" check
@@ -65,14 +70,16 @@ gate hybrid      600 required make BIN="$BIN" EVIDENCE="$OUT" check-hybrid MPIRU
                       MPIRUN_FLAGS="${MPI#mpirun } -x OMP_NUM_THREADS --map-by node --bind-to none" \
                       HYBRID_GATE_ARGS="--max-cores 16 --suite multinode --expect-hosts 2"
 # Same ppr:2:node:PE=4 mapping as place_2x4.
-need place_2x4 recorder required && \
+need place_2x4_3 recorder required && \
 gate recorder    120 required env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores \
     python3 scripts/run_case.py --out "$OUT" --case smoke_bound_2node_4x4 --rep 1 --allocated-cores 16 \
     --launcher "$MPI -np 4 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES" \
     -- "$BIN/bh_hybrid" --n 50000 --steps 2 --schedule dynamic --chunk 64
-# Last: the configuration that stalled in job 1507215 (one rank per node,
-# PE=8 = the whole per-node cpuset), so a repeat cannot disturb the gates above.
-gate place_1x8    60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+# Last: the mapping that hung under tm in jobs 1507215 and 1514029 (one rank per node,
+# PE=8 = the whole per-node cpuset). Each attempt is bounded and the job continues.
+gate place_1x8_1  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+gate place_1x8_2  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+gate place_1x8_3  60 required make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
 
 verdict >/dev/null && finish 0
 finish 1
