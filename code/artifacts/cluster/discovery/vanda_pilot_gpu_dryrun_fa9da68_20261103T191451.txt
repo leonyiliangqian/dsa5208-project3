@@ -1,0 +1,75 @@
+read-only checks and dry runs: no job submitted, no amgr login
+2026-11-03T19:15:01+08:00
+stdct-login-01
+== server
+    server_state = Scheduling
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_min.ncpus = 2
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== queue gpu
+    resources_max.ncpus = 36
+    resources_max.ngpus = 2
+    resources_max.walltime = 48:00:00
+    resources_min.ngpus = 1
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = gpu_free
+    max_run = [u:PBS_GENERIC=2]
+    enabled = True
+    started = True
+== current jobs
+qstat rc=0
+bundle sha256 matches Mac: 508cb10683d6f3a2254da7c2a28794b538b7023c6ae5e2f5e6e4e3ecb4463396
+commit matches fa9da689dd4044610f799fa6464dd8048d73cede
+tree matches c2c1f6f75b54be40bc7fe322f18bd3a628696e69
+status lines before: 0
+syntax ok jobs/vanda/pilot.pbs
+syntax ok jobs/vanda/measure.sh
+syntax ok jobs/vanda/gpu_validate.pbs
+syntax ok jobs/vanda/gpu_busy.sh
+== pilot directives
+#PBS -N p3_pilot1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+manifest pilot-single-node-v1 status proposed
+d1cd10a5242fee02b16e9f38db8f2e0458ed3fac31b91aa548b4d7f71f3a98b1  manifests/pilot_single_node.json
+== gpu directives
+#PBS -N p3_gpu_validate
+#PBS -l select=1:ngpus=1:ncpus=36:mem=60gb
+#PBS -l walltime=00:30:00
+#PBS -j oe
+== modules (listing only)
+/cm/shared/modulefiles:
+nvhpc-hpcx-cuda12/26.1
+/app1/ebapps/arches/flat-avx2/modules/mpi:
+OpenMPI/4.1.6-GCC-13.2.0
+/app1/ebapps/arches/flat-avx2/modules/lang:
+Python/3.11.5-GCCcore-13.2.0
+== dry run pilot (no --yes)
+command: qsub -q auto_free -v SOURCE_GIT_REV=fa9da689dd4044610f799fa6464dd8048d73cede -o /home/svu/leonyil.qian/dsa5208-p3-fa9da68/code/artifacts/cluster/logs/ jobs/vanda/pilot.pbs
+dry run: add --yes to submit
+rc=0
+== dry run gpu_validate (no --yes)
+command: qsub -q auto_free -v SOURCE_GIT_REV=fa9da689dd4044610f799fa6464dd8048d73cede -o /home/svu/leonyil.qian/dsa5208-p3-fa9da68/code/artifacts/cluster/logs/ jobs/vanda/gpu_validate.pbs
+dry run: add --yes to submit
+rc=0
+== after
+status lines: 0
+fa9da689dd4044610f799fa6464dd8048d73cede
+== current jobs (must be empty)
+qstat rc=0
