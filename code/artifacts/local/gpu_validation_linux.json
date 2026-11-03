@@ -1,5 +1,5 @@
 {
- "date_utc": "2026-11-03T08:05:43+00:00",
+ "date_utc": "2026-11-03T08:10:04+00:00",
  "mode": "no device: target regions ran on the host; says nothing about a GPU",
  "real_gpu_executed": false,
  "cxx": "g++",
@@ -10,7 +10,7 @@
   "separate_memory": 0
  },
  "mandatory_without_device_rc": 0,
- "source_git_rev": "unknown",
+ "source_git_rev": "afa806a",
  "checks": [
   {
    "name": "device: probe reports",
