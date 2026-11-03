@@ -3,12 +3,14 @@
 # whether the kernel runs on the GPU and gives the reference forces. NOT
 # APPROVED: submit only after the user approves it, through jobs/vanda/submit.sh.
 #
-# Gates, in order; each stops the job if a later one could not mean anything:
-#   build      nvc++ -mp=gpu, on the compute node
-#   device     mandatory offload, kernel on a device with separate memory
-#   compiled   the compiler says it generated GPU code for the kernel
-#   gpu_gate   tests/validate_gpu.py --expect-device
-#   gpu_busy   nvidia-smi sees the GPU working during a mandatory-offload run
+# Gates, in order:
+#   build      nvc++ -mp=gpu, on the compute node (critical)
+#   device     mandatory offload, kernel on a device with separate memory (critical)
+#   gpu_gate   tests/validate_gpu.py --expect-device (required)
+#   gpu_busy   nvidia-smi sees the GPU working during a mandatory-offload run (required)
+#   compiled   compiler messages about GPU code generation (optional, a record only)
+# The result rests on what the running program did. The wording of -Minfo messages
+# is not relied on; the full messages stay in gate_build.log.
 #
 #PBS -N p3_gpu_validate
 #PBS -l select=1:ngpus=1:ncpus=36:mem=60gb
@@ -69,10 +71,10 @@ MAKE_VARS=(BIN="$BIN" CXX="$JOB_CXX" GPU_CXX="$JOB_CXX" CXXFLAGS="-O3 -std=c++17
 
 gate build 300 critical make "${MAKE_VARS[@]}" "$BIN/bh_serial" "$BIN/bh_gpu"
 gate device 60 critical env OMP_TARGET_OFFLOAD=MANDATORY "$BIN/bh_gpu" --require-device --device-check
-gate compiled 20 critical grep -E 'Generating (NVIDIA|Tesla|"?nvidia)' "$OUT/gate_build.log"
 gate gpu_gate 900 required env OMP_NUM_THREADS=36 make "${MAKE_VARS[@]}" EVIDENCE="$OUT" \
     GPU_GATE_ARGS=--expect-device check-gpu
 gate gpu_busy 200 required bash jobs/vanda/gpu_busy.sh "$OUT" "$BIN/bh_gpu"
+gate compiled 20 optional grep -iE 'generating.*(nvidia|tesla|gpu)' "$OUT/gate_build.log"
 
 verdict >/dev/null && finish 0
 finish 1

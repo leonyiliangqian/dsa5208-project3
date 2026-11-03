@@ -13,8 +13,8 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   Build and d1-d9 never ran: **the 1507215 stall is still unexplained and two-node solver
   correctness is still unverified.** Do not resubmit 1513781; a rerun is a new approval.
 - **Fix:** commit 563d198, merged to `main`. Tested locally only; not yet tried on Vanda.
-- **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (branch
-  `gpu/omp-target`). **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
+- **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (on `main`).
+  **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md).
 
