@@ -1,0 +1,430 @@
+run_id=twonode-20261103T102750Z-1514458 job=1514458.stdct-mgmt-02 host=IN-002 start=2026-11-03T18:27:50+08:00 source_rev=0b1f36ba1147ecfe776406e82529733b3eeb27e3
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+walltime_s=1800 end_reserve_s=60 gate_overhead_s=140 remote_exec=/opt/pbs/bin/pbs_tmrsh
+
+===== gate allocation (critical, limit 90s) 18:27:52: env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/twonode-20261103T102750Z-1514458 2 pbs_tmrsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	in-002: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+	in-005: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+node IN-002 allowed=17,27,33,41,47,49,51,55 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node IN-005 allowed=8,10,12,14,16,18,20,22 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['IN-002', 'IN-005'] head=IN-002 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only template_line_seen=True
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=ok remote_under_pbs_mom=ok pbs_jobid_on_every_node=ok
+allocation PASS
+allocation PASS rc=0 secs=4 kind=critical 
+
+===== gate build (critical, limit 240s) 18:27:58: make BIN=bin/vanda-1514458 all hybrid
+mkdir -p bin/vanda-1514458
+g++ -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-1514458/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic"' -o bin/vanda-1514458/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=7 kind=critical 
+
+===== gate flags (critical, limit 60s) 18:28:07: bash jobs/vanda/flags_check.sh
+CXXFLAGS=-O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+== mpicxx -show
+g++ -I/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/include -L/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib -L/app1/ebapps/arches/flat-avx2/software/hwloc/2.9.2-GCCcore-13.2.0/lib -L/app1/ebapps/arches/flat-avx2/software/libevent/2.1.12-GCCcore-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/hwloc/2.9.2-GCCcore-13.2.0/lib -Wl,-rpath -Wl,/app1/ebapps/arches/flat-avx2/software/libevent/2.1.12-GCCcore-13.2.0/lib -Wl,--enable-new-dtags -lmpi
+== resolved target
+  -march=                     		x86-64
+  -mtune=                     		generic
+== ISA macros defined by these flags
+none
+== embedded in binaries
+bin/vanda-1514458/bh_serial: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+bin/vanda-1514458/bh_hybrid: -O3 -std=c++17 -Wall -Wextra -march=x86-64 -mtune=generic
+flags PASS rc=0 secs=1 kind=critical 
+
+===== gate toolchain (critical, limit 90s) 18:28:10: make BIN=bin/vanda-1514458 toolchain
+g++ -O2 -fopenmp -o bin/vanda-1514458/omp_check tests/toolchain/omp_check.cpp
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1514458/mpi_check tests/toolchain/mpi_check.cpp
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1514458/hybrid_check tests/toolchain/hybrid_check.cpp
+OMP_NUM_THREADS=4 bin/vanda-1514458/omp_check
+omp_check _OPENMP=201511 max_threads=4 team=4 PASS
+mpirun -np 2 bin/vanda-1514458/mpi_check
+mpi_check size=2 rank_sum=1 PASS
+mpi_library Open MPI v4.1.6, package: Open MPI ebapps@atlas8-c01 Distribution, ident: 4.1.6,
+mpirun -np 2 -x OMP_NUM_THREADS=2 bin/vanda-1514458/hybrid_check
+hybrid_check ranks=2 provided=1 funneled=1 min_team=2 PASS
+toolchain PASS rc=0 secs=5 kind=critical 
+
+===== gate internode_2 (critical, limit 90s) 18:28:17: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=2 INTERNODE_HOSTS=2
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1514458/internode_check tests/toolchain/internode_check.cpp
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-1514458/internode_check
+internode_check ranks=2 hosts=2 [IN-002,IN-005] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0053 allgatherv_1000003x3_max_s=0.0057 expect_hosts=2 PASS
+internode_2 PASS rc=0 secs=7 kind=critical 
+
+===== gate internode_16 (required, limit 90s) 18:28:26: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=16 INTERNODE_HOSTS=2
+INTERNODE_EXPECT_HOSTS=2 mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 16 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-1514458/internode_check
+internode_check ranks=16 hosts=2 [IN-002,IN-005] offset=1 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0266 allgatherv_1000003x3_max_s=0.0481 expect_hosts=2 PASS
+internode_16 PASS rc=0 secs=4 kind=required 
+
+===== gate place_2x4_1 (required, limit 60s) 18:28:32: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+trace t=1793701717.433 host=IN-005 rank=2 pid=3677499 stage=gather_done 
+trace t=1793701717.433 host=IN-005 rank=2 pid=3677499 stage=bcast_begin 
+trace t=1793701717.433 host=IN-005 rank=3 pid=3677500 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=1 thread=0 cpu=47 mask_cpus=1
+placement host=IN-002 rank=1 thread=1 cpu=49 mask_cpus=1
+placement host=IN-002 rank=1 thread=2 cpu=51 mask_cpus=1
+placement host=IN-002 rank=1 thread=3 cpu=55 mask_cpus=1
+placement host=IN-005 rank=2 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=2 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=2 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=2 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=3 thread=0 cpu=16 mask_cpus=1
+placement host=IN-005 rank=3 thread=1 cpu=18 mask_cpus=1
+placement host=IN-005 rank=3 thread=2 cpu=20 mask_cpus=1
+placement host=IN-005 rank=3 thread=3 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701717.434 host=IN-002 rank=0 pid=3575342 stage=bcast_begin 
+trace t=1793701717.434 host=IN-002 rank=1 pid=3575343 stage=finalize_begin verdict=PASS
+trace t=1793701717.434 host=IN-002 rank=0 pid=3575342 stage=finalize_begin verdict=PASS
+trace t=1793701717.433 host=IN-005 rank=2 pid=3677499 stage=finalize_begin verdict=PASS
+trace t=1793701717.434 host=IN-005 rank=3 pid=3677500 stage=finalize_begin verdict=PASS
+trace t=1793701717.477 host=IN-002 rank=1 pid=3575343 stage=finalize_done 
+trace t=1793701717.477 host=IN-002 rank=0 pid=3575342 stage=finalize_done 
+trace t=1793701717.478 host=IN-005 rank=3 pid=3677500 stage=finalize_done 
+trace t=1793701717.479 host=IN-005 rank=2 pid=3677499 stage=finalize_done 
+place_2x4_1 PASS rc=0 secs=5 kind=required 
+
+===== gate place_2x4_2 (required, limit 60s) 18:28:39: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+trace t=1793701723.275 host=IN-005 rank=3 pid=3677665 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=27 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=1 thread=0 cpu=47 mask_cpus=1
+placement host=IN-002 rank=1 thread=1 cpu=49 mask_cpus=1
+placement host=IN-002 rank=1 thread=2 cpu=51 mask_cpus=1
+placement host=IN-002 rank=1 thread=3 cpu=55 mask_cpus=1
+placement host=IN-005 rank=2 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=2 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=2 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=2 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=3 thread=0 cpu=16 mask_cpus=1
+placement host=IN-005 rank=3 thread=1 cpu=18 mask_cpus=1
+placement host=IN-005 rank=3 thread=2 cpu=20 mask_cpus=1
+placement host=IN-005 rank=3 thread=3 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701723.275 host=IN-002 rank=0 pid=3575549 stage=bcast_begin 
+trace t=1793701723.275 host=IN-002 rank=0 pid=3575549 stage=finalize_begin verdict=PASS
+trace t=1793701723.275 host=IN-002 rank=1 pid=3575550 stage=finalize_begin verdict=PASS
+trace t=1793701723.275 host=IN-005 rank=2 pid=3677664 stage=finalize_begin verdict=PASS
+trace t=1793701723.275 host=IN-005 rank=3 pid=3677665 stage=finalize_begin verdict=PASS
+trace t=1793701723.318 host=IN-002 rank=0 pid=3575549 stage=finalize_done 
+trace t=1793701723.318 host=IN-002 rank=1 pid=3575550 stage=finalize_done 
+trace t=1793701723.320 host=IN-005 rank=2 pid=3677664 stage=finalize_done 
+trace t=1793701723.320 host=IN-005 rank=3 pid=3677665 stage=finalize_done 
+place_2x4_2 PASS rc=0 secs=4 kind=required 
+
+===== gate place_2x4_3 (required, limit 60s) 18:28:45: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+trace t=1793701729.329 host=IN-005 rank=3 pid=3677831 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=27 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=1 thread=0 cpu=47 mask_cpus=1
+placement host=IN-002 rank=1 thread=1 cpu=49 mask_cpus=1
+placement host=IN-002 rank=1 thread=2 cpu=51 mask_cpus=1
+placement host=IN-002 rank=1 thread=3 cpu=55 mask_cpus=1
+placement host=IN-005 rank=2 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=2 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=2 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=2 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=3 thread=0 cpu=16 mask_cpus=1
+placement host=IN-005 rank=3 thread=1 cpu=18 mask_cpus=1
+placement host=IN-005 rank=3 thread=2 cpu=20 mask_cpus=1
+placement host=IN-005 rank=3 thread=3 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701729.330 host=IN-002 rank=0 pid=3575834 stage=bcast_begin 
+trace t=1793701729.330 host=IN-002 rank=1 pid=3575835 stage=finalize_begin verdict=PASS
+trace t=1793701729.330 host=IN-002 rank=0 pid=3575834 stage=finalize_begin verdict=PASS
+trace t=1793701729.330 host=IN-005 rank=2 pid=3677830 stage=finalize_begin verdict=PASS
+trace t=1793701729.330 host=IN-005 rank=3 pid=3677831 stage=finalize_begin verdict=PASS
+trace t=1793701729.373 host=IN-002 rank=1 pid=3575835 stage=finalize_done 
+trace t=1793701729.373 host=IN-002 rank=0 pid=3575834 stage=finalize_done 
+trace t=1793701729.375 host=IN-005 rank=3 pid=3677831 stage=finalize_done 
+trace t=1793701729.375 host=IN-005 rank=2 pid=3677830 stage=finalize_done 
+place_2x4_3 PASS rc=0 secs=4 kind=required 
+
+===== gate place_4x2 (required, limit 60s) 18:28:51: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+placement host=IN-005 rank=5 thread=1 cpu=14 mask_cpus=1
+placement host=IN-005 rank=6 thread=0 cpu=16 mask_cpus=1
+trace t=1793701734.688 host=IN-005 rank=5 pid=3677998 stage=gather_done 
+trace t=1793701734.688 host=IN-005 rank=4 pid=3677997 stage=gather_done 
+trace t=1793701734.688 host=IN-005 rank=4 pid=3677997 stage=bcast_begin 
+trace t=1793701734.688 host=IN-005 rank=5 pid=3677998 stage=bcast_begin 
+placement host=IN-005 rank=6 thread=1 cpu=18 mask_cpus=1
+placement host=IN-005 rank=7 thread=0 cpu=20 mask_cpus=1
+placement host=IN-005 rank=7 thread=1 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=8 threads=2 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701734.689 host=IN-002 rank=0 pid=3576052 stage=bcast_begin 
+trace t=1793701734.689 host=IN-002 rank=0 pid=3576052 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-002 rank=2 pid=3576054 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-002 rank=1 pid=3576053 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-002 rank=3 pid=3576055 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-005 rank=6 pid=3677999 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-005 rank=5 pid=3677998 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-005 rank=7 pid=3678000 stage=finalize_begin verdict=PASS
+trace t=1793701734.689 host=IN-005 rank=4 pid=3677997 stage=finalize_begin verdict=PASS
+trace t=1793701734.732 host=IN-002 rank=2 pid=3576054 stage=finalize_done 
+trace t=1793701734.732 host=IN-002 rank=3 pid=3576055 stage=finalize_done 
+trace t=1793701734.732 host=IN-002 rank=0 pid=3576052 stage=finalize_done 
+trace t=1793701734.732 host=IN-002 rank=1 pid=3576053 stage=finalize_done 
+trace t=1793701734.734 host=IN-005 rank=5 pid=3677998 stage=finalize_done 
+trace t=1793701734.734 host=IN-005 rank=7 pid=3678000 stage=finalize_done 
+trace t=1793701734.734 host=IN-005 rank=6 pid=3677999 stage=finalize_done 
+trace t=1793701734.734 host=IN-005 rank=4 pid=3677997 stage=finalize_done 
+place_4x2 PASS rc=0 secs=3 kind=required 
+
+===== gate place_8x1 (required, limit 60s) 18:28:57: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-002 rank=0 pid=3576504 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=14 pid=3678560 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=12 pid=3678558 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=15 pid=3678561 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=13 pid=3678559 stage=finalize_begin verdict=PASS
+trace t=1793701741.480 host=IN-002 rank=5 pid=3576509 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=0 pid=3576504 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=3 pid=3576507 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=6 pid=3576510 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=1 pid=3576505 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=2 pid=3576506 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=7 pid=3576511 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=4 pid=3576508 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=8 pid=3678554 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=11 pid=3678557 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=10 pid=3678556 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=12 pid=3678558 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=15 pid=3678561 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=9 pid=3678555 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=13 pid=3678559 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=14 pid=3678560 stage=finalize_done 
+place_8x1 PASS rc=0 secs=4 kind=required 
+
+===== gate serial (required, limit 240s) 18:29:03: make BIN=bin/vanda-1514458 EVIDENCE=artifacts/cluster/runs/twonode-20261103T102750Z-1514458 check
+python3 tests/validate_serial.py --binary bin/vanda-1514458/bh_serial \
+    --out artifacts/cluster/runs/twonode-20261103T102750Z-1514458/serial_validation_vanda-1514458.json
+self_test case=empty n=0 leaf_size=1 nodes=0 PASS
+self_test case=empty n=0 leaf_size=8 nodes=0 PASS
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.222e-14 mean_rel_err=1.478e-15 max_abs_err=2.536e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.230e-14 mean_rel_err=1.479e-15 max_abs_err=2.590e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)
+serial PASS rc=0 secs=1 kind=required 
+
+===== gate hybrid (required, limit 600s) 18:29:06: make BIN=bin/vanda-1514458 EVIDENCE=artifacts/cluster/runs/twonode-20261103T102750Z-1514458 check-hybrid MPIRUN=mpirun MPIRUN_FLAGS=--prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -x OMP_NUM_THREADS --map-by node --bind-to none HYBRID_GATE_ARGS=--max-cores 16 --suite multinode --expect-hosts 2
+    --out artifacts/cluster/runs/twonode-20261103T102750Z-1514458/hybrid_validation_vanda-1514458.json --max-cores 16 --suite multinode --expect-hosts 2
+hybrid case=1x1_static n=2000 steps=1 ranks=1 threads=1 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_static n=2000 steps=1 ranks=1 threads=4 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=1x4_dynamic1 n=2000 steps=1 ranks=1 threads=4 schedule=dynamic/1 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=2x1_static n=2000 steps=1 ranks=2 threads=1 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=3x2_dynamic16 n=2000 steps=1 ranks=3 threads=2 schedule=dynamic/16 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=4x2_guided n=2000 steps=1 ranks=4 threads=2 schedule=guided/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=theta0_3x2 n=1500 steps=1 ranks=3 threads=2 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=leaf1_2x2 n=1500 steps=1 ranks=2 threads=2 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x1 n=2000 steps=10 ranks=1 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_1x4_dynamic n=2000 steps=10 ranks=1 threads=4 schedule=dynamic/8 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_3x2_static n=2001 steps=10 ranks=3 threads=2 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=traj_4x2_guided n=2003 steps=10 ranks=4 threads=2 schedule=guided/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=uneven_n7_4ranks n=7 steps=10 ranks=4 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=zero_owned_n3_5ranks n=3 steps=10 ranks=5 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=singleton_3ranks n=1 steps=5 ranks=3 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_2x8_static n=20011 steps=1 ranks=2 threads=8 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_4x4_dynamic64 n=20011 steps=10 ranks=4 threads=4 schedule=dynamic/64 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_8x2_guided n=20003 steps=10 ranks=8 threads=2 schedule=guided/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_16x1_static n=2003 steps=10 ranks=16 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_6x2_dynamic1 n=1001 steps=10 ranks=6 threads=2 schedule=dynamic/1 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_zero_owned_16x1 n=10 steps=10 ranks=16 threads=1 schedule=static/0 hosts=2 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=mn_theta0_4x4 n=4001 steps=1 ranks=4 threads=4 schedule=static/0 hosts=2 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)
+hybrid PASS rc=0 secs=117 kind=required 
+
+===== gate recorder (required, limit 120s) 18:31:06: env OMP_NUM_THREADS=4 OMP_PROC_BIND=close OMP_PLACES=cores python3 scripts/run_case.py --out artifacts/cluster/runs/twonode-20261103T102750Z-1514458 --case smoke_bound_2node_4x4 --rep 1 --allocated-cores 16 --launcher mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:2:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES -- bin/vanda-1514458/bh_hybrid --n 50000 --steps 2 --schedule dynamic --chunk 64
+smoke_bound_2node_4x4_rep1: exit=0 ok=True wall_s=0.14974
+recorder PASS rc=0 secs=4 kind=required 
+
+===== gate place_1x8_1 (required, limit 60s) 18:31:12: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793701875.960 host=IN-005 rank=1 pid=3681778 stage=omp_done thread_cpus=8,10,12,14,16,18,20,22
+trace t=1793701875.960 host=IN-005 rank=1 pid=3681778 stage=gather_begin 
+trace t=1793701875.960 host=IN-002 rank=0 pid=3585167 stage=gather_done 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=27 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+trace t=1793701875.960 host=IN-005 rank=1 pid=3681778 stage=gather_done 
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=0 thread=4 cpu=47 mask_cpus=1
+placement host=IN-002 rank=0 thread=5 cpu=49 mask_cpus=1
+placement host=IN-002 rank=0 thread=6 cpu=51 mask_cpus=1
+placement host=IN-002 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-005 rank=1 thread=0 cpu=8 mask_cpus=1
+trace t=1793701875.960 host=IN-005 rank=1 pid=3681778 stage=bcast_begin 
+placement host=IN-005 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=1 thread=4 cpu=16 mask_cpus=1
+placement host=IN-005 rank=1 thread=5 cpu=18 mask_cpus=1
+placement host=IN-005 rank=1 thread=6 cpu=20 mask_cpus=1
+placement host=IN-005 rank=1 thread=7 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701875.961 host=IN-002 rank=0 pid=3585167 stage=bcast_begin 
+trace t=1793701875.961 host=IN-002 rank=0 pid=3585167 stage=finalize_begin verdict=PASS
+trace t=1793701875.961 host=IN-005 rank=1 pid=3681778 stage=finalize_begin verdict=PASS
+trace t=1793701876.004 host=IN-002 rank=0 pid=3585167 stage=finalize_done 
+trace t=1793701876.006 host=IN-005 rank=1 pid=3681778 stage=finalize_done 
+place_1x8_1 PASS rc=0 secs=4 kind=required 
+
+===== gate place_1x8_2 (required, limit 60s) 18:31:18: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793701880.888 host=IN-005 rank=1 pid=3681936 stage=omp_done thread_cpus=8,10,12,14,16,18,20,22
+trace t=1793701880.888 host=IN-002 rank=0 pid=3585821 stage=gather_done 
+trace t=1793701880.888 host=IN-005 rank=1 pid=3681936 stage=gather_begin 
+trace t=1793701880.888 host=IN-005 rank=1 pid=3681936 stage=gather_done 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=27 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=0 thread=4 cpu=47 mask_cpus=1
+placement host=IN-002 rank=0 thread=5 cpu=49 mask_cpus=1
+placement host=IN-002 rank=0 thread=6 cpu=51 mask_cpus=1
+placement host=IN-002 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-005 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=1 thread=4 cpu=16 mask_cpus=1
+placement host=IN-005 rank=1 thread=5 cpu=18 mask_cpus=1
+placement host=IN-005 rank=1 thread=6 cpu=20 mask_cpus=1
+placement host=IN-005 rank=1 thread=7 cpu=22 mask_cpus=1
+trace t=1793701880.888 host=IN-005 rank=1 pid=3681936 stage=bcast_begin 
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701880.888 host=IN-002 rank=0 pid=3585821 stage=bcast_begin 
+trace t=1793701880.889 host=IN-002 rank=0 pid=3585821 stage=finalize_begin verdict=PASS
+trace t=1793701880.888 host=IN-005 rank=1 pid=3681936 stage=finalize_begin verdict=PASS
+trace t=1793701880.932 host=IN-002 rank=0 pid=3585821 stage=finalize_done 
+trace t=1793701880.933 host=IN-005 rank=1 pid=3681936 stage=finalize_done 
+place_1x8_2 PASS rc=0 secs=3 kind=required 
+
+===== gate place_1x8_3 (required, limit 60s) 18:31:24: make BIN=bin/vanda-1514458 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793701886.701 host=IN-005 rank=1 pid=3682108 stage=omp_done thread_cpus=8,10,12,14,16,18,20,22
+trace t=1793701886.701 host=IN-002 rank=0 pid=3586645 stage=gather_done 
+trace t=1793701886.701 host=IN-005 rank=1 pid=3682108 stage=gather_begin 
+trace t=1793701886.701 host=IN-005 rank=1 pid=3682108 stage=gather_done 
+trace t=1793701886.701 host=IN-005 rank=1 pid=3682108 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=27 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=33 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=41 mask_cpus=1
+placement host=IN-002 rank=0 thread=4 cpu=47 mask_cpus=1
+placement host=IN-002 rank=0 thread=5 cpu=49 mask_cpus=1
+placement host=IN-002 rank=0 thread=6 cpu=51 mask_cpus=1
+placement host=IN-002 rank=0 thread=7 cpu=55 mask_cpus=1
+placement host=IN-005 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=IN-005 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=IN-005 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=IN-005 rank=1 thread=4 cpu=16 mask_cpus=1
+placement host=IN-005 rank=1 thread=5 cpu=18 mask_cpus=1
+placement host=IN-005 rank=1 thread=6 cpu=20 mask_cpus=1
+placement host=IN-005 rank=1 thread=7 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+trace t=1793701886.701 host=IN-002 rank=0 pid=3586645 stage=bcast_begin 
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701886.701 host=IN-002 rank=0 pid=3586645 stage=finalize_begin verdict=PASS
+trace t=1793701886.701 host=IN-005 rank=1 pid=3682108 stage=finalize_begin verdict=PASS
+trace t=1793701886.744 host=IN-002 rank=0 pid=3586645 stage=finalize_done 
+trace t=1793701886.746 host=IN-005 rank=1 pid=3682108 stage=finalize_done 
+place_1x8_3 PASS rc=0 secs=2 kind=required 
+
+===== summary 18:31:29
+allocation PASS rc=0 secs=4 kind=critical 
+build PASS rc=0 secs=7 kind=critical 
+flags PASS rc=0 secs=1 kind=critical 
+toolchain PASS rc=0 secs=5 kind=critical 
+internode_2 PASS rc=0 secs=7 kind=critical 
+internode_16 PASS rc=0 secs=4 kind=required 
+place_2x4_1 PASS rc=0 secs=5 kind=required 
+place_2x4_2 PASS rc=0 secs=4 kind=required 
+place_2x4_3 PASS rc=0 secs=4 kind=required 
+place_4x2 PASS rc=0 secs=3 kind=required 
+place_8x1 PASS rc=0 secs=4 kind=required 
+serial PASS rc=0 secs=1 kind=required 
+hybrid PASS rc=0 secs=117 kind=required 
+recorder PASS rc=0 secs=4 kind=required 
+place_1x8_1 PASS rc=0 secs=4 kind=required 
+place_1x8_2 PASS rc=0 secs=3 kind=required 
+place_1x8_3 PASS rc=0 secs=2 kind=required 
+verdict required_or_critical=17 not_passed=0 optional: none
+verdict PASS
+end=2026-11-03T18:31:29+08:00 elapsed_s=219 walltime_s=1800

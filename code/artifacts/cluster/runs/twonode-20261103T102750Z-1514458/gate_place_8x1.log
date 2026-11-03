@@ -1,0 +1,249 @@
+OMP_NUM_THREADS=1 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    PLACEMENT_EXPECT_HOSTS=2 PLACEMENT_TRACE=1 \
+    mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1514458.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 16 --map-by ppr:8:node:PE=1 \
+    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1514458/placement_check
+[IN-002:3576456] MCW rank 2 bound to socket 1[core 2[hwt 0]]: [][././B/././././.]
+[IN-002:3576456] MCW rank 3 bound to socket 1[core 3[hwt 0]]: [][./././B/./././.]
+[IN-002:3576456] MCW rank 4 bound to socket 1[core 4[hwt 0]]: [][././././B/././.]
+[IN-002:3576456] MCW rank 5 bound to socket 1[core 5[hwt 0]]: [][./././././B/./.]
+[IN-002:3576456] MCW rank 6 bound to socket 1[core 6[hwt 0]]: [][././././././B/.]
+[IN-002:3576456] MCW rank 7 bound to socket 1[core 7[hwt 0]]: [][./././././././B]
+[IN-002:3576456] MCW rank 0 bound to socket 1[core 0[hwt 0]]: [][B/././././././.]
+[IN-002:3576456] MCW rank 1 bound to socket 1[core 1[hwt 0]]: [][./B/./././././.]
+[IN-005:3678506] MCW rank 8 bound to socket 0[core 0[hwt 0]]: [B/././././././.][]
+[IN-005:3678506] MCW rank 9 bound to socket 0[core 1[hwt 0]]: [./B/./././././.][]
+[IN-005:3678506] MCW rank 10 bound to socket 0[core 2[hwt 0]]: [././B/././././.][]
+[IN-005:3678506] MCW rank 11 bound to socket 0[core 3[hwt 0]]: [./././B/./././.][]
+[IN-005:3678506] MCW rank 12 bound to socket 0[core 4[hwt 0]]: [././././B/././.][]
+[IN-005:3678506] MCW rank 13 bound to socket 0[core 5[hwt 0]]: [./././././B/./.][]
+[IN-005:3678506] MCW rank 14 bound to socket 0[core 6[hwt 0]]: [././././././B/.][]
+[IN-005:3678506] MCW rank 15 bound to socket 0[core 7[hwt 0]]: [./././././././B][]
+trace t=1793701740.021 host=IN-002 rank=5 pid=3576509 stage=start affinity=49 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=5 pid=3576509 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=1 pid=3576505 stage=start affinity=27 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=1 pid=3576505 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=7 pid=3576511 stage=start affinity=55 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=7 pid=3576511 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=0 pid=3576504 stage=start affinity=17 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=0 pid=3576504 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=6 pid=3576510 stage=start affinity=51 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=6 pid=3576510 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=2 pid=3576506 stage=start affinity=33 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=2 pid=3576506 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=3 pid=3576507 stage=start affinity=41 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=3 pid=3576507 stage=mpi_init_begin 
+trace t=1793701740.021 host=IN-002 rank=4 pid=3576508 stage=start affinity=47 omp_num_threads=1
+trace t=1793701740.021 host=IN-002 rank=4 pid=3576508 stage=mpi_init_begin 
+trace t=1793701740.027 host=IN-005 rank=15 pid=3678561 stage=start affinity=22 omp_num_threads=1
+trace t=1793701740.027 host=IN-005 rank=15 pid=3678561 stage=mpi_init_begin 
+trace t=1793701740.027 host=IN-005 rank=9 pid=3678555 stage=start affinity=10 omp_num_threads=1
+trace t=1793701740.027 host=IN-005 rank=9 pid=3678555 stage=mpi_init_begin 
+trace t=1793701740.027 host=IN-005 rank=14 pid=3678560 stage=start affinity=20 omp_num_threads=1
+trace t=1793701740.027 host=IN-005 rank=14 pid=3678560 stage=mpi_init_begin 
+trace t=1793701740.027 host=IN-005 rank=11 pid=3678557 stage=start affinity=14 omp_num_threads=1
+trace t=1793701740.027 host=IN-005 rank=11 pid=3678557 stage=mpi_init_begin 
+trace t=1793701740.028 host=IN-005 rank=8 pid=3678554 stage=start affinity=8 omp_num_threads=1
+trace t=1793701740.028 host=IN-005 rank=12 pid=3678558 stage=start affinity=16 omp_num_threads=1
+trace t=1793701740.028 host=IN-005 rank=12 pid=3678558 stage=mpi_init_begin 
+trace t=1793701740.028 host=IN-005 rank=8 pid=3678554 stage=mpi_init_begin 
+trace t=1793701740.028 host=IN-005 rank=10 pid=3678556 stage=start affinity=12 omp_num_threads=1
+trace t=1793701740.028 host=IN-005 rank=10 pid=3678556 stage=mpi_init_begin 
+trace t=1793701740.028 host=IN-005 rank=13 pid=3678559 stage=start affinity=18 omp_num_threads=1
+trace t=1793701740.028 host=IN-005 rank=13 pid=3678559 stage=mpi_init_begin 
+trace t=1793701741.025 host=IN-002 rank=1 pid=3576505 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=1 pid=3576505 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=7 pid=3576511 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=7 pid=3576511 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=0 pid=3576504 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=0 pid=3576504 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=6 pid=3576510 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=6 pid=3576510 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=2 pid=3576506 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=2 pid=3576506 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=3 pid=3576507 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=3 pid=3576507 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=5 pid=3576509 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=5 pid=3576509 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-002 rank=4 pid=3576508 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-002 rank=4 pid=3576508 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=13 pid=3678559 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=13 pid=3678559 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=9 pid=3678555 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=9 pid=3678555 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=10 pid=3678556 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=12 pid=3678558 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=12 pid=3678558 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=11 pid=3678557 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=11 pid=3678557 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=15 pid=3678561 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=15 pid=3678561 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=14 pid=3678560 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=14 pid=3678560 stage=allreduce_threads_begin threads=1
+trace t=1793701741.025 host=IN-005 rank=8 pid=3678554 stage=mpi_init_done size=16 provided=1
+trace t=1793701741.025 host=IN-005 rank=8 pid=3678554 stage=allreduce_threads_begin threads=1
+trace t=1793701741.026 host=IN-005 rank=10 pid=3678556 stage=allreduce_threads_begin threads=1
+trace t=1793701741.036 host=IN-005 rank=9 pid=3678555 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=5 pid=3576509 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=5 pid=3576509 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=5 pid=3576509 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=7 pid=3576511 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=0 pid=3576504 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=0 pid=3576504 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=0 pid=3576504 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=6 pid=3576510 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=6 pid=3576510 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=6 pid=3576510 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=4 pid=3576508 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=4 pid=3576508 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=4 pid=3576508 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=1 pid=3576505 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=1 pid=3576505 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=1 pid=3576505 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=3 pid=3576507 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=3 pid=3576507 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=3 pid=3576507 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=2 pid=3576506 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-002 rank=7 pid=3576511 stage=omp_begin 
+trace t=1793701741.036 host=IN-002 rank=2 pid=3576506 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=10 pid=3678556 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=10 pid=3678556 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=10 pid=3678556 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=12 pid=3678558 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=12 pid=3678558 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=12 pid=3678558 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=2 pid=3576506 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=8 pid=3678554 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=8 pid=3678554 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=8 pid=3678554 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-002 rank=7 pid=3576511 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=13 pid=3678559 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=13 pid=3678559 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=13 pid=3678559 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=14 pid=3678560 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=14 pid=3678560 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=14 pid=3678560 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=15 pid=3678561 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=15 pid=3678561 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=15 pid=3678561 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=11 pid=3678557 stage=allreduce_threads_done min=1 max=1
+trace t=1793701741.036 host=IN-005 rank=11 pid=3678557 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=11 pid=3678557 stage=omp_team_started team=1
+trace t=1793701741.036 host=IN-005 rank=9 pid=3678555 stage=omp_begin 
+trace t=1793701741.036 host=IN-005 rank=9 pid=3678555 stage=omp_team_started team=1
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=omp_done thread_cpus=27
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=12 pid=3678558 stage=omp_done thread_cpus=16
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=omp_done thread_cpus=51
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=4 pid=3576508 stage=omp_done thread_cpus=47
+trace t=1793701741.436 host=IN-002 rank=4 pid=3576508 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=omp_done thread_cpus=49
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=0 pid=3576504 stage=omp_done thread_cpus=17
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=omp_done thread_cpus=41
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=0 pid=3576504 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=omp_done thread_cpus=33
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=omp_done thread_cpus=8
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=10 pid=3678556 stage=omp_done thread_cpus=12
+trace t=1793701741.436 host=IN-005 rank=10 pid=3678556 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=omp_done thread_cpus=55
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=13 pid=3678559 stage=omp_done thread_cpus=18
+trace t=1793701741.436 host=IN-005 rank=13 pid=3678559 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=13 pid=3678559 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=13 pid=3678559 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=14 pid=3678560 stage=omp_done thread_cpus=20
+trace t=1793701741.436 host=IN-005 rank=14 pid=3678560 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=14 pid=3678560 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=14 pid=3678560 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=4 pid=3576508 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=4 pid=3576508 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=omp_done thread_cpus=14
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=15 pid=3678561 stage=omp_done thread_cpus=22
+trace t=1793701741.436 host=IN-005 rank=15 pid=3678561 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=15 pid=3678561 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=15 pid=3678561 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=10 pid=3678556 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=10 pid=3678556 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=12 pid=3678558 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=omp_done thread_cpus=10
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=gather_begin 
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=12 pid=3678558 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=gather_done 
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=bcast_begin 
+trace t=1793701741.436 host=IN-005 rank=12 pid=3678558 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=gather_begin 
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=0 pid=3576504 stage=gather_done 
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=1 thread=0 cpu=27 mask_cpus=1
+placement host=IN-002 rank=2 thread=0 cpu=33 mask_cpus=1
+placement host=IN-002 rank=3 thread=0 cpu=41 mask_cpus=1
+placement host=IN-002 rank=4 thread=0 cpu=47 mask_cpus=1
+placement host=IN-002 rank=5 thread=0 cpu=49 mask_cpus=1
+placement host=IN-002 rank=6 thread=0 cpu=51 mask_cpus=1
+placement host=IN-002 rank=7 thread=0 cpu=55 mask_cpus=1
+placement host=IN-005 rank=8 thread=0 cpu=8 mask_cpus=1
+placement host=IN-005 rank=9 thread=0 cpu=10 mask_cpus=1
+placement host=IN-005 rank=10 thread=0 cpu=12 mask_cpus=1
+placement host=IN-005 rank=11 thread=0 cpu=14 mask_cpus=1
+placement host=IN-005 rank=12 thread=0 cpu=16 mask_cpus=1
+placement host=IN-005 rank=13 thread=0 cpu=18 mask_cpus=1
+placement host=IN-005 rank=14 thread=0 cpu=20 mask_cpus=1
+placement host=IN-005 rank=15 thread=0 cpu=22 mask_cpus=1
+placement_host host=IN-002 threads=8 distinct_cpus=8
+placement_host host=IN-005 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=16 threads=1 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793701741.436 host=IN-005 rank=10 pid=3678556 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=0 pid=3576504 stage=bcast_begin 
+trace t=1793701741.436 host=IN-002 rank=4 pid=3576508 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=6 pid=3576510 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=5 pid=3576509 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=7 pid=3576511 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=1 pid=3576505 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=3 pid=3576507 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-002 rank=2 pid=3576506 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=9 pid=3678555 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=8 pid=3678554 stage=finalize_begin verdict=PASS
+trace t=1793701741.436 host=IN-005 rank=11 pid=3678557 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-002 rank=0 pid=3576504 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=14 pid=3678560 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=12 pid=3678558 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=15 pid=3678561 stage=finalize_begin verdict=PASS
+trace t=1793701741.437 host=IN-005 rank=13 pid=3678559 stage=finalize_begin verdict=PASS
+trace t=1793701741.480 host=IN-002 rank=5 pid=3576509 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=0 pid=3576504 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=3 pid=3576507 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=6 pid=3576510 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=1 pid=3576505 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=2 pid=3576506 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=7 pid=3576511 stage=finalize_done 
+trace t=1793701741.480 host=IN-002 rank=4 pid=3576508 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=8 pid=3678554 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=11 pid=3678557 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=10 pid=3678556 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=12 pid=3678558 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=15 pid=3678561 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=9 pid=3678555 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=13 pid=3678559 stage=finalize_done 
+trace t=1793701741.482 host=IN-005 rank=14 pid=3678560 stage=finalize_done 

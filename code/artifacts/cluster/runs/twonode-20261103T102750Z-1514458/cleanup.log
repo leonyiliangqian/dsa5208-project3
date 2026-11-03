@@ -1,0 +1,51 @@
+== after allocation 18:27:56
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 18:28:05
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after flags 18:28:08
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after toolchain 18:28:15
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after internode_2 18:28:24
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after internode_16 18:28:30
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_2x4_1 18:28:37
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_2x4_2 18:28:43
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_2x4_3 18:28:49
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_4x2 18:28:54
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_8x1 18:29:01
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after serial 18:29:04
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after hybrid 18:31:03
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after recorder 18:31:10
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_1x8_1 18:31:16
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_1x8_2 18:31:21
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_1x8_3 18:31:26
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=IN-005 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

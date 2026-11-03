@@ -1,0 +1,39 @@
+no job submitted; dry run only
+2026-11-03T18:26:16+08:00
+stdct-login-01
+== bundle
+a79c88208ee981d48f635d86514bc2dcc1d7df9ce57f1f4a87b7b03dd7faf8f3
+sha256 matches Mac
+error: need a repository to verify a bundle
+== clone
+HEAD 0b1f36ba1147ecfe776406e82529733b3eeb27e3
+tree 24b5eaa668b0e7a69e832bfcf470cf3386877329
+commit matches
+tree matches
+fsck rc=0
+status lines before dry run: 0
+== script checks
+syntax ok jobs/vanda/twonode.pbs
+syntax ok jobs/vanda/multinode_setup.sh
+syntax ok jobs/vanda/allocation_check.sh
+syntax ok jobs/vanda/gates.sh
+#PBS -N p3_twonode
+#PBS -l select=2:ncpus=8:mpiprocs=8:mem=16gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+27:[ "${REQUIRE_PBS_TM:-1}" = 1 ] && export MPI_LAUNCHER=${MPI_LAUNCHER:-pbs_tmrsh}
+== login-node pbs_tmrsh (compute nodes are checked by the job)
+/opt/pbs/bin/qsub
+== dry run (no --yes)
+command: qsub -q auto_free -v SOURCE_GIT_REV=0b1f36ba1147ecfe776406e82529733b3eeb27e3 -o /home/svu/leonyil.qian/dsa5208-p3-0b1f36b/code/artifacts/cluster/logs/ jobs/vanda/twonode.pbs
+dry run: add --yes to submit
+dry run rc=0
+== after dry run
+status lines: 0
+0b1f36ba1147ecfe776406e82529733b3eeb27e3
+== current jobs (must be empty)
+qstat rc=0
+== pbs_tmrsh on login node (read-only)
+ls: cannot access '/opt/pbs/bin/pbs_tmrsh': No such file or directory
+PBS_EXEC=/opt/pbs

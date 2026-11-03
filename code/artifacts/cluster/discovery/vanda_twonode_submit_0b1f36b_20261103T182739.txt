@@ -1,0 +1,25 @@
+pre-submission recheck
+2026-11-03T18:27:40+08:00
+stdct-login-01
+scheduling=True
+auto_free rate=0 enabled=True started=True
+cpu_parallel rate=0 enabled=True started=True
+jobs: []
+HEAD 0b1f36ba1147ecfe776406e82529733b3eeb27e3
+1503779.stdct-mgmt-02.OU
+1506687.stdct-mgmt-02.OU
+1507215.stdct-mgmt-02.OU
+1513781.stdct-mgmt-02.OU
+1514029.stdct-mgmt-02.OU
+== submit (once)
+command: qsub -q auto_free -v SOURCE_GIT_REV=0b1f36ba1147ecfe776406e82529733b3eeb27e3 -o /home/svu/leonyil.qian/dsa5208-p3-0b1f36b/code/artifacts/cluster/logs/ jobs/vanda/twonode.pbs
+1514458.stdct-mgmt-02
+submit rc=0
+2026-11-03T18:27:42+08:00
+== qstat
+
+stdct-mgmt-02: 
+                                                            Req'd  Req'd   Elap
+Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+--------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+1514458.stdct-* leonyil* cpu_par* p3_twonode    --    2  16   32gb 00:30 Q   -- 

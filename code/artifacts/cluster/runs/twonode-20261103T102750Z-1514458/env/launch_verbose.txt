@@ -1,0 +1,46 @@
+[IN-002:3572678] mca: base: components_register: registering framework plm components
+[IN-002:3572678] mca: base: components_register: found loaded component rsh
+[IN-002:3572678] mca: base: components_register: component rsh register function successful
+[IN-002:3572678] mca: base: components_open: opening plm components
+[IN-002:3572678] mca: base: components_open: found loaded component rsh
+[IN-002:3572678] mca: base: components_open: component rsh open function successful
+[IN-002:3572678] mca:base:select: Auto-selecting plm components
+[IN-002:3572678] mca:base:select:(  plm) Querying component [rsh]
+[IN-002:3572678] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-002:3572678] mca:base:select:(  plm) Selected component [rsh]
+[IN-002:3572678] mca: base: components_register: registering framework ras components
+[IN-002:3572678] mca: base: components_register: found loaded component simulator
+[IN-002:3572678] mca: base: components_register: component simulator register function successful
+[IN-002:3572678] mca: base: components_register: found loaded component tm
+[IN-002:3572678] mca: base: components_register: component tm register function successful
+[IN-002:3572678] mca: base: components_register: found loaded component slurm
+[IN-002:3572678] mca: base: components_register: component slurm register function successful
+[IN-002:3572678] mca: base: components_open: opening ras components
+[IN-002:3572678] mca: base: components_open: found loaded component simulator
+[IN-002:3572678] mca: base: components_open: found loaded component tm
+[IN-002:3572678] mca: base: components_open: component tm open function successful
+[IN-002:3572678] mca: base: components_open: found loaded component slurm
+[IN-002:3572678] mca: base: components_open: component slurm open function successful
+[IN-002:3572678] mca:base:select: Auto-selecting ras components
+[IN-002:3572678] mca:base:select:(  ras) Querying component [simulator]
+[IN-002:3572678] mca:base:select:(  ras) Querying component [tm]
+[IN-002:3572678] mca:base:select:(  ras) Query of component [tm] set priority to 100
+[IN-002:3572678] mca:base:select:(  ras) Querying component [slurm]
+[IN-002:3572678] mca:base:select:(  ras) Selected component [tm]
+[IN-002:3572678] mca: base: close: unloading component simulator
+[IN-002:3572678] mca: base: close: component slurm closed
+[IN-002:3572678] mca: base: close: unloading component slurm
+[IN-002:3572678] [[45104,0],0] plm:rsh: final template argv:
+	/opt/pbs/bin/pbs_tmrsh <template>           PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${LD_LIBRARY_PATH:-} ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${DYLD_LIBRARY_PATH:-} ; export DYLD_LIBRARY_PATH ;   /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin/orted -mca orte_leave_session_attached "1" -mca ess "env" -mca ess_base_jobid "2955935744" -mca ess_base_vpid "<template>" -mca ess_base_num_procs "3" -mca orte_node_regex "IN-[3:2],in-[3:2,5]@0(3)" -mca orte_hnp_uri "2955935744.0;tcp://192.168.23.122:33921" --mca plm_rsh_agent "/opt/pbs/bin/pbs_tmrsh" --mca plm_rsh_no_tree_spawn "1" --mca plm_base_verbose "10" --mca ras_base_verbose "10" -mca plm "rsh" -mca btl "self,vader,tcp" -mca pml "ob1" -mca hwloc_base_binding_policy "none" -mca rmaps_base_mapping_policy "ppr:1:node" -mca pmix "^s1,s2,cray,isolated"
+[IN-002:3572678] [[45104,0],0] complete_setup on job [45104,1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive update proc state command from [[45104,0],1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive got update_proc_state for job [45104,1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive update proc state command from [[45104,0],2]
+[IN-002:3572678] [[45104,0],0] plm:base:receive got update_proc_state for job [45104,1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive update proc state command from [[45104,0],1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive got update_proc_state for job [45104,1]
+[IN-002:3572678] [[45104,0],0] plm:base:receive update proc state command from [[45104,0],2]
+[IN-002:3572678] [[45104,0],0] plm:base:receive got update_proc_state for job [45104,1]
+[IN-002:3572678] mca: base: close: unloading component tm
+[IN-002:3572678] mca: base: close: component rsh closed
+[IN-002:3572678] mca: base: close: unloading component rsh
