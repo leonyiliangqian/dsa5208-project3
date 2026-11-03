@@ -257,3 +257,29 @@ Balance not read: the allocation-manager session has expired (`amgr login`
 needed). Record: code/artifacts/cluster/discovery/vanda_prediag_checks_*.txt.
 Local dry run for diag.pbs at e43b561 prints the expected qsub command;
 directives select=2:ncpus=8:mpiprocs=8:mem=4gb, place=scatter, 00:20:00.
+
+### Diagnostic job 1513781, 3 Nov 15:35 SGT (one submission, stopped by our own harness)
+
+Submitted once from a clean clone of 18c0d24: auto_free routed to cpu_parallel,
+no -P, select=2:ncpus=8:mpiprocs=8:mem=4gb, place=scatter, 00:20:00; charge rate
+0 on the job record. Ran on IN-002 and IN-005, both Gold 6438N, 12 s walltime,
+Exit_status 6. Evidence: artifacts/cluster/runs/diag-20261103T073541Z-1513781/ and
+artifacts/cluster/logs/1513781.stdct-mgmt-02.OU.
+
+Result: `allocation` PASS (2 hosts, 8 CPUs each, plm and ras tm selected, remote
+orted under pbs_mom). Then `cleanup` FAIL and exit 6. **`build` and d1-d9 never
+ran, so no trace exists and this job says nothing about the 1507215 stall.** That
+stall remains unexplained, and it is not evidence of two-node solver correctness.
+
+Cause of the exit, a false negative in jobs/vanda/gates.sh: cleanup_all captures
+the remote leftover check through `pbs_tmrsh ... >> cleanup.log`, but pbs_tmrsh
+writes remote output to the PBS job's output file, not to its own stdout (man
+page: artifacts/cluster/discovery/vanda_pbs_tmrsh_man_20261103.txt). The IN-005
+line `... unattributed=0 CLEAN` is in the .OU and absent from cleanup.log and
+job.log, so the count of CLEAN reports was 1 of 2 nodes. Both nodes reported CLEAN.
+The local simulations use ssh, which does return stdout, so they could not catch
+this. The gate library dates from 30 Oct, after the earlier jobs; this was its first
+multi-node run on Vanda. snapshot_watch.sh has the same pattern, so remote
+snapshots would be lost too. Every multi-node job using gates.sh (twonode, measure)
+would stop the same way. Balance not read (no amgr session).
+

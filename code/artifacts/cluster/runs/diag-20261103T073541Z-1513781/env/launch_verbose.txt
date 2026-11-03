@@ -1,0 +1,32 @@
+[IN-002:2919026] mca: base: components_register: registering framework plm components
+[IN-002:2919026] mca: base: components_register: found loaded component tm
+[IN-002:2919026] mca: base: components_register: component tm register function successful
+[IN-002:2919026] mca: base: components_open: opening plm components
+[IN-002:2919026] mca: base: components_open: found loaded component tm
+[IN-002:2919026] mca: base: components_open: component tm open function successful
+[IN-002:2919026] mca:base:select: Auto-selecting plm components
+[IN-002:2919026] mca:base:select:(  plm) Querying component [tm]
+[IN-002:2919026] mca:base:select:(  plm) Query of component [tm] set priority to 75
+[IN-002:2919026] mca:base:select:(  plm) Selected component [tm]
+[IN-002:2919026] mca: base: components_register: registering framework ras components
+[IN-002:2919026] mca: base: components_register: found loaded component tm
+[IN-002:2919026] mca: base: components_register: component tm register function successful
+[IN-002:2919026] mca: base: components_open: opening ras components
+[IN-002:2919026] mca: base: components_open: found loaded component tm
+[IN-002:2919026] mca: base: components_open: component tm open function successful
+[IN-002:2919026] mca:base:select: Auto-selecting ras components
+[IN-002:2919026] mca:base:select:(  ras) Querying component [tm]
+[IN-002:2919026] mca:base:select:(  ras) Query of component [tm] set priority to 100
+[IN-002:2919026] mca:base:select:(  ras) Selected component [tm]
+[IN-002:2919026] [[47518,0],0] complete_setup on job [47518,1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive update proc state command from [[47518,0],1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive got update_proc_state for job [47518,1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive update proc state command from [[47518,0],2]
+[IN-002:2919026] [[47518,0],0] plm:base:receive got update_proc_state for job [47518,1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive update proc state command from [[47518,0],1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive got update_proc_state for job [47518,1]
+[IN-002:2919026] [[47518,0],0] plm:base:receive update proc state command from [[47518,0],2]
+[IN-002:2919026] [[47518,0],0] plm:base:receive got update_proc_state for job [47518,1]
+[IN-002:2919026] mca: base: close: unloading component tm
+[IN-002:2919026] mca: base: close: component tm closed
+[IN-002:2919026] mca: base: close: unloading component tm

@@ -1,0 +1,41 @@
+run_id=diag-20261103T073541Z-1513781 job=1513781.stdct-mgmt-02 host=IN-002 start=2026-11-03T15:35:41+08:00 source_rev=18c0d249fdd2e62421318aee075113d1e303a7aa
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=tm mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --mca plm tm --mca ras tm -x PATH -x LD_LIBRARY_PATH
+walltime_s=1200 end_reserve_s=60 gate_overhead_s=140 remote_exec=pbs_tmrsh
+head_entry=in-002.stdct.loc pbs_tmrsh=yes
+
+===== gate allocation (critical, limit 90s) 15:35:46: env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/diag-20261103T073541Z-1513781 2 tm
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	in-002: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+	in-005: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UP
+node IN-002 allowed=37,41,43,45,55,57,59,61 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node IN-005 allowed=0,2,6,8,10,12,14,16 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['IN-002', 'IN-005'] head=IN-002 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=tm plm_selected=['tm'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_tm_selected=ok remote_orted_not_sshd=ok
+allocation PASS
+allocation PASS rc=0 secs=3 kind=critical 
+== after allocation 15:35:49
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+STOP: could not verify that gate allocation left no processes of this job on every node
+cleanup FAIL rc=- secs=0 kind=critical after allocation
+
+===== summary 15:35:51
+allocation PASS rc=0 secs=3 kind=critical 
+cleanup FAIL rc=- secs=0 kind=critical after allocation
+verdict required_or_critical=2 not_passed=1 optional: none
+  not passed: cleanup FAIL rc=- secs=0 kind=critical after allocation
+verdict FAIL
+end=2026-11-03T15:35:51+08:00 elapsed_s=10 walltime_s=1200

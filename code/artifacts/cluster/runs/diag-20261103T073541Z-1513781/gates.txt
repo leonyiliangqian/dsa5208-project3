@@ -1,0 +1,2 @@
+allocation PASS rc=0 secs=3 kind=critical 
+cleanup FAIL rc=- secs=0 kind=critical after allocation
