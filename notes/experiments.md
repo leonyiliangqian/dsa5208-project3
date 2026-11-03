@@ -295,3 +295,22 @@ the job, so a failure there is safe but would stop the job again.
 Read-only site checks for Lecture 12, same day: discovery/vanda_lecture12_checks_20261103.txt.
 Plan and proposals: requirements_plan.md.
 
+### OpenMP target solver, local tests, 3 Nov (not a GPU)
+
+`gpu/bh_gpu.cpp`, built with GCC 12 and no offload support, so target regions run on the host and
+transfers do nothing. `make check-gpu` passes, serial and hybrid gates still pass, and
+ASan/UBSan are clean on both backends. Seven broken kernels are all caught by the self-test.
+Evidence: artifacts/local/gpu_validation_linux.json, which records real_gpu_executed=false.
+
+Two findings. GCC 12 returns success under OMP_TARGET_OFFLOAD=MANDATORY with no device, so the
+job relies on --require-device and on nvidia-smi sampling instead. Removing the `j != i` test
+changes no force: a softened self-pair contributes exactly zero, so it is not a usable mutation.
+
+Not shown: that nvc++ accepts the code, that map clauses and transfers are right with separate
+memory, that the traversal stack fits on the device, or any GPU timing.
+
+Diagnostic rehearsal from a clean clone of main (56d3de5), two containers, remote output sent away
+from stdout as pbs_tmrsh does: verdict PASS, all steps reached, 20 of 20 CLEAN reports (d8 skipped,
+no pbs_tmrsh). Evidence: artifacts/local/runs/simulated-diag-tmoutput-20261103-56d3de5. This does
+not reproduce the 1507215 stall and is not a Vanda result.
+

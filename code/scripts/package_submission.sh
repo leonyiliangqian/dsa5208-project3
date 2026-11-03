@@ -7,7 +7,7 @@
 set -euo pipefail
 out=${1:-dsa5208-project3-source.zip}
 cd "$(git rev-parse --show-toplevel)"
-paths=(README.md code/README.md code/Makefile code/common code/serial code/hybrid code/tests
+paths=(README.md code/README.md code/Makefile code/common code/serial code/hybrid code/gpu code/tests
        code/scripts code/manifests code/jobs code/docker)
 bad=$(git ls-files -- "${paths[@]}" | grep -E '(\.log|\.OU|\.ER|\.stdout|\.stderr)$|(^|/)artifacts/' || true)
 if [ -n "$bad" ]; then

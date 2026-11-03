@@ -1,0 +1,162 @@
+{
+ "date_utc": "2026-11-03T08:05:43+00:00",
+ "mode": "no device: target regions ran on the host; says nothing about a GPU",
+ "real_gpu_executed": false,
+ "cxx": "g++",
+ "cxxflags": "-O3 -std=c++17 -Wall -Wextra -march=native -fopenmp",
+ "device_probe": {
+  "num_devices": 0,
+  "kernel_on_device": 0,
+  "separate_memory": 0
+ },
+ "mandatory_without_device_rc": 0,
+ "source_git_rev": "unknown",
+ "checks": [
+  {
+   "name": "device: probe reports",
+   "ok": true,
+   "detail": "device_check num_devices=0 kernel_on_device=0 separate_memory=0"
+  },
+  {
+   "name": "device: host fallback reported, not a device",
+   "ok": true,
+   "detail": "{'num_devices': 0, 'kernel_on_device': 0, 'separate_memory': 0}"
+  },
+  {
+   "name": "device: --require-device refuses (exit 7)",
+   "ok": true,
+   "detail": "rc=7"
+  },
+  {
+   "name": "self-test device",
+   "ok": true,
+   "detail": "58 cases"
+  },
+  {
+   "name": "self-test cpu",
+   "ok": true,
+   "detail": "58 cases"
+  },
+  {
+   "name": "validate device theta=0.0 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=4.772e-14 host_tree_max_rel_err_vs_direct=4.772e-14 PASS"
+  },
+  {
+   "name": "validate device theta=0.5 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS"
+  },
+  {
+   "name": "validate device theta=0.5 leaf=1",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS"
+  },
+  {
+   "name": "validate device theta=0.9 leaf=16",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.0 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=4.772e-14 host_tree_max_rel_err_vs_direct=4.772e-14 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.5 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.5 leaf=1",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.9 leaf=16",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0 bitwise_identical=20000 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS"
+  },
+  {
+   "name": "trajectory device against serial",
+   "ok": true,
+   "detail": "worst relative difference 0.000e+00, limit 1e-10"
+  },
+  {
+   "name": "record device states where the kernel ran",
+   "ok": true,
+   "detail": "kernel_on_device=False"
+  },
+  {
+   "name": "trajectory cpu against serial",
+   "ok": true,
+   "detail": "worst relative difference 0.000e+00, limit 1e-10"
+  },
+  {
+   "name": "record cpu states where the kernel ran",
+   "ok": true,
+   "detail": "kernel_on_device=False"
+  },
+  {
+   "name": "rejects --n 0",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --theta -1",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --backend fpga",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --bogus",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --leaf-size 0",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "mutation caught: monopole softening dropped",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: cell holding the target not forced open",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: acceptance test reversed",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: last child never visited",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: softening dropped from leaf sum",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: leaf range one short",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  },
+  {
+   "name": "mutation caught: tree order used as slot",
+   "ok": true,
+   "detail": "device=True cpu=True"
+  }
+ ],
+ "failed": []
+}

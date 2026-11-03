@@ -18,7 +18,7 @@ EVIDENCE ?= artifacts/local
 
 .DEFAULT_GOAL := all
 
-.PHONY: help all hybrid clean check check-hybrid preflight sanitize toolchain placement internode
+.PHONY: help all hybrid gpu check-gpu clean check check-hybrid preflight sanitize toolchain placement internode
 
 help:       ## Show this help
 	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
@@ -32,6 +32,17 @@ hybrid: $(BIN)/bh_hybrid  ## Build the MPI+OpenMP solver (needs mpicxx)
 
 $(BIN)/bh_hybrid: hybrid/bh_hybrid.cpp common/nbody.hpp common/run_support.hpp | $(BIN)
 	$(MPICXX) $(CXXFLAGS) $(OMPFLAGS) $(MPIDEFS) $(BUILDDEF) -o $@ $<
+
+# OpenMP target solver. Without offload support the compiler runs target regions on
+# the host, so check-gpu tests logic only. On NVHPC: GPU_CXX=nvc++ GPU_OMPFLAGS=-mp=gpu.
+GPU_CXX ?= $(CXX)
+GPU_OMPFLAGS ?= $(OMPFLAGS)
+GPU_GATE_ARGS ?= --expect-no-device
+
+gpu: $(BIN)/bh_gpu  ## Build the OpenMP target solver
+
+$(BIN)/bh_gpu: gpu/bh_gpu.cpp common/nbody.hpp common/run_support.hpp | $(BIN)
+	$(GPU_CXX) $(CXXFLAGS) $(GPU_OMPFLAGS) $(BUILDDEF) -o $@ $<
 
 $(BIN):
 	mkdir -p $(BIN)
@@ -101,6 +112,11 @@ check-hybrid: $(BIN)/bh_serial $(BIN)/bh_hybrid  ## Hybrid gate: serial vs MPI+O
 	$(PYTHON) tests/validate_hybrid.py --serial $(BIN)/bh_serial --hybrid $(BIN)/bh_hybrid \
 	    --mpirun $(MPIRUN) --mpirun-flags "$(MPIRUN_FLAGS)" \
 	    --out $(EVIDENCE)/hybrid_validation_$(notdir $(BIN)).json $(HYBRID_GATE_ARGS)
+
+check-gpu: $(BIN)/bh_serial $(BIN)/bh_gpu  ## GPU solver gate (add GPU_GATE_ARGS=--expect-device on a GPU node)
+	$(PYTHON) tests/validate_gpu.py --serial $(BIN)/bh_serial --gpu $(BIN)/bh_gpu \
+	    --source gpu/bh_gpu.cpp --cxx "$(GPU_CXX)" --cxxflags "$(CXXFLAGS) $(GPU_OMPFLAGS)" \
+	    --out $(EVIDENCE)/gpu_validation_$(notdir $(BIN)).json $(GPU_GATE_ARGS)
 
 preflight:  ## Record the local tool inventory
 	$(PYTHON) scripts/preflight.py

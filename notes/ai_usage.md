@@ -30,3 +30,9 @@ content and quality of the submitted work.
 
 Use the policy links in the assignment; do not claim this log itself establishes
 compliance. Cite external algorithms, code and text actually used.
+
+## 3 November 2026
+
+Claude (Opus 5.5) diagnosed the failure of job 1513781, wrote the remote-report fix, revised the plan
+for Lecture 12, and wrote the OpenMP target solver, its tests and job scripts, with Leon directing
+scope and approving cluster use. The GPU code has not run on a GPU.
