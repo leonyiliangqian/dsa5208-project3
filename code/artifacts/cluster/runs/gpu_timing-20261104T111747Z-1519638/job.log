@@ -1,0 +1,99 @@
+run_id=gpu_timing-20261104T111747Z-1519638 job=1519638.stdct-mgmt-02 host=GN-A40-004 start=2026-11-04T19:17:47+08:00 source_rev=8a50c8f754f716aad91f81343f7eeb6d950a4cf6
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading nvhpc-hpcx-cuda12/26.1
+  Loading requirement: hpcx
+manifest=manifests/gpu_timing.json manifest_status=frozen 2026-11-04 sizes from GPU job 1514775; fixed before any CPU-backend timing on Vanda sha256=36b00fe2c12ea2bb30c655fffe8080433079a90f3f58413eb6ba3b56d94c7822
+
+===== gate build (critical, limit 300s) 19:17:52: make BIN=bin/vanda-1519638 CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS=-O3 -std=c++17 GPU_OMPFLAGS=-mp=gpu -Minfo=mp bin/vanda-1519638/bh_gpu
+(anonymous namespace)::ForceEvaluator::~ForceEvaluator():
+         305, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    212, Generating target exit data map(delete: acc[:n3],slot[:n],pos[:n3],mass[:n],order[:n]) finalize
+(anonymous namespace)::ForceEvaluator::evaluate(nbody::Octree const&, double, (anonymous namespace)::Timers&):
+    233, #omp parallel
+    249, #omp target teams distribute parallel for
+        249, Generating "nvkernel__ZN38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef14ForceEvaluator8evaluateERKN5nbody6OctreeEdRNS_6TimersE_F1L249_3" GPU kernel
+        252, Loop parallelized across teams and threads(128), schedule(static)
+(anonymous namespace)::ForceEvaluator::reserve_nodes(unsigned long):
+         305, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    298, Generating target enter data map(create: nodes[:cap])
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::probe_device():
+    126, #omp target
+        126, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_6890abef38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef12probe_deviceEv_F1L126_7" GPU kernel
+    132, #omp target
+        132, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_6890abef38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef12probe_deviceEv_F1L132_9" GPU kernel
+    132, Generating map(alloc:value) 
+         Generating target enter data map(to: value)
+    133, Generating target exit data map(delete: value) finalize
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::probe_team():
+    148, #omp parallel
+        149, Begin single region
+             End single region
+             Barrier
+        153, Barrier
+(anonymous namespace)::ForceEvaluator::release_nodes():
+    305, Generating target exit data map(delete: nodes[:cap]) finalize
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::traverse_one(int, _INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::DevNode const*, int const*, int, double const*, double const*, double, double, double*):
+     65, Generating implicit omp declare target routine
+         Generating NVIDIA GPU code
+build PASS rc=0 secs=9 kind=critical 
+
+===== gate device (critical, limit 60s) 19:18:01: env OMP_TARGET_OFFLOAD=MANDATORY bin/vanda-1519638/bh_gpu --require-device --device-check
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+device PASS rc=0 secs=1 kind=critical 
+
+===== gate gpu_busy (required, limit 200s) 19:18:02: bash jobs/vanda/gpu_busy.sh artifacts/cluster/runs/gpu_timing-20261104T111747Z-1519638 bin/vanda-1519638/bh_gpu
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+result {"program":"bh_gpu","backend":"device","kernel_on_device":true,"separate_memory":true,"num_devices":1,"n":1000000,"theta":0.5,"dt":0.001,"steps":5,"warmup":0,"leaf_size":8,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":36,"threads_effective":36,"distinct_cpus":36,"proc_bind":"false","schedule_effective":"static","chunk_effective":0,"hosts":["GN-A40-004"],"nodes":415544,"setup_s":2.123400,"wall_s":5.994347,"integrate_s":0.035970,"exchange_s":0,"build_s":0.605865,"traverse_s":5.256973,"flatten_s":0.057726,"map_nodes_s":0.000001,"to_device_s":0.029519,"from_device_s":0.008283,"peak_rss_mib_rank_max":324.1,"peak_rss_mib_rank_sum":324.1,"compiler":"EDG g++ 11.2.1 mode","cxxflags":"-O3 -std=c++17"}
+run_rc=0 samples=8 peak_gpu_utilisation=100
+gpu_busy PASS rc=0 secs=9 kind=required 
+
+===== gate runs (required, limit 3434s) 19:18:12: python3 scripts/run_manifest.py manifests/gpu_timing.json --out artifacts/cluster/runs/gpu_timing-20261104T111747Z-1519638 --bin bin/vanda-1519638 --cores-per-node 36 --deadline 1793794325
+gpu_timing_gpu_device_t36_n100000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.639954
+gpu_timing_gpu_cpu_t36_n100000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.375519
+gpu_timing_gpu_device_t36_n300000_th0p5_L8_rep1: exit=0 ok=True wall_s=1.632676
+gpu_timing_gpu_cpu_t36_n300000_th0p5_L8_rep1: exit=0 ok=True wall_s=1.18639
+gpu_timing_gpu_device_t36_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=6.022091
+gpu_timing_gpu_cpu_t36_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=3.78663
+gpu_timing_gpu_device_t36_n3000000_th0p5_L8_rep1: exit=0 ok=True wall_s=19.865663
+gpu_timing_gpu_cpu_t36_n3000000_th0p5_L8_rep1: exit=0 ok=True wall_s=14.622423
+gpu_timing_gpu_device_t36_n100000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.615002
+gpu_timing_gpu_cpu_t36_n100000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.282713
+gpu_timing_gpu_device_t36_n300000_th0p5_L8_rep2: exit=0 ok=True wall_s=1.63119
+gpu_timing_gpu_cpu_t36_n300000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.968797
+gpu_timing_gpu_device_t36_n1000000_th0p5_L8_rep2: exit=0 ok=True wall_s=6.018947
+gpu_timing_gpu_cpu_t36_n1000000_th0p5_L8_rep2: exit=0 ok=True wall_s=3.768317
+gpu_timing_gpu_device_t36_n3000000_th0p5_L8_rep2: exit=0 ok=True wall_s=19.874773
+gpu_timing_gpu_cpu_t36_n3000000_th0p5_L8_rep2: exit=0 ok=True wall_s=14.611541
+gpu_timing_gpu_device_t36_n100000_th0p5_L8_rep3: exit=0 ok=True wall_s=0.615349
+gpu_timing_gpu_cpu_t36_n100000_th0p5_L8_rep3: exit=0 ok=True wall_s=0.283129
+gpu_timing_gpu_device_t36_n300000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.634557
+gpu_timing_gpu_cpu_t36_n300000_th0p5_L8_rep3: exit=0 ok=True wall_s=0.987805
+gpu_timing_gpu_device_t36_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=6.019105
+gpu_timing_gpu_cpu_t36_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=3.744247
+gpu_timing_gpu_device_t36_n3000000_th0p5_L8_rep3: exit=0 ok=True wall_s=19.864427
+gpu_timing_gpu_cpu_t36_n3000000_th0p5_L8_rep3: exit=0 ok=True wall_s=14.637811
+manifest gpu-timing-v1 (frozen 2026-11-04 sizes from GPU job 1514775; fixed before any CPU-backend timing on Vanda) sha256=36b00fe2c12e runs=24 worst_case_s=2880 scale=1
+runs PASS rc=0 secs=240 kind=required limit cut from 99999s to 3434s (worst-case overhead 81s) to fit the walltime
+
+===== gate analyze (required, limit 120s) 19:22:12: python3 scripts/analyze.py artifacts/cluster/runs/gpu_timing-20261104T111747Z-1519638
+gpu_timing-20261104T111747Z-1519638: 24 records, 0 failed, 8 configurations
+  bh_gpu    cpu n=100000 1x36 P=36 -/0 reps=3 wall_med=0.2831s [0.2827,0.3755]
+  bh_gpu    device n=100000 1x36 P=36 -/0 reps=3 wall_med=0.6153s [0.6150,0.6400] cpu/device=0.46
+  bh_gpu    cpu n=300000 1x36 P=36 -/0 reps=3 wall_med=0.9878s [0.9688,1.1864]
+  bh_gpu    device n=300000 1x36 P=36 -/0 reps=3 wall_med=1.6327s [1.6312,1.6346] cpu/device=0.61
+  bh_gpu    cpu n=1000000 1x36 P=36 -/0 reps=3 wall_med=3.7683s [3.7442,3.7866]
+  bh_gpu    device n=1000000 1x36 P=36 -/0 reps=3 wall_med=6.0191s [6.0189,6.0221] cpu/device=0.63
+  bh_gpu    cpu n=3000000 1x36 P=36 -/0 reps=3 wall_med=14.6224s [14.6115,14.6378]
+  bh_gpu    device n=3000000 1x36 P=36 -/0 reps=3 wall_med=19.8657s [19.8644,19.8748] cpu/device=0.74
+analyze PASS rc=0 secs=1 kind=required 
+
+===== summary 19:22:13
+build PASS rc=0 secs=9 kind=critical 
+device PASS rc=0 secs=1 kind=critical 
+gpu_busy PASS rc=0 secs=9 kind=required 
+runs PASS rc=0 secs=240 kind=required limit cut from 99999s to 3434s (worst-case overhead 81s) to fit the walltime
+analyze PASS rc=0 secs=1 kind=required 
+verdict required_or_critical=5 not_passed=0 optional: none
+verdict PASS
+end=2026-11-04T19:22:13+08:00 elapsed_s=266 walltime_s=3600

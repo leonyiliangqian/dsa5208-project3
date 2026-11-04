@@ -58,14 +58,14 @@ Communication analysis: `exchange_s` times the per-step `MPI_Allgatherv`.
 
 `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP `target`. The tree is built on
 the host with the existing `Octree`; the serial and hybrid solvers are unchanged and stay the
-CPU baselines. **G0 and G1 passed on a real A40 (job 1514775).** G2 timing has not run. Local tests used GCC 12
+CPU baselines. **G0 and G1 passed on a real A40 (job 1514775). G2 timing ran in job 1519638.** Local tests used GCC 12
 without offload support, so target regions ran on the host and transfers did nothing.
 
 | Step | What | Why it is meaningful | State |
 |---|---|---|---|
 | G0 | Kernel on a device with separate memory; `--require-device`; `nvidia-smi` sampling during a run | A silent fallback to CPU would make every GPU number false. GCC 12 ignored `OMP_TARGET_OFFLOAD=MANDATORY` with no device, so that variable alone proves nothing | Logic tested locally; needs a GPU |
 | G1 | theta=0 against direct summation; theta>0 against the host tree; closed-form pair; trajectory against `bh_serial`; reused device buffers with a growing tree | Independent references. Limits fixed before any device run: 1e-10, 1e-12, 1e-10 | Pass with host fallback; needs a GPU |
-| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the chunk, same binary, one kernel; flatten, transfer and kernel timed separately | Shows where the GPU wins and what transfers cost | Code and local tests ready (`gpu_timing.pbs`, `manifests/gpu_timing.json`); not run on a GPU |
+| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the chunk, same binary, one kernel; flatten, transfer and kernel timed separately | Shows where the GPU wins and what transfers cost | Done, job 1519638: the GPU was slower at every size (CPU/device 0.46 to 0.74). `manifests/gpu_timing.json` |
 | G3 | Optional: 2 ranks and 2 GPUs on one node, exchanging device buffers | The only step that would exercise CUDA-aware MPI | Not written |
 
 Errors that need separate device memory, such as a missing transfer or a wrong map clause,

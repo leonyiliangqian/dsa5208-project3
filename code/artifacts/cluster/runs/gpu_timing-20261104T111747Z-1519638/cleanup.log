@@ -1,0 +1,10 @@
+== after build 19:18:01
+leftover_check host=GN-A40-004 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after device 19:18:02
+leftover_check host=GN-A40-004 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after gpu_busy 19:18:11
+leftover_check host=GN-A40-004 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after runs 19:22:12
+leftover_check host=GN-A40-004 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after analyze 19:22:13
+leftover_check host=GN-A40-004 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

@@ -1,0 +1,1 @@
+device_check num_devices=1 kernel_on_device=1 separate_memory=1

@@ -1,0 +1,36 @@
+mkdir -p bin/vanda-1519638
+nvc++ -O3 -std=c++17 -mp=gpu -Minfo=mp -DNBODY_CXXFLAGS='"-O3 -std=c++17"' -o bin/vanda-1519638/bh_gpu gpu/bh_gpu.cpp
+(anonymous namespace)::ForceEvaluator::ForceEvaluator(nbody::Particles&, (anonymous namespace)::Backend):
+    201, Generating target enter data map(create: acc[:n3],slot[:n],pos[:n3])
+         Generating target enter data map(to: mass[:n])
+         Generating target enter data map(create: order[:n])
+(anonymous namespace)::ForceEvaluator::~ForceEvaluator():
+         305, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    212, Generating target exit data map(delete: acc[:n3],slot[:n],pos[:n3],mass[:n],order[:n]) finalize
+(anonymous namespace)::ForceEvaluator::evaluate(nbody::Octree const&, double, (anonymous namespace)::Timers&):
+    233, #omp parallel
+    249, #omp target teams distribute parallel for
+        249, Generating "nvkernel__ZN38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef14ForceEvaluator8evaluateERKN5nbody6OctreeEdRNS_6TimersE_F1L249_3" GPU kernel
+        252, Loop parallelized across teams and threads(128), schedule(static)
+(anonymous namespace)::ForceEvaluator::reserve_nodes(unsigned long):
+         305, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    298, Generating target enter data map(create: nodes[:cap])
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::probe_device():
+    126, #omp target
+        126, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_6890abef38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef12probe_deviceEv_F1L126_7" GPU kernel
+    132, #omp target
+        132, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_6890abef38_GLOBAL__N__14_gpu_bh_gpu_cpp_6890abef12probe_deviceEv_F1L132_9" GPU kernel
+    132, Generating map(alloc:value) 
+         Generating target enter data map(to: value)
+    133, Generating target exit data map(delete: value) finalize
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::probe_team():
+    148, #omp parallel
+        149, Begin single region
+             End single region
+             Barrier
+        153, Barrier
+(anonymous namespace)::ForceEvaluator::release_nodes():
+    305, Generating target exit data map(delete: nodes[:cap]) finalize
+_INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::traverse_one(int, _INTERNAL_14_gpu_bh_gpu_cpp_6890abef::(anonymous namespace)::DevNode const*, int const*, int, double const*, double const*, double, double, double*):
+     65, Generating implicit omp declare target routine
+         Generating NVIDIA GPU code

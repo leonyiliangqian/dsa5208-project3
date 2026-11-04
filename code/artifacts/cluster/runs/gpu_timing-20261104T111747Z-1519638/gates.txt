@@ -1,0 +1,5 @@
+build PASS rc=0 secs=9 kind=critical 
+device PASS rc=0 secs=1 kind=critical 
+gpu_busy PASS rc=0 secs=9 kind=required 
+runs PASS rc=0 secs=240 kind=required limit cut from 99999s to 3434s (worst-case overhead 81s) to fit the walltime
+analyze PASS rc=0 secs=1 kind=required 

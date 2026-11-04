@@ -22,18 +22,20 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Stale JSON label:** that run's validation JSON says `kind: local development validation`. It ran on Vanda.
   The files stay unchanged; validators now record `execution_context`. Do not edit the originals.
 - **GPU validated on real hardware, job 1514775 (commit fa9da68):** NVIDIA A40, 4 of 4 gates, 23 of 23 checks.
-  Program, driver (`nvidia-smi` 100%, process listed) and mandatory offload agree. No GPU timing yet; the force
+  Program, driver (`nvidia-smi` 100%, process listed) and mandatory offload agree. The force
   traversal only is offloaded; fault-injection checks did not run on the GPU.
 - **Pilot 1514774 measured nothing.** Exit 1 after 1 s: a relative `source` ran before the `cd`, since PBS starts in
   $HOME. 0 of 20 planned runs started, so there is **no sizing data**. Fixed locally in pilot, bench1, bench2 and
   bench4 and tested in Docker, not on Vanda. The rerun needs a new approval.
-- **G2 GPU timing:** code and local tests ready (`jobs/vanda/gpu_timing.pbs`), refuses device fallback. Never run on
-  a GPU. Still no GPU timing.
+- **G2 GPU timing measured, job 1519638 (commit 8a50c8f):** NVIDIA A40 on GN-A40-004, 5 of 5 gates, 24 of 24 runs valid.
+  **The GPU was slower than the 36 CPU cores at every size:** CPU/device 0.46, 0.61, 0.63 and 0.74 for N = 1e5, 3e5, 1e6
+  and 3e6. The kernel is at least 97% of the gap; mapping and transfers are under 1% of device wall time. One job, one
+  node, three repetitions. Cause not investigated. See `notes/experiments.md`.
+- **Pilot v2 1519637 still queued** (22:50 SGT, 4 Nov; PBS: insufficient `node_pool`). No sizing data yet.
 - **Pilot order risk:** `pilot_single_node.json` can skip every 64-core case if its serial cases run slow; `..._v2.json`
   has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
-- **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
-- **Ready to submit once approved:** clean clone `~/dsa5208-p3-8a50c8f`, pilot v2 and GPU timing dry runs done on Vanda, 4 Nov.
+- **Approvals:** both requests in [notes/approval_requests.md](notes/approval_requests.md) are used. None is open.
 
 ## Open before submission (13 Nov 23:59 SGT)
 
@@ -42,7 +44,7 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 | **256-core MPI scaling, 10 points** | Not measured. The free queue stops at 160 CPUs per job and per user. `batch_cpu` fits but is charged at rate 1 (`bench4`, about 128 core-hours requested for its pilot alone). Balance last read 29 Oct. No charged job is approved. | Leon: `amgr login`, charge decision or lecturer exception |
 | **Source submission** | Lecture 12 asks for code, Canvas lists PDF only; how to hand in source is unconfirmed, and the report has a pending marker. `code/scripts/package_submission.sh` builds the source zip. Nothing has been sent. | Leon: ask the lecturer |
 | **AI declaration** | Draft in `report/main.tex`, record in `notes/ai_usage.md`. Needs group review; provenance of the earlier serial code is unconfirmed; Codex's role in November needs confirming. | Group |
-| Report results | Pilot, GPU timing and formal runs have not run; figures stay pending. | After approvals |
+| Report results | GPU timing is in the report. Pilot is queued and formal runs have not run, so their figures stay pending. | After pilot, then approvals |
 | Group details | Membership and student IDs in `report/main.tex`. | Group |
 
 ## The short version
@@ -86,6 +88,7 @@ presented as a cluster result.
 | Two hosts, exact 8-CPU cpusets, PBS tm launching, MPI data exchange between nodes (2 and 16 ranks) | `code/artifacts/cluster/runs/twonode-20261029T071525Z-1507215/` | **Vanda** (job then stalled) |
 | Two-node hybrid = serial, exact, 22 cases (17 across both hosts), **unbound**; 8 bound placement probes and one bound smoke run, not compared with serial | `code/artifacts/cluster/runs/twonode-20261103T102750Z-1514458/` | **Vanda**, IN-002 + IN-005 |
 | Real GPU execution and device correctness; no timing | `code/artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775/` | **Vanda**, GN-A40-005 |
+| GPU timing against 36 CPU cores, N = 1e5 to 3e6, 3 repetitions | `code/artifacts/cluster/runs/gpu_timing-20261104T111747Z-1519638/` | **Vanda**, GN-A40-004 |
 | Mixed CPU models in the free pool (Platinum 8452Y and Gold 6438N) | `code/artifacts/cluster/runs/twonode-20261029T053005Z-1506687/` | **Vanda** (job stopped by design) |
 | Zero charge (balance 10000.0 after jobs 1503779 and 1506687; later jobs not re-checked, queue rate 0 at submission) | `code/artifacts/cluster/discovery/` | **Vanda** |
 | Energy behaviour vs dt and theta; leaf-size and binding observations; mutation check | `code/artifacts/local/` | local only |
@@ -141,6 +144,9 @@ python3 scripts/report_figures.py artifacts/cluster/analysis/formal/summary.json
 # writes report/generated/fig_*.tex and tab_*.tex; the Results slots pick them up
 ```
 
+Pass every summary in one command, including `artifacts/cluster/runs/gpu_timing-20261104T111747Z-1519638/summary.json`.
+`tab_failed_runs.tex` lists only its inputs, so it was left out while the GPU job was the only input.
+
 `report_figures.py` refuses anything outside `artifacts/cluster/` for the report.
 
 ## Report: what is written and what is pending
@@ -180,7 +186,7 @@ From a fresh clone of commit `fc338c5` (tracked tree clean):
 | `tests/jobs/gates_selftest.sh` on two simulated nodes | 42/42 PASS |
 | Simulated `twonode`, `diag`, `correctness`, `bench2` jobs | verdict PASS (diag: optional d8 SKIP, no pbs_tmrsh locally) |
 | Simulated `pilot` job (local test manifest) | runs gate FAIL only because the test manifest contains a deliberate 3 s timeout probe |
-| Report: pdfLaTeX `-shell-escape` + biber in `code/docker/tex` | compiles, 5 pages, no errors, undefined references or overfull boxes (the 5.5 pt overflow in `generated/hybrid_table.tex` was fixed on 30 Oct by narrower column spacing in `report_tables.py`; regenerated from Vanda job 1503779, numbers unchanged) |
+| Report: pdfLaTeX `-shell-escape` + biber in `code/docker/tex` | compiles, 6 pages with the GPU timing, no errors, undefined references or overfull boxes (the 5.5 pt overflow in `generated/hybrid_table.tex` was fixed on 30 Oct by narrower column spacing in `report_tables.py`; regenerated from Vanda job 1503779, numbers unchanged) |
 
 Evidence: `code/artifacts/local/runs/*-20261030T092*` (each records commit
 `fc338c5`). These are simulations and tests, never measurements.

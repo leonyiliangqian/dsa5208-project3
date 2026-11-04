@@ -501,3 +501,34 @@ Checks: gpu_timing_e2e 43/43, check-gpu 29/29, pipeline_e2e 42/42, pbs_entry_tes
 files, no logs, evidence, binaries or credentials found by name or content scan; the extracted package builds and passes
 its serial, hybrid, GPU, context, G2 and entry tests. None of this ran under nvc++: the new probe code is unbuilt there.
 
+
+### G2 GPU timing, job 1519638, 4 Nov (Vanda)
+
+Queued 19:10, started 19:17:47, finished 19:22:16 SGT, exit 0, walltime 4 min 26 s, `gpu` queue, GN-A40-004, charge rate 0.
+Commit 8a50c8f, manifest `gpu-timing-v1` frozen before this run, 24 of 24 runs. Gates: build, device, gpu_busy, runs and
+analyze passed; cleanup clean. 88 files retrieved, each matching its Vanda checksum.
+
+First build of the G2 probes under nvc++. Rechecked from the raw records after retrieval with `gpu_problems`, ignoring
+stored `ok`: 0 problems. All 12 device runs report the kernel on a device with separate memory, with
+OMP_TARGET_OFFLOAD=MANDATORY and --require-device. All 24 report 36 threads on 36 distinct CPUs, `close`, dynamic,64.
+One binary, host, CPU model and GPU throughout.
+
+| N | device wall s | cpu wall s | cpu/device | device kernel s | cpu kernel s | device map+transfers s |
+|---|---|---|---|---|---|---|
+| 1e5 | 0.615 | 0.283 | 0.46 | 0.560 | 0.231 | 0.004 |
+| 3e5 | 1.633 | 0.988 | 0.61 | 1.442 | 0.807 | 0.011 |
+| 1e6 | 6.019 | 3.768 | 0.63 | 5.255 | 3.059 | 0.040 |
+| 3e6 | 19.866 | 14.622 | 0.74 | 16.834 | 11.714 | 0.121 |
+
+Medians of 3. The GPU was slower at every size. The kernel is at least 97% of the wall-time gap; mapping and transfers are
+under 1% of device wall time. nvc++ reports the device loop as "teams and threads(128), schedule(static)"; the kernel was not tuned
+for the GPU. Why it is slower was not tested, and nothing above 3e6 ran, so the rising ratio does not show a crossover.
+
+Limits:
+- One job, one node, one GPU, 3 repetitions.
+- `gpu_busy` sampled `nvidia-smi` (100%) in its own N=1e6 run before the timed runs, not during them. Those rest on mandatory
+  offload, --require-device and the program's report.
+- Timed on GN-A40-004; correctness (G1) ran on GN-A40-005 from fa9da68. The diff to 8a50c8f touches timers, probes and
+  the result line, not the kernel. G1 was not rerun with this binary.
+- The result field `compiler` reads "EDG g++ 11.2.1 mode", the compiler's GNU compatibility string. `gate_build.log` shows
+  nvc++ built it.

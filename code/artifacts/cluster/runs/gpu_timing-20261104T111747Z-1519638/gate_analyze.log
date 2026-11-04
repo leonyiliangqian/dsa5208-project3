@@ -1,0 +1,9 @@
+gpu_timing-20261104T111747Z-1519638: 24 records, 0 failed, 8 configurations
+  bh_gpu    cpu n=100000 1x36 P=36 -/0 reps=3 wall_med=0.2831s [0.2827,0.3755]
+  bh_gpu    device n=100000 1x36 P=36 -/0 reps=3 wall_med=0.6153s [0.6150,0.6400] cpu/device=0.46
+  bh_gpu    cpu n=300000 1x36 P=36 -/0 reps=3 wall_med=0.9878s [0.9688,1.1864]
+  bh_gpu    device n=300000 1x36 P=36 -/0 reps=3 wall_med=1.6327s [1.6312,1.6346] cpu/device=0.61
+  bh_gpu    cpu n=1000000 1x36 P=36 -/0 reps=3 wall_med=3.7683s [3.7442,3.7866]
+  bh_gpu    device n=1000000 1x36 P=36 -/0 reps=3 wall_med=6.0191s [6.0189,6.0221] cpu/device=0.63
+  bh_gpu    cpu n=3000000 1x36 P=36 -/0 reps=3 wall_med=14.6224s [14.6115,14.6378]
+  bh_gpu    device n=3000000 1x36 P=36 -/0 reps=3 wall_med=19.8657s [19.8644,19.8748] cpu/device=0.74

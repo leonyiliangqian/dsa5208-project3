@@ -1,8 +1,8 @@
 # Approval requests, 4 November 2026
 
-Nothing below has been submitted, and no approval is open. Immediately before any submission, recheck
-`scheduling = True`, queue enabled and started, charge rate 0, current jobs and duplicates. A failure is not retried
-automatically.
+**Both requests below were approved and submitted once on 4 Nov at 19:10 SGT: pilot `1519637` and GPU timing `1519638`.
+No approval is open.** GPU timing finished; the pilot was still queued at 22:50 SGT. A failure is not retried
+automatically: it needs a local fix and a new approval.
 
 **Vanda state, 4 Nov 18:59 SGT:** clean clone `~/dsa5208-p3-8a50c8f` created, commit and tree verified, dry runs printed the
 commands below. Scheduling on, charge rate 0 on `auto_free`, `cpu_parallel` and `gpu`, no current jobs, no duplicates.
