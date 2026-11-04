@@ -220,7 +220,7 @@ Each run writes its own record: exact command, scheduler job ID, nodes, CPU mode
 \pending{interpretation: how communication affects runtime as core count grows.}
 
 \subsection{GPU Test}
-\pending{at least one GPU test is required even with X = OpenMP (Lecture 12). The OpenMP target kernel exists but has not run on a GPU; no GPU validation or measurement exists yet.}
+The GPU program uses the serial tree code on the CPU and offloads only the force traversal, with OpenMP \texttt{target}. A silent fallback to the CPU would make any GPU result false, so the job requires a device: the kernel must report that it ran on a device whose memory is separate from the host's, offload is set to mandatory, and \texttt{nvidia-smi} provides a view from outside the program. Separate memory also matters for correctness, because a missing data transfer cannot show up when the target region runs on the host. \input{generated/gpu_note.tex} The deliberate-fault checks of the validator ran only in local development without a device, not on the GPU. This is one validation job on one GPU and shows correctness, not speed. \pending{GPU timing against the CPU cores of the same allocation: not measured yet.}
 
 \subsection{Accuracy and Cost}
 \resultslot{tab_accuracy_cost}{accuracy against cost table (study 6).}

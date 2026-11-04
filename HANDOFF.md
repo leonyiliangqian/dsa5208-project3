@@ -21,8 +21,12 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   cover 64-core nodes, more than 2 nodes or the charged pool. See `notes/experiments.md`.
 - **Stale JSON label:** that run's validation JSON says `kind: local development validation`. It ran on Vanda.
   The files stay unchanged; validators now record `execution_context`. Do not edit the originals.
-- **GPU:** `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP target (on `main`).
-  **Never compiled by `nvc++` or run on a GPU**; local tests ran on the host only.
+- **GPU validated on real hardware, job 1514775 (commit fa9da68):** NVIDIA A40, 4 of 4 gates, 23 of 23 checks.
+  Program, driver (`nvidia-smi` 100%, process listed) and mandatory offload agree. No GPU timing yet; the force
+  traversal only is offloaded; fault-injection checks did not run on the GPU.
+- **Pilot 1514774 measured nothing.** Exit 1 after 1 s: a relative `source` ran before the `cd`, since PBS starts in
+  $HOME. 0 of 20 planned runs started, so there is **no sizing data**. Fixed locally in pilot, bench1, bench2 and
+  bench4 and tested in Docker, not on Vanda. The rerun needs a new approval.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
 
@@ -66,6 +70,7 @@ presented as a cluster result.
 | Placement: one thread per core, bound, inside the PBS cpuset | same run, `gate_place_*.log` | **Vanda** |
 | Two hosts, exact 8-CPU cpusets, PBS tm launching, MPI data exchange between nodes (2 and 16 ranks) | `code/artifacts/cluster/runs/twonode-20261029T071525Z-1507215/` | **Vanda** (job then stalled) |
 | Two-node hybrid = serial, exact, 22 cases (17 across both hosts), **unbound**; 8 bound placement probes and one bound smoke run, not compared with serial | `code/artifacts/cluster/runs/twonode-20261103T102750Z-1514458/` | **Vanda**, IN-002 + IN-005 |
+| Real GPU execution and device correctness; no timing | `code/artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775/` | **Vanda**, GN-A40-005 |
 | Mixed CPU models in the free pool (Platinum 8452Y and Gold 6438N) | `code/artifacts/cluster/runs/twonode-20261029T053005Z-1506687/` | **Vanda** (job stopped by design) |
 | Zero charge (balance 10000.0 after jobs 1503779 and 1506687; later jobs not re-checked, queue rate 0 at submission) | `code/artifacts/cluster/discovery/` | **Vanda** |
 | Energy behaviour vs dt and theta; leaf-size and binding observations; mutation check | `code/artifacts/local/` | local only |
@@ -79,7 +84,7 @@ generated from the Vanda correctness run by `code/scripts/report_tables.py`.
 1. **Bound two-node comparison against serial.** Not done; job 1514458's comparison was unbound. The tm stall
    from 1507215 and 1514029 is unexplained and avoided by using `pbs_tmrsh`.
 2. **Credit balance after job 1507215.** Needs `amgr login` (Leon's password).
-3. **Single-node pilot** (`pilot.pbs`, 64 cores, 1 h). Not approved yet.
+3. **Single-node pilot** (`pilot.pbs`, 64 cores, 1 h). Job 1514774 failed at entry; rerun needs approval.
 4. **Formal measurements** (strong, ranks x threads, schedule, weak, leaf,
    accuracy–cost). The manifests `code/manifests/studies_*.json` are *proposed*:
    their sizes are placeholders until the pilot. The bench jobs refuse to run

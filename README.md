@@ -20,6 +20,8 @@ membership and student IDs in `report/main.tex` before submission.
   separate placement probes and one bound smoke run, not against serial. One job, and the
   1514029 tm hang is unexplained; multi-node jobs use `pbs_tmrsh`.
   See notes/experiments.md and notes/cluster_access.md.
+- GPU validation job 1514775 ran on a real NVIDIA A40 and passed its device and correctness gates. No GPU timing yet.
+- Pilot job 1514774 failed at entry in 1 s and measured nothing; fixed locally, rerun awaits approval.
 - Measurement pipeline complete and tested locally (manifests, time-limited runs,
   analysis, report figures/tables); no performance measurement exists yet.
 - Report: method, parallel design, correctness (Vanda) and methodology drafted

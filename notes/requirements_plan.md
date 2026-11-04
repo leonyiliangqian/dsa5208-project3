@@ -12,7 +12,7 @@ Deadline stays 13 November 2026, 23:59 SGT until a new date is confirmed.
 | 5 | Explain the algorithm | Report sections on Problem and Method | Drafted |
 | 5 | Serial runtime against N | Study 0, log-log, with fitted slope | Figure code and manifest ready; no measurement |
 | 10 | MPI to at least 256 cores: strong, weak, speedup, efficiency, communication | Studies 1 and 4, MPI-only series, one job | **Blocked**: queue and charge decision; two-node correctness passed on the free pool (job 1514458, comparison unbound) |
-| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready; GPU kernel written, **never run on a GPU** |
+| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready, pilot not yet run; GPU correctness validated on an A40 (job 1514775); no GPU timing |
 | 5 | Overall discussion | After results | Not started |
 
 Also required: define non-standard terms; explain how the Plummer positions and
@@ -58,9 +58,8 @@ Communication analysis: `exchange_s` times the per-step `MPI_Allgatherv`.
 
 `code/gpu/bh_gpu.cpp` offloads the force traversal with OpenMP `target`. The tree is built on
 the host with the existing `Octree`; the serial and hybrid solvers are unchanged and stay the
-CPU baselines. **Real GPU execution is unverified: this code has never been compiled by `nvc++`
-or run on a GPU.** Local tests used GCC 12 without offload support, so target regions ran on the
-host and transfers did nothing.
+CPU baselines. **G0 and G1 passed on a real A40 (job 1514775).** G2 timing has not run. Local tests used GCC 12
+without offload support, so target regions ran on the host and transfers did nothing.
 
 | Step | What | Why it is meaningful | State |
 |---|---|---|---|
@@ -91,8 +90,8 @@ Revisions and exact commands are in [approval_requests.md](approval_requests.md)
 |---|---|---|---|---|
 | 1 | `diag` rerun | Done as job 1514029 | | |
 | 2 | `twonode` correctness | Done: job 1514458 passed | | |
-| 3 | `pilot` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | Ready |
-| 4 | `gpu_validate` (G0 and G1) | 1 GPU, 36 cores, 60 GB, 30 min | `auto_free`, 0 | Ready |
+| 3 | `pilot` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 1514774 failed at entry; rerun needs new approval |
+| 4 | `gpu_validate` (G0 and G1) | Done: job 1514775 passed | | |
 | 5 | 4-node pilot, including a 256-rank hybrid-against-serial comparison | 4 x 64 cores, 30 min, about 128 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 2, balance, charge approval |
 | 6 | `bench4` formal series | 4 x 64 cores, walltime from job 5 | `auto` -> `batch_cpu`, 1 | Manifests frozen, charge approval |
 | 7 | GPU G2 | 1 GPU, 36 cores, walltime from job 4 | `auto_free`, 0 | Job 4 passes, runner support added |

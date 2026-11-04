@@ -100,6 +100,8 @@ showed the default bound the rank to one hardware thread.
 | 29 Oct 13:30 | 1506687.stdct-mgmt-02 | 3c76d5e | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness | Ran 13:30-13:31 on CN-161 + IN-002; Exit_status 5: allocation check stopped the job before compiling (CPU models differ) |
 | 29 Oct 15:15 | 1507215.stdct-mgmt-02 | 494af8b | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness, portable build, forced tm launch | Ran 15:15-15:47 on IN-011 + IN-013; Exit_status -29 (killed at the 30 min walltime). Gates allocation, build, flags, toolchain, internode_2, internode_16 PASS; place_1x8 hung with no output; later gates not run |
 | 3 Nov 18:27 | 1514458.stdct-mgmt-02 | 0b1f36b | 2 x 8 CPUs, 16 GB each, place=scatter, 30 min | auto_free -> cpu_parallel, no -P | Two-node correctness, pbs_tmrsh launch | Ran 18:27-18:31 on IN-002 + IN-005; Exit_status 0; all 17 gates PASS. Hybrid comparison unbound |
+| 3 Nov 19:41 | 1514774.stdct-mgmt-02 | fa9da68 | 1 x 64 CPUs, 120 GB, 60 min | auto_free -> cpu_parallel, no -P | Single-node pilot | Started 20:50 on IN-009; Exit_status 1 after 1 s. Failed at entry; no gate or case ran |
+| 3 Nov 19:41 | 1514775.stdct-mgmt-02 | fa9da68 | 1 GPU, 36 CPUs, 60 GB, 30 min | auto_free -> gpu, no -P | GPU validation | Ran 21:43-21:45 on GN-A40-005; Exit_status 0; 4 of 4 critical and required gates PASS, optional PASS |
 
 Charging basis: site `hpc cpu` instructions present `-q auto_free` without
 `-P` as the alternative to a project; `auto_free`, `cpu_parallel` and
@@ -408,3 +410,41 @@ in schema, and that fix has not run on PBS: a fake PBS environment in Docker is 
 
 Not shown: reliability (one job, one node pair), the cause of the tm hang (tm was not used), more than 2 nodes,
 full 64-core nodes, Platinum 8452Y nodes, or the charged cpu_node pool.
+
+### Pilot job 1514774, 3 Nov 20:50 SGT (one submission, failed at entry)
+
+The whole PBS log is `...SC: line 17: jobs/vanda/measure.sh: No such file or directory`. PBS starts a job in $HOME;
+pilot.pbs sourced that relative path, and the `cd "$PBS_O_WORKDIR"` was inside measure.sh, so it never ran.
+Cause confirmed by the log, and reproduced by tests/jobs/pbs_entry_test.sh. bench1, bench2 and bench4 had the same bug.
+Simulations started in code/, so they could not see it.
+
+**Usable for sizing: 0 of 20 planned runs.** Also 0 failed, 0 timed out and 0 skipped, because none started. No run
+directory, gates, environment or timing exist. Nothing about 64-core behaviour or IN-009 is known. Approval consumed.
+
+Fix, local only: the four wrappers change directory first. pbs_entry_test passes, and fails on a restored copy of
+the bug. In Docker, pilot.pbs started from another directory passed allocation, build, placement and analyze with
+manifests/local_e2e.json; `runs` failed only on that manifest's deliberate 3 s timeout probe. Not run on Vanda.
+
+### GPU validation job 1514775, 3 Nov 21:43 SGT (one submission, real GPU execution)
+
+Commit fa9da68, rate 0, 55 s, GN-A40-005, NVIDIA A40, Platinum 8452Y host, nvc++ 26.1-0, Exit_status 0. Evidence:
+artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775/, logs/1514775.stdct-mgmt-02.OU. All 14 files, with
+the pilot log, byte-identical to Vanda before commit. execution_context=pbs_batch: first real run of that label.
+
+**Real GPU, not host fallback**, from independent records:
+- Program: `num_devices=1 kernel_on_device=1 separate_memory=1`; --require-device and OMP_TARGET_OFFLOAD=MANDATORY accepted.
+- Driver: gpu_samples.csv, 0% then 100% in the last 6 of 8 samples, 521 MiB; gpu_apps.txt lists bh_gpu on the GPU.
+- Compiler: "Generating NVIDIA GPU code" (optional gate, record only).
+- `real_gpu_executed=true`, which means only that --expect-device was set and no check failed, so it does not stand alone.
+- PBS resources_used.ngpus=0 is not evidence either way; exec_vnode shows ngpus=1 allocated.
+
+**Correctness on the device:** 23 of 23 checks. theta=0 against direct 4.986e-14 (limit 1e-10); theta>0 agrees with
+the host tree (agree_worst <= 0.0017 of the allowed 1e-12); device trajectory against serial 9.682e-14 (limit 1e-10);
+self-test 58 cases, including buffers reused as the tree grows.
+
+Not shown: fault detection on the GPU, because mutation checks run only in no-device mode; the separate `cpu` backend
+checks are not device evidence; more than one GPU or job. Tree build and integration stay on the host. The single
+timed run (N=10^6) is not a measurement: no repeats, and no CPU comparison. G2 needs runner support.
+
+The watch for these jobs stopped updating, and I reported 1514775 as queued at about 22:11 when PBS shows it had
+finished at 21:45. `ssh` also outlived a perl alarm by 17 minutes. Status must come from `qstat -xf`, with a hard limit.

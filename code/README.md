@@ -131,6 +131,7 @@ LOCAL PIPELINE TEST.
 
 Tests: `docker/run.sh bash tests/pipeline_e2e.sh` (manifest -> runs -> analysis
 -> figures on tiny inputs, timeout, deadline, interruption and refusal paths);
+`bash tests/jobs/pbs_entry_test.sh` (job scripts started outside code/, as PBS does);
 `docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'` (gate library fault
 injection on two simulated nodes).
 
@@ -149,19 +150,20 @@ after it; kinds are critical, required and optional. Step-by-step:
 | `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node | PASSED as job 1503779 |
 | `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch | PASSED as job 1514458 (comparison unbound; 1506687 and 1507215 did not reach it) |
 | `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
-| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | prepared, NOT approved |
+| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | 1514774 failed at entry and measured nothing; fixed locally; rerun awaits approval |
+| `gpu_validate.pbs` | 1 GPU, 36 cores, 60 GB, 30 min | device, correctness and `nvidia-smi` gates | PASSED as job 1514775, A40; no timing |
 | `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
 
 Results so far: correctness job 1503779 (one node) passed; no performance
 measurement exists.
 
-## OpenMP target solver (GPU not yet verified)
+## OpenMP target solver (validated on an A40, job 1514775; no timing yet)
 
 `gpu/bh_gpu.cpp` offloads the force traversal; the tree is built on the host. `--backend device`
 uses `target`, and `--backend cpu` runs the same kernel on host threads. `--require-device` exits 7
 unless the kernel ran on a device with separate memory. A compiler without offload support runs
-target regions on the host, so `make check-gpu` then tests logic only. It has not been built with
-`nvc++` or run on a GPU; `jobs/vanda/gpu_validate.pbs` is the proposed first test.
+target regions on the host, so `make check-gpu` then tests logic only. `jobs/vanda/gpu_validate.pbs`
+runs it on a device.
 
 ```sh
 docker/run.sh make check-gpu                                   # local, no GPU
