@@ -40,8 +40,9 @@ parser.add_argument("--mpirun-flags", default=os.environ.get("MPIRUN_FLAGS", "--
                     help="extra launcher flags, e.g. binding policy")
 parser.add_argument("--max-cores", type=int, default=os.cpu_count() or 4,
                     help="skip configurations with ranks*threads above this")
-parser.add_argument("--suite", choices=("single", "multinode"), default="single",
-                    help="multinode adds 16-core cases meant to span two nodes")
+parser.add_argument("--suite", choices=("single", "multinode", "bound"), default="single",
+                    help="multinode adds 16-core cases meant to span two nodes; bound replaces the "
+                         "cases with ones using all --max-cores, placed as measurements are")
 parser.add_argument("--expect-hosts", type=int, default=0,
                     help="require multi-rank runs to report exactly min(ranks, this) hosts")
 opts = parser.parse_args()
@@ -58,12 +59,20 @@ def run(cmd, env=None, timeout=300):
         return subprocess.CompletedProcess(cmd, 124, "", f"TIMEOUT after {timeout}s")
 
 
-def hybrid_cmd(ranks, extra):
-    return [opts.mpirun, "-np", str(ranks), *opts.mpirun_flags.split(), hybrid, *extra]
+def hybrid_cmd(ranks, extra, threads=1):
+    flags = opts.mpirun_flags.split()
+    if opts.suite == "bound":
+        # The placement of scripts/run_manifest.py, so the comparison covers what is timed.
+        per_node = math.ceil(ranks / max(opts.expect_hosts, 1))
+        flags += ["--map-by", f"ppr:{per_node}:node:PE={threads}", "--bind-to", "core",
+                  "-x", "OMP_NUM_THREADS", "-x", "OMP_PROC_BIND", "-x", "OMP_PLACES"]
+    return [opts.mpirun, "-np", str(ranks), *flags, hybrid, *extra]
 
 
 def hybrid_env(threads):
     env = dict(os.environ, OMP_NUM_THREADS=str(threads))
+    if opts.suite == "bound":
+        env.update(OMP_PROC_BIND="close", OMP_PLACES="cores")
     # Open MPI forwards the launching environment to local ranks.
     return env
 
@@ -131,7 +140,7 @@ def check(name, n, steps, theta, leaf, ranks, threads, schedule="static", chunk=
     extra = ["--n", str(n), "--steps", str(steps), "--theta", str(theta), "--leaf-size",
              str(leaf), "--seed", "42", "--schedule", schedule, "--chunk", str(chunk),
              "--dump", str(dump)]
-    r = run(hybrid_cmd(ranks, extra), env=hybrid_env(threads))
+    r = run(hybrid_cmd(ranks, extra, threads), env=hybrid_env(threads))
     rec = {"case": name, "n": n, "steps": steps, "theta": theta, "leaf_size": leaf,
            "ranks": ranks, "threads": threads, "schedule": schedule, "chunk": chunk,
            "returncode": r.returncode}
@@ -164,21 +173,34 @@ def check(name, n, steps, theta, leaf, ranks, threads, schedule="static", chunk=
 
 # One-step accelerations, then 10-step trajectories, across rank/thread splits,
 # schedules, uneven division and ranks that own no particles.
-check("1x1_static", 2000, 1, 0.5, 8, 1, 1)
-check("1x4_static", 2000, 1, 0.5, 8, 1, 4)
-check("1x4_dynamic1", 2000, 1, 0.5, 8, 1, 4, "dynamic", 1)
-check("2x1_static", 2000, 1, 0.5, 8, 2, 1)
-check("3x2_dynamic16", 2000, 1, 0.5, 8, 3, 2, "dynamic", 16)
-check("4x2_guided", 2000, 1, 0.5, 8, 4, 2, "guided", 0)
-check("theta0_3x2", 1500, 1, 0.0, 8, 3, 2)
-check("leaf1_2x2", 1500, 1, 0.7, 1, 2, 2)
-check("traj_1x1", 2000, 10, 0.5, 8, 1, 1)
-check("traj_1x4_dynamic", 2000, 10, 0.5, 8, 1, 4, "dynamic", 8)
-check("traj_3x2_static", 2001, 10, 0.5, 8, 3, 2)
-check("traj_4x2_guided", 2003, 10, 0.5, 8, 4, 2, "guided", 0)
-check("uneven_n7_4ranks", 7, 10, 0.5, 2, 4, 1)
-check("zero_owned_n3_5ranks", 3, 10, 0.5, 8, 5, 1)
-check("singleton_3ranks", 1, 5, 0.5, 8, 3, 1)
+if opts.suite == "bound":
+    # Every core of the job, bound as in measurements. Only this suite compares bound runs
+    # with serial; jobs 1503779 and 1514458 compared fewer cores or unbound runs.
+    P = opts.max_cores
+    if P % 8 or not opts.expect_hosts or P % opts.expect_hosts:
+        raise SystemExit(f"FAIL: --suite bound needs --max-cores divisible by 8 and by --expect-hosts, got {P}")
+    check(f"bound_{P}x1_traj", 20011, 10, 0.5, 8, P, 1, "dynamic", 64)
+    check(f"bound_{P // 8}x8_traj", 20011, 10, 0.5, 8, P // 8, 8, "dynamic", 64)
+    check(f"bound_{P // 4}x4_guided", 20003, 10, 0.5, 8, P // 4, 4, "guided", 0)
+    check(f"bound_{P // 8}x8_accel", 20011, 1, 0.5, 8, P // 8, 8)
+    check(f"bound_{P // 8}x8_theta0", 4001, 1, 0.0, 8, P // 8, 8)
+    check(f"bound_{P}x1_zero_owned", 10, 10, 0.5, 8, P, 1)
+else:
+    check("1x1_static", 2000, 1, 0.5, 8, 1, 1)
+    check("1x4_static", 2000, 1, 0.5, 8, 1, 4)
+    check("1x4_dynamic1", 2000, 1, 0.5, 8, 1, 4, "dynamic", 1)
+    check("2x1_static", 2000, 1, 0.5, 8, 2, 1)
+    check("3x2_dynamic16", 2000, 1, 0.5, 8, 3, 2, "dynamic", 16)
+    check("4x2_guided", 2000, 1, 0.5, 8, 4, 2, "guided", 0)
+    check("theta0_3x2", 1500, 1, 0.0, 8, 3, 2)
+    check("leaf1_2x2", 1500, 1, 0.7, 1, 2, 2)
+    check("traj_1x1", 2000, 10, 0.5, 8, 1, 1)
+    check("traj_1x4_dynamic", 2000, 10, 0.5, 8, 1, 4, "dynamic", 8)
+    check("traj_3x2_static", 2001, 10, 0.5, 8, 3, 2)
+    check("traj_4x2_guided", 2003, 10, 0.5, 8, 4, 2, "guided", 0)
+    check("uneven_n7_4ranks", 7, 10, 0.5, 2, 4, 1)
+    check("zero_owned_n3_5ranks", 3, 10, 0.5, 8, 5, 1)
+    check("singleton_3ranks", 1, 5, 0.5, 8, 3, 1)
 
 if opts.suite == "multinode":
     # Up to 16 cores over two nodes. With round-robin mapping (--map-by node),
@@ -197,7 +219,7 @@ repeat_dumps = []
 for k in range(3):
     dump = work / f"repeat_{k}.txt"
     r = run(hybrid_cmd(2, ["--n", "3000", "--steps", "5", "--schedule", "dynamic", "--chunk", "1",
-                           "--dump", str(dump)]), env=hybrid_env(4))
+                           "--dump", str(dump)], 4), env=hybrid_env(4))
     repeat_dumps.append(dump.read_bytes() if r.returncode == 0 and dump.exists() else b"")
 repeat_ok = all(repeat_dumps) and len(set(repeat_dumps)) == 1
 print(f"hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical={repeat_ok} "

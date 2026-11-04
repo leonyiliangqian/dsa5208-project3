@@ -1,0 +1,13 @@
+strong_serial_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.109307
+strong_hybrid_2x1_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.102549
+strong_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.052875
+ranks_threads_hybrid_2x4_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.038058
+weak_hybrid_2x2_2nodes_dynamic64_n2000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.030586
+weak_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.042653
+strong_serial_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.098182
+strong_hybrid_2x1_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.103543
+strong_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.045823
+ranks_threads_hybrid_2x4_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.039693
+weak_hybrid_2x2_2nodes_dynamic64_n2000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.028218
+weak_hybrid_4x2_2nodes_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.038164
+manifest local-sim-twonode-v1 (frozen: local two-container simulation test only, never results) sha256=0b769239ff7c runs=12 worst_case_s=1620 scale=1

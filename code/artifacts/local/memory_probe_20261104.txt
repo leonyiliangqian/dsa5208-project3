@@ -1,0 +1,6 @@
+Local peak memory probe for sizing only. Docker dsa5208-p3-dev:bookworm, 4 Nov 2026, not Vanda, not a timing result.
+OMP_NUM_THREADS=1 mpirun --bind-to none -np R bh_hybrid --n N --steps 1 --warmup 0 --seed 42 --schedule dynamic --chunk 64
+"n":1000000 "ranks":2 "wall_s":40.154139 "exchange_s":0.002307 "build_s":0.490934 "traverse_s":39.653690 "peak_rss_mib_rank_max":153.5 "peak_rss_mib_rank_sum":305.4
+"n":1000000 "ranks":4 "wall_s":22.840362 "exchange_s":0.006235 "build_s":0.599435 "traverse_s":22.229595 "peak_rss_mib_rank_max":153.2 "peak_rss_mib_rank_sum":610.8
+"n":3000000 "ranks":4 "wall_s":87.446733 "exchange_s":0.018758 "build_s":2.282596 "traverse_s":85.132062 "peak_rss_mib_rank_max":426.1 "peak_rss_mib_rank_sum":1703.3
+Fit: 17 MiB + 136.4 MiB per million particles, from the two 4-rank lines.

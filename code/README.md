@@ -9,7 +9,7 @@ C++17 Barnes–Hut gravitational n-body simulation, serial and MPI+OpenMP.
 | `serial/barnes_hut.cpp` | Serial driver (`bh_serial`): speedup denominator, `--self-test`, `--validate` |
 | `hybrid/bh_hybrid.cpp` | MPI+OpenMP driver (`bh_hybrid`); 1 rank = OpenMP only, 1 thread = MPI only |
 | `tests/` | Serial gate, hybrid gate, energy/timestep study, toolchain probes, `pipeline_e2e.sh`, `jobs/gates_selftest.sh` |
-| `scripts/` | `run_case.py` (one recorded, time-limited run), `run_manifest.py` (all runs of a manifest), `analyze.py`, `report_figures.py`, `report_tables.py`, preflight, discovery |
+| `scripts/` | `run_case.py` (one recorded, time-limited run), `run_manifest.py` (all runs of a manifest), `analyze.py`, `report_figures.py`, `report_tables.py`, `plan_budget.py` (checks a manifest against its job request), preflight, discovery |
 | `manifests/` | Machine-readable experiment plans (pilot, proposed formal studies, local test manifests) |
 | `jobs/vanda/` | PBS jobs, gate library, submission wrapper (see below) |
 | `docker/` | Development image and `run.sh`; `twonode/` two-container simulation; `tex/` LaTeX compile test |

@@ -28,6 +28,7 @@ Axes for time, problem size and core count are logarithmic (Lecture 12).
   tab_failed_runs.tex                                every failed, timed-out or skipped run
 """
 import argparse
+import itertools
 import datetime
 import json
 import math
@@ -78,16 +79,22 @@ def label(r):
     return f"{r['ranks']}$\\times${r['threads']}"
 
 
-def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=False, legend="north west"):
+# Distinct marks, so series stay apart in greyscale.
+MARKS = ("*", "square*", "triangle*", "diamond*", "pentagon*")
+
+
+def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=False, legend="north west",
+           log_base_x=2, axis_opts=""):
     lines = ["\\begin{figure}[t]", "\\centering", "\\begin{tikzpicture}",
              "\\begin{axis}[width=0.9\\columnwidth, height=0.65\\columnwidth, "
              f"xlabel={{{xlabel}}}, ylabel={{{ylabel}}}, "
-             + ("xmode=log, log basis x=2, " if logx else "")
+             + (f"xmode=log, log basis x={log_base_x}, " if logx else "")
              + ("ymode=log, " if logy else "")
+             + axis_opts
              + f"legend pos={legend}, legend cell align=left, grid=major, grid style={{gray!25}}]"]
-    for name, pts in series:
+    for (name, pts), mark in zip(series, itertools.cycle(MARKS)):
         coords = " ".join(f"({x:g},{y:.4g})" for x, y in pts)
-        lines.append(f"\\addplot+[mark=*] coordinates {{{coords}}};")
+        lines.append(f"\\addplot+[mark={mark}, thick] coordinates {{{coords}}};")
         lines.append(f"\\addlegendentry{{{esc(name)}}}")
     if ideal:
         coords = " ".join(f"({x:g},{y:g})" for x, y in ideal)
@@ -127,15 +134,18 @@ def strong(rows, w):
         "fig:strong-efficiency", ideal=[(1, 1), (pmax, 1)], legend="south west"))
 
 
-def table(name, w, caption, lab, head, body, cols=None, wide=False):
+def table(name, w, caption, lab, head, body, cols=None, wide=False, colsep=None):
     """Single-column tables are scaled to the column width; wide=True gives a
-    full-width table* (cols then sets the column types, e.g. a p{} column)."""
+    full-width table* (cols then sets the column types, e.g. a p{} column).
+    colsep narrows the gaps, in pt, when a wide table has many columns."""
     env = "table*" if wide else "table"
     cols = cols or "l" + "r" * (len(head) - 1)
     tab = (["\\begin{tabular}{" + cols + "}", "\\toprule", " & ".join(head) + " \\\\", "\\midrule"]
            + [" & ".join(row) + " \\\\" for row in body] + ["\\bottomrule", "\\end{tabular}"])
     if not wide:
         tab = ["\\resizebox{\\columnwidth}{!}{%"] + tab + ["}"]
+    if colsep:
+        tab = [f"\\setlength{{\\tabcolsep}}{{{colsep}pt}}"] + tab
     lines = [f"\\begin{{{env}}}[t]", "\\centering", "\\small", f"\\caption{{{caption}}}",
              f"\\label{{{lab}}}"] + tab + [f"\\end{{{env}}}", ""]
     w.write(name, "\n".join(lines))
@@ -289,6 +299,15 @@ def accuracy(rows, inputs, w):
           "tab:accuracy-cost", ["$\\theta$", "$N$ (error)", "max rel.", "mean rel.", "config", "wall (s)"], body)
 
 
+def fmt_n(n):
+    """Particle count for a reader: 1000000 as 10^6, 3000000 as 3 x 10^6."""
+    e = len(str(int(n))) - 1
+    m = n / 10 ** e
+    if m == 1:
+        return f"$10^{{{e}}}$"
+    return f"${m:g}\\times10^{{{e}}}$" if m == int(m) else f"{n:g}"
+
+
 def gpu_timing(rows, w):
     rs = [r for r in rows if has_study(r, "gpu_timing") and r.get("backend") in ("device", "cpu")]
     paired = sorted((r for r in rs if "gpu_speedup_vs_cpu" in r), key=lambda r: r["n"])
@@ -307,17 +326,23 @@ def gpu_timing(rows, w):
         [(f"device ({gpu})", [(r["n"], r["wall_median_s"]) for r in paired]),
          (f"cpu backend, {r0['threads']} cores", [(r["n"], cpu_of[r["n"]]["wall_median_s"]) for r in paired])],
         "particles $N$", "timed-region wall time (s)",
-        w.caption("Same program and workloads on the device and CPU backends, median of repetitions. " + what),
-        "fig:gpu-runtime", logy=True))
-    body = [[f"{r['n']:g}", fmt_wall(r), fmt_wall(cpu_of[r["n"]]), f"{r['gpu_speedup_vs_cpu']:.2f}",
-             f"{r['traverse_median_s']:.3f}", f"{r['flatten_median_s']:.3f}",
+        w.caption(f"Wall time of the same program on the device and on {r0['threads']} CPU cores, median of repetitions. "
+                  "Settings are in Table~\\ref{tab:gpu}."),
+        "fig:gpu-runtime", logy=True, log_base_x=10, legend="south east",
+        axis_opts="xtick={" + ",".join(f"{r['n']:g}" for r in paired) + "}, xticklabels={"
+                  + ",".join("{" + fmt_n(r["n"]) + "}" for r in paired) + "}, "
+                  "ytick={0.3,1,3,10,30}, log ticks with fixed point, "))
+    body = [[fmt_n(r["n"]), fmt_wall(r), fmt_wall(cpu_of[r["n"]]), f"{r['gpu_speedup_vs_cpu']:.2f}",
+             f"{r['traverse_median_s']:.3f}", f"{cpu_of[r['n']]['traverse_median_s']:.3f}",
+             f"{r['flatten_median_s']:.3f}",
              f"{r['map_nodes_median_s'] + r['to_device_median_s'] + r['from_device_median_s']:.3f}",
              f"{r['reps']}/{r['cpu_reps']}"] for r in paired]
     table("tab_gpu.tex", w,
-          w.caption("Device against CPU backend: wall time, median [min, max] in seconds; ratio of medians; and device-run "
-                    "medians of the kernel, flattening, and node mapping plus both transfers; repetitions on "
-                    "device/cpu. " + what),
-          "tab:gpu", ["$N$", "device (s)", "cpu (s)", "cpu/device", "kernel", "flatten", "map+transfer", "reps"], body)
+          w.caption("Device against CPU backend. Wall time is the median [min, max] in seconds. Below 1, cpu/device means "
+                    "the device took longer. Kernel times are medians for each backend; flatten and map+transfer "
+                    "(node mapping plus both transfers) are device-run medians, in seconds; reps is device/cpu. " + what),
+          "tab:gpu", ["$N$", "device wall", "cpu wall", "cpu/device", "device kernel", "cpu kernel", "flatten",
+                      "map+transfer", "reps"], body, wide=True, colsep=3.5)
 
 
 def failed_runs(failed, w):

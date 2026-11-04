@@ -1,0 +1,6 @@
+simulated-pilot2-20261104: 12 records, 0 failed, 5 configurations
+  bh_hybrid  n=2000 2x2 P=4 dynamic/64 reps=2 wall_med=0.0294s [0.0282,0.0306]
+  bh_hybrid  n=4000 2x1 P=2 dynamic/64 reps=2 wall_med=0.1030s [0.1025,0.1035] speedup=1.01 eff=0.50
+  bh_hybrid  n=4000 2x4 P=8 dynamic/64 reps=2 wall_med=0.0389s [0.0381,0.0397] speedup=2.67 eff=0.33
+  bh_hybrid  n=4000 4x2 P=8 dynamic/64 reps=4 wall_med=0.0442s [0.0382,0.0529] speedup=2.35 eff=0.29
+  bh_serial  n=4000 1x1 P=1 -/0 reps=2 wall_med=0.1037s [0.0982,0.1093]

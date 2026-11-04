@@ -8,6 +8,9 @@
 #   REQUIRE_FROZEN   1 for formal benchmarks: refuse a manifest whose status
 #                    does not start with "frozen" (the pilot runs a proposed one)
 #
+#   SCALE_CHECKS     1 adds, after placement, critical gates that use every core:
+#                    MPI-only placement, data exchange, and bound runs against serial
+#
 # Gates (jobs/vanda/gates.sh): allocation (critical: hosts, exact cpusets and
 # ONE CPU model, since timings are compared only within a model), build
 # (critical, -march=native, which one model makes safe), placement (critical),
@@ -65,6 +68,16 @@ gate allocation 90 critical env ALLOC_EXPECT_NODES="$EXPECT_NODES" ALLOC_CPUS_PE
 gate build     300 critical make BIN="$BIN" all hybrid
 gate placement  90 critical make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES="$EXPECT_NODES" \
     PLACE_R="$PR" PLACE_T="$PT"
+if [ "${SCALE_CHECKS:-0}" = 1 ]; then
+    ALL_CORES=$(( EXPECT_NODES * CPUS_PER_NODE ))
+    gate place_mpi  180 critical make BIN="$BIN" MPIRUN="$MPI" placement PLACE_NODES="$EXPECT_NODES" \
+        PLACE_R="$CPUS_PER_NODE" PLACE_T=1
+    gate internode  180 critical make BIN="$BIN" MPIRUN="$MPI" internode INTERNODE_NP="$ALL_CORES" \
+        INTERNODE_HOSTS="$EXPECT_NODES"
+    gate serial     240 critical make BIN="$BIN" EVIDENCE="$OUT" check
+    gate bound_vs_serial 480 critical make BIN="$BIN" EVIDENCE="$OUT" check-hybrid MPIRUN=mpirun \
+        MPIRUN_FLAGS="${MPI#mpirun }" HYBRID_GATE_ARGS="--max-cores $ALL_CORES --suite bound --expect-hosts $EXPECT_NODES"
+fi
 # The runner gets a deadline that leaves this gate's worst-case overhead and
 # the analysis gate; the gate's own limit is then cut to the same budget.
 DEADLINE=$(( JOB_START_S + WALLTIME_S - END_RESERVE_S - $(gate_overhead_s) - 120 - $(gate_overhead_s) ))

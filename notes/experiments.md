@@ -532,3 +532,22 @@ Limits:
   the result line, not the kernel. G1 was not rerun with this binary.
 - The result field `compiler` reads "EDG g++ 11.2.1 mode", the compiler's GNU compatibility string. `gate_build.log` shows
   nvc++ built it.
+
+### Preparation for 256 cores, 4 Nov (local only, no job)
+
+Pilot 1519637 still queued at 23:13 SGT (`Insufficient amount of resource: node_pool`); one status check, nothing changed.
+
+Added `pilot2.pbs` (free rehearsal), `pilot4.pbs`, their manifests, `scripts/plan_budget.py` and a `bound` suite in
+`validate_hybrid.py`, run through new critical gates in `measure.sh` (`SCALE_CHECKS=1`). `bench4` manifest is now v1 with provisional limits.
+Plan: [plan_256core.md](plan_256core.md). The running pilot uses clone 8a50c8f, so these changes do not affect it.
+
+GPU table now spans the page, without scaling, and has the CPU kernel time; the figure has base-10 labels, distinct marks and a legend clear of
+the data. Report compiles at 6 pages with no overfull box; pages 5 and 6 inspected as images.
+
+Memory probe: `artifacts/local/memory_probe_20261104.txt`, local Docker, 17 MiB + 136.4 MiB per million particles per rank.
+
+Checks: plan_budget_test 8 of 8, including 4 refusal checks; pbs_entry_test; gpu_timing_e2e 43/43; pipeline_e2e 42/42;
+default check-hybrid; `--suite bound` refuses a core count it cannot place. `pilot2.pbs` ran end to end on two simulated nodes
+(`artifacts/local/runs/simulated-pilot2-20261104/`, ssh, 8 cores each, tiny sizes): 9 of 9 gates, 6 of 6 bound cases exact against serial.
+Not shown: `pbs_tmrsh` at 64 ranks per node, more than two nodes, `cpu_node` nodes, or any timing or memory on Vanda.
+Dry runs of `submit.sh` printed the `qsub` lines for pilot2, pilot4 and bench4 locally, with no `qsub` on this machine and nothing sent.

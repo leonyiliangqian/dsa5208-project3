@@ -1,18 +1,18 @@
 {
-  "id": "studies-four-node-v0",
-  "status": "proposed: N, steps and timeouts are placeholders until the pilots; needs a queue that allows 256 CPUs (cpu_parallel caps a job at 160), an approved allocation, and two-node correctness",
-  "description": "Whole MPI and MPI+OpenMP series from 1 to 256 cores inside one 4-node job, so every point shares one CPU model, allocation and build. Each N is a placeholder.",
+  "id": "studies-four-node-v1",
+  "status": "proposed: N, steps and limits are provisional until pilot_four_node has run on batch_cpu; needs an approved charge or exception; freeze before bench4",
+  "description": "Graded strong and weak MPI and MPI+OpenMP series from 1 to 256 cores inside one 4-node job, so every point shares one CPU model, allocation and build, with its serial baseline. Each limit is at least twice a provisional estimate, 30 s at least on one node and 60 s across nodes, (scripts/plan_budget.py).",
   "defaults": {
     "theta": 0.5,
     "leaf_size": 8,
-    "steps": 5,
+    "steps": 3,
     "warmup": 1,
     "seed": 42,
     "schedule": "dynamic",
     "chunk": 64,
     "nodes": 4,
     "reps": 3,
-    "timeout_s": 900,
+    "timeout_s": 30,
     "n": 1000000
   },
   "cases": [
@@ -20,35 +20,39 @@
       "study": "strong",
       "program": "serial",
       "nodes": 1,
-      "timeout_s": 1800
+      "timeout_s": 290
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 1,
       "threads": 1,
-      "nodes": 1
+      "nodes": 1,
+      "timeout_s": 290
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 2,
       "threads": 1,
-      "nodes": 1
+      "nodes": 1,
+      "timeout_s": 150
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 4,
       "threads": 1,
-      "nodes": 1
+      "nodes": 1,
+      "timeout_s": 80
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 8,
       "threads": 1,
-      "nodes": 1
+      "nodes": 1,
+      "timeout_s": 50
     },
     {
       "study": "strong",
@@ -76,21 +80,24 @@
       "program": "hybrid",
       "ranks": 128,
       "threads": 1,
-      "nodes": 2
+      "nodes": 2,
+      "timeout_s": 60
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 256,
       "threads": 1,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 1,
       "threads": 8,
-      "nodes": 1
+      "nodes": 1,
+      "timeout_s": 50
     },
     {
       "study": "strong",
@@ -118,14 +125,16 @@
       "program": "hybrid",
       "ranks": 16,
       "threads": 8,
-      "nodes": 2
+      "nodes": 2,
+      "timeout_s": 60
     },
     {
       "study": "strong",
       "program": "hybrid",
       "ranks": 32,
       "threads": 8,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     },
     {
       "study": "weak",
@@ -181,7 +190,8 @@
       "ranks": 64,
       "threads": 1,
       "nodes": 1,
-      "n": 3200000
+      "n": 3200000,
+      "timeout_s": 50
     },
     {
       "study": "weak",
@@ -189,7 +199,8 @@
       "ranks": 128,
       "threads": 1,
       "nodes": 2,
-      "n": 6400000
+      "n": 6400000,
+      "timeout_s": 80
     },
     {
       "study": "weak",
@@ -197,7 +208,8 @@
       "ranks": 256,
       "threads": 1,
       "nodes": 4,
-      "n": 12800000
+      "n": 12800000,
+      "timeout_s": 140
     },
     {
       "study": "weak",
@@ -229,7 +241,8 @@
       "ranks": 8,
       "threads": 8,
       "nodes": 1,
-      "n": 3200000
+      "n": 3200000,
+      "timeout_s": 40
     },
     {
       "study": "weak",
@@ -237,7 +250,8 @@
       "ranks": 16,
       "threads": 8,
       "nodes": 2,
-      "n": 6400000
+      "n": 6400000,
+      "timeout_s": 70
     },
     {
       "study": "weak",
@@ -245,35 +259,40 @@
       "ranks": 32,
       "threads": 8,
       "nodes": 4,
-      "n": 12800000
+      "n": 12800000,
+      "timeout_s": 130
     },
     {
       "study": "ranks_threads",
       "program": "hybrid",
       "ranks": 64,
       "threads": 4,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     },
     {
       "study": "ranks_threads",
       "program": "hybrid",
       "ranks": 16,
       "threads": 16,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     },
     {
       "study": "ranks_threads",
       "program": "hybrid",
       "ranks": 8,
       "threads": 32,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     },
     {
       "study": "ranks_threads",
       "program": "hybrid",
       "ranks": 4,
       "threads": 64,
-      "nodes": 4
+      "nodes": 4,
+      "timeout_s": 60
     }
   ]
 }

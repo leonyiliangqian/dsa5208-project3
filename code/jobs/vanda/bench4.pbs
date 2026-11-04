@@ -5,13 +5,14 @@
 # auto_free: it needs batch_cpu through `auto` with an approved --project, at
 # charge rate 1. Blocked until two-node correctness passes and the charge is
 # approved. All nodes must be one CPU model (allocation gate). Walltime and
-# memory are placeholders to be set from pilot timings before approval.
+# sizes are provisional: pilot4.pbs must pass first, then set them from its
+# timings and recheck with scripts/plan_budget.py.
 # Submit only after approval, through jobs/vanda/submit.sh.
 #
 #PBS -N p3_bench4
 #PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
 #PBS -l place=scatter
-#PBS -l walltime=01:00:00
+#PBS -l walltime=02:45:00
 #PBS -j oe
 
 RUN_PREFIX=bench4

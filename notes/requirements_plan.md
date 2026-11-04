@@ -2,7 +2,7 @@
 
 Written 3 November 2026 from [project_memory.md](project_memory.md) and read-only
 checks saved in `code/artifacts/cluster/discovery/vanda_lecture12_checks_20261103.txt`.
-Nothing here has been measured. No job, allocation or charge below is approved.
+No job, allocation or charge below is approved unless marked done or queued.
 Deadline stays 13 November 2026, 23:59 SGT until a new date is confirmed.
 
 ## Rubric against current state
@@ -12,7 +12,7 @@ Deadline stays 13 November 2026, 23:59 SGT until a new date is confirmed.
 | 5 | Explain the algorithm | Report sections on Problem and Method | Drafted |
 | 5 | Serial runtime against N | Study 0, log-log, with fitted slope | Figure code and manifest ready; no measurement |
 | 10 | MPI to at least 256 cores: strong, weak, speedup, efficiency, communication | Studies 1 and 4, MPI-only series, one job | **Blocked**: queue and charge decision; two-node correctness passed on the free pool (job 1514458, comparison unbound) |
-| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready, pilot not yet run; GPU correctness validated on an A40 (job 1514775); no GPU timing |
+| 10 | MPI+X, and at least one GPU test because X is OpenMP | T=8 series, ranks x threads, schedule; study 7 for the GPU | CPU side ready, pilot queued; GPU correctness (job 1514775) and timing (job 1519638) done on an A40 |
 | 5 | Overall discussion | After results | Not started |
 
 Also required: define non-standard terms; explain how the Plummer positions and
@@ -84,17 +84,20 @@ confirm on a GPU node in G0.
 
 ## Job proposals, in order. None of the remaining jobs approved
 
-Revisions and exact commands are in [approval_requests.md](approval_requests.md).
+Earlier requests are in [approval_requests.md](approval_requests.md).
 
 | # | Job | Request | Queue, rate | Depends on |
 |---|---|---|---|---|
 | 1 | `diag` rerun | Done as job 1514029 | | |
 | 2 | `twonode` correctness | Done: job 1514458 passed | | |
-| 3 | `pilot` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 1514774 failed at entry; rerun needs new approval |
+| 3 | `pilot` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | Queued as job 1519637 |
 | 4 | `gpu_validate` (G0 and G1) | Done: job 1514775 passed | | |
-| 5 | 4-node pilot, including a 256-rank hybrid-against-serial comparison | 4 x 64 cores, 30 min, about 128 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 2, balance, charge approval |
-| 6 | `bench4` formal series | 4 x 64 cores, walltime from job 5 | `auto` -> `batch_cpu`, 1 | Manifests frozen, charge approval |
-| 7 | GPU G2 | 1 GPU, 36 cores, 60 GB, 60 min | `auto_free`, 0 | Ready; awaits approval |
+| 5a | `pilot2`, free rehearsal with bound comparison | 2 x 64 cores, 30 min, 64 core-hours requested | `auto_free`, 0 | Job 3 finished |
+| 5 | `pilot4`, 4-node correctness and sizing with bound comparison | 4 x 64 cores, 45 min, 192 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 5a, balance, charge approval |
+| 6 | `bench4` formal series | 4 x 64 cores, 2 h 45 min provisional, 704 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 5, manifests frozen, charge approval |
+| 7 | GPU G2 | Done: job 1519638 passed | | |
+
+Full plan and assumptions: [plan_256core.md](plan_256core.md).
 
 Job 2 on the free pool does not establish correctness on `cpu_node` nodes, so job 5
 repeats the comparison there.

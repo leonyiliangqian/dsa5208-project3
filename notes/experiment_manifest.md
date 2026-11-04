@@ -17,6 +17,9 @@ MPI strong and weak scaling to at least 256 cores, and a GPU test. The tables be
 128 and are superseded on those points by [requirements_plan.md](requirements_plan.md) and
 `code/manifests/studies_four_node.json`. The queue row below does not hold at 256 cores.
 
+**Amendment, 4 Nov 2026 (still proposed):** `studies_four_node.json` is now v1: 3 timed steps and limits tied to
+estimates. Requests and assumptions are in [plan_256core.md](plan_256core.md).
+
 ## Fixed for every formal run
 
 | Setting | Value |
