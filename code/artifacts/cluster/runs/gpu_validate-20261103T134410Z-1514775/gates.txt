@@ -1,0 +1,5 @@
+build PASS rc=0 secs=12 kind=critical 
+device PASS rc=0 secs=0 kind=critical 
+gpu_gate PASS rc=0 secs=25 kind=required 
+gpu_busy PASS rc=0 secs=9 kind=required 
+compiled PASS rc=0 secs=0 kind=optional 

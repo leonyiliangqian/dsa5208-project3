@@ -1,0 +1,137 @@
+{
+ "date_utc": "2026-11-03T13:44:54+00:00",
+ "mode": "device",
+ "real_gpu_executed": true,
+ "cxx": "nvc++",
+ "cxxflags": "-O3 -std=c++17 -mp=gpu -Minfo=mp",
+ "device_probe": {
+  "num_devices": 1,
+  "kernel_on_device": 1,
+  "separate_memory": 1
+ },
+ "mandatory_without_device_rc": null,
+ "kind": "cluster correctness validation under PBS batch; not performance evidence",
+ "execution_context": "pbs_batch",
+ "pbs_jobid": "1514775.stdct-mgmt-02",
+ "pbs_queue": "gpu",
+ "hostname": "GN-A40-005",
+ "source_git_rev": "fa9da689dd4044610f799fa6464dd8048d73cede",
+ "checks": [
+  {
+   "name": "device: probe reports",
+   "ok": true,
+   "detail": "device_check num_devices=1 kernel_on_device=1 separate_memory=1"
+  },
+  {
+   "name": "device: kernel on device with separate memory",
+   "ok": true,
+   "detail": ""
+  },
+  {
+   "name": "device: --require-device accepts",
+   "ok": true,
+   "detail": "rc=0"
+  },
+  {
+   "name": "device: OMP_TARGET_OFFLOAD=MANDATORY runs",
+   "ok": true,
+   "detail": "rc=0"
+  },
+  {
+   "name": "self-test device",
+   "ok": true,
+   "detail": "58 cases"
+  },
+  {
+   "name": "self-test cpu",
+   "ok": true,
+   "detail": "58 cases"
+  },
+  {
+   "name": "validate device theta=0.0 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.0017 bitwise_identical=1455 max_rel_err_vs_direct=4.986e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS"
+  },
+  {
+   "name": "validate device theta=0.5 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2556 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS"
+  },
+  {
+   "name": "validate device theta=0.5 leaf=1",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2696 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS"
+  },
+  {
+   "name": "validate device theta=0.9 leaf=16",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=2877 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.0 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.00136 bitwise_identical=2625 max_rel_err_vs_direct=4.942e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.5 leaf=8",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2719 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.5 leaf=1",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2815 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS"
+  },
+  {
+   "name": "validate cpu theta=0.9 leaf=16",
+   "ok": true,
+   "detail": "validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=3027 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS"
+  },
+  {
+   "name": "trajectory device against serial",
+   "ok": true,
+   "detail": "worst relative difference 9.682e-14, limit 1e-10"
+  },
+  {
+   "name": "record device states where the kernel ran",
+   "ok": true,
+   "detail": "kernel_on_device=True"
+  },
+  {
+   "name": "trajectory cpu against serial",
+   "ok": true,
+   "detail": "worst relative difference 6.906e-14, limit 1e-10"
+  },
+  {
+   "name": "record cpu states where the kernel ran",
+   "ok": true,
+   "detail": "kernel_on_device=False"
+  },
+  {
+   "name": "rejects --n 0",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --theta -1",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --backend fpga",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --bogus",
+   "ok": true,
+   "detail": "rc=2"
+  },
+  {
+   "name": "rejects --leaf-size 0",
+   "ok": true,
+   "detail": "rc=2"
+  }
+ ],
+ "failed": []
+}

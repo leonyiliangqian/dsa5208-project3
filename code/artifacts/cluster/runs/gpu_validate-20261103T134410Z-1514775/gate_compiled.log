@@ -1,0 +1,4 @@
+        195, Generating "nvkernel__ZN38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e14ForceEvaluator8evaluateERKN5nbody6OctreeEdRNS_6TimersE_F1L195_3" GPU kernel
+        120, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L120_7" GPU kernel
+        126, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L126_9" GPU kernel
+         Generating NVIDIA GPU code

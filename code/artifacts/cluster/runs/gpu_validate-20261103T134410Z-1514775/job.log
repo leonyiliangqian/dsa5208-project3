@@ -1,0 +1,98 @@
+run_id=gpu_validate-20261103T134410Z-1514775 job=1514775.stdct-mgmt-02 host=GN-A40-005 start=2026-11-03T21:44:10+08:00 source_rev=fa9da689dd4044610f799fa6464dd8048d73cede
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading nvhpc-hpcx-cuda12/26.1
+  Loading requirement: hpcx
+
+===== gate build (critical, limit 300s) 21:44:15: make BIN=bin/vanda-1514775 CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS=-O3 -std=c++17 GPU_OMPFLAGS=-mp=gpu -Minfo=mp bin/vanda-1514775/bh_serial bin/vanda-1514775/bh_gpu
+nvc++ -O3 -std=c++17 -DNBODY_CXXFLAGS='"-O3 -std=c++17"' -o bin/vanda-1514775/bh_serial serial/barnes_hut.cpp
+nvc++ -O3 -std=c++17 -mp=gpu -Minfo=mp -DNBODY_CXXFLAGS='"-O3 -std=c++17"' -o bin/vanda-1514775/bh_gpu gpu/bh_gpu.cpp
+(anonymous namespace)::ForceEvaluator::ForceEvaluator(nbody::Particles&, (anonymous namespace)::Backend):
+    150, Generating target enter data map(create: acc[:n3],slot[:n],pos[:n3])
+         Generating target enter data map(to: mass[:n])
+         Generating target enter data map(create: order[:n])
+(anonymous namespace)::ForceEvaluator::~ForceEvaluator():
+         251, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    161, Generating target exit data map(delete: acc[:n3],slot[:n],pos[:n3],mass[:n],order[:n]) finalize
+(anonymous namespace)::ForceEvaluator::evaluate(nbody::Octree const&, double, (anonymous namespace)::Timers&):
+    182, #omp parallel
+    195, #omp target teams distribute parallel for
+        195, Generating "nvkernel__ZN38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e14ForceEvaluator8evaluateERKN5nbody6OctreeEdRNS_6TimersE_F1L195_3" GPU kernel
+        198, Loop parallelized across teams and threads(128), schedule(static)
+(anonymous namespace)::ForceEvaluator::reserve_nodes(unsigned long):
+         251, Generating target exit data map(delete: this->dev_nodes_[:this->capacity_]) finalize
+    244, Generating target enter data map(create: nodes[:cap])
+_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e::(anonymous namespace)::probe_device():
+    120, #omp target
+        120, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L120_7" GPU kernel
+    126, #omp target
+        126, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L126_9" GPU kernel
+    126, Generating map(alloc:value) 
+         Generating target enter data map(to: value)
+    127, Generating target exit data map(delete: value) finalize
+(anonymous namespace)::ForceEvaluator::release_nodes():
+    251, Generating target exit data map(delete: nodes[:cap]) finalize
+_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e::(anonymous namespace)::traverse_one(int, _INTERNAL_14_gpu_bh_gpu_cpp_b6db859e::(anonymous namespace)::DevNode const*, int const*, int, double const*, double const*, double, double, double*):
+     59, Generating implicit omp declare target routine
+         Generating NVIDIA GPU code
+build PASS rc=0 secs=12 kind=critical 
+
+===== gate device (critical, limit 60s) 21:44:28: env OMP_TARGET_OFFLOAD=MANDATORY bin/vanda-1514775/bh_gpu --require-device --device-check
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+device PASS rc=0 secs=0 kind=critical 
+
+===== gate gpu_gate (required, limit 900s) 21:44:29: env OMP_NUM_THREADS=36 make BIN=bin/vanda-1514775 CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS=-O3 -std=c++17 GPU_OMPFLAGS=-mp=gpu -Minfo=mp EVIDENCE=artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775 GPU_GATE_ARGS=--expect-device check-gpu
+self_test case=lattice_on_planes leaf=1 theta=0 vs direct worst=0.00121 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.5 vs host tree worst=0.000241 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=1 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=lattice_on_planes leaf=8 theta=0 vs direct worst=0.00172 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.5 vs host tree worst=0.000233 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=8 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=two_particles closed_form worst=5.05e-05 PASS
+self_test case=reuse grow nodes 463->4455 worst=0.000611 PASS
+self_test failures=0
+PASS self-test cpu: 58 cases
+PASS validate device theta=0.0 leaf=8: validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.0017 bitwise_identical=1455 max_rel_err_vs_direct=4.986e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS
+PASS validate device theta=0.5 leaf=8: validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2556 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS
+PASS validate device theta=0.5 leaf=1: validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2696 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS
+PASS validate device theta=0.9 leaf=16: validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=2877 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS
+PASS validate cpu theta=0.0 leaf=8: validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.00136 bitwise_identical=2625 max_rel_err_vs_direct=4.942e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS
+PASS validate cpu theta=0.5 leaf=8: validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2719 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS
+PASS validate cpu theta=0.5 leaf=1: validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2815 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS
+PASS validate cpu theta=0.9 leaf=16: validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=3027 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS
+PASS trajectory device against serial: worst relative difference 9.682e-14, limit 1e-10
+PASS record device states where the kernel ran: kernel_on_device=True
+PASS trajectory cpu against serial: worst relative difference 6.906e-14, limit 1e-10
+PASS record cpu states where the kernel ran: kernel_on_device=False
+PASS rejects --n 0: rc=2
+PASS rejects --theta -1: rc=2
+PASS rejects --backend fpga: rc=2
+PASS rejects --bogus: rc=2
+PASS rejects --leaf-size 0: rc=2
+PASS: GPU gate, 23 checks, 0 failed
+gpu_gate PASS rc=0 secs=25 kind=required 
+
+===== gate gpu_busy (required, limit 200s) 21:44:55: bash jobs/vanda/gpu_busy.sh artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775 bin/vanda-1514775/bh_gpu
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+result {"program":"bh_gpu","backend":"device","kernel_on_device":true,"separate_memory":true,"num_devices":1,"n":1000000,"theta":0.5,"dt":0.001,"steps":5,"warmup":0,"leaf_size":8,"seed":42,"softening":0.025000000000000001,"ranks":1,"threads":36,"threads_effective":36,"hosts":["GN-A40-005"],"nodes":415544,"setup_s":2.121066,"wall_s":6.000032,"integrate_s":0.039275,"exchange_s":0,"build_s":0.608492,"traverse_s":5.255423,"flatten_s":0.057734,"to_device_s":0.028707,"from_device_s":0.010393,"peak_rss_mib_rank_max":319.9,"peak_rss_mib_rank_sum":319.9,"compiler":"EDG g++ 11.2.1 mode","cxxflags":"-O3 -std=c++17"}
+run_rc=0 samples=8 peak_gpu_utilisation=100
+gpu_busy PASS rc=0 secs=9 kind=required 
+
+===== gate compiled (optional, limit 20s) 21:45:04: grep -iE generating.*(nvidia|tesla|gpu) artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775/gate_build.log
+        195, Generating "nvkernel__ZN38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e14ForceEvaluator8evaluateERKN5nbody6OctreeEdRNS_6TimersE_F1L195_3" GPU kernel
+        120, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L120_7" GPU kernel
+        126, Generating "nvkernel__ZN36_INTERNAL_14_gpu_bh_gpu_cpp_b6db859e38_GLOBAL__N__14_gpu_bh_gpu_cpp_b6db859e12probe_deviceEv_F1L126_9" GPU kernel
+         Generating NVIDIA GPU code
+compiled PASS rc=0 secs=0 kind=optional 
+
+===== summary 21:45:05
+build PASS rc=0 secs=12 kind=critical 
+device PASS rc=0 secs=0 kind=critical 
+gpu_gate PASS rc=0 secs=25 kind=required 
+gpu_busy PASS rc=0 secs=9 kind=required 
+compiled PASS rc=0 secs=0 kind=optional 
+verdict required_or_critical=4 not_passed=0 optional: compiled=PASS
+verdict PASS
+end=2026-11-03T21:45:05+08:00 elapsed_s=55 walltime_s=1800

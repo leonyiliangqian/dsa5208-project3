@@ -1,0 +1,147 @@
+python3 tests/validate_gpu.py --serial bin/vanda-1514775/bh_serial --gpu bin/vanda-1514775/bh_gpu \
+    --source gpu/bh_gpu.cpp --cxx "nvc++" --cxxflags "-O3 -std=c++17 -mp=gpu -Minfo=mp" \
+    --out artifacts/cluster/runs/gpu_validate-20261103T134410Z-1514775/gpu_validation_vanda-1514775.json --expect-device
+PASS device: probe reports: device_check num_devices=1 kernel_on_device=1 separate_memory=1
+PASS device: kernel on device with separate memory
+PASS device: --require-device accepts: rc=0
+PASS device: OMP_TARGET_OFFLOAD=MANDATORY runs: rc=0
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+self_test case=singleton leaf=1 theta=0 vs direct worst=0 PASS
+self_test case=singleton leaf=1 theta=0.5 vs host tree worst=0 PASS
+self_test case=singleton leaf=1 theta=0.9 vs host tree worst=0 PASS
+self_test case=singleton leaf=1 theta=2.0 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=0 vs direct worst=0 PASS
+self_test case=singleton leaf=8 theta=0.5 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=0.9 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=2.0 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0 vs direct worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0.5 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0.9 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=2.0 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0 vs direct worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0.5 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0.9 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=2.0 vs host tree worst=0 PASS
+self_test case=coincident_cluster leaf=1 theta=0 vs direct worst=5.8e-05 PASS
+self_test case=coincident_cluster leaf=1 theta=0.5 vs host tree worst=0.000112 PASS
+self_test case=coincident_cluster leaf=1 theta=0.9 vs host tree worst=9.23e-05 PASS
+self_test case=coincident_cluster leaf=1 theta=2.0 vs host tree worst=7.74e-05 PASS
+self_test case=coincident_cluster leaf=8 theta=0 vs direct worst=5.81e-05 PASS
+self_test case=coincident_cluster leaf=8 theta=0.5 vs host tree worst=0.00011 PASS
+self_test case=coincident_cluster leaf=8 theta=0.9 vs host tree worst=0.00012 PASS
+self_test case=coincident_cluster leaf=8 theta=2.0 vs host tree worst=9.14e-05 PASS
+self_test case=below_max_depth leaf=1 theta=0 vs direct worst=1.32e-05 PASS
+self_test case=below_max_depth leaf=1 theta=0.5 vs host tree worst=0.000269 PASS
+self_test case=below_max_depth leaf=1 theta=0.9 vs host tree worst=0.000319 PASS
+self_test case=below_max_depth leaf=1 theta=2.0 vs host tree worst=0.00025 PASS
+self_test case=below_max_depth leaf=8 theta=0 vs direct worst=1.2e-05 PASS
+self_test case=below_max_depth leaf=8 theta=0.5 vs host tree worst=0.000363 PASS
+self_test case=below_max_depth leaf=8 theta=0.9 vs host tree worst=0.000396 PASS
+self_test case=below_max_depth leaf=8 theta=2.0 vs host tree worst=0.000367 PASS
+self_test case=plummer leaf=1 theta=0 vs direct worst=5.03e-05 PASS
+self_test case=plummer leaf=1 theta=0.5 vs host tree worst=0.00064 PASS
+self_test case=plummer leaf=1 theta=0.9 vs host tree worst=0.000832 PASS
+self_test case=plummer leaf=1 theta=2.0 vs host tree worst=0.000635 PASS
+self_test case=plummer leaf=8 theta=0 vs direct worst=5.22e-05 PASS
+self_test case=plummer leaf=8 theta=0.5 vs host tree worst=0.000849 PASS
+self_test case=plummer leaf=8 theta=0.9 vs host tree worst=0.000627 PASS
+self_test case=plummer leaf=8 theta=2.0 vs host tree worst=0.000445 PASS
+self_test case=unequal_masses leaf=1 theta=0 vs direct worst=5.36e-05 PASS
+self_test case=unequal_masses leaf=1 theta=0.5 vs host tree worst=0.000468 PASS
+self_test case=unequal_masses leaf=1 theta=0.9 vs host tree worst=0.000435 PASS
+self_test case=unequal_masses leaf=1 theta=2.0 vs host tree worst=0.000432 PASS
+self_test case=unequal_masses leaf=8 theta=0 vs direct worst=6.7e-05 PASS
+self_test case=unequal_masses leaf=8 theta=0.5 vs host tree worst=0.00074 PASS
+self_test case=unequal_masses leaf=8 theta=0.9 vs host tree worst=0.000478 PASS
+self_test case=unequal_masses leaf=8 theta=2.0 vs host tree worst=0.000542 PASS
+self_test case=lattice_on_planes leaf=1 theta=0 vs direct worst=0.00154 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.5 vs host tree worst=0.000269 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=1 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=lattice_on_planes leaf=8 theta=0 vs direct worst=0.00167 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.5 vs host tree worst=0.000342 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=8 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=two_particles closed_form worst=5.05e-05 PASS
+self_test case=reuse grow nodes 463->4455 worst=0.00065 PASS
+self_test failures=0
+PASS self-test device: 58 cases
+device_check num_devices=1 kernel_on_device=1 separate_memory=1
+self_test case=singleton leaf=1 theta=0 vs direct worst=0 PASS
+self_test case=singleton leaf=1 theta=0.5 vs host tree worst=0 PASS
+self_test case=singleton leaf=1 theta=0.9 vs host tree worst=0 PASS
+self_test case=singleton leaf=1 theta=2.0 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=0 vs direct worst=0 PASS
+self_test case=singleton leaf=8 theta=0.5 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=0.9 vs host tree worst=0 PASS
+self_test case=singleton leaf=8 theta=2.0 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0 vs direct worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0.5 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=0.9 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=1 theta=2.0 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0 vs direct worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0.5 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=0.9 vs host tree worst=0 PASS
+self_test case=all_coincident leaf=8 theta=2.0 vs host tree worst=0 PASS
+self_test case=coincident_cluster leaf=1 theta=0 vs direct worst=5.8e-05 PASS
+self_test case=coincident_cluster leaf=1 theta=0.5 vs host tree worst=0.000112 PASS
+self_test case=coincident_cluster leaf=1 theta=0.9 vs host tree worst=9.23e-05 PASS
+self_test case=coincident_cluster leaf=1 theta=2.0 vs host tree worst=7.39e-05 PASS
+self_test case=coincident_cluster leaf=8 theta=0 vs direct worst=5.81e-05 PASS
+self_test case=coincident_cluster leaf=8 theta=0.5 vs host tree worst=0.00011 PASS
+self_test case=coincident_cluster leaf=8 theta=0.9 vs host tree worst=7.4e-05 PASS
+self_test case=coincident_cluster leaf=8 theta=2.0 vs host tree worst=7.2e-05 PASS
+self_test case=below_max_depth leaf=1 theta=0 vs direct worst=1.35e-05 PASS
+self_test case=below_max_depth leaf=1 theta=0.5 vs host tree worst=0.000301 PASS
+self_test case=below_max_depth leaf=1 theta=0.9 vs host tree worst=0.000319 PASS
+self_test case=below_max_depth leaf=1 theta=2.0 vs host tree worst=0.00025 PASS
+self_test case=below_max_depth leaf=8 theta=0 vs direct worst=1.19e-05 PASS
+self_test case=below_max_depth leaf=8 theta=0.5 vs host tree worst=0.000299 PASS
+self_test case=below_max_depth leaf=8 theta=0.9 vs host tree worst=0.000307 PASS
+self_test case=below_max_depth leaf=8 theta=2.0 vs host tree worst=0.000241 PASS
+self_test case=plummer leaf=1 theta=0 vs direct worst=5.02e-05 PASS
+self_test case=plummer leaf=1 theta=0.5 vs host tree worst=0.000642 PASS
+self_test case=plummer leaf=1 theta=0.9 vs host tree worst=0.000843 PASS
+self_test case=plummer leaf=1 theta=2.0 vs host tree worst=0.000635 PASS
+self_test case=plummer leaf=8 theta=0 vs direct worst=5.6e-05 PASS
+self_test case=plummer leaf=8 theta=0.5 vs host tree worst=0.000661 PASS
+self_test case=plummer leaf=8 theta=0.9 vs host tree worst=0.000625 PASS
+self_test case=plummer leaf=8 theta=2.0 vs host tree worst=0.000445 PASS
+self_test case=unequal_masses leaf=1 theta=0 vs direct worst=5.91e-05 PASS
+self_test case=unequal_masses leaf=1 theta=0.5 vs host tree worst=0.000392 PASS
+self_test case=unequal_masses leaf=1 theta=0.9 vs host tree worst=0.000378 PASS
+self_test case=unequal_masses leaf=1 theta=2.0 vs host tree worst=0.000432 PASS
+self_test case=unequal_masses leaf=8 theta=0 vs direct worst=6.73e-05 PASS
+self_test case=unequal_masses leaf=8 theta=0.5 vs host tree worst=0.000553 PASS
+self_test case=unequal_masses leaf=8 theta=0.9 vs host tree worst=0.000527 PASS
+self_test case=unequal_masses leaf=8 theta=2.0 vs host tree worst=0.000384 PASS
+self_test case=lattice_on_planes leaf=1 theta=0 vs direct worst=0.00121 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.5 vs host tree worst=0.000241 PASS
+self_test case=lattice_on_planes leaf=1 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=1 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=lattice_on_planes leaf=8 theta=0 vs direct worst=0.00172 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.5 vs host tree worst=0.000233 PASS
+self_test case=lattice_on_planes leaf=8 theta=0.9 vs host tree worst=0.000243 PASS
+self_test case=lattice_on_planes leaf=8 theta=2.0 vs host tree worst=0.000252 PASS
+self_test case=two_particles closed_form worst=5.05e-05 PASS
+self_test case=reuse grow nodes 463->4455 worst=0.000611 PASS
+self_test failures=0
+PASS self-test cpu: 58 cases
+PASS validate device theta=0.0 leaf=8: validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.0017 bitwise_identical=1455 max_rel_err_vs_direct=4.986e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS
+PASS validate device theta=0.5 leaf=8: validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2556 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS
+PASS validate device theta=0.5 leaf=1: validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2696 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS
+PASS validate device theta=0.9 leaf=16: validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=2877 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS
+PASS validate cpu theta=0.0 leaf=8: validate_gpu n=20000 theta=0.000 leaf_size=8 agree_worst=0.00136 bitwise_identical=2625 max_rel_err_vs_direct=4.942e-14 host_tree_max_rel_err_vs_direct=4.872e-14 PASS
+PASS validate cpu theta=0.5 leaf=8: validate_gpu n=20000 theta=0.500 leaf_size=8 agree_worst=0.00146 bitwise_identical=2719 max_rel_err_vs_direct=6.758e-02 host_tree_max_rel_err_vs_direct=6.758e-02 PASS
+PASS validate cpu theta=0.5 leaf=1: validate_gpu n=20000 theta=0.500 leaf_size=1 agree_worst=0.0015 bitwise_identical=2815 max_rel_err_vs_direct=7.358e-02 host_tree_max_rel_err_vs_direct=7.358e-02 PASS
+PASS validate cpu theta=0.9 leaf=16: validate_gpu n=20000 theta=0.900 leaf_size=16 agree_worst=0.00146 bitwise_identical=3027 max_rel_err_vs_direct=3.903e-01 host_tree_max_rel_err_vs_direct=3.903e-01 PASS
+PASS trajectory device against serial: worst relative difference 9.682e-14, limit 1e-10
+PASS record device states where the kernel ran: kernel_on_device=True
+PASS trajectory cpu against serial: worst relative difference 6.906e-14, limit 1e-10
+PASS record cpu states where the kernel ran: kernel_on_device=False
+PASS rejects --n 0: rc=2
+PASS rejects --theta -1: rc=2
+PASS rejects --backend fpga: rc=2
+PASS rejects --bogus: rc=2
+PASS rejects --leaf-size 0: rc=2
+PASS: GPU gate, 23 checks, 0 failed
