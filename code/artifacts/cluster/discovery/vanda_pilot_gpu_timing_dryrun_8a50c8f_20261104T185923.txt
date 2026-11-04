@@ -1,0 +1,86 @@
+read-only checks and dry runs: no job submitted, no amgr login
+2026-11-04 18:59:32 SGT
+stdct-login-01
+== server
+    server_state = Scheduling
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.ngpus = 0
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== queue gpu
+    resources_max.ncpus = 36
+    resources_max.ngpus = 2
+    resources_max.walltime = 48:00:00
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = gpu_free
+    max_run = [u:PBS_GENERIC=2]
+    enabled = True
+    started = True
+== current jobs
+qstat rc=0
+== history
+1513781.stdct-*  p3_diag    2:20 F 00:00
+1514029.stdct-*  p3_diag    1:20 F 00:05
+1514458.stdct-*  p3_twonode 3:30 F 00:03
+1514774.stdct-*  p3_pilot1  1:00 F 00:00
+1514775.stdct-*  p3_gpu_va* 1:30 F 00:00
+bundle sha256 matches Mac: ba3746cdb5a0e29cfa1203ba0d98b6834f91d88db8e33e5a7ac4ea83d749f752
+commit matches 8a50c8f754f716aad91f81343f7eeb6d950a4cf6
+tree matches 467be26d27bf118c97ea8bb1d195b2bd3f916edd
+status lines before: 0
+syntax ok jobs/vanda/pilot.pbs
+syntax ok jobs/vanda/measure.sh
+syntax ok jobs/vanda/gpu_timing.pbs
+syntax ok jobs/vanda/gpu_busy.sh
+== pilot
+#PBS -N p3_pilot1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+cd "${PBS_O_WORKDIR:?run under PBS, from the code/ directory}"
+source jobs/vanda/measure.sh
+0a5f9f64cc5923a218ec9be9f3498be34baf2733c1aeaee1f4daa78c1e2f937a  manifests/pilot_single_node_v2.json
+== gpu timing
+#PBS -N p3_gpu_timing
+#PBS -l select=1:ngpus=1:ncpus=36:mem=60gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+36b00fe2c12ea2bb30c655fffe8080433079a90f3f58413eb6ba3b56d94c7822  manifests/gpu_timing.json
+== modules (listing only)
+nvhpc-hpcx-cuda12/26.1
+OpenMPI/4.1.6-GCC-13.2.0
+Python/3.11.5-GCCcore-13.2.0
+== plans (no run)
+manifest pilot-single-node-v2 (proposed) sha256=0a5f9f64cc59 runs=20 worst_case_s=6480 scale=1
+manifest gpu-timing-v1 (frozen 2026-11-04 sizes from GPU job 1514775; fixed before any CPU-backend timing on Vanda) sha256=36b00fe2c12e runs=24 worst_case_s=2880 scale=1
+== entry test (no job, stub measure.sh)
+PASS: PBS entry directory, 0 failed
+== dry run pilot v2 (no --yes)
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_v2.json,SOURCE_GIT_REV=8a50c8f754f716aad91f81343f7eeb6d950a4cf6 -o /home/svu/leonyil.qian/dsa5208-p3-8a50c8f/code/artifacts/cluster/logs/ jobs/vanda/pilot.pbs
+dry run: add --yes to submit
+rc=0
+== dry run gpu_timing (no --yes)
+command: qsub -q auto_free -v SOURCE_GIT_REV=8a50c8f754f716aad91f81343f7eeb6d950a4cf6 -o /home/svu/leonyil.qian/dsa5208-p3-8a50c8f/code/artifacts/cluster/logs/ jobs/vanda/gpu_timing.pbs
+dry run: add --yes to submit
+rc=0
+== after
+status lines: 0
+8a50c8f754f716aad91f81343f7eeb6d950a4cf6
+== current jobs (must be empty)
+qstat rc=0
+old evidence check, 2026-11-04 19:00:31 SGT, read-only
+baseline: 3 Nov 19:15 SGT checksums of older clones and bundles,     5173 files
+missing or changed now:        0
+jobs 1514774 and 1514775 on Vanda against committed copies,       14 files: identical

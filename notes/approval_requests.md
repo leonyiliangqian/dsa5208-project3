@@ -4,13 +4,13 @@ Nothing below has been submitted, and no approval is open. Immediately before an
 `scheduling = True`, queue enabled and started, charge rate 0, current jobs and duplicates. A failure is not retried
 automatically.
 
-**Vanda state:** the SSH session closed on 4 Nov, and a `BatchMode` check at 18:36 SGT was refused for lack of one. **The
-clone `~/dsa5208-p3-8a50c8f` does not exist and no Vanda dry run has been done.** Both commands below come from dry runs
-in a clean local clone of origin. Commits after `8a50c8f` add only notes. The earlier `075ec51` and `6493ced`
-preparations are withdrawn: neither clone was created, and `6493ced` lacks the G2 review fixes.
+**Vanda state, 4 Nov 18:59 SGT:** clean clone `~/dsa5208-p3-8a50c8f` created, commit and tree verified, dry runs printed the
+commands below. Scheduling on, charge rate 0 on `auto_free`, `cpu_parallel` and `gpu`, no current jobs, no duplicates.
+Record: `code/artifacts/cluster/discovery/vanda_pilot_gpu_timing_dryrun_8a50c8f_20261104T185923.txt`. Commits after `8a50c8f` add only notes and evidence. The earlier `075ec51`
+and `6493ced` preparations are withdrawn: neither clone was created, and `6493ced` lacks the G2 review fixes.
 
 Both jobs: revision `8a50c8f754f716aad91f81343f7eeb6d950a4cf6`, clone `~/dsa5208-p3-8a50c8f`, `auto_free` with no `-P`,
-charge rate 0. Creating the clone needs Leon's SSH session.
+charge rate 0.
 
 ## 1. Single-node pilot, manifest v2
 

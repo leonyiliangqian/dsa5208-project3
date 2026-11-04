@@ -33,7 +33,7 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
-- **Vanda access:** the SSH session closed on 4 Nov; Leon must reopen it (`ssh -fN vanda`). No clone of the requested revision exists yet.
+- **Ready to submit once approved:** clean clone `~/dsa5208-p3-8a50c8f`, pilot v2 and GPU timing dry runs done on Vanda, 4 Nov.
 
 ## Open before submission (13 Nov 23:59 SGT)
 
