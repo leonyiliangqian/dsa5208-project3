@@ -1,5 +1,13 @@
 # Project 3 persistent requirements and decisions
 
+## Decision by Leon, 4 November 2026: no lecturer contact
+
+Contacting the lecturer is no longer needed, because the deadline Leon refers to for that contact has passed. Do not draft,
+send or ask to send lecturer messages. `lecturer_questions_draft.md` stays only as an inactive, unsent record.
+This says nothing about the final project deadline, which **stays 13 November 2026, 23:59 SGT** unless Leon says otherwise.
+
+Remaining decisions: pilot sizing; 256-core access, charge approval and current balance; formal experiments; report review.
+
 ## Lecture 12 clarification supplied by Leon, 3 November 2026
 
 Source: user-pasted excerpts from *Lecture 12: The Design of Parallel

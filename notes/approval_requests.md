@@ -72,7 +72,5 @@ are refused rather than timed, and the job would need a fix and new approval.
 Next requests, not yet open: `pilot2`, `pilot4`, `bench4` and `bench1`, in [plan_256core.md](plan_256core.md). Each needs its own approval.
 
 - Run `amgr login` to read projects and balance. Only Leon can do this.
-- Ask the lecturer about a course project or free-queue exception for 256 cores, and how to submit
-  source code when Canvas lists PDF only. Nothing has been sent.
 - Open gap: no bound two-node result has been compared with serial (job 1514458's comparison was unbound).
   `pilot2` and `pilot4` include this comparison, on every core.

@@ -31,8 +31,7 @@ repository).
 
 Open before a 256-core job: `amgr login` by Leon to read projects and balance (last
 reading 10000.0 on 29 Oct, before job 1507215); how charge rate 1 converts to credits;
-CPU model of the `cpu_node` pool; whether the lecturer has a course project or
-exception for this requirement.
+CPU model of the `cpu_node` pool; Leon's charge decision.
 
 Run the whole series, 1 to 256 cores, inside one 4-node job
 (`manifests/studies_four_node.json`, `jobs/vanda/bench4.pbs`, both proposed). Mixing

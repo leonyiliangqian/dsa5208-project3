@@ -86,5 +86,5 @@ Lecture 12: include source code; exclude logs and terminal output
 (`code/scripts/package_submission.sh` builds the source package from the committed tree).
 
 The brief also requires source code and a run README, although the listed upload
-type is PDF. Confirm the source delivery mechanism with the lecturer or Canvas;
+type is PDF. Confirm the source delivery mechanism on Canvas;
 do not assume a repository link alone meets the requirement. No email has been sent.

@@ -11,11 +11,13 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Biggest open item:** 256 cores, 10 points. [notes/plan_256core.md](notes/plan_256core.md) has the job order, exact
   requests, charge assumptions, dry runs and the rules for using the pilot's results. All sizes are provisional and none of
   those jobs is approved.
-- **To send, once reviewed:** [notes/lecturer_questions_draft.md](notes/lecturer_questions_draft.md) asks about a 256-core
-  allocation or exception and how to submit code. **Nothing has been sent.**
-- **What each person can do next:**
-  - Leon: run `amgr login` to read the balance and project, send the lecturer questions, decide on the charge.
-  - Group: review the GPU paragraph and AI declaration; confirm membership and student IDs in `report/main.tex`.
+- **Lecturer contact is closed:** Leon decided on 4 Nov that it is no longer needed. Do not draft or send lecturer messages.
+  The final deadline stays 13 Nov 23:59 SGT.
+- **Remaining decisions:**
+  1. **Pilot sizing:** apply the rules in `plan_256core.md` once pilot `1519637` finishes.
+  2. **256-core access:** Leon reads the current balance with `amgr login`, then decides on charge approval.
+  3. **Formal experiments:** each job needs its own approval, after its manifest is frozen.
+  4. **Report review:** the group reviews the GPU paragraph, AI declaration, membership and student IDs, and how source is handed in.
 
 ## Update, 3 November 2026
 
@@ -55,8 +57,8 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 
 | Gap | State | Who |
 |---|---|---|
-| **256-core MPI scaling, 10 points** | Not measured. The free queue stops at 160 CPUs per job and per user. `batch_cpu` fits but is charged at rate 1: up to 896 core-hours requested across `pilot4` and `bench4`, see [plan_256core.md](notes/plan_256core.md). Balance last read 29 Oct. No charged job is approved. | Leon: `amgr login`, charge decision or lecturer exception |
-| **Source submission** | Lecture 12 asks for code, Canvas lists PDF only; how to hand in source is unconfirmed, and the report has a pending marker. `code/scripts/package_submission.sh` builds the source zip. Question drafted in [lecturer_questions_draft.md](notes/lecturer_questions_draft.md); nothing has been sent. | Leon: send it |
+| **256-core MPI scaling, 10 points** | Not measured. The free queue stops at 160 CPUs per job and per user. `batch_cpu` fits but is charged at rate 1: up to 896 core-hours requested across `pilot4` and `bench4`, see [plan_256core.md](notes/plan_256core.md). Balance last read 29 Oct. No charged job is approved. | Leon: `amgr login`, charge decision |
+| **Source submission** | Lecture 12 asks for code, Canvas lists PDF only; how to hand in source is unconfirmed, and the report has a pending marker. `code/scripts/package_submission.sh` builds the source zip. Check the Canvas submission page. | Group |
 | **AI declaration** | Draft in `report/main.tex`, record in `notes/ai_usage.md`. Needs group review; provenance of the earlier serial code is unconfirmed; Codex's role in November needs confirming. | Group |
 | Report results | GPU timing is in the report. Pilot is queued and formal runs have not run, so their figures stay pending. | After pilot, then approvals |
 | Group details | Membership and student IDs in `report/main.tex`. | Group |
@@ -175,7 +177,7 @@ Red `\pending{...}` markers still to resolve:
 
 | Section | Pending |
 |---|---|
-| Submission overview | how source is submitted (ask lecturer); "Atlas or Vanda" -> Vanda |
+| Submission overview | how source is submitted (check Canvas); "Atlas or Vanda" -> Vanda |
 | Introduction | main measured findings (2–3 sentences) |
 | Serial Baseline | leaf size re-tuned on the cluster (pilot) |
 | Computing Environment | memory per node, interconnect, single-node-type enforcement, nodes used |

@@ -1,8 +1,7 @@
-# Draft for the lecturer: not sent
+# Lecturer draft: inactive, not sent
 
-For Leon or the group to review and send. Before sending, confirm the addressee: our notes name Anthony Chen as course sponsor
-(from the course handout), not as lecturer, and the title below is assumed. Also confirm the group details, which
-`report/README.md` still marks as to be confirmed.
+**INACTIVE. Kept as a record only; never sent.** Leon decided on 4 Nov 2026 that lecturer contact is no longer needed. Do not send
+or revise this. See `project_memory.md`.
 
 **To:** cygnari@nus.edu.sg
 

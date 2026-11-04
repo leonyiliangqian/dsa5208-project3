@@ -10,11 +10,10 @@ needs one of these:
 
 | Route | What it takes | Effect |
 |---|---|---|
-| Lecturer's course project or free exception | Send [lecturer_questions_draft.md](lecturer_questions_draft.md) | No charge to Leon, if granted |
 | Charged `batch_cpu` | Leon's `amgr login`, then approval of each job below | Up to 896 core-hours requested in total |
 | Stop at 128 cores on the free queue | `bench1` and `bench2` | Does not meet "at least 256"; the report must say so |
 
-Ask the lecturer first: an answer could remove the charge. Leave time for queue waits, because the free pilot has already
+Leave time for queue waits, because the free pilot has already
 waited over 3.5 hours and the wait on `batch_cpu` has never been tested. Due 13 Nov 23:59 SGT.
 
 ## Order of jobs
@@ -25,8 +24,8 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 |---|---|---|---|---|---|---|
 | 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | Already queued |
 | A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0 finished; 64 + 128 cores exceeds the 160 limit |
-| B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project and charge or exception |
-| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge or exception |
+| B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project, balance and charge approval |
+| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge approval |
 | D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 4 h | `auto_free`, 0 | 256 | 79 min, 84 core-hours | Step 0, manifest resized and frozen |
 
 "Expected use" comes from `scripts/plan_budget.py` and is rough. The same estimate could be off by a factor of two or more:
@@ -77,12 +76,11 @@ so it sets sizes and limits only. Times come from `summary.csv` in the run direc
 
 Then freeze each manifest, commit, make a new clean clone, rerun its dry run, and ask for approval.
 
-| Lecturer's answer | Next |
+| Leon's charge decision | Next |
 |---|---|
-| Project or exception given | Use that project in steps B and C. Check its charge rate first |
-| Personal credits expected | Leon reads the balance and decides on B, then on C after comparing the balance |
-| Below 256 accepted | Skip B and C. Run `bench1` and `bench2` and state the limit in the report |
-| No answer yet | Steps A and D are free, so they can go ahead with approval |
+| Charge approved | Leon reads the balance and approves B, then C after comparing the balance |
+| Charge declined | Skip B and C. Run `bench1` and `bench2` and state the shortfall against 256 cores in the report |
+| Not decided yet | Steps A and D are free, so they can go ahead with approval |
 
 ## What each requirement rests on
 

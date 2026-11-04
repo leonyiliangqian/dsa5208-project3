@@ -68,7 +68,7 @@
 
 %----------------------------------------------------------
 
-\noindent\textbf{Submission Overview.} \pending{confirm with the lecturer how source code is submitted alongside this PDF.} The submission comprises the C++17 source (shared core, serial driver, MPI+OpenMP driver), the validation and measurement scripts, the scheduler job scripts used on \pending{Atlas or Vanda}, the raw run records from which every table and figure is generated, and a \texttt{README.md} with build and run instructions.
+\noindent\textbf{Submission Overview.} \pending{confirm on Canvas how source code is submitted alongside this PDF.} The submission comprises the C++17 source (shared core, serial driver, MPI+OpenMP driver), the validation and measurement scripts, the scheduler job scripts used on \pending{Atlas or Vanda}, the raw run records from which every table and figure is generated, and a \texttt{README.md} with build and run instructions.
 
 \section{Introduction}
 \rhostart{T}he gravitational $N$-body problem asks for the motion of $N$ point masses under their mutual attraction. Direct summation costs $O(N^2)$ per force evaluation, which limits it to small $N$. The Barnes--Hut algorithm~\cite{BarnesHut1986} reduces the cost to $O(N \log N)$ by grouping distant particles into the cells of an octree and replacing each sufficiently distant group by its total mass at its centre of mass.
