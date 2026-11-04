@@ -33,6 +33,7 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
+- **Not done:** clone `~/dsa5208-p3-075ec51`. Vanda stopped responding on 4 Nov before the transfer.
 
 ## The short version
 
