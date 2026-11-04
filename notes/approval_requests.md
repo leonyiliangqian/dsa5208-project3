@@ -12,7 +12,8 @@ passed there. **Nothing has been uploaded to Vanda and this revision has not run
 the SSH session open:
 
 ```sh
-git bundle create /tmp/dsa5208-p3-075ec51.bundle 075ec5191ab1251b34c1f458be3b29b2acc1a438:refs/heads/main
+git clone -q . /tmp/p3-075ec51 && git -C /tmp/p3-075ec51 checkout -q -B main 075ec5191ab1251b34c1f458be3b29b2acc1a438
+git -C /tmp/p3-075ec51 bundle create /tmp/dsa5208-p3-075ec51.bundle main
 scp /tmp/dsa5208-p3-075ec51.bundle vanda:~/
 ```
 
