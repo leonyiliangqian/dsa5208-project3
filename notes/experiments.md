@@ -448,3 +448,34 @@ timed run (N=10^6) is not a measurement: no repeats, and no CPU comparison. G2 n
 
 The watch for these jobs stopped updating, and I reported 1514775 as queued at about 22:11 when PBS shows it had
 finished at 21:45. `ssh` also outlived a perl alarm by 17 minutes. Status must come from `qstat -xf`, with a hard limit.
+
+### Pilot deadline check, 4 Nov (arithmetic, no job)
+
+Runner rule: a run starts only if its whole limit + 45 s fits before the deadline, about 3258 s after job start. In
+`pilot_single_node.json` the serial cases come first, with 615, 615, 615 and 1215 s worst-case slots. If they all use
+their limits, **all 6 of the 64-core hybrid and schedule cases, plus leaf, accuracy and theta_cost (16 of 20), are
+skipped.** Estimate from the only timing we have, a local Docker serial run (50,000 bodies, 1.67 s per step), scaled
+by N log N: about 1200 s in total, so at the estimate all 20 run. At 2x all still run. At 3x six are skipped, leaving
+the first three 64-core sets in. At 4x two serial runs time out and every 64-core case is skipped. The estimate
+comes from another machine, so 075ec51's essential cases are likely, but not guaranteed, to run.
+
+`pilot_single_node_v2.json` has the same 20 runs and arguments (checked by plan comparison), with 64-core cases first
+and shorter limits. Worst case, 1x64, 8x8, 64x1, serial up to 10^6, schedules and one theta_cost run still start;
+11 others may be skipped. 2,000,000 serial has 600 s rather than 1200 s, which it might exceed. Nothing has run yet.
+
+### G2 GPU timing support, 4 Nov (local only, no GPU)
+
+`manifests/gpu_timing.json` (frozen): N = 10^5, 3x10^5, 10^6, 3x10^6, 5 timed steps, 3 interleaved repetitions, same
+bh_gpu binary on both backends with 36 host threads. Worst case 2880 s, so nothing is skipped on time alone. Sizes
+rest on job 1514775's one device run; no CPU-backend run on Vanda has informed them.
+
+Fallback is refused at four points: device runs get --require-device and OMP_TARGET_OFFLOAD=MANDATORY; run_case.py
+rejects a result that does not report the device; analyze.py checks again, ignoring a stored ok; the job's device gate
+stops it first. A device row is compared only with the cpu row of the same problem, threads, binary, CPU model and
+source tree.
+
+tests/gpu_timing_e2e.sh 33/33, with a stub bh_gpu and the real no-device GCC build, whose 6 device runs exit 7.
+pipeline_e2e 42/42, pbs_entry_test and check-context pass. Not shown: nvc++ running this path, the 36-core CPU
+backend's time, or anything about speed. The CPU backend is the same kernel built by nvc++, not the GCC hybrid
+solver, so the comparison says nothing about bh_hybrid. Hash of run records now includes gpu/*.cpp.
+

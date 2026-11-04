@@ -7,6 +7,8 @@ swept (Cartesian product). Programs:
   hybrid    bh_hybrid on `nodes` nodes, `ranks` in total, `threads` per rank,
             placed with --map-by ppr:<ranks/nodes>:node:PE=<threads> --bind-to core
   validate  bh_serial --validate (accuracy against direct summation)
+  gpu       bh_gpu, `threads` host threads, one `backend`: device (mandatory offload,
+            --require-device) or cpu. Each workload must be planned on both backends.
 Repetitions are interleaved: rep 1 of every case, then rep 2, ...
 
 Each run has its own timeout (case `timeout_s`; run_case.py stops the whole
@@ -38,7 +40,7 @@ HERE = Path(__file__).resolve().parent
 GRACE_S = 15
 MARGIN_S = 30
 SWEEPABLE = ("n", "theta", "steps", "warmup", "leaf_size", "seed", "ranks", "threads",
-             "nodes", "schedule", "chunk")
+             "nodes", "schedule", "chunk", "backend")
 
 
 def expand(manifest):
@@ -66,6 +68,8 @@ def case_name(p):
         if p.get("nodes", 1) > 1:
             parts.append(f"{p['nodes']}nodes")
         parts.append(f"{p['schedule']}{p['chunk']}")
+    if prog == "gpu":
+        parts += [p["backend"], f"t{p['threads']}"]
     parts += [f"n{p['n']}", f"th{p['theta']}", f"L{p['leaf_size']}"]
     return "_".join(str(x) for x in parts).replace(".", "p")
 
@@ -78,10 +82,28 @@ def program_args(p, scale):
     args += ["--steps", str(p["steps"]), "--warmup", str(p["warmup"]), "--seed", str(p["seed"])]
     if p["program"] == "hybrid":
         args += ["--schedule", p["schedule"], "--chunk", str(p["chunk"])]
+    if p["program"] == "gpu":
+        args += ["--backend", p["backend"]] + (["--require-device"] if p["backend"] == "device" else [])
     return args
 
 
+def check_gpu_pairs(points):
+    """A device timing means nothing without the same workload on the CPU backend."""
+    pairs = {}
+    for p in points:
+        if p["program"] != "gpu":
+            continue
+        if p.get("backend") not in ("device", "cpu"):
+            sys.exit(f"{p['name']}: backend must be device or cpu")
+        key = tuple(p[k] for k in ("n", "theta", "steps", "warmup", "leaf_size", "seed", "threads", "reps"))
+        pairs.setdefault(key, set()).add(p["backend"])
+    unpaired = [k for k, b in pairs.items() if b != {"device", "cpu"}]
+    if unpaired:
+        sys.exit(f"gpu workloads not planned on both backends: {unpaired}")
+
+
 def plan_runs(points, a):
+    check_gpu_pairs(points)
     runs = []
     reps = max(p.get("reps", 1) for p in points) if points else 0
     for rep in range(1, reps + 1):
@@ -102,6 +124,15 @@ def plan_runs(points, a):
                             "-x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES")
                 env = {"OMP_NUM_THREADS": str(t), "OMP_PROC_BIND": "close", "OMP_PLACES": "cores"}
                 cores, binary = r * t, "bh_hybrid"
+            elif prog == "gpu":
+                t = p["threads"]
+                if t > a.cores_per_node:
+                    sys.exit(f"{p['name']}: {t} threads exceed {a.cores_per_node} cores")
+                launcher = ""
+                env = {"OMP_NUM_THREADS": str(t), "OMP_PROC_BIND": "close", "OMP_PLACES": "cores"}
+                if p["backend"] == "device":
+                    env["OMP_TARGET_OFFLOAD"] = "MANDATORY"
+                cores, binary = t, "bh_gpu"
             else:
                 launcher = f"taskset -c {a.first_cpu}" if a.first_cpu is not None else ""
                 env, cores, binary = {"OMP_NUM_THREADS": "1"}, 1, "bh_serial"

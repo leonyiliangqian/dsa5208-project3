@@ -27,6 +27,10 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Pilot 1514774 measured nothing.** Exit 1 after 1 s: a relative `source` ran before the `cd`, since PBS starts in
   $HOME. 0 of 20 planned runs started, so there is **no sizing data**. Fixed locally in pilot, bench1, bench2 and
   bench4 and tested in Docker, not on Vanda. The rerun needs a new approval.
+- **G2 GPU timing:** code and local tests ready (`jobs/vanda/gpu_timing.pbs`), refuses device fallback. Never run on
+  a GPU. Still no GPU timing.
+- **Pilot order risk:** `pilot_single_node.json` can skip every 64-core case if its serial cases run slow; `..._v2.json`
+  has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
 

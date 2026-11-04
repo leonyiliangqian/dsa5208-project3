@@ -132,6 +132,7 @@ LOCAL PIPELINE TEST.
 Tests: `docker/run.sh bash tests/pipeline_e2e.sh` (manifest -> runs -> analysis
 -> figures on tiny inputs, timeout, deadline, interruption and refusal paths);
 `bash tests/jobs/pbs_entry_test.sh` (job scripts started outside code/, as PBS does);
+`docker/run.sh bash tests/gpu_timing_e2e.sh` (G2 pipeline and fallback refusal, with a stub);
 `docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'` (gate library fault
 injection on two simulated nodes).
 
@@ -152,6 +153,7 @@ after it; kinds are critical, required and optional. Step-by-step:
 | `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
 | `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | 1514774 failed at entry and measured nothing; fixed locally; rerun awaits approval |
 | `gpu_validate.pbs` | 1 GPU, 36 cores, 60 GB, 30 min | device, correctness and `nvidia-smi` gates | PASSED as job 1514775, A40; no timing |
+| `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB, 60 min | G2: `manifests/gpu_timing.json`, device against cpu backend | prepared, NOT approved |
 | `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
 
 Results so far: correctness job 1503779 (one node) passed; no performance

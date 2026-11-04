@@ -65,7 +65,7 @@ without offload support, so target regions ran on the host and transfers did not
 |---|---|---|---|
 | G0 | Kernel on a device with separate memory; `--require-device`; `nvidia-smi` sampling during a run | A silent fallback to CPU would make every GPU number false. GCC 12 ignored `OMP_TARGET_OFFLOAD=MANDATORY` with no device, so that variable alone proves nothing | Logic tested locally; needs a GPU |
 | G1 | theta=0 against direct summation; theta>0 against the host tree; closed-form pair; trajectory against `bh_serial`; reused device buffers with a growing tree | Independent references. Limits fixed before any device run: 1e-10, 1e-12, 1e-10 | Pass with host fallback; needs a GPU |
-| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the chunk, same binary, one kernel; flatten, transfer and kernel timed separately | Shows where the GPU wins and what transfers cost | Timers exist; runner support and manifest to add after G1 |
+| G2 | Same N sweep (log axes): 1 GPU against the 36 CPU cores of the chunk, same binary, one kernel; flatten, transfer and kernel timed separately | Shows where the GPU wins and what transfers cost | Code and local tests ready (`gpu_timing.pbs`, `manifests/gpu_timing.json`); not run on a GPU |
 | G3 | Optional: 2 ranks and 2 GPUs on one node, exchanging device buffers | The only step that would exercise CUDA-aware MPI | Not written |
 
 Errors that need separate device memory, such as a missing transfer or a wrong map clause,
@@ -94,7 +94,7 @@ Revisions and exact commands are in [approval_requests.md](approval_requests.md)
 | 4 | `gpu_validate` (G0 and G1) | Done: job 1514775 passed | | |
 | 5 | 4-node pilot, including a 256-rank hybrid-against-serial comparison | 4 x 64 cores, 30 min, about 128 core-hours requested | `auto` -> `batch_cpu`, 1 | Job 2, balance, charge approval |
 | 6 | `bench4` formal series | 4 x 64 cores, walltime from job 5 | `auto` -> `batch_cpu`, 1 | Manifests frozen, charge approval |
-| 7 | GPU G2 | 1 GPU, 36 cores, walltime from job 4 | `auto_free`, 0 | Job 4 passes, runner support added |
+| 7 | GPU G2 | 1 GPU, 36 cores, 60 GB, 60 min | `auto_free`, 0 | Ready; awaits approval |
 
 Job 2 on the free pool does not establish correctness on `cpu_node` nodes, so job 5
 repeats the comparison there.

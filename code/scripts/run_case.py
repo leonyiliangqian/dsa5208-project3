@@ -26,6 +26,8 @@ import socket
 import subprocess
 import sys
 
+from gpu_record import gpu_problems
+
 root = Path(__file__).resolve().parents[1]
 
 
@@ -43,7 +45,7 @@ def source_state():
            or os.environ.get("SOURCE_GIT_REV") or "no-git")
     # Hash the source files themselves so an uncommitted edit is still traceable.
     files = sorted(list(root.glob("common/*.hpp")) + list(root.glob("serial/*.cpp")) +
-                   list(root.glob("hybrid/*.cpp")) + [root / "Makefile"])
+                   list(root.glob("hybrid/*.cpp")) + list(root.glob("gpu/*.cpp")) + [root / "Makefile"])
     h = hashlib.sha256()
     for f in files:
         h.update(str(f.relative_to(root)).encode())
@@ -147,6 +149,8 @@ def main():
             problems.append("effective threads differ from requested")
         if result["ranks"] * result["threads"] > a.allocated_cores:
             problems.append("ranks x threads exceeds allocated cores (oversubscribed)")
+        if result.get("program") == "bh_gpu":
+            problems += gpu_problems(result, full, os.environ)
     record = {
         "case": a.case, "rep": a.rep, "returncode": code,
         "ok": not problems, "problems": problems,
@@ -166,8 +170,10 @@ def main():
         "mpi": sh("mpirun --version 2>&1 | head -1"),
         "modules": os.environ.get("LOADEDMODULES", ""),
         "env": {k: os.environ.get(k) for k in ("OMP_NUM_THREADS", "OMP_PROC_BIND", "OMP_PLACES",
-                                               "OMP_SCHEDULE", "SLURM_CPUS_PER_TASK", "SLURM_NTASKS",
-                                               "PBS_NCPUS", "CXXFLAGS")},
+                                               "OMP_SCHEDULE", "OMP_TARGET_OFFLOAD", "CUDA_VISIBLE_DEVICES",
+                                               "SLURM_CPUS_PER_TASK", "SLURM_NTASKS", "PBS_NCPUS", "CXXFLAGS")},
+        "gpu_hardware": sh("nvidia-smi --query-gpu=name,uuid,driver_version --format=csv,noheader")
+        if binary.name == "bh_gpu" else None,
         **source_state(),
         "result": result,
     }

@@ -24,6 +24,7 @@ Axes for time, problem size and core count are logarithmic (Lecture 12).
   fig_phases.tex                                     strong-study hybrid rows, phase medians
   fig_comm_fraction.tex                              exchange time / wall time, strong and weak
   tab_accuracy_cost.tex                              studies "accuracy" (validate) and "theta"
+  fig_gpu_runtime.tex, tab_gpu.tex                   study "gpu_timing" (device and cpu on the same workloads)
   tab_failed_runs.tex                                every failed, timed-out or skipped run
 """
 import argparse
@@ -288,6 +289,34 @@ def accuracy(rows, inputs, w):
           "tab:accuracy-cost", ["$\\theta$", "$N$ (error)", "max rel.", "mean rel.", "config", "wall (s)"], body)
 
 
+def gpu_timing(rows, w):
+    rs = [r for r in rows if has_study(r, "gpu_timing") and r.get("backend") in ("device", "cpu")]
+    paired = sorted((r for r in rs if "gpu_speedup_vs_cpu" in r), key=lambda r: r["n"])
+    if not paired:
+        return
+    if len({(r["theta"], r["leaf_size"], r["steps"], r["threads"], r["cpu_model"], r.get("gpu_hardware")) for r in rs}) > 1:
+        sys.exit("gpu_timing: rows differ in theta, leaf size, steps, threads, CPU or GPU; split the input")
+    r0 = paired[0]
+    gpu = (r0.get("gpu_hardware") or "GPU").split(",")[0]
+    cpu_of = {r["n"]: r for r in rs if r["backend"] == "cpu"}
+    what = (f"{r0['steps']} timed steps, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, {r0['threads']} host threads, "
+            f"{esc(r0['cpu_model'])}. Only the force traversal runs on the device; the tree build and "
+            "integration stay on the host for both backends.")
+    w.write("fig_gpu_runtime.tex", fig_xy(
+        [(f"device ({gpu})", [(r["n"], r["wall_median_s"]) for r in paired]),
+         (f"cpu backend, {r0['threads']} cores", [(r["n"], cpu_of[r["n"]]["wall_median_s"]) for r in paired])],
+        "particles $N$", "timed-region wall time (s)",
+        w.caption("Same program and workloads on the device and CPU backends, median of repetitions. " + what),
+        "fig:gpu-runtime", logy=True))
+    body = [[f"{r['n']:g}", fmt_wall(r), fmt_wall(cpu_of[r["n"]]), f"{r['gpu_speedup_vs_cpu']:.2f}",
+             f"{r['traverse_median_s']:.3f}", f"{r['flatten_median_s']:.3f}",
+             f"{r['to_device_median_s'] + r['from_device_median_s']:.3f}", str(r["reps"])] for r in paired]
+    table("tab_gpu.tex", w,
+          w.caption("Device against CPU backend: wall time, median [min, max] in seconds; ratio of medians; and device-run "
+                    "medians of the kernel, flattening and both transfers. " + what),
+          "tab:gpu", ["$N$", "device (s)", "cpu (s)", "cpu/device", "kernel", "flatten", "transfer", "reps"], body)
+
+
 def failed_runs(failed, w):
     body = [[esc(f["case"]), str(f["rep"]), esc(f.get("run", "")), esc("; ".join(f.get("problems") or []))]
             for f in sorted(failed, key=lambda f: (f.get("run", ""), f["case"], f["rep"]))]
@@ -324,6 +353,7 @@ def main():
     phases(rows, w)
     comm_fraction(rows, w)
     accuracy(rows, inputs, w)
+    gpu_timing(rows, w)
     failed_runs(failed, w)
     print(f"wrote {len(w.written)} fragments to {out}: {', '.join(w.written)}"
           + (" [LOCAL PIPELINE TEST]" if w.local else ""))

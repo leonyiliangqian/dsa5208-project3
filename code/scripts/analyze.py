@@ -20,6 +20,11 @@ writes <run>/summary.csv and <run>/summary.json.
 combines several run directories (e.g. one study split over jobs) into
 DIR/summary.{csv,json}; records keep their run directory in `runs`.
 Skipped and timed-out runs appear under "failed" with their reasons.
+
+GPU timing: a bh_gpu record that fails gpu_record.gpu_problems counts as failed even
+if it says ok. A device row is compared only with the cpu row of the same problem,
+threads, binary, CPU model and source tree (gpu_speedup_vs_cpu = T_cpu / T_device).
+It never gets a serial speedup: the CPU backend is the reference for this test.
 """
 import csv
 import json
@@ -27,8 +32,11 @@ from pathlib import Path
 import statistics
 import sys
 
+from gpu_record import gpu_problems
+
 PROBLEM = ("n", "theta", "dt", "steps", "warmup", "leaf_size", "seed", "softening")
 PHASES = ("integrate_s", "exchange_s", "build_s", "traverse_s")
+GPU_PHASES = ("flatten_s", "to_device_s", "from_device_s")
 
 
 def build_of(rec):
@@ -40,7 +48,7 @@ def build_of(rec):
 def placement_of(rec):
     """Launcher words before the program (binding/mapping flags) plus OpenMP placement."""
     cmd = rec["command"]
-    prog = next(i for i, w in enumerate(cmd) if Path(w).name in ("bh_serial", "bh_hybrid"))
+    prog = next(i for i, w in enumerate(cmd) if Path(w).name in ("bh_serial", "bh_hybrid", "bh_gpu"))
     env = rec.get("env", {})
     return (" ".join(cmd[:prog]), env.get("OMP_PROC_BIND") or "", env.get("OMP_PLACES") or "")
 
@@ -49,7 +57,7 @@ def config_of(rec):
     r = rec["result"]
     return (r["program"], *(r[k] for k in PROBLEM), r["ranks"], r["threads"], rec["allocated_cores"],
             r.get("schedule_requested", "-"), r.get("chunk_requested", 0), len(r.get("hosts", [])),
-            *placement_of(rec), *build_of(rec))
+            *placement_of(rec), *build_of(rec), r.get("backend", "-"), rec.get("binary_sha256"))
 
 
 def main(run_dirs, out_dir=None):
@@ -64,6 +72,12 @@ def main(run_dirs, out_dir=None):
             records.append(rec)
     if not records:
         sys.exit(f"no raw records in {[str(d / 'raw') for d in runs]}")
+    for rec in records:
+        res = rec.get("result") or {}
+        if rec.get("ok") and res.get("program") == "bh_gpu":
+            refused = gpu_problems(res, rec.get("command", []), rec.get("env"))
+            if refused:
+                rec["ok"], rec["problems"] = False, ["refused by analyze: " + p for p in refused]
     failed = [r for r in records if not r.get("ok")]
     groups = {}
     for rec in records:
@@ -85,6 +99,11 @@ def main(run_dirs, out_dir=None):
             row[f"{ph[:-2]}_median_s"] = statistics.median(x[ph] for x in res)
         if all(x.get("traverse_mean_s") for x in res):
             row["traverse_imbalance"] = statistics.median(x["traverse_s"] / x["traverse_mean_s"] for x in res)
+        if first["program"] == "bh_gpu":
+            for ph in GPU_PHASES:
+                row[f"{ph[:-2]}_median_s"] = statistics.median(x[ph] for x in res)
+            row.update(backend=first["backend"], binary_sha256=recs[0].get("binary_sha256"),
+                       gpu_hardware=recs[0].get("gpu_hardware"))
         launcher, bind, places = placement_of(recs[0])
         row.update(launcher=launcher, omp_proc_bind=bind, omp_places=places,
                    cpu_model=cpu, source_tree_sha256=tree, cxxflags=flags,
@@ -106,11 +125,18 @@ def main(run_dirs, out_dir=None):
             serial[k] = r
     for r in rows:
         base = serial.get(tuple(r[x] for x in PROBLEM) + (r["cpu_model"], r["source_tree_sha256"], r["cxxflags"]))
-        if base and r["program"] != "bh_serial":
+        if base and r["program"] not in ("bh_serial", "bh_gpu"):
             r["speedup_vs_serial"] = base["wall_median_s"] / r["wall_median_s"]
             r["efficiency"] = r["speedup_vs_serial"] / r["cores"]
 
-    rows.sort(key=lambda r: (r["n"], r["program"], r["cores"], r["ranks"], r["schedule"], r["chunk"]))
+    pair_key = lambda r: tuple(r[x] for x in PROBLEM) + (r["threads"], r["cpu_model"], r["source_tree_sha256"],
+                                                         r["cxxflags"], r["binary_sha256"])
+    cpu_rows = {pair_key(r): r for r in rows if r.get("backend") == "cpu"}
+    for r in rows:
+        if r.get("backend") == "device" and pair_key(r) in cpu_rows:
+            r["gpu_speedup_vs_cpu"] = cpu_rows[pair_key(r)]["wall_median_s"] / r["wall_median_s"]
+
+    rows.sort(key=lambda r: (r["n"], r["program"], r.get("backend", ""), r["cores"], r["ranks"], r["schedule"], r["chunk"]))
     fields = list(dict.fromkeys(k for r in rows for k in r))
     with open(run / "summary.csv", "w", newline="") as f:
         w = csv.DictWriter(f, fieldnames=fields, lineterminator="\n")
@@ -125,7 +151,9 @@ def main(run_dirs, out_dir=None):
     print(f"{run.name}: {len(records)} records, {len(failed)} failed, {len(rows)} configurations")
     for r in rows:
         sp = f" speedup={r['speedup_vs_serial']:.2f} eff={r['efficiency']:.2f}" if "speedup_vs_serial" in r else ""
-        print(f"  {r['program']:9s} n={r['n']} {r['ranks']}x{r['threads']} P={r['cores']} "
+        if "gpu_speedup_vs_cpu" in r:
+            sp = f" cpu/device={r['gpu_speedup_vs_cpu']:.2f}"
+        print(f"  {r['program']:9s} {r.get('backend', '')} n={r['n']} {r['ranks']}x{r['threads']} P={r['cores']} "
               f"{r['schedule']}/{r['chunk']} reps={r['reps']} wall_med={r['wall_median_s']:.4f}s "
               f"[{r['wall_min_s']:.4f},{r['wall_max_s']:.4f}]{sp}")
 
