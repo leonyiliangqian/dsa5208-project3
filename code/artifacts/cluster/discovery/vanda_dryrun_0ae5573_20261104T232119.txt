@@ -1,0 +1,64 @@
+read-only checks and dry runs: no job submitted, no amgr login
+2026-11-04 23:21:20 +08
+stdct-login-01
+bundle_sha_ok
+note: first clone had no checkout because the bundle carried no HEAD; checking out origin/main in that empty clone
+rev=0ae557312edc89e654c802d8e9cc416bf69d0397 tree=fac78375a414673bac1b7b20bbf64b212723089e
+commit_and_tree_ok
+status_lines=0
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_max.ncpus = 160
+    resources_default.queue_charge_rate = 0
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== queue auto
+    resources_default.queue_charge_rate = 1
+    enabled = True
+    started = True
+== queue batch_cpu
+    resources_max.ncpus = 720
+    resources_default.queue_charge_rate = 1
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== jobs before
+1519637.stdct-* leonyil* cpu_par* p3_pilot1     --    1  64  120gb 01:00 Q   -- 
+== dry runs
+command: qsub -q auto_free -v SOURCE_GIT_REV=0ae557312edc89e654c802d8e9cc416bf69d0397 -o /home/svu/leonyil.qian/dsa5208-p3-0ae5573/code/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+dry run: add --yes to submit
+command: qsub -q auto -P PROJECT_ID -v SOURCE_GIT_REV=0ae557312edc89e654c802d8e9cc416bf69d0397 -o /home/svu/leonyil.qian/dsa5208-p3-0ae5573/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs
+dry run: add --yes to submit
+command: qsub -q auto -P PROJECT_ID -v SOURCE_GIT_REV=0ae557312edc89e654c802d8e9cc416bf69d0397 -o /home/svu/leonyil.qian/dsa5208-p3-0ae5573/code/artifacts/cluster/logs/ jobs/vanda/bench4.pbs
+dry run: add --yes to submit
+== budgets
+Python 3.11.5
+request: 2 x 64 cores, 120 GB each, 1800 s = 64 core-hours requested
+credits at assumed rate 0 per core-hour: 0 if charged on the request
+runs: 6, estimated 178 s, worst case 1020 s, budget 1040 s after 300 s of gates and 460 s reserved at the end
+expected job time: 8 min = 17 core-hours used
+largest node memory: 72 GB of 120 GB
+PLAN OK
+request: 4 x 64 cores, 240 GB each, 2700 s = 192 core-hours requested
+credits at assumed rate 1 per core-hour: 192 if charged on the request
+runs: 9, estimated 286 s, worst case 1395 s, budget 1704 s after 300 s of gates and 696 s reserved at the end
+expected job time: 10 min = 42 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+request: 4 x 64 cores, 240 GB each, 9900 s = 704 core-hours requested
+credits at assumed rate 1 per core-hour: 704 if charged on the request
+runs: 105, estimated 2502 s, worst case 8625 s, budget 8904 s after 300 s of gates and 696 s reserved at the end
+expected job time: 47 min = 199 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+== jobs after
+1519637.stdct-* leonyil* cpu_par* p3_pilot1     --    1  64  120gb 01:00 Q   -- 
+== clone status
+0ae557312edc89e654c802d8e9cc416bf69d0397

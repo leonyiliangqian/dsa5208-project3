@@ -551,3 +551,14 @@ default check-hybrid; `--suite bound` refuses a core count it cannot place. `pil
 (`artifacts/local/runs/simulated-pilot2-20261104/`, ssh, 8 cores each, tiny sizes): 9 of 9 gates, 6 of 6 bound cases exact against serial.
 Not shown: `pbs_tmrsh` at 64 ranks per node, more than two nodes, `cpu_node` nodes, or any timing or memory on Vanda.
 Dry runs of `submit.sh` printed the `qsub` lines for pilot2, pilot4 and bench4 locally, with no `qsub` on this machine and nothing sent.
+
+### Checks before the pilot's results, 4 Nov 23:20 SGT
+
+Pilot 1519637 still queued (`Insufficient amount of resource: node_pool`), nothing retrieved. Balance not read: `hpc project` asks
+for `amgr login`, and `amgr balance` failed with an error in the tool. Clean clone `~/dsa5208-p3-0ae5573` created on Vanda and dry runs
+recorded (`artifacts/cluster/discovery/vanda_dryrun_0ae5573_*.txt`). The first clone step left an empty directory because the bundle
+had no HEAD; `origin/main` was checked out in it, and commit and tree match. No job was submitted.
+
+`studies_single_node.json` is v1: 3 timed steps, each size with its own limit, serial leaf study at 3e5; `bench1` walltime is 4 h provisional.
+Estimates in `plan_budget.py` now scale with theta and leaf size. Decision rules for the pilot's results are in plan_256core.md,
+set before any result existed.

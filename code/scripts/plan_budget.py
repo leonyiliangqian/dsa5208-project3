@@ -25,6 +25,9 @@ from run_manifest import GRACE_S, expand
 # threads); job 1514458 gave 22 at N = 5e4 where nvc++ gave about 15 near that size, so GCC
 # is about 1.4 times slower; rounded up to 35 for lost parallel efficiency.
 KERNEL_US = 35.0
+# Smaller theta opens more cells: about theta^-3 below the default, from the opening criterion,
+# not measured here. Any other leaf size gets 1.5 times the kernel until the pilot measures it.
+THETA_REF, OTHER_LEAF_FACTOR = 0.5, 1.5
 # Tree build on one thread, microseconds per particle per step at N = 1e6 (job 1519638),
 # doubled for ranks sharing memory bandwidth.
 BUILD_US = 0.123 * 2
@@ -55,6 +58,7 @@ def estimate_s(p):
     if p["program"] == "validate":
         return 60.0
     kernel = KERNEL_US * (1 + 0.23 * math.log10(n / 1e6)) * 1e-6 * n
+    kernel *= max(1.0, (THETA_REF / p["theta"]) ** 3) * (1.0 if p["leaf_size"] == 8 else OTHER_LEAF_FACTOR)
     build = BUILD_US * (n / 1e6) ** 0.3 * 1e-6 * n
     steps = p["steps"] + p["warmup"]
     if p["program"] == "serial":

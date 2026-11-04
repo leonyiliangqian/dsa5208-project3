@@ -1,10 +1,14 @@
 # Draft for the lecturer: not sent
 
-For Leon or the group to review and send. Fill in the bracketed parts first.
+For Leon or the group to review and send. Before sending, confirm the addressee: our notes name Anthony Chen as course sponsor
+(from the course handout), not as lecturer, and the title below is assumed. Also confirm the group details, which
+`report/README.md` still marks as to be confirmed.
+
+**To:** cygnari@nus.edu.sg
 
 **Subject:** DSA5208 Project 3: Vanda allocation for 256 cores, and how to submit code
 
-Dear [lecturer's name],
+Dear Prof. Chen,
 
 We are doing Project 3 (Barnes–Hut n-body, MPI+OpenMP, with a GPU test) and have two questions.
 
@@ -26,5 +30,5 @@ Lecture 12 asks us to include source code and to leave out log files and termina
 only. How should we submit the code: a separate upload, an appendix in the PDF, or a repository link?
 
 Thank you,
-[Name and student ID]
-On behalf of [group members]
+Leon Yiliang Qian (A0355825W)
+On behalf of our group, with Yan Yixin (A0327039A) and Zhang Yue (A0333668U)

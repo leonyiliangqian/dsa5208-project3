@@ -27,13 +27,16 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0 finished; 64 + 128 cores exceeds the 160 limit |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project and charge or exception |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge or exception |
-| D | `bench1`, serial against N, schedule, leaf, theta | 1 x 64 cores, walltime not set | `auto_free`, 0 | Not sized | About 130 min estimated | Step 0, manifest trimmed and frozen |
+| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 4 h | `auto_free`, 0 | 256 | 79 min, 84 core-hours | Step 0, manifest resized and frozen |
 
 "Expected use" comes from `scripts/plan_budget.py` and is rough. The same estimate could be off by a factor of two or more:
 one local Docker run was about 2.5 times slower per particle, though on a different machine.
 
 Step A can be skipped to save queue time. It costs nothing, and it is the only way to find a launch fault at 64 ranks per
 node before paying for one. `bench2` is needed only if the 256-core route fails.
+
+`bench1` has 148 runs. Its 4 h covers the worst case, 13020 s, if every run uses its whole limit. A long request may wait
+longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline.
 
 ## Charge assumptions
 
@@ -43,8 +46,43 @@ node before paying for one. `bench2` is needed only if the 256-core route fails.
   (`am_job_cache`), which suggests a request-based hold or charge. Whether unused time comes back is unknown.
 - Under these assumptions B + C is 896 credits at most, or 9% of the last balance read, 10000.0 on 29 Oct. That reading
   predates every later job. **Leon must read the current balance with `amgr login`.**
+- **Balance not available:** on 4 Nov at 23:20 SGT, `hpc project` still asked for `amgr login`, and `amgr balance` failed
+  with an error before showing anything. The existing SSH login does not cover it.
 - A job that fails early may still be charged. Compare the balance before and after step B before approving step C.
 - Omitting `-P` charges personal credits. `submit.sh` refuses a run with no project unless `--no-project` is passed.
+
+## After the pilot: decisions
+
+These rules were set **before any pilot result existed**, so results cannot shape them. The pilot has one repetition per case,
+so it sets sizes and limits only. Times come from `summary.csv` in the run directory; `wall_s` covers 2 timed steps.
+
+| # | Read from the pilot | Rule | Then |
+|---|---|---|---|
+| 1 | Exit status and gates | Critical gate failed | Stop. Diagnose, fix locally, ask for a new approval. No sizing from this job |
+| 2 | Timed-out or skipped runs | Any at 64 cores or serial 10^6 | Use the limit as a lower bound on time, and resize from the next lower size that finished |
+| 3 | CPU model | Record it | Later baselines must match within their own job. Do not compare times across models |
+| 4 | Serial time per step at 10^6 (t) | t < 20 s: N_s = 2 x 10^6, if serial 2 x 10^6 is at most 40 s per step | Target is 60–120 s of serial time for 3 steps |
+| | | 20 to 40 s: keep 10^6 | |
+| | | 40 to 80 s: N_s = 5 x 10^5 | |
+| | | Over 80 s: N_s = 3 x 10^5 | |
+| 5 | `hybrid 1x1` against serial, same N | More than 20% slower | Find out why before freezing; the MPI overhead should be small at one rank |
+| 6 | 64 x 1 efficiency against serial | Under 0.25 | N_s is too small for the curve: raise it if rule 4 allows, otherwise keep it and explain in the report |
+| 7 | Peak RSS per rank, 64 x 1 at 10^6 | At most 240 MiB: keep 50,000 particles per core | 240 MiB is where 12.8 x 10^6 at 64 ranks reaches 80% of 240 GB |
+| | | Over 240 MiB: use 25,000 per core | Same rule on 120 GB nodes at 128 cores |
+| 8 | Share of `exchange_s` in wall, 64 x 1 | 50% or more | Raise N_s if rule 4 allows. Otherwise keep it: this is a finding about communication, not a fault |
+| 9 | static and guided against dynamic, chunk 64 | Keep dynamic, chunk 64, unless another is over 10% faster | One repetition cannot settle it. Study 3 still reports all schedules |
+| 10 | Leaf size 4, 16, 32 against 8 at 3 x 10^5 | Keep 8 unless another is over 10% faster | Study 5 still reports all sizes |
+| 11 | theta 0.3, 0.7, 0.9 run time; accuracy runs | Replace the theta estimate in `plan_budget.py` | Keep theta = 0.5 if its accuracy run exits 0 |
+| 12 | Kernel, build and exchange times | Replace the constants in `plan_budget.py`, rerun it on every plan | If refused on free queues, raise walltime. If refused on `bench4`, lower N_s or drop the MPI+OpenMP ranks x threads points. Keep 3 repetitions |
+
+Then freeze each manifest, commit, make a new clean clone, rerun its dry run, and ask for approval.
+
+| Lecturer's answer | Next |
+|---|---|
+| Project or exception given | Use that project in steps B and C. Check its charge rate first |
+| Personal credits expected | Leon reads the balance and decides on B, then on C after comparing the balance |
+| Below 256 accepted | Skip B and C. Run `bench1` and `bench2` and state the limit in the report |
+| No answer yet | Steps A and D are free, so they can go ahead with approval |
 
 ## What each requirement rests on
 
@@ -84,6 +122,11 @@ case gives the fallback of 25,000 per core, and step A would show the problem at
 
 ## Dry runs
 
+**Done for `0ae5573`, 4 Nov at 23:21 SGT:** clean clone `~/dsa5208-p3-0ae5573`, commit and tree verified, `pilot2`, `pilot4` and
+`bench4` printed their `qsub` lines, and all three budgets passed on Vanda. Pilot `1519637` was the only job before and after.
+Record: `code/artifacts/cluster/discovery/vanda_dryrun_0ae5573_*.txt`. That commit predates the resized `bench1`, and any frozen
+manifest needs its own clone and dry run.
+
 These print the `qsub` line and submit nothing. Run from a clean clone of the commit to be used, so the revision is right:
 
 ```sh
@@ -91,6 +134,7 @@ cd ~/dsa5208-p3-<rev>/code
 bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project
 bash jobs/vanda/submit.sh pilot4 --queue auto --project <PROJECT_ID>
 bash jobs/vanda/submit.sh bench4 --queue auto --project <PROJECT_ID>
+bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project
 ```
 
 Add `--yes` only after that job's approval. `bench4` also refuses to start until its manifest status begins with `frozen`.
@@ -102,6 +146,7 @@ cd code
 python3 scripts/plan_budget.py manifests/pilot_two_node.json jobs/vanda/pilot2.pbs --runs
 python3 scripts/plan_budget.py manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1 --runs
 python3 scripts/plan_budget.py manifests/studies_four_node.json jobs/vanda/bench4.pbs --rate 1 --runs
+python3 scripts/plan_budget.py manifests/studies_single_node.json jobs/vanda/bench1.pbs --runs
 ```
 
 Before each submission, recheck `scheduling = True`, the queue enabled and started, its charge rate, current jobs and

@@ -69,7 +69,7 @@ are refused rather than timed, and the job would need a fix and new approval.
 
 ## 3. Other decisions
 
-Next requests, not yet open: `pilot2`, `pilot4` and `bench4`, in [plan_256core.md](plan_256core.md). Each needs its own approval.
+Next requests, not yet open: `pilot2`, `pilot4`, `bench4` and `bench1`, in [plan_256core.md](plan_256core.md). Each needs its own approval.
 
 - Run `amgr login` to read projects and balance. Only Leon can do this.
 - Ask the lecturer about a course project or free-queue exception for 256 cores, and how to submit

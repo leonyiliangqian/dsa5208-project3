@@ -14,6 +14,7 @@ plan() { python3 scripts/plan_budget.py "$@"; }
 expect pilot4 0 plan manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1
 expect pilot2 0 plan manifests/pilot_two_node.json jobs/vanda/pilot2.pbs
 expect bench4 0 plan manifests/studies_four_node.json jobs/vanda/bench4.pbs --rate 1
+expect bench1 0 plan manifests/studies_single_node.json jobs/vanda/bench1.pbs
 sed 's/mem=240gb/mem=100gb/' jobs/vanda/pilot4.pbs > "$work/lowmem.pbs"
 expect control_memory 1 plan manifests/pilot_four_node.json "$work/lowmem.pbs"
 expect control_memory_reason 0 grep -q "over the 100 GB requested" <(plan manifests/pilot_four_node.json "$work/lowmem.pbs")

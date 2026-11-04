@@ -3,13 +3,14 @@
 Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 **Mon 2 Nov 17:00 SGT**. Report due **13 Nov 2026 23:59 SGT**.
 
-## Update, 4 November 2026, 23:13 SGT (read this first)
+## Update, 4 November 2026, 23:21 SGT (read this first)
 
 - **Done:** GPU timing (job 1519638) is in the report: the GPU was slower than the 36 CPU cores at every size. Please
   review that paragraph.
-- **Waiting:** pilot `1519637` was still queued at 23:13 SGT. It gives the sizes for everything below. Do not resubmit or cancel it. Nothing is watching it now: the 4-hour watch ended at 23:10, so check with `qstat -xf 1519637`.
+- **Waiting:** pilot `1519637` was still queued at 23:20 SGT. It gives the sizes for everything below. Do not resubmit or cancel it. Nothing is watching it now: the 4-hour watch ended at 23:10, so check with `qstat -xf 1519637`.
 - **Biggest open item:** 256 cores, 10 points. [notes/plan_256core.md](notes/plan_256core.md) has the job order, exact
-  requests, charge assumptions and dry runs. All sizes are provisional and none of those jobs is approved.
+  requests, charge assumptions, dry runs and the rules for using the pilot's results. All sizes are provisional and none of
+  those jobs is approved.
 - **To send, once reviewed:** [notes/lecturer_questions_draft.md](notes/lecturer_questions_draft.md) asks about a 256-core
   allocation or exception and how to submit code. **Nothing has been sent.**
 - **What each person can do next:**
