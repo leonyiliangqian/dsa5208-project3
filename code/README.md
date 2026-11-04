@@ -144,7 +144,7 @@ Every job is submitted only through `jobs/vanda/submit.sh <job> --queue auto_fre
 run their steps as gates (`jobs/vanda/gates.sh`): each has a time limit, a
 process snapshot before expiry and an ownership-checked cleanup on every node
 after it; kinds are critical, required and optional. Step-by-step:
-`../notes/cluster_access.md`.
+`../notes/cluster_access.md` (in the repository, not the source package).
 
 | Job | Request | Purpose | Status |
 |---|---|---|---|

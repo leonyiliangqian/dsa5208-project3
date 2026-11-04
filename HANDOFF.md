@@ -33,7 +33,17 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Next approvals:** [notes/approval_requests.md](notes/approval_requests.md). None granted.
-- **Not done:** clone `~/dsa5208-p3-075ec51`. Vanda stopped responding on 4 Nov before the transfer.
+- **Vanda access:** the SSH session closed on 4 Nov; Leon must reopen it (`ssh -fN vanda`). No clone of the requested revision exists yet.
+
+## Open before submission (13 Nov 23:59 SGT)
+
+| Gap | State | Who |
+|---|---|---|
+| **256-core MPI scaling, 10 points** | Not measured. The free queue stops at 160 CPUs per job and per user. `batch_cpu` fits but is charged at rate 1 (`bench4`, about 128 core-hours requested for its pilot alone). Balance last read 29 Oct. No charged job is approved. | Leon: `amgr login`, charge decision or lecturer exception |
+| **Source submission** | Lecture 12 asks for code, Canvas lists PDF only; how to hand in source is unconfirmed, and the report has a pending marker. `code/scripts/package_submission.sh` builds the source zip. Nothing has been sent. | Leon: ask the lecturer |
+| **AI declaration** | Draft in `report/main.tex`, record in `notes/ai_usage.md`. Needs group review; provenance of the earlier serial code is unconfirmed; Codex's role in November needs confirming. | Group |
+| Report results | Pilot, GPU timing and formal runs have not run; figures stay pending. | After approvals |
+| Group details | Membership and student IDs in `report/main.tex`. | Group |
 
 ## The short version
 

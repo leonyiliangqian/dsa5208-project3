@@ -1,3 +1,6 @@
+#ifndef _GNU_SOURCE
+#define _GNU_SOURCE  // sched_getcpu
+#endif
 // Barnes-Hut force traversal offloaded with OpenMP target.
 //
 // The tree is built on the host with the same Octree as the serial and hybrid
@@ -29,6 +32,9 @@
 #include <vector>
 
 #include <omp.h>
+#ifdef __linux__
+#include <sched.h>
+#endif
 #include <unistd.h>
 
 namespace {
@@ -129,8 +135,53 @@ DeviceInfo probe_device() {
     return info;
 }
 
+// The host team as it really runs. Every thread records its CPU after the single's
+// barrier, so a team stacked on fewer CPUs shows up here; -1 means not measured.
+struct TeamInfo {
+    int team = 0, distinct_cpus = -1;
+};
+
+TeamInfo probe_team() {
+    TeamInfo info;
+    std::vector<int> cpus(omp_get_max_threads(), -1);
+#pragma omp parallel
+    {
+#pragma omp single
+        info.team = omp_get_num_threads();
+#ifdef __linux__
+        cpus[omp_get_thread_num()] = sched_getcpu();
+#pragma omp barrier
+#endif
+    }
+#ifdef __linux__
+    cpus.resize(info.team);
+    std::sort(cpus.begin(), cpus.end());
+    info.distinct_cpus = static_cast<int>(std::unique(cpus.begin(), cpus.end()) - cpus.begin());
+#endif
+    return info;
+}
+
+const char *proc_bind_name() {
+    switch (omp_get_proc_bind()) {
+        case omp_proc_bind_false: return "false";
+        case omp_proc_bind_close: return "close";
+        case omp_proc_bind_spread: return "spread";
+        default: return "other";
+    }
+}
+
+const char *schedule_name(omp_sched_t kind) {
+    switch (static_cast<int>(kind) & 0x7fffffff) {
+        case omp_sched_static: return "static";
+        case omp_sched_dynamic: return "dynamic";
+        case omp_sched_guided: return "guided";
+        case omp_sched_auto: return "auto";
+        default: return "unknown";
+    }
+}
+
 struct Timers {
-    double flatten = 0.0, to_device = 0.0, kernel = 0.0, from_device = 0.0;
+    double flatten = 0.0, map_nodes = 0.0, to_device = 0.0, kernel = 0.0, from_device = 0.0;
 };
 
 // Device copies of the arrays, kept mapped across steps so transfers can be
@@ -185,7 +236,10 @@ class ForceEvaluator {
             return;
         }
 
+        // Remapping when the tree outgrows its device copy is inside the timed region.
+        t0 = std::chrono::steady_clock::now();
         reserve_nodes(count);
+        t.map_nodes += seconds_since(t0);
         DevNode *nodes = dev_nodes_;
         const std::size_t n = n_, n3 = 3 * n_, cap = capacity_;
         t0 = std::chrono::steady_clock::now();
@@ -462,6 +516,7 @@ int main(int argc, char **argv) {
     if (device_check) return 0;
     if (self_test) return run_self_test(backend);
 
+    const TeamInfo team = probe_team();
     const auto t_setup = std::chrono::steady_clock::now();
     Particles p = make_plummer(opt.n, opt.seed);
     Octree tree;
@@ -533,21 +588,28 @@ int main(int argc, char **argv) {
     char host[256] = "unknown";
     gethostname(host, sizeof host - 1);
     const double rss = peak_rss_mib();
-    // traverse_s is the kernel alone. Flattening and both transfers are separate
-    // fields because a GPU run pays them on every step.
+    // traverse_s is the kernel alone. Flattening, node mapping and both transfers are
+    // separate fields because a GPU run pays them on every step. Both backends flatten;
+    // the tree build and flattening use one host thread, so threads speed up only the
+    // cpu kernel. wall_s excludes setup_s and the warmup steps.
+    omp_sched_t sched_kind;
+    int sched_chunk = 0;
+    omp_get_schedule(&sched_kind, &sched_chunk);
     std::printf("result {\"program\":\"bh_gpu\",\"backend\":\"%s\",\"kernel_on_device\":%s,"
                 "\"separate_memory\":%s,\"num_devices\":%d,\"n\":%zu,\"theta\":%.17g,\"dt\":%.17g,"
                 "\"steps\":%d,\"warmup\":%d,\"leaf_size\":%d,\"seed\":%llu,\"softening\":%.17g,"
-                "\"ranks\":1,\"threads\":%d,\"threads_effective\":%d,\"hosts\":[%s],\"nodes\":%zu,"
+                "\"ranks\":1,\"threads\":%d,\"threads_effective\":%d,\"distinct_cpus\":%d,\"proc_bind\":\"%s\","
+                "\"schedule_effective\":\"%s\",\"chunk_effective\":%d,\"hosts\":[%s],\"nodes\":%zu,"
                 "\"setup_s\":%.6f,\"wall_s\":%.6f,\"integrate_s\":%.6f,\"exchange_s\":0,\"build_s\":%.6f,"
-                "\"traverse_s\":%.6f,\"flatten_s\":%.6f,\"to_device_s\":%.6f,\"from_device_s\":%.6f,"
+                "\"traverse_s\":%.6f,\"flatten_s\":%.6f,\"map_nodes_s\":%.6f,\"to_device_s\":%.6f,\"from_device_s\":%.6f,"
                 "\"peak_rss_mib_rank_max\":%.1f,\"peak_rss_mib_rank_sum\":%.1f%s%s}\n",
                 backend == Backend::device ? "device" : "cpu",
                 backend == Backend::device && device.on_device ? "true" : "false",
                 device.separate_memory ? "true" : "false", device.num_devices, opt.n, opt.theta, opt.dt,
                 opt.steps, opt.warmup, opt.leaf_size, static_cast<unsigned long long>(opt.seed),
-                kSoftening, omp_get_max_threads(), omp_get_max_threads(), json_string(host).c_str(),
-                tree.node_count(), setup_s, wall, integrate_s, build_s, t.kernel, t.flatten, t.to_device,
+                kSoftening, omp_get_max_threads(), team.team, team.distinct_cpus, proc_bind_name(),
+                schedule_name(sched_kind), sched_chunk, json_string(host).c_str(),
+                tree.node_count(), setup_s, wall, integrate_s, build_s, t.kernel, t.flatten, t.map_nodes, t.to_device,
                 t.from_device, rss, rss, energy, build_json().c_str());
     if (!opt.dump.empty()) write_dump(opt.dump, p);
     return 0;

@@ -479,3 +479,25 @@ pipeline_e2e 42/42, pbs_entry_test and check-context pass. Not shown: nvc++ runn
 backend's time, or anything about speed. The CPU backend is the same kernel built by nvc++, not the GCC hybrid
 solver, so the comparison says nothing about bh_hybrid. Hash of run records now includes gpu/*.cpp.
 
+### G2 review, 4 Nov (local only, no GPU)
+
+Defects found in the code above, and fixed:
+- `threads_effective` was `omp_get_max_threads()` printed twice, so its check could never fail. bh_gpu now measures the
+  team in a parallel region, and records distinct CPUs, proc_bind and the effective schedule. Both backends must show the
+  requested team, one CPU per thread and `close`.
+- The cpu kernel used `schedule(runtime)` with OMP_SCHEDULE unset, so its schedule was an unrecorded runtime default on
+  an irregular workload. Runner now sets dynamic,64, the hybrid default; a cpu run on anything else is refused.
+- Device tree remapping was inside wall_s but in no phase. It is now `map_nodes_s`.
+- Pairing ignored placement and host, and hid unequal repetition counts. It now matches both, and shows counts.
+- package_submission.sh failed on an absolute output path, and packaged the internal root README with dead links.
+
+Timing boundaries as they now are: wall_s covers `steps` steps after setup and warmup, and is integrate + build + flatten
++ map_nodes + to_device + kernel + from_device. Tree build, flatten and integrate use one host thread on both backends, and
+the CPU backend pays flatten too, so the ratio is for this program, not the best possible CPU code. Kernel placement rests
+on a probe plus mandatory offload and --require-device, not a check inside the kernel; gpu_busy is the outside view. A
+36-thread team is 36 physical cores on these nodes (1 thread per core, job 1514775).
+
+Checks: gpu_timing_e2e 43/43, check-gpu 29/29, pipeline_e2e 42/42, pbs_entry_test. Package audit on a real zip: 71 text
+files, no logs, evidence, binaries or credentials found by name or content scan; the extracted package builds and passes
+its serial, hybrid, GPU, context, G2 and entry tests. None of this ran under nvc++: the new probe code is unbuilt there.
+

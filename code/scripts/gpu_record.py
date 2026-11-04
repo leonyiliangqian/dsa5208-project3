@@ -24,4 +24,14 @@ def gpu_problems(result, command, env):
             problems.append("device run without OMP_TARGET_OFFLOAD=MANDATORY")
     elif result.get("kernel_on_device") is not False:
         problems.append("cpu backend does not report a host kernel")
+    # The same team on both backends: real threads, each on its own CPU.
+    threads = result.get("threads")
+    if result.get("threads_effective") != threads:
+        problems.append(f"team of {result.get('threads_effective')}, {threads} requested")
+    if result.get("distinct_cpus") != threads:
+        problems.append(f"{threads} threads on {result.get('distinct_cpus')} distinct CPUs")
+    if result.get("proc_bind") != "close":
+        problems.append(f"proc_bind {result.get('proc_bind')}, close expected")
+    if requested == "cpu" and (result.get("schedule_effective"), result.get("chunk_effective")) != ("dynamic", 64):
+        problems.append("cpu kernel not on schedule dynamic,64")
     return problems

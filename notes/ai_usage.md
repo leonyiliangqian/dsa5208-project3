@@ -4,6 +4,7 @@ Update this record throughout the project; review the final statement as a group
 
 | Date | Tool | Work performed | Review status |
 |---|---|---|---|
+| 3-4 Nov 2026 | Claude Code (Claude Opus 5.5) | Lecture 12 plan; OpenMP target GPU solver and validator; `pbs_tmrsh` launcher; G2 timing runner and fallback refusal; job-entry and execution-label fixes; submitted Vanda jobs 1513781, 1514029, 1514458, 1514774 and 1514775 one at a time after Leon's approval, and analysed them; report text and package audit | Leon directed and approved jobs; group review pending |
 | 30 Oct 2026 | Claude Code (Claude Opus 5.5) | Gate library review (ownership-based cleanup, gate kinds, time accounting); machine-readable manifests and runner with per-run timeouts and deadlines; process-group timeouts in run_case.py; multi-run analysis; pgfplots figure/table generator with local-evidence refusal; pilot and benchmark jobs on a shared gated body; end-to-end pipeline and fault-injection tests; report result slots; teammate handoff | Local tests and simulations only; no cluster job submitted; no performance measurement |
 | 29-30 Oct 2026 | Claude Code (Claude Opus 5.5) | Two-node job revisions (portable build, forced PBS tm launch with verified selection); submitted authorised jobs 1506687 and 1507215 and retrieved their evidence; local diagnosis of the 1507215 stall (two-container simulation, traced placement probe); bounded gates with cleanup checks and fault-injection test; diagnostic job diag.pbs (not submitted); report text on two-node status, node pool and bounded runs | Two-node solver correctness unverified on Vanda; stall cause unknown; simulations are local evidence only |
 | 28 Oct 2026 | OpenAI Codex (ChatGPT) | Inspected the existing starter; updated requirements, milestones, staged implementation and experiment plans; added tool inventory and serial validation runner; corrected stale report placeholders | Setup checks run; group review pending |
@@ -21,18 +22,8 @@ figures and report writing, plus the checks performed by the group.
 
 ## Declaration draft (update before submission)
 
-We used OpenAI Codex (ChatGPT) to review the project starter, organize requirements
-and milestones, refine the proposed parallelization and validation plans, and
-create setup and validation scripts. [Add all further AI uses, including assistance
-with earlier code/design if applicable.] We reviewed [specify the work reviewed]
-and validated [specify the checks actually completed]. We are responsible for the
-content and quality of the submitted work.
-
-Use the policy links in the assignment; do not claim this log itself establishes
-compliance. Cite external algorithms, code and text actually used.
-
-## 3 November 2026
-
-Claude (Opus 5.5) diagnosed the failure of job 1513781, wrote the remote-report fix, revised the plan
-for Lecture 12, and wrote the OpenMP target solver, its tests and job scripts, with Leon directing
-scope and approving cluster use. The GPU code has not run on a GPU.
+The current wording is in `report/main.tex` (AI usage). Before submission, confirm as a group:
+- what each member actually reviewed and checked (the draft must not claim more);
+- whether AI helped with the earlier serial code and design (provenance unconfirmed);
+- what role OpenAI Codex had in November: messages in the Claude session refer to a "Codex Claude-check schedule", so it may
+  have supervised this work, and that belongs in the declaration if so.

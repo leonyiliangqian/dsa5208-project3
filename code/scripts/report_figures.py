@@ -299,9 +299,10 @@ def gpu_timing(rows, w):
     r0 = paired[0]
     gpu = (r0.get("gpu_hardware") or "GPU").split(",")[0]
     cpu_of = {r["n"]: r for r in rs if r["backend"] == "cpu"}
-    what = (f"{r0['steps']} timed steps, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, {r0['threads']} host threads, "
-            f"{esc(r0['cpu_model'])}. Only the force traversal runs on the device; the tree build and "
-            "integration stay on the host for both backends.")
+    what = (f"{r0['steps']} timed steps, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, {esc(r0['cpu_model'])}. "
+            f"Only the force traversal differs: on the device, or on {r0['threads']} bound CPU threads (schedule dynamic, "
+            "chunk 64). Both backends build and flatten the tree and integrate on one host thread, and those times are "
+            "included; setup and warmup are not.")
     w.write("fig_gpu_runtime.tex", fig_xy(
         [(f"device ({gpu})", [(r["n"], r["wall_median_s"]) for r in paired]),
          (f"cpu backend, {r0['threads']} cores", [(r["n"], cpu_of[r["n"]]["wall_median_s"]) for r in paired])],
@@ -310,11 +311,13 @@ def gpu_timing(rows, w):
         "fig:gpu-runtime", logy=True))
     body = [[f"{r['n']:g}", fmt_wall(r), fmt_wall(cpu_of[r["n"]]), f"{r['gpu_speedup_vs_cpu']:.2f}",
              f"{r['traverse_median_s']:.3f}", f"{r['flatten_median_s']:.3f}",
-             f"{r['to_device_median_s'] + r['from_device_median_s']:.3f}", str(r["reps"])] for r in paired]
+             f"{r['map_nodes_median_s'] + r['to_device_median_s'] + r['from_device_median_s']:.3f}",
+             f"{r['reps']}/{r['cpu_reps']}"] for r in paired]
     table("tab_gpu.tex", w,
           w.caption("Device against CPU backend: wall time, median [min, max] in seconds; ratio of medians; and device-run "
-                    "medians of the kernel, flattening and both transfers. " + what),
-          "tab:gpu", ["$N$", "device (s)", "cpu (s)", "cpu/device", "kernel", "flatten", "transfer", "reps"], body)
+                    "medians of the kernel, flattening, and node mapping plus both transfers; repetitions on "
+                    "device/cpu. " + what),
+          "tab:gpu", ["$N$", "device (s)", "cpu (s)", "cpu/device", "kernel", "flatten", "map+transfer", "reps"], body)
 
 
 def failed_runs(failed, w):

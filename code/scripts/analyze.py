@@ -23,7 +23,8 @@ Skipped and timed-out runs appear under "failed" with their reasons.
 
 GPU timing: a bh_gpu record that fails gpu_record.gpu_problems counts as failed even
 if it says ok. A device row is compared only with the cpu row of the same problem,
-threads, binary, CPU model and source tree (gpu_speedup_vs_cpu = T_cpu / T_device).
+threads, placement, hosts, binary, CPU model and source tree
+(gpu_speedup_vs_cpu = T_cpu / T_device; repetition counts kept beside it).
 It never gets a serial speedup: the CPU backend is the reference for this test.
 """
 import csv
@@ -36,7 +37,7 @@ from gpu_record import gpu_problems
 
 PROBLEM = ("n", "theta", "dt", "steps", "warmup", "leaf_size", "seed", "softening")
 PHASES = ("integrate_s", "exchange_s", "build_s", "traverse_s")
-GPU_PHASES = ("flatten_s", "to_device_s", "from_device_s")
+GPU_PHASES = ("flatten_s", "map_nodes_s", "to_device_s", "from_device_s")
 
 
 def build_of(rec):
@@ -57,7 +58,8 @@ def config_of(rec):
     r = rec["result"]
     return (r["program"], *(r[k] for k in PROBLEM), r["ranks"], r["threads"], rec["allocated_cores"],
             r.get("schedule_requested", "-"), r.get("chunk_requested", 0), len(r.get("hosts", [])),
-            *placement_of(rec), *build_of(rec), r.get("backend", "-"), rec.get("binary_sha256"))
+            *placement_of(rec), *build_of(rec), r.get("backend", "-"), rec.get("binary_sha256"),
+            tuple(r.get("hosts", [])) if r["program"] == "bh_gpu" else ())
 
 
 def main(run_dirs, out_dir=None):
@@ -103,7 +105,8 @@ def main(run_dirs, out_dir=None):
             for ph in GPU_PHASES:
                 row[f"{ph[:-2]}_median_s"] = statistics.median(x[ph] for x in res)
             row.update(backend=first["backend"], binary_sha256=recs[0].get("binary_sha256"),
-                       gpu_hardware=recs[0].get("gpu_hardware"))
+                       gpu_hardware=recs[0].get("gpu_hardware"), host_names=first.get("hosts"),
+                       distinct_cpus=first.get("distinct_cpus"), proc_bind=first.get("proc_bind"))
         launcher, bind, places = placement_of(recs[0])
         row.update(launcher=launcher, omp_proc_bind=bind, omp_places=places,
                    cpu_model=cpu, source_tree_sha256=tree, cxxflags=flags,
@@ -130,11 +133,13 @@ def main(run_dirs, out_dir=None):
             r["efficiency"] = r["speedup_vs_serial"] / r["cores"]
 
     pair_key = lambda r: tuple(r[x] for x in PROBLEM) + (r["threads"], r["cpu_model"], r["source_tree_sha256"],
-                                                         r["cxxflags"], r["binary_sha256"])
+                                                         r["cxxflags"], r["binary_sha256"], r["omp_proc_bind"], r["omp_places"],
+                                                         tuple(r["host_names"]))
     cpu_rows = {pair_key(r): r for r in rows if r.get("backend") == "cpu"}
     for r in rows:
         if r.get("backend") == "device" and pair_key(r) in cpu_rows:
             r["gpu_speedup_vs_cpu"] = cpu_rows[pair_key(r)]["wall_median_s"] / r["wall_median_s"]
+            r["cpu_reps"] = cpu_rows[pair_key(r)]["reps"]
 
     rows.sort(key=lambda r: (r["n"], r["program"], r.get("backend", ""), r["cores"], r["ranks"], r["schedule"], r["chunk"]))
     fields = list(dict.fromkeys(k for r in rows for k in r))

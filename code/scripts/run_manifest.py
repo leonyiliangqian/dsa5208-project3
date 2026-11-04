@@ -129,7 +129,8 @@ def plan_runs(points, a):
                 if t > a.cores_per_node:
                     sys.exit(f"{p['name']}: {t} threads exceed {a.cores_per_node} cores")
                 launcher = ""
-                env = {"OMP_NUM_THREADS": str(t), "OMP_PROC_BIND": "close", "OMP_PLACES": "cores"}
+                env = {"OMP_NUM_THREADS": str(t), "OMP_PROC_BIND": "close", "OMP_PLACES": "cores",
+                       "OMP_SCHEDULE": "dynamic,64"}
                 if p["backend"] == "device":
                     env["OMP_TARGET_OFFLOAD"] = "MANDATORY"
                 cores, binary = t, "bh_gpu"
