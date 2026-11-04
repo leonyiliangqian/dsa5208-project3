@@ -1,0 +1,33 @@
+pre-submission checks
+2026-11-04 19:10:23 SGT
+stdct-login-01
+scheduling=True
+auto_free rate=0 enabled=True started=True
+cpu_parallel rate=0 enabled=True started=True
+gpu rate=0 enabled=True started=True
+active jobs: []
+1513781.stdct-*  p3_diag    2:20 F 00:00
+1514029.stdct-*  p3_diag    1:20 F 00:05
+1514458.stdct-*  p3_twonode 3:30 F 00:03
+1514774.stdct-*  p3_pilot1  1:00 F 00:00
+1514775.stdct-*  p3_gpu_va* 1:30 F 00:00
+HEAD 8a50c8f754f716aad91f81343f7eeb6d950a4cf6
+clone clean
+directives match the approval
+== submit pilot v2 (once)
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_v2.json,SOURCE_GIT_REV=8a50c8f754f716aad91f81343f7eeb6d950a4cf6 -o /home/svu/leonyil.qian/dsa5208-p3-8a50c8f/code/artifacts/cluster/logs/ jobs/vanda/pilot.pbs
+1519637.stdct-mgmt-02
+pilot submit rc=0
+== submit gpu_timing (once)
+command: qsub -q auto_free -v SOURCE_GIT_REV=8a50c8f754f716aad91f81343f7eeb6d950a4cf6 -o /home/svu/leonyil.qian/dsa5208-p3-8a50c8f/code/artifacts/cluster/logs/ jobs/vanda/gpu_timing.pbs
+1519638.stdct-mgmt-02
+gpu submit rc=0
+2026-11-04 19:10:25 SGT
+== qstat
+
+stdct-mgmt-02: 
+                                                            Req'd  Req'd   Elap
+Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+--------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+1519637.stdct-* leonyil* cpu_par* p3_pilot1     --    1  64  120gb 01:00 Q   -- 
+1519638.stdct-* leonyil* gpu      p3_gpu_ti*    --    1  36   60gb 01:00 Q   -- 
