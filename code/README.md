@@ -1,40 +1,67 @@
-# Project 3 code
+# Barnes–Hut n-body: serial, MPI+OpenMP and GPU
 
-C++17 Barnes–Hut gravitational n-body simulation, serial and MPI+OpenMP.
+DSA5208 Project 3 source code. C++17 gravitational n-body simulation with the Barnes–Hut tree approximation: a serial reference,
+a hybrid MPI+OpenMP solver and an OpenMP target (GPU) solver. The report is handed in separately as a PDF.
+
+This README covers everything needed to build and run the code, and it stands alone. Run records, logs and the report source are
+not part of this package. All commands below run from this directory.
 
 | Path | Contents |
 |---|---|
-| `common/nbody.hpp` | Particles, Plummer initial conditions, direct summation, octree, leapfrog |
-| `common/run_support.hpp` | Shared CLI options/validation, state dump, JSON helpers |
+| `common/nbody.hpp` | Particles, Plummer-profile positions, direct summation, octree, leapfrog |
+| `common/run_support.hpp` | Shared command-line options and validation, state dump, JSON helpers |
 | `serial/barnes_hut.cpp` | Serial driver (`bh_serial`): speedup denominator, `--self-test`, `--validate` |
 | `hybrid/bh_hybrid.cpp` | MPI+OpenMP driver (`bh_hybrid`); 1 rank = OpenMP only, 1 thread = MPI only |
-| `tests/` | Serial gate, hybrid gate, energy/timestep study, toolchain probes, `pipeline_e2e.sh`, `jobs/gates_selftest.sh` |
-| `scripts/` | `run_case.py` (one recorded, time-limited run), `run_manifest.py` (all runs of a manifest), `analyze.py`, `report_figures.py`, `report_tables.py`, `plan_budget.py` (checks a manifest against its job request), preflight, discovery |
-| `manifests/` | Machine-readable experiment plans (pilot, proposed formal studies, local test manifests) |
-| `jobs/vanda/` | PBS jobs, gate library, submission wrapper (see below) |
-| `docker/` | Development image and `run.sh`; `twonode/` two-container simulation; `tex/` LaTeX compile test |
-| `artifacts/local/`, `artifacts/cluster/` | Written when you run the tests or jobs. Local simulations and Vanda evidence are kept apart. Both are left out of the source package, which has no logs or terminal output |
+| `gpu/bh_gpu.cpp` | OpenMP target driver (`bh_gpu`): `--backend device` or `cpu` |
+| `tests/` | Serial, hybrid and GPU gates, energy and timestep study, toolchain probes, pipeline and job-library tests |
+| `scripts/` | `run_case.py` (one recorded, time-limited run), `run_manifest.py` (all runs of a plan), `analyze.py`, `verify_run.py` (rechecks a run from its raw records), `plan_budget.py` (checks a plan against its job request), `report_figures.py`, `report_tables.py`, `preflight.py` |
+| `manifests/` | Experiment plans as JSON. `local_*` are tiny test plans; a formal job refuses a plan whose status is not `frozen` |
+| `jobs/vanda/` | PBS job scripts, gate library and submission wrapper for the Vanda cluster |
+| `docker/` | Development image and `run.sh`; `twonode/` simulates two nodes; `tex/` is a LaTeX compile test |
 
-## Build and check
+## Dependencies
 
-macOS (serial only; Apple clang has no OpenMP or MPI here):
+| Needed for | Tools | Used on Vanda |
+|---|---|---|
+| Serial | C++17 compiler, GNU make, Python 3.7 or later (standard library only, for the gates and scripts) | GCC 13.2.0 |
+| MPI+OpenMP | `mpicxx` with OpenMP and at least `MPI_THREAD_FUNNELED` | `OpenMPI/4.1.6-GCC-13.2.0` |
+| GPU | A compiler with OpenMP target offload to the device; any OpenMP compiler still builds it and runs target regions on the host | `nvhpc-hpcx-cuda12/26.1` (`nvc++`), NVIDIA A40 |
+| Docker (optional) | Docker; the image in `docker/Dockerfile` holds the Linux tools above except the GPU compiler | not used |
+
+macOS with Apple clang has no OpenMP or MPI here, so it builds only the serial program. Use Docker for the rest.
+
+## Build
+
+Binaries go to `bin/<os>/` (`bin/darwin`, `bin/linux`), so builds for different systems never mix. `make help` lists all targets.
 
 ```sh
-make help
-make check            # serial gate
-make sanitize         # ASan + UBSan debug build, never timed
+make all                # serial: bin/<os>/bh_serial
+make hybrid             # MPI+OpenMP: bin/<os>/bh_hybrid
+make gpu                # OpenMP target: bin/<os>/bh_gpu, on the host without offload support
+make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" gpu     # for a GPU, with NVHPC
 ```
 
-Linux / Docker (serial + hybrid). Docker Desktop must be running:
+In Docker, put `docker/run.sh` in front: `docker/run.sh make all hybrid gpu`.
+
+## Small validation
+
+Each of these takes under a few minutes on a laptop and needs no cluster:
 
 ```sh
-docker/run.sh make toolchain      # OpenMP team, 2 MPI ranks, FUNNELED + OpenMP
-docker/run.sh make check          # serial gate
-docker/run.sh make check-hybrid   # serial vs MPI+OpenMP, by particle ID
-docker/run.sh sh scripts/local_pilot.sh   # pipeline exercise, local evidence only
+make check                        # serial gate
+docker/run.sh make check-hybrid   # MPI+OpenMP against serial, particle by particle
+docker/run.sh make check-gpu      # GPU solver's logic, on the host
 ```
 
-Binaries go to `bin/<os>/` (`bin/darwin`, `bin/linux`), so the two never mix.
+Without Docker, on Linux with the tools above, run the same `make` targets directly. For a one-minute look:
+
+```sh
+./bin/linux/bh_serial --self-test
+./bin/linux/bh_serial --validate --n 2000 --theta 0.5
+./bin/linux/bh_serial --n 20000 --steps 3 --warmup 1
+OMP_NUM_THREADS=2 mpirun -np 2 --bind-to none ./bin/linux/bh_hybrid --n 20000 --steps 3 --warmup 1 --schedule dynamic --chunk 64
+OMP_NUM_THREADS=2 ./bin/linux/bh_gpu --n 20000 --steps 3 --warmup 1 --backend cpu
+```
 
 ### Gates
 
@@ -51,7 +78,7 @@ Binaries go to `bin/<os>/` (`bin/darwin`, `bin/linux`), so the two never mix.
   be bitwise identical, invalid arguments must exit 2 on all ranks without hanging,
   and a 1e-9 perturbation must be detected.
 
-Both write JSON evidence with source and binary hashes to `artifacts/local/`.
+Each writes JSON with source and binary hashes to `artifacts/local/`, which is created when you run it.
 
 ## Running
 
@@ -113,7 +140,7 @@ Barnes–Hut, never direct summation, as the speedup denominator.
 python3 scripts/run_manifest.py manifests/<m>.json --out <run dir> --bin <bin dir> \
     [--mpirun ...] [--cores-per-node C] [--nodes K] [--first-cpu CPU] [--deadline EPOCH] [--plan-only]
 python3 scripts/analyze.py <run dir> [<run dir> ...] [--out <dir>]     # summary.csv/json
-python3 scripts/report_figures.py <summary.json> [...]                 # -> ../report/generated/
+python3 scripts/report_figures.py <summary.json> [...] --out <dir>     # pgfplots figures and tables
 ```
 
 A manifest lists cases; list-valued fields are swept. Repetitions are
@@ -125,7 +152,7 @@ allocated cores, CPU model, source and binary hashes, compiler, MPI and flags.
 computes speedup only against a serial baseline with the same problem, CPU
 model, source tree and flags. `report_figures.py` writes pgfplots figures and
 tables; it refuses inputs outside `artifacts/cluster/` unless `--allow-local`
-with an `--out` outside `report/generated/`, and then marks every caption
+with an `--out` other than the report's own folder, and then marks every caption
 LOCAL PIPELINE TEST.
 
 Tests: `docker/run.sh bash tests/pipeline_e2e.sh` (manifest -> runs -> analysis
@@ -142,24 +169,19 @@ Every job is submitted only through `jobs/vanda/submit.sh <job> --queue auto_fre
 `SOURCE_GIT_REV` (compute nodes have no git). Jobs build on the compute node and
 run their steps as gates (`jobs/vanda/gates.sh`): each has a time limit, a
 process snapshot before expiry and an ownership-checked cleanup on every node
-after it; kinds are critical, required and optional. Step-by-step:
-`../notes/cluster_access.md` (in the repository, not the source package).
+after it; kinds are critical, required and optional. The jobs depend on this site's queues and modules, so elsewhere treat them as examples.
 
-| Job | Request | Purpose | Status |
-|---|---|---|---|
-| `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node | PASSED as job 1503779 |
-| `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch | PASSED as job 1514458 (comparison unbound; 1506687 and 1507215 did not reach it) |
-| `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
-| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node_v2.json` | 1514774 and 1519637 failed before any run and measured nothing; launcher fixed; rerun 1522998 submitted |
-| `pilot16.pbs` | 1 x 16 cores, 16 GB, 60 min | `manifests/pilot_single_node_16core.json`: provisional sizes while the 64-core pilot waits | submitted once as job 1523275 |
-| `gpu_validate.pbs` | 1 GPU, 36 cores, 60 GB, 30 min | device, correctness and `nvidia-smi` gates | PASSED as job 1514775, A40; no timing |
-| `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB, 60 min | G2: `manifests/gpu_timing.json`, device against cpu backend | PASSED as job 1519638, A40 |
-| `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
+| Job | Request | Purpose |
+|---|---|---|
+| `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node |
+| `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch |
+| `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locates a launch stall, one factor per step |
+| `pilot.pbs`, `pilot16.pbs` | 1 x 64 cores or 1 x 16 cores, 60 min | one-repetition sizing runs |
+| `pilot2.pbs`, `pilot4.pbs` | 2 or 4 x 64 cores | launch, correctness and sizing at 128 and 256 cores |
+| `bench16.pbs`, `bench1.pbs`, `bench2.pbs`, `bench4.pbs` | 1 x 16 cores; 1, 2 or 4 x 64 cores | formal studies from a frozen plan, with one CPU model |
+| `gpu_validate.pbs`, `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB | device and correctness gates; device against CPU timing |
 
-Results so far: correctness passed on one node (1503779) and two nodes (1514458), and the GPU was
-timed (1519638). No CPU scaling measurement exists.
-
-## OpenMP target solver (validated on an A40, job 1514775; timed in job 1519638)
+## OpenMP target solver
 
 `gpu/bh_gpu.cpp` offloads the force traversal; the tree is built on the host. `--backend device`
 uses `target`, and `--backend cpu` runs the same kernel on host threads. `--require-device` exits 7
@@ -168,7 +190,7 @@ target regions on the host, so `make check-gpu` then tests logic only. `jobs/van
 runs it on a device.
 
 ```sh
-docker/run.sh make check-gpu                                   # local, no GPU
+docker/run.sh make check-gpu                                   # no GPU
 make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" \
     GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node
 ```

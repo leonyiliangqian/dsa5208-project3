@@ -2,14 +2,16 @@
 # Build the source package for the final submission from the committed tree:
 # code and code/README.md only; the root README is internal project status. Raw evidence (artifacts/, job logs, terminal output)
 # stays in the repository for internal verification and is left out, as the
-# Lecture 12 requirements ask.
+# Lecture 12 requirements ask. Tools that only make sense inside the repository stay out too.
 #   scripts/package_submission.sh [OUTPUT.zip]    (run from code/)
 set -euo pipefail
 out=${1:-dsa5208-project3-source.zip}
 out=$(cd "$(dirname "$out")" && pwd)/$(basename "$out")
 cd "$(git rev-parse --show-toplevel)"
 paths=(code/README.md code/Makefile code/common code/serial code/hybrid code/gpu code/tests
-       code/scripts code/manifests code/jobs code/docker)
+       code/scripts code/manifests code/jobs code/docker
+       ':(exclude)code/scripts/package_submission.sh' ':(exclude)code/tests/jobs/package_test.sh'
+       ':(exclude)code/tests/repo_links_test.py')
 bad=$(git ls-files -- "${paths[@]}" | grep -E '\.(log|OU|ER|out|txt|stdout|stderr|o|a|so|exe|bundle|zip|pdf|pem|key|pyc)$|(^|/)(artifacts|bin|__pycache__)/|(^|/)(\.env|id_rsa|credentials)' || true)
 if [ -n "$bad" ]; then
     echo "refusing: log, evidence, binary or credential files in the package paths:" >&2

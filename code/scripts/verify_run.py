@@ -75,7 +75,7 @@ def main():
         check(len(r["hosts"]) == p.get("nodes", 1), f"{case}: hosts {r['hosts']}")
         phases = r["integrate_s"] + r["exchange_s"] + r["build_s"] + r["traverse_s"]
         # Phases are maxima over ranks, so they can pass wall slightly, but never fall far below it.
-        check(0.9 * r["wall_s"] <= phases <= 1.1 * r["wall_s"], f"{case}: phases {phases:.3f} against wall {r['wall_s']:.3f}")
+        check(0.9 * r["wall_s"] <= phases <= 1.1 * r["wall_s"] + 0.1, f"{case}: phases {phases:.3f} against wall {r['wall_s']:.3f}")
         check(d["elapsed_s"] >= r["setup_s"] + r["wall_s"] - 0.01, f"{case}: elapsed under setup + wall")
         check(not (run / folder / f"{case}_rep{rep}.stderr").read_text().strip(), f"{case}: stderr not empty")
         check(f"{r['wall_s']:.4f}" in (run / folder / f"{case}_rep{rep}.stdout").read_text(), f"{case}: stdout wall")

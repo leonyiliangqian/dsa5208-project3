@@ -24,6 +24,13 @@ done
 # Split so this file does not match its own patterns.
 private='leon''yil|/Users/''leon|A0[0-9]{6}[A-Z]|gmail''[.]com'
 ! grep -rlE "BEGIN [A-Z ]*PRIVATE KEY|PBS_JOBCOOKIE=[0-9A-F]|$private" "$work/x" | grep -q .; result no_credentials_or_personal_details $?
+! grep -E '(package_submission|package_test|repo_links_test|HANDOFF)' "$work/list" | grep -q .; result no_internal_tools $?
+# The README must stand alone: every dependency and build path, and no pointer out of the package.
+readme="$work/x/dsa5208-project3/code/README.md"
+for word in '## Dependencies' 'make hybrid' 'make gpu' 'mpicxx' 'nvc++' 'make check-hybrid' 'make check-gpu' 'Python 3'; do
+    grep -qF "$word" "$readme"; result "readme_has_${word// /_}" $?
+done
+! grep -nE '\.\./|HANDOFF|notes/|report/' "$readme" | grep -q .; result readme_points_nowhere_else $?
 binaries=$(cd "$work/x" && find . -type f -exec sh -c 'head -c 4 "$1" | grep -q "^.ELF\|^.\{0,1\}PK" && echo "$1"' _ {} \; | wc -l | tr -d ' ')
 [ "$binaries" = 0 ]; result no_binary_content $? "found=$binaries"
 
