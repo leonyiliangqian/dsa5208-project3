@@ -42,7 +42,7 @@ longer in the queue. If `bench4` is approved, `bench1` can drop its strong and w
 
 **Why:** `1522998` waits for a whole 64-core node. A snapshot at 14:20 SGT on 5 Nov had no free-pool node with 64 or even 32 cores
 free, and 6 with at least 16 (5 Gold 6438N, 1 Platinum 8452Y). That counts cores only, not memory, and it is one moment, so it does
-not promise a start. It is why this pilot uses 16 cores rather than 32.
+not promise a start. It is why this pilot uses 16 cores rather than 32. At 14:31, one node had 32 free and still 6 had 16.
 
 **Request:** 1 x 16 cores, 16 GB, 60 min, 16 core-hours at most, rate 0. Same 20 runs, sizes and order as the 64-core pilot, with
 1 x 16, 4 x 4 and 16 x 1 in place of 1 x 64, 8 x 8 and 64 x 1.

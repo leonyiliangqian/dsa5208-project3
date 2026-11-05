@@ -615,3 +615,12 @@ One read-only snapshot at 14:20 SGT: `1522998` state Q, `node_pool`; free cores 
 Source package at `c8b7495`: `package_test` passes, with 80 files, no logs, text output, evidence or binaries, and three refusal
 controls. Unzipped alone, it passes `make check` and `make check-hybrid` in Docker. Report compiled in a scratch copy: 8 pages, no
 overfull box; pages 1, 3, 4, 7 and 8 inspected as images. Figure code reviewed: time, N and core-count axes are logarithmic.
+
+### Status check and pilot16 readiness, 5 Nov 14:29-14:31 SGT
+
+`1522998` still queued (`node_pool`), unchanged, no run directory. Because it had not started, clone `~/dsa5208-p3-96a37ba` was prepared
+and the `pilot16` dry run run without `--yes`; every check passed and nothing was submitted. Record:
+`artifacts/cluster/discovery/vanda_pilot16_dryrun_96a37ba_20261105T143058.txt`.
+
+Report: all 8 pages now inspected as images. Terms added for warm-up, schedule, chunk, NUMA, kernel and flattening; the GPU timing
+paragraph separated from validation; Table 6 moved next to its text. No overfull box. No numbers changed.

@@ -14,14 +14,18 @@ if `1522998` has started or passed its gates, this request lapses.
 | With `1522998` | It stays queued. 64 + 16 cores is inside the 160-CPU, 2-running-job limit |
 | If a gate fails | The job stops, with no retry |
 
-After approval: copy the exact commit, verify commit, tree and manifest hash, dry-run, recheck readiness, then run once:
+**Prepared on Vanda, 5 Nov 14:31 SGT:** clone `~/dsa5208-p3-96a37ba` created from a bundle holding only this commit. Commit, tree
+`2e833d8567bba10e71da1b6ad63017262c215bd2` and manifest hash verified, and the clone is clean. Scheduling on, `auto_free` and
+`cpu_parallel` enabled and started, rate 0. The only unfinished job is `1522998`, and no `p3_pilot16` exists. Dry run printed the
+command and submitted nothing. Record: `code/artifacts/cluster/discovery/vanda_pilot16_dryrun_96a37ba_20261105T143058.txt`.
+
+After approval: recheck commit, tree, manifest hash, rate 0, queues, duplicates and that `1522998` has not started, then run once:
 
 ```sh
 cd ~/dsa5208-p3-96a37ba/code
 bash jobs/vanda/submit.sh pilot16 --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_16core.json --yes
 ```
 
-The dry run so far is local only: `code/artifacts/local/pilot16_dryrun_20261105.txt`. No clone exists on Vanda yet.
 
 ## Consumed, 5 November 2026: rerun the single-node pilot once
 

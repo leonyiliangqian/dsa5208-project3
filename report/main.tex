@@ -91,11 +91,13 @@ So far only correctness and the required GPU test have been measured on Vanda. \
 \item[Owned particles:] the particles a rank computes forces for and moves.
 \item[Binding, placement:] restricting a rank or thread to given cores, and the resulting layout.
 \item[Strong and weak scaling:] more cores with fixed $N$, and more cores with $N/P$ fixed.
-\item[Timed region:] the steps whose wall time is reported; setup is excluded.
+\item[Timed region:] the steps whose wall time is reported; setup and the warm-up steps before them are excluded.
 \item[Traversal imbalance:] the slowest rank's force time divided by the mean over ranks.
 \item[Manifest:] a file listing the runs of an experiment, fixed before they run.
 \item[Gate:] a checked step in a job, with its own time limit.
+\item[Schedule, chunk:] how OpenMP shares loop iterations among threads, and how many it hands out at a time.\item[NUMA domain:] a group of cores sharing one memory controller.
 \item[Offload, device:] running the force loop on a GPU, which is the device.
+\item[Kernel, flattening:] the force loop on its own, and copying the tree into plain arrays the device can read.
 \item[PBS, \texttt{tm}, \texttt{pbs\_tmrsh}:] the cluster's job scheduler, its interface for starting processes, and its tool for starting a command on a node inside a job.
 \item[Daemon:] the helper process Open MPI starts on a node to launch ranks.
 \end{description}
@@ -230,7 +232,7 @@ None of these CPU studies has run yet. They are numbered as in the experiment pl
 \item Ranks $\times$ threads at fixed $P$ and $N$, e.g.\ $16{\times}1$, $8{\times}2$, $4{\times}4$, $2{\times}8$, $1{\times}16$, with matched placement.
 \item OpenMP schedule: static against dynamic and guided, with a small chunk-size sweep fixed in advance.
 \item Weak scaling with $N \propto P$ and fixed threads per rank, to at least 256 cores.
-\item Leaf size.
+\item Leaf size, on the serial program.
 \item Accuracy against cost across $\theta$, reported separately from scaling.
 \end{enumerate}
 The share of time in the position exchange is read from the strong and weak runs. Axes for time, particle count and CPU count are logarithmic in every figure; efficiency and the exchange share are ratios and use linear vertical axes.
@@ -279,7 +281,9 @@ Expected, not measured: efficiency should fall even for a perfect force loop, be
 Expected, not measured: each step sends every particle's three coordinates to every rank, so each rank receives $24N$ bytes and a node with $R$ ranks receives $24NR$ bytes. At fixed $N$ the force time falls with $P$ while this does not, so the exchange's share of runtime should rise, especially with many ranks per node. \pending{interpretation: how communication affects runtime as core count grows.}
 
 \subsection{GPU Test}
-The GPU program uses the serial tree code on the CPU and offloads only the force traversal, with OpenMP \texttt{target}. A silent fallback to the CPU would make any GPU result false, so the job requires a device: the kernel must report that it ran on a device whose memory is separate from the host's, offload is set to mandatory, and \texttt{nvidia-smi} provides a view from outside the program. Separate memory also matters for correctness, because a missing data transfer cannot show up when the target region runs on the host. \input{generated/gpu_note.tex} The deliberate-fault checks of the validator ran only in local development without a device, not on the GPU. This is one validation job on one GPU and shows correctness, not speed. \resultslot{fig_gpu_runtime}{GPU timing against the CPU cores of the same allocation: not measured yet.}
+The GPU program uses the serial tree code on the CPU and offloads only the force traversal, with OpenMP \texttt{target}. A silent fallback to the CPU would make any GPU result false, so the job requires a device: the kernel must report that it ran on a device whose memory is separate from the host's, offload is set to mandatory, and \texttt{nvidia-smi} provides a view from outside the program. Separate memory also matters for correctness, because a missing data transfer cannot show up when the target region runs on the host. \input{generated/gpu_note.tex} The deliberate-fault checks of the validator ran only in local development without a device, not on the GPU. This is one validation job on one GPU and shows correctness, not speed.
+
+\resultslot{fig_gpu_runtime}{GPU timing against the CPU cores of the same allocation: not measured yet.}
 \resultslot{tab_gpu}{device, CPU backend, kernel, flattening and transfer times.}
 In this timing job (PBS 1519638, commit \texttt{8a50c8f}; Figure~\ref{fig:gpu-runtime} and Table~\ref{tab:gpu}), one A40 took longer than the 36 CPU cores of the same allocation at every size. The ratio of CPU to device time rose from 0.46 at $N=10^5$ to 0.74 at $N=3\times10^6$; below 1, the device is slower. The force kernel accounts for at least 97\% of the difference. Node mapping and both transfers together took under 1\% of device wall time, so moving data is not what limits this program. Tree build, flattening and integration use one host thread on both backends. We did not tune the kernel for the GPU and did not test why it is slower. We also ran nothing above $N=3\times10^6$, so the rising ratio does not show that the device would overtake the CPU at a larger size. The CPU backend is this same kernel built with \texttt{nvc++}, not the MPI+OpenMP program, so the comparison says nothing about that solver. These figures come from one job on one node with one GPU and three repetitions per case.
 
@@ -294,7 +298,7 @@ Two pilot jobs ended before any run and so measured nothing. Job 1514774 stopped
 \subsection{Parallelization Decisions}
 Table~\ref{tab:decisions} lists the technique used for each part of the program and the communication it needs. These are design choices; their measured cost is pending.
 
-\begin{table}[t]
+\begin{table}[!ht]
 \centering
 \small
 \caption{Technique and communication for each part of a timestep.}
