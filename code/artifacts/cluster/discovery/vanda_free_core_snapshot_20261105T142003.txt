@@ -1,0 +1,9 @@
+one read-only snapshot, no job changed: free cores per node in pool cpu_free (pbsnodes), memory not counted
+2026-11-05 14:20:03 +08
+1522998 job_state = Q; comment = Not Running: Insufficient amount of resource: node_pool
+pool cpu_free ('cn', 72) nodes 3
+pool cpu_free ('in', 64) nodes 20
+pool cpu_free ('rn', 72) nodes 1
+cn unusable 0 free>=64 0 free>=32 0 free>=16 1 free>=8 1 total free 27
+in unusable 0 free>=64 0 free>=32 0 free>=16 5 free>=8 10 total free 175
+rn unusable 1 free>=64 0 free>=32 0 free>=16 0 free>=8 0 total free 0

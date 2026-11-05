@@ -68,16 +68,38 @@
 
 %----------------------------------------------------------
 
-\noindent\textbf{Submission Overview.} \pending{confirm on Canvas how source code is submitted alongside this PDF.} The submission comprises the C++17 source (shared core, serial driver, MPI+OpenMP driver), the validation and measurement scripts, the scheduler job scripts used on \pending{Atlas or Vanda}, the raw run records from which every table and figure is generated, and a \texttt{README.md} with build and run instructions.
+\noindent\textbf{Submission Overview.} \pending{confirm on Canvas how source code is submitted alongside this PDF.} The source package holds the C++17 code (shared core, serial, MPI+OpenMP and GPU drivers), the validation and measurement scripts, the experiment plans, the PBS job scripts used on the Vanda cluster, and a \texttt{README.md} with build and run instructions. As required, it contains no log files or terminal output; run records are kept separately to check the results in this report.
 
 \section{Introduction}
 \rhostart{T}he gravitational $N$-body problem asks for the motion of $N$ point masses under their mutual attraction. Direct summation costs $O(N^2)$ per force evaluation, which limits it to small $N$. The Barnes--Hut algorithm~\cite{BarnesHut1986} reduces the cost to $O(N \log N)$ by grouping distant particles into the cells of an octree and replacing each sufficiently distant group by its total mass at its centre of mass.
 
-Barnes--Hut is a useful parallelization exercise because it is not embarrassingly parallel. Every particle's force depends on a tree built from all positions, so each timestep needs global information; the work per particle depends on local density, so equal particle counts need not mean equal work; and particles move, so any decomposition changes over time. We implement a serial reference and an MPI+OpenMP version in C++17, verify that the parallel version reproduces the serial one, and study how the split between MPI ranks and OpenMP threads, and the OpenMP loop schedule, affect scaling and efficiency on \pending{Atlas or Vanda}.
+Barnes--Hut is a useful parallelization exercise because it is not embarrassingly parallel. Every particle's force depends on a tree built from all positions, so each timestep needs global information; the work per particle depends on local density, so equal particle counts need not mean equal work; and particles move, so any decomposition changes over time. We implement a serial reference and an MPI+OpenMP version in C++17, verify that the parallel version reproduces the serial one, and study how the split between MPI ranks and OpenMP threads, and the OpenMP loop schedule, affect scaling and efficiency on the Vanda cluster.
 
-\pending{main measured findings in two or three sentences, once cluster runs exist.}
+So far only correctness and the required GPU test have been measured on Vanda. \textbf{No CPU scaling result exists yet}, for serial, MPI or MPI+OpenMP runs, so this report states no CPU performance finding. \pending{main measured findings in two or three sentences, once cluster runs exist.}
 
 \section{Problem and Method}
+\subsection{Terms Used}
+\begin{description}[noitemsep,leftmargin=0pt,font=\normalfont\itshape]
+\item[Octree:] a tree of cubes in which each cell splits into eight equal octants.
+\item[Leaf size $L$:] the most particles a cell may hold before it is split.
+\item[Opening angle $\theta$:] the accuracy setting of Barnes--Hut. A larger value treats more cells as single masses, which is faster and less accurate.
+\item[Monopole:] a cell's total mass placed at its centre of mass.
+\item[Softening $\varepsilon$:] a small length added to each separation so that the force stays finite.
+\item[Rank, thread, core:] an MPI process, an OpenMP thread within it, and a physical CPU core. $R \times T$ means $R$ ranks with $T$ threads each.
+\item[Allocated cores $P$:] the cores a run holds, normally $R \times T$.
+\item[Replicated tree:] every rank stores all positions and builds the same full tree.
+\item[Owned particles:] the particles a rank computes forces for and moves.
+\item[Binding, placement:] restricting a rank or thread to given cores, and the resulting layout.
+\item[Strong and weak scaling:] more cores with fixed $N$, and more cores with $N/P$ fixed.
+\item[Timed region:] the steps whose wall time is reported; setup is excluded.
+\item[Traversal imbalance:] the slowest rank's force time divided by the mean over ranks.
+\item[Manifest:] a file listing the runs of an experiment, fixed before they run.
+\item[Gate:] a checked step in a job, with its own time limit.
+\item[Offload, device:] running the force loop on a GPU, which is the device.
+\item[PBS, \texttt{tm}, \texttt{pbs\_tmrsh}:] the cluster's job scheduler, its interface for starting processes, and its tool for starting a command on a node inside a job.
+\item[Daemon:] the helper process Open MPI starts on a node to launch ranks.
+\end{description}
+
 \subsection{Physical Model and Inputs}
 Particle $i$ has mass $m_i$, position $\mathbf{x}_i$ and velocity $\mathbf{v}_i$. With $G=1$ and Plummer softening $\varepsilon = 0.025$, its acceleration is
 \begin{equation}
@@ -86,7 +108,14 @@ Particle $i$ has mass $m_i$, position $\mathbf{x}_i$ and velocity $\mathbf{v}_i$
 \end{equation}
 Softening keeps the force finite when particles come close or coincide.
 
-Inputs are synthetic. Positions follow the Plummer density profile~\cite{Plummer1911}, sampled by inverting its cumulative mass function as in Aarseth, H\'enon and Wielen~\cite{Aarseth1974}, with equal masses $1/N$. Velocities are small, isotropic and random (speed uniform in $[0, 0.1]$); they are \emph{not} the Plummer equilibrium distribution, which this study does not need. All randomness comes from a fixed-seed Mersenne Twister, so every implementation starts from an identical state. The profile is strongly centrally concentrated, which makes tree depth and per-particle work vary across space; a uniform cube would hide the load-balance question.
+Inputs are synthetic and generated by one routine, so every implementation starts from the same state. A fixed-seed Mersenne Twister supplies all random numbers. For each particle in ID order:
+\begin{itemize}[noitemsep]
+\item \emph{Mass:} every particle has mass $1/N$, so total mass is 1.
+\item \emph{Radius:} a uniform random $m \in (0,1)$ gives $r = (m^{-2/3}-1)^{-1/2}$. This inverts the cumulative mass function of the Plummer density $\rho(r) \propto (1+r^2)^{-5/2}$ with scale length 1~\cite{Plummer1911,Aarseth1974}. The radius is not truncated, so rare particles lie far out and enlarge the root cell.
+\item \emph{Direction:} uniform on the sphere, from a uniform $\cos\vartheta \in [-1,1]$ and azimuth $\in [0,2\pi)$.
+\item \emph{Velocity:} speed uniform in $[0, 0.1]$, in an independent uniform direction.
+\end{itemize}
+These velocities are \emph{not} the Plummer equilibrium distribution, and we do not claim the cloud is in equilibrium: it starts cold and will evolve. Mean momentum is not removed. Our runs are a few steps long and measure cost, not astrophysical behaviour, so they do not need equilibrium. The profile is centrally concentrated, which makes tree depth and per-particle work vary across space; a uniform cube would hide the load-balance question. Synthetic data suit weak scaling because $N$ can be set freely with the same distribution. The cloud keeps the same size as $N$ grows, so density and tree depth grow too.
 
 Time integration uses kick--drift--kick leapfrog~\cite{Verlet1967}: half kick $\mathbf{v} \leftarrow \mathbf{v} + \tfrac{\Delta t}{2}\mathbf{a}$, drift $\mathbf{x} \leftarrow \mathbf{x} + \Delta t\,\mathbf{v}$, new forces, half kick. Unless stated otherwise $\Delta t = 10^{-3}$.
 
@@ -129,9 +158,33 @@ MPI is initialised with \texttt{MPI\_Init\_thread} requesting \texttt{MPI\_THREA
 Placement matters as much as the code. During local development we found that Open MPI's default binding can put a rank's whole thread team on one hardware thread: \input{generated/binding_note.tex} Every measurement run and placement probe therefore sets placement explicitly: $R$ ranks per node with $T$ cores each (Open MPI \texttt{--map-by ppr:$R$:node:PE=$T$ --bind-to core}), and within each rank one OpenMP thread per core (\texttt{OMP\_PROC\_BIND=close}, \texttt{OMP\_PLACES=cores}). A placement probe run inside each job checks that every thread runs on a different CPU and is bound to a single core. Placement is recorded with every run and treated as part of the configuration in the analysis.
 
 \section{Correctness}
-We separate two questions: how far Barnes--Hut is from the exact force at a given $\theta$ (approximation error), and whether the parallel program computes the same Barnes--Hut result as the serial one (implementation error). The approximation and implementation results below come from a correctness job on a Vanda compute node (PBS job 1503779, 8 allocated cores, compiled there with GCC~13.2 and Open MPI~4.1.6, with hybrid--serial comparisons run unbound); the same gates also passed earlier in a local Debian container with GCC~12 and Open MPI~4.1.4. The energy study (Table~\ref{tab:energy}) and the mutation check are local development evidence only.
+Each test below exists to catch a particular fault; Table~\ref{tab:test-purpose} gives the reason for each. We separate two questions: how far Barnes--Hut is from the exact force at a given $\theta$ (approximation error), and whether the parallel program computes the same Barnes--Hut result as the serial one (implementation error). The approximation and implementation results below come from a correctness job on a Vanda compute node (PBS job 1503779, 8 allocated cores, compiled there with GCC~13.2 and Open MPI~4.1.6, with hybrid--serial comparisons run unbound); the same gates also passed earlier in a local Debian container with GCC~12 and Open MPI~4.1.4. The energy study (Table~\ref{tab:energy}) and the mutation check are local development evidence only.
 
-Correctness across two nodes rests on one job; every earlier two-node job stopped before the comparison. Job 1506687 stopped at its pre-build allocation check, which at that time required identical CPU models and was given two different ones. Job 1507215 confirmed two distinct hosts, the 8-core allocations and data exchange between nodes, then stalled in a placement probe and reached its time limit. A diagnostic job (1514029) reproduced the stall: under PBS's own process manager, launches that used a core mapping and binding hung, even for \texttt{hostname}, while one launch through PBS's \texttt{pbs\_tmrsh} agent passed. We did not find the cause. Multi-node jobs therefore start their remote daemons through \texttt{pbs\_tmrsh}, with no fallback to ssh, and check that those daemons run under the PBS daemon on every node. \input{generated/twonode_note.tex}
+\begin{table}[t]
+\centering
+\small
+\caption{Why each validation test is meaningful.}
+\label{tab:test-purpose}
+\begin{tabular}{@{}p{0.40\columnwidth}p{0.54\columnwidth}@{}}
+\toprule
+Test & Fault it would reveal \\
+\midrule
+$\theta=0$ against direct summation & A particle lost or counted twice in the tree, or self-interaction \\
+Tree invariants & A particle in no leaf or two; wrong cell mass \\
+Two particles, closed form, $\theta$ up to 10 & Wrong force law; a cell accepted that contains its target \\
+Coincident and extreme inputs & Particles dropped at the depth limit \\
+Hybrid against serial, by particle ID & Missing exchange, wrong ownership, a race \\
+Uneven $N$, empty ranks, $N=1$ & Errors in dividing particles between ranks \\
+Repeated threaded runs & Results that depend on thread timing \\
+Perturbed force, mass mismatch, removed exchange & A test harness that cannot fail \\
+Invalid arguments & Ranks left hanging in a collective \\
+Placement probe & Threads sharing a core, which would spoil timings \\
+GPU against direct summation and serial & A missing data transfer; silent fallback to the CPU \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Correctness across two nodes rests on one job; every earlier two-node job stopped before the comparison. Job 1506687 stopped at its pre-build allocation check, which at that time required identical CPU models and was given two different ones. Job 1507215 confirmed two distinct hosts, the 8-core allocations and data exchange between nodes, then stalled in a placement probe and reached its time limit. A diagnostic job (1514029) reproduced the stall: under PBS's own process manager, launches that used a core mapping and binding hung, even for \texttt{hostname}, while one launch through PBS's \texttt{pbs\_tmrsh} agent passed. We did not find the cause. Multi-node jobs therefore start their remote daemons through \texttt{pbs\_tmrsh}, with no fallback to ssh, and check that those daemons run under the PBS daemon on every node. \input{generated/twonode_note.tex} Single-node measurement jobs at first used a plain node file instead. Pilot job 1519637 showed that this did not avoid \texttt{tm}: \texttt{mpirun} still selected it, started a daemon on its only node and made no progress at the first bound launch, with no run started and nothing measured. The process state matched the earlier stall, so we take it to be the same fault, though that is an inference. All measurement jobs now launch through \texttt{pbs\_tmrsh}. \pending{whether this works on one node at full size is not yet shown on Vanda.}
 
 These results answer two separate questions. The comparison against the serial program shows that the distributed computation gives the same answer across two nodes, but it ran unbound, so it says nothing about bound runs. The bound runs are the placement probes, which check where threads run and do not run the solver, and one short solver run with 4 ranks of 4 threads ($N=50000$, 2 steps), which checks that a bound two-node run completes and is recorded, without comparing its result with serial. No bound result has been compared with serial. This is also one job on one pair of nodes, at far below full scale: it does not show that the launch method is reliable, explain the stall, or cover the larger allocations and other node types used for measurement.
 
@@ -157,7 +210,7 @@ Energy is a supplementary diagnostic, not a correctness proof (Table~\ref{tab:en
 \section{Computing Environment}
 Formal measurements use the NUS HPC cluster Vanda, which is scheduled by PBS. Code is compiled on the allocated compute node, because login and compute nodes differ in architecture, with \texttt{-O3 -march=native} and the same flags for serial and hybrid builds. Jobs are submitted to the zero-rate \texttt{auto\_free} routing queue, which places multi-core jobs in \texttt{cpu\_parallel}. The first correctness job ran on node IN-003: two Intel Xeon Gold 6438N sockets with 32 cores each, one hardware thread per core, two NUMA domains and Red Hat Enterprise Linux~9.4. It used the \texttt{OpenMPI/4.1.6-GCC-13.2.0} module (GCC~13.2.0, Open MPI~4.1.6). PBS confined the job to its 8 allocated cores, and the placement probe confirmed one thread per core.
 
-The free node pool is not uniform: besides the 64-core Gold~6438N (IN) nodes it contains 72-core Xeon Platinum~8452Y (CN) nodes, and the scheduler offers no resource that selects a CPU model, so a multi-node request can receive both types (job 1506687 did). Each run records its nodes and CPU models. Timings are compared only within a single CPU model, and a speedup's serial baseline must come from the same model. Multi-node correctness jobs, which may receive mixed nodes, use one portable build (\texttt{-march=x86-64 -mtune=generic}, recorded together with the target the compiler resolved) instead of \texttt{-march=native}; their results are correctness evidence only. \pending{memory per node, interconnect, how measurement jobs are restricted to one node type, and the nodes and allocations used by the measurement jobs.}
+The free node pool is not uniform: besides the 64-core Gold~6438N (IN) nodes it contains 72-core Xeon Platinum~8452Y (CN) nodes, and the scheduler offers no resource that selects a CPU model, so a multi-node request can receive both types (job 1506687 did). Each run records its nodes and CPU models. Timings are compared only within a single CPU model, and a speedup's serial baseline must come from the same model. Multi-node correctness jobs, which may receive mixed nodes, use one portable build (\texttt{-march=x86-64 -mtune=generic}, recorded together with the target the compiler resolved) instead of \texttt{-march=native}; their results are correctness evidence only. The free queue allows at most 160 CPUs per job and per user, so 256 cores needs the charged \texttt{batch\_cpu} queue. \pending{whether a 256-core run is approved and completed: not yet decided, and the report must state any shortfall.} \pending{memory per node, interconnect, how measurement jobs are restricted to one node type, and the nodes and allocations used by the measurement jobs.}
 
 Local development used a Debian~12 container (GCC~12.2, Open MPI~4.1.4) on an 8-core Intel Core i9-9880H laptop with simultaneous multithreading, and Apple clang on macOS for the serial gates. No timing from these machines is reported as a performance result.
 
@@ -169,13 +222,19 @@ The timed region is a fixed number of timesteps after setup. Setup covers initia
 $P$ is the number of physical cores allocated to a run, normally ranks $\times$ threads, and runs that place more threads than allocated cores are rejected. Strong-scaling speedup is $S(P) = T_{\mathrm{serial}}/T(P)$ and efficiency is $E(P) = S(P)/P$, where $T_{\mathrm{serial}}$ is serial Barnes--Hut with the same problem, numerical settings, source revision, compiler flags and CPU model. The one-rank, one-thread hybrid time is reported alongside it to expose MPI and OpenMP overhead. Weak-scaling efficiency is $T(P_0, N_0)/T(P, N)$ with $N/P = N_0/P_0$ and a stated baseline $P_0$. Constant particles per core does not mean constant work per core, since tree depth grows with $N$, and the replicated design stores all $N$ positions on every rank.
 
 \subsection{Planned Studies}
-\begin{enumerate}
-\item Strong scaling at fixed $N$ and step count over increasing $P$, including serial and one-rank, one-thread baselines, and node boundaries where the allocation allows.
+None of these CPU studies has run yet. They are numbered as in the experiment plans.
+\begin{enumerate}[noitemsep]
+\setcounter{enumi}{-1}
+\item Serial runtime against particle count $N$.
+\item Strong scaling at fixed $N$ and step count, to at least 256 cores, including serial and one-rank, one-thread baselines, with speedup and efficiency.
 \item Ranks $\times$ threads at fixed $P$ and $N$, e.g.\ $16{\times}1$, $8{\times}2$, $4{\times}4$, $2{\times}8$, $1{\times}16$, with matched placement.
 \item OpenMP schedule: static against dynamic and guided, with a small chunk-size sweep fixed in advance.
-\item Weak scaling with $N \propto P$ and fixed threads per rank.
+\item Weak scaling with $N \propto P$ and fixed threads per rank, to at least 256 cores.
+\item Leaf size.
 \item Accuracy against cost across $\theta$, reported separately from scaling.
 \end{enumerate}
+The share of time in the position exchange is read from the strong and weak runs. Axes for time, particle count and CPU count are logarithmic in every figure; efficiency and the exchange share are ratios and use linear vertical axes.
+
 Problem sizes, step counts and core counts will be chosen from pilot runs within the cluster's memory and time limits and then frozen in a manifest: a machine-readable file in the code repository whose identifier and checksum every run record carries. Formal measurement jobs refuse a manifest that is not frozen. \pending{frozen manifest (sizes, step counts, core counts) after the pilot.} Each configuration is run at least three times. We report the median with the minimum and maximum, and failed runs are kept and listed.
 
 \subsection{Bounded Runs and Failed Runs}
@@ -189,17 +248,17 @@ Each run writes its own record: exact command, scheduler job ID, nodes, CPU mode
 % analysed Vanda runs (artifacts/cluster/) only; until it exists the slot
 % shows a pending marker. Do not type numbers into these slots by hand.
 \newcommand{\resultslot}[2]{\IfFileExists{generated/#1.tex}{\input{generated/#1.tex}}{\pending{#2}}}
-\pending{no scaling measurement has run yet: every figure and table in this section except the GPU test awaits Vanda jobs after the 2 Nov reopening.}
+\pending{no CPU scaling measurement exists: every CPU figure and table in this section awaits Vanda jobs. Only the GPU test below is measured. Statements marked ``expected'' follow from the design and are not results.}
 
 \subsection{Serial Runtime against Problem Size}
 \resultslot{fig_serial_n}{serial runtime against $N$, log--log axes (study 0).}
-\pending{interpretation against the expected $O(N\log N)$ cost.}
+Expected, not measured: about $O(N \log N)$ per step, so a slope slightly above 1 on log--log axes. \pending{interpretation of the measured slope.}
 
 \subsection{Strong Scaling}
 \resultslot{fig_strong_runtime}{strong-scaling runtime figure to at least 256 cores (study 1).}
 \resultslot{fig_strong_speedup}{strong-scaling speedup figure (study 1).}
 \resultslot{fig_strong_efficiency}{strong-scaling efficiency figure (study 1).}
-\pending{interpretation of the strong-scaling results.}
+Expected, not measured: the force loop divides among cores, but every rank repeats the whole tree build on one thread and takes part in the exchange. Those costs do not shrink with more ranks, so efficiency should fall as $P$ grows, and more quickly with many ranks than with many threads per rank. \pending{interpretation of the strong-scaling results.}
 
 \subsection{Ranks and Threads}
 \resultslot{tab_ranks_threads}{ranks $\times$ threads table (study 2).}
@@ -212,12 +271,12 @@ Each run writes its own record: exact command, scheduler job ID, nodes, CPU mode
 \subsection{Weak Scaling}
 \resultslot{fig_weak_runtime}{weak-scaling runtime figure to at least 256 cores (study 4).}
 \resultslot{fig_weak_efficiency}{weak-scaling efficiency figure (study 4).}
-\pending{interpretation, including memory per rank.}
+Expected, not measured: efficiency should fall even for a perfect force loop, because $N$ and so each rank's tree build and memory grow with $P$. \pending{interpretation, including memory per rank.}
 
 \subsection{Where the Time Goes}
 \resultslot{fig_phases}{phase times against core count.}
 \resultslot{fig_comm_fraction}{share of runtime spent in the position exchange.}
-\pending{interpretation: how communication affects runtime as core count grows.}
+Expected, not measured: each step sends every particle's three coordinates to every rank, so each rank receives $24N$ bytes and a node with $R$ ranks receives $24NR$ bytes. At fixed $N$ the force time falls with $P$ while this does not, so the exchange's share of runtime should rise, especially with many ranks per node. \pending{interpretation: how communication affects runtime as core count grows.}
 
 \subsection{GPU Test}
 The GPU program uses the serial tree code on the CPU and offloads only the force traversal, with OpenMP \texttt{target}. A silent fallback to the CPU would make any GPU result false, so the job requires a device: the kernel must report that it ran on a device whose memory is separate from the host's, offload is set to mandatory, and \texttt{nvidia-smi} provides a view from outside the program. Separate memory also matters for correctness, because a missing data transfer cannot show up when the target region runs on the host. \input{generated/gpu_note.tex} The deliberate-fault checks of the validator ran only in local development without a device, not on the GPU. This is one validation job on one GPU and shows correctness, not speed. \resultslot{fig_gpu_runtime}{GPU timing against the CPU cores of the same allocation: not measured yet.}
@@ -229,11 +288,35 @@ In this timing job (PBS 1519638, commit \texttt{8a50c8f}; Figure~\ref{fig:gpu-ru
 \pending{interpretation.}
 
 \subsection{Failed and Skipped Runs}
-\resultslot{tab_failed_runs}{table of failed, timed-out and skipped runs.}
+Two pilot jobs ended before any run and so measured nothing. Job 1514774 stopped at entry after one second because of a job-script path error. Job 1519637 stopped at its placement step (see Correctness). \resultslot{tab_failed_runs}{table of failed, timed-out and skipped runs.}
 
 \section{Discussion}
+\subsection{Parallelization Decisions}
+Table~\ref{tab:decisions} lists the technique used for each part of the program and the communication it needs. These are design choices; their measured cost is pending.
+
+\begin{table}[t]
+\centering
+\small
+\caption{Technique and communication for each part of a timestep.}
+\label{tab:decisions}
+\begin{tabular}{@{}p{0.2\columnwidth}p{0.38\columnwidth}p{0.3\columnwidth}@{}}
+\toprule
+Part & Technique & Communication \\
+\midrule
+Initial state & Rank 0 generates it & One broadcast \\
+Integration & Each rank, owned particles only & None \\
+Positions & Replicated on every rank & \texttt{MPI\_Allgatherv} each step \\
+Tree build & Whole tree on each rank, one thread & None; the same tree results from the same positions \\
+Force loop & OpenMP within a rank, ranks by ID range & None; the tree is read-only \\
+GPU force loop & OpenMP \texttt{target} on one device & Host--device transfers, no MPI \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Replication makes the force loop free of communication and keeps results exactly equal to serial, which is what the correctness tests rely on. The price is the per-step all-to-all exchange and a tree build that is repeated on every rank. Threads avoid neither cost, but fewer ranks per node reduce the exchange volume and memory, which is why the ranks $\times$ threads study matters.
+
 \subsection{What the Results Support}
-\pending{after cluster results.}
+The correctness jobs support the claim that the parallel program reproduces the serial result in the configurations tested, within the limits given in Correctness. The GPU job supports only the comparison in its section: one A40 was slower than 36 CPU cores with this kernel. Nothing yet supports a claim about CPU scaling, MPI communication cost or the best split of ranks and threads. \pending{after cluster results.}
 
 \subsection{Limitations}
 \label{sec:limitations}

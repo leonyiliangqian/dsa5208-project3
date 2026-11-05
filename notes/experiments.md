@@ -604,3 +604,14 @@ Leon approved one rerun. Commit `3f77e87`, tree, manifest hash, resources, sched
 unfinished job and no other `p3_pilot1` in history. Submitted once at 13:46:25 SGT from `~/dsa5208-p3-3f77e87/code`; state Q in
 `cpu_parallel`, rate 0. PBS shows `project = personal-leonyil.qian`. Nothing measured yet. Record:
 `artifacts/cluster/discovery/vanda_pilot_rerun_submit_3f77e87_20261105T134621.txt`.
+
+### Preparation while 1522998 waits, 5 Nov (local, no job changed)
+
+One read-only snapshot at 14:20 SGT: `1522998` state Q, `node_pool`; free cores in `artifacts/cluster/discovery/vanda_free_core_snapshot_20261105T142003.txt`.
+`pilot16.pbs` and `pilot_single_node_16core.json` are prepared at `96a37ba`, not approved. Local checks, never measurements:
+`plan_budget_test`, `pbs_entry_test`, and the wrapper end to end in Docker with `REQUIRE_PBS_TM=0` and the local test manifest
+(`artifacts/local/runs/simulated-pilot16-20261105/`): 36 runs passed, and only the deliberate timeout probe failed. Dry run recorded locally.
+
+Source package at `c8b7495`: `package_test` passes, with 80 files, no logs, text output, evidence or binaries, and three refusal
+controls. Unzipped alone, it passes `make check` and `make check-hybrid` in Docker. Report compiled in a scratch copy: 8 pages, no
+overfull box; pages 1, 3, 4, 7 and 8 inspected as images. Figure code reviewed: time, N and core-count axes are logarithmic.

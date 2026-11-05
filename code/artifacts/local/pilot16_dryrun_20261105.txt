@@ -1,0 +1,16 @@
+local dry run only: no qsub on this machine, nothing sent to Vanda; the paths and revision change in a Vanda clone
+2026-11-05 14:22:21 +08
+96a37ba1d5dfa810dfa24bb740e58aad9aa5388d
+340af523ae17b4f996426dffe7d4bd42adcd4bf400a8807a9b2a61cd545c0690  manifests/pilot_single_node_16core.json
+#PBS -N p3_pilot16
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=16gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_16core.json,SOURCE_GIT_REV=96a37ba1d5dfa810dfa24bb740e58aad9aa5388d -o /Users/leon.qian/Desktop/DSA5208/dsa5208-project3/code/artifacts/cluster/logs/ jobs/vanda/pilot16.pbs
+dry run: add --yes to submit
+request: 1 x 16 cores, 16 GB each, 3600 s = 16 core-hours requested
+credits at assumed rate 0 per core-hour: 0 if charged on the request
+runs: 20, estimated 946 s, worst case 2900 s, budget 2958 s after 300 s of gates and 342 s reserved at the end
+expected job time: 21 min = 6 core-hours used
+largest node memory: 3 GB of 16 GB
+PLAN OK

@@ -38,6 +38,41 @@ node before paying for one. `bench2` is needed only if the 256-core route fails.
 `bench1` has 148 runs. Its 4 h covers the worst case, 13020 s, if every run uses its whole limit. A long request may wait
 longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline.
 
+## Smaller pilot: `pilot16`, not approved
+
+**Why:** `1522998` waits for a whole 64-core node. A snapshot at 14:20 SGT on 5 Nov had no free-pool node with 64 or even 32 cores
+free, and 6 with at least 16 (5 Gold 6438N, 1 Platinum 8452Y). That counts cores only, not memory, and it is one moment, so it does
+not promise a start. It is why this pilot uses 16 cores rather than 32.
+
+**Request:** 1 x 16 cores, 16 GB, 60 min, 16 core-hours at most, rate 0. Same 20 runs, sizes and order as the 64-core pilot, with
+1 x 16, 4 x 4 and 16 x 1 in place of 1 x 64, 8 x 8 and 64 x 1.
+
+**Memory:** at most 3 GB estimated (16 ranks at 1.3 x (17 + 136.4) MiB, from a local Docker probe), so 16 GB leaves a factor of
+about 5. **Runtime:** estimated 21 min including 5 min of gates. Limits are shorter than the 64-core pilot's, and the worst case of
+2900 s fits the 2958 s budget, so all 20 runs can start. These are estimates, not measurements, and a slower shared node could time
+out. The serial 10^6 limit of 300 s is still 100 s per step, enough to tell the bands of rule 4 apart.
+
+| Rule | What 16 cores gives |
+|---|---|
+| 1, 3 | Gates and CPU model of this job. The model may not match later jobs |
+| 4 | Serial time at 10^6 and 2 x 10^6: **answered**, though a shared node may read slow |
+| 5 | `hybrid 1x1` against serial: **answered** |
+| 6 | Efficiency at 16 x 1 only. Under 0.25 is a warning; a good value says nothing about 64 |
+| 7 | RSS per rank at 16 x 1: **estimate only**, since per-rank MPI memory can grow with ranks |
+| 8 | Exchange share at 16 x 1: **lower bound**, since exchange volume per node grows with ranks |
+| 9 | Schedules at 1 x 16: **provisional** |
+| 10 | Leaf size, serial at 3 x 10^5: **answered** |
+| 11 | Theta and accuracy at 4 x 4: **answered** for cost; the theta estimate can be replaced |
+| 12 | Constants in `plan_budget.py`: **provisional** |
+
+**Still needs 64 cores:** launch through `pbs_tmrsh` at 64 ranks on a node (8 per node is the most shown); 64 x 1 efficiency, RSS and
+exchange share; 1 x 64 across both sockets; a whole node with no other job on it. `pilot2` or `1522998` must supply these before any
+manifest is frozen for a charged job. Results from this job size later jobs but are not reported as scaling results.
+
+**Finding on the 64-core pilot:** `plan_budget.py` refuses `pilot_single_node_v2.json`, since its worst case of 6480 s is over the
+2958 s budget. That is why its sizing runs come first. If runs are slow, `1522998` may skip its last runs (leaf, serial 2 x 10^6,
+`hybrid 1x1`), and rule 2 then applies. It has not been changed.
+
 ## Charge assumptions
 
 - **Assumed: 1 credit per core-hour at rate 1.** The site's conversion is **not confirmed**. Only the queue's

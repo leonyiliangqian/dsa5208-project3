@@ -1,0 +1,29 @@
+{
+  "case": "accuracy_validate_n2000_th0p7_L8",
+  "rep": 1,
+  "ok": true,
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_s": 0.04,
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "bin/vanda-99016/bh_serial",
+    "--validate",
+    "--n",
+    "2000",
+    "--theta",
+    "0.7",
+    "--leaf-size",
+    "8"
+  ],
+  "timeout_s": 120,
+  "tags": {
+    "study": "accuracy",
+    "manifest_id": "local-e2e-v1",
+    "manifest_sha256": "6d85c8e71cf868c2de5d599625162979ad6c8c659bd3355248c1bb2cd11e57c6",
+    "manifest_status": "local pipeline test only: tiny inputs in Docker, never results",
+    "scale": "1"
+  }
+}

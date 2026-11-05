@@ -7,7 +7,12 @@ membership and student IDs in `report/main.tex` before submission.
 
 **Teammates writing the report: start with [HANDOFF.md](HANDOFF.md).**
 
-## Current state (30 October 2026)
+## Latest state
+
+See the top of [HANDOFF.md](HANDOFF.md). In short, on 5 November: pilot rerun `1522998` is queued, no CPU scaling result exists, and
+GPU timing is done (job 1519638). The list below is from 30 October.
+
+## State on 30 October 2026
 
 - Topic: Barnes–Hut n-body, C++17, MPI+OpenMP.
 - Serial reference audited and fixed; serial gate passes on macOS, Docker and Vanda.
@@ -70,6 +75,7 @@ commands and [code/README.md](code/README.md) for details.
 | [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol; every Vanda job and finding |
 | [notes/experiment_manifest.md](notes/experiment_manifest.md) | Study design (machine-readable plans in `code/manifests/`) |
 | [notes/ai_usage.md](notes/ai_usage.md) | AI-use record and declaration draft |
+| [notes/group_review.md](notes/group_review.md) | What the group must check before submission |
 | [notes/cluster_access.md](notes/cluster_access.md) | Vanda runbook |
 | [notes/progress_report_draft.md](notes/progress_report_draft.md) | Optional progress report draft (not sent) |
 | [code/](code/) | C++17 serial and MPI+OpenMP solvers, tests, measurement pipeline, Vanda jobs |

@@ -1,5 +1,28 @@
 # Approval requests
 
+## Open, 5 November 2026: 16-core pilot, not approved
+
+**Not approved and not submitted.** Reasoning is in `plan_256core.md`, "Smaller pilot". Use it only if `1522998` has not started;
+if `1522998` has started or passed its gates, this request lapses.
+
+| | |
+|---|---|
+| Source | `96a37ba1d5dfa810dfa24bb740e58aad9aa5388d`, in a new clone `~/dsa5208-p3-96a37ba` |
+| Manifest | `pilot_single_node_16core.json`, SHA-256 `340af523ae17b4f996426dffe7d4bd42adcd4bf400a8807a9b2a61cd545c0690`, 20 runs |
+| Request | `select=1:ncpus=16:mpiprocs=16:mem=16gb`, 60 min, 16 core-hours at most |
+| Queue, charge | `auto_free`, no `-P`, recheck rate 0 before submitting |
+| With `1522998` | It stays queued. 64 + 16 cores is inside the 160-CPU, 2-running-job limit |
+| If a gate fails | The job stops, with no retry |
+
+After approval: copy the exact commit, verify commit, tree and manifest hash, dry-run, recheck readiness, then run once:
+
+```sh
+cd ~/dsa5208-p3-96a37ba/code
+bash jobs/vanda/submit.sh pilot16 --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_16core.json --yes
+```
+
+The dry run so far is local only: `code/artifacts/local/pilot16_dryrun_20261105.txt`. No clone exists on Vanda yet.
+
 ## Consumed, 5 November 2026: rerun the single-node pilot once
 
 **Approved by Leon and submitted once on 5 Nov at 13:46:25 SGT as job `1522998`. This approval is used up, and no approval is open.**
