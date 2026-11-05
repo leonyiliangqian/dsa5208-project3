@@ -11,8 +11,8 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Cause, as far as shown:** the job asked for a hostfile launch, but mpirun still selected `tm`, the launcher that hung with
   binding in job 1514029. Same process state too. Why `tm` hangs with binding is still unknown.
 - **Fix, commit `3f77e87`:** every job launches through `pbs_tmrsh`. Passed locally only; Docker has no PBS or `tm`.
-- **Waiting on Leon:** one rerun of the pilot, request in [notes/approval_requests.md](notes/approval_requests.md). Not approved or
-  submitted. The last wait was 10 h 1 min.
+- **Waiting on Leon:** one rerun of the pilot, request in [notes/approval_requests.md](notes/approval_requests.md). Clone
+  `~/dsa5208-p3-3f77e87` and its dry run are ready (5 Nov 13:31 SGT). Not approved or submitted. The last wait was 10 h 1 min.
 - The items below still apply, except that sizing now waits for this rerun.
 
 ## Update, 4 November 2026, 23:21 SGT

@@ -1,0 +1,86 @@
+preparation only: read-only checks, new clone, dry run; no job submitted, no amgr login
+2026-11-05 13:31:15 +08
+stdct-login-01
+== old pilot evidence before: 828668f77b07ecede3ae709e1940d646ee0bdc94878ab69b8cd2f1ad7a9d83cb
+== bundle
+bundle sha256 matches Mac: 59400c0419245a2a2c386234daab7816c1192b356e2d8a511050710321477508
+commit matches 3f77e8727a9876f77667d3b7d78b9934ad43897d
+tree matches 00bf445fb0350de806d83aa0c10a5097bc32c636
+status lines before: 0
+manifest matches 0a5f9f64cc5923a218ec9be9f3498be34baf2733c1aeaee1f4daa78c1e2f937a
+manifest status=proposed cases=11
+syntax ok jobs/vanda/pilot.pbs
+syntax ok jobs/vanda/measure.sh
+syntax ok jobs/vanda/multinode_setup.sh
+syntax ok jobs/vanda/allocation_check.sh
+old launcher line absent
+37:[ "${REQUIRE_PBS_TM:-1}" = 1 ] && export MPI_LAUNCHER=${MPI_LAUNCHER:-pbs_tmrsh}
+pbs_tmrsh on login: 
+== job script
+#PBS -N p3_pilot1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=01:00:00
+#PBS -j oe
+EXPECT_NODES=1 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+cd "${PBS_O_WORKDIR:?run under PBS, from the code/ directory}"
+source jobs/vanda/measure.sh
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_max.ncpus = 160
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e0030005=16]
+    max_run = [u:e0540410=9]
+    max_run = [u:e0983460=28]
+    max_run = [u:e1554743=3]
+    max_run = [u:sauyong=12]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== current jobs
+qstat rc=0
+== history, this user
+
+stdct-mgmt-02: 
+                                                            Req'd  Req'd   Elap
+Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+--------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+1513781.stdct-* leonyil* cpu_par* p3_diag    29187*   2  16    8gb 00:20 F 00:00
+1514029.stdct-* leonyil* cpu_par* p3_diag    15883*   2  16    8gb 00:20 F 00:05
+1514458.stdct-* leonyil* cpu_par* p3_twonode 35725*   2  16   32gb 00:30 F 00:03
+1514774.stdct-* leonyil* cpu_par* p3_pilot1  102388   1  64  120gb 01:00 F 00:00
+1514775.stdct-* leonyil* gpu      p3_gpu_va* 139252   1  36   60gb 00:30 F 00:00
+1519637.stdct-* leonyil* cpu_par* p3_pilot1  214531   1  64  120gb 01:00 F 00:01
+1519638.stdct-* leonyil* gpu      p3_gpu_ti* 177471   1  36   60gb 01:00 F 00:04
+== jobs named p3_pilot1, any state
+1514774.stdct-mgmt-02
+1519637.stdct-mgmt-02
+== not finished, this user: []
+== 1519637
+    job_state = F
+    run_count = 1
+    Exit_status = 5
+== dry run, no --yes
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_v2.json,SOURCE_GIT_REV=3f77e8727a9876f77667d3b7d78b9934ad43897d -o /home/svu/leonyil.qian/dsa5208-p3-3f77e87/code/artifacts/cluster/logs/ jobs/vanda/pilot.pbs
+dry run: add --yes to submit
+dryrun rc=0
+status lines after: 0
+== not finished after dry run: []
+old pilot evidence unchanged: 828668f77b07ecede3ae709e1940d646ee0bdc94878ab69b8cd2f1ad7a9d83cb
+old clone commit: 8a50c8f754f716aad91f81343f7eeb6d950a4cf6
+2026-11-05 13:31:32 +08
+== pbs_tmrsh check
+ls: cannot access '/opt/pbs/bin/pbs_tmrsh': No such file or directory
+/opt/pbs/bin/qstat
+login PATH has /opt/pbs/bin: 1
+== Mac
+bundle sha256 59400c0419245a2a2c386234daab7816c1192b356e2d8a511050710321477508 refs HEAD,main at 3f77e8727a9876f77667d3b7d78b9934ad43897d, 777226 bytes

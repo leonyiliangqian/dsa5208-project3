@@ -4,6 +4,12 @@
 
 **Not approved and not submitted.** It needs Leon's explicit yes.
 
+**Prepared on Vanda, 5 Nov 13:31 SGT:** clone `~/dsa5208-p3-3f77e87` created from a bundle holding only this commit. Commit, tree
+`00bf445fb0350de806d83aa0c10a5097bc32c636` and manifest hash verified, and the clone is clean. Scheduling on, `auto_free` and
+`cpu_parallel` enabled and started, rate 0, no unfinished job. `p3_pilot1` history holds only finished `1514774` and `1519637`. Dry
+run printed the command and submitted nothing. Recheck these just before submitting. Record:
+`code/artifacts/cluster/discovery/vanda_pilot_rerun_dryrun_3f77e87_20261105T133115.txt`.
+
 | | |
 |---|---|
 | Why | Pilot `1519637` hung at `placement`, 0 of 20 runs. All sizing waits on this job |
@@ -14,22 +20,14 @@
 | Queue wait | `1519637` waited 10 h 1 min. This is no prediction |
 | If the launcher is still wrong | The `placement` gate stops the job in about 2 minutes, with no retry |
 
-If approved, these steps run once:
+If approved, this runs once, after rechecking the readiness items:
 
 ```sh
-# Mac: copy the commit, using the existing SSH session
-git bundle create "$SP/p3-3f77e87.bundle" --all
-scp "$SP/p3-3f77e87.bundle" vanda:~/
-
-# Vanda: new clone, leaving every older clone as it is
-git clone ~/p3-3f77e87.bundle ~/dsa5208-p3-3f77e87
-cd ~/dsa5208-p3-3f77e87 && git checkout 3f77e8727a9876f77667d3b7d78b9934ad43897d && cd code
-bash jobs/vanda/submit.sh pilot --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_v2.json
-# stop here unless the commit, command, charge rate and absence of a duplicate job all check out
+cd ~/dsa5208-p3-3f77e87/code
 bash jobs/vanda/submit.sh pilot --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_v2.json --yes
 ```
 
-`$SP` is a temporary directory on the Mac. Nothing here approves `pilot2`, `pilot4`, `bench1` or `bench4`, a charged queue, a
+Nothing here approves `pilot2`, `pilot4`, `bench1` or `bench4`, a charged queue, a
 retry, or monitoring. It also tests `pbs_tmrsh` at 64 ranks on one node for free, which no job has yet done.
 
 ## Closed, 4 November 2026
