@@ -10,10 +10,16 @@ out=$(cd "$(dirname "$out")" && pwd)/$(basename "$out")
 cd "$(git rev-parse --show-toplevel)"
 paths=(code/README.md code/Makefile code/common code/serial code/hybrid code/gpu code/tests
        code/scripts code/manifests code/jobs code/docker)
-bad=$(git ls-files -- "${paths[@]}" | grep -E '\.(log|OU|ER|stdout|stderr|o|a|so|exe|bundle|zip|pdf|pem|key|pyc)$|(^|/)(artifacts|bin|__pycache__)/|(^|/)(\.env|id_rsa|credentials)' || true)
+bad=$(git ls-files -- "${paths[@]}" | grep -E '\.(log|OU|ER|out|txt|stdout|stderr|o|a|so|exe|bundle|zip|pdf|pem|key|pyc)$|(^|/)(artifacts|bin|__pycache__)/|(^|/)(\.env|id_rsa|credentials)' || true)
 if [ -n "$bad" ]; then
     echo "refusing: log, evidence, binary or credential files in the package paths:" >&2
     echo "$bad" >&2
+    exit 1
+fi
+secret=$(git grep -lE 'BEGIN [A-Z ]*PRIVATE KEY|PBS_JOBCOOKIE=[0-9A-F]' HEAD -- "${paths[@]}" || true)
+if [ -n "$secret" ]; then
+    echo "refusing: credential or job-cookie text in:" >&2
+    echo "$secret" >&2
     exit 1
 fi
 git archive --format=zip -o "$out" --prefix=dsa5208-project3/ HEAD -- "${paths[@]}"

@@ -13,8 +13,7 @@ C++17 Barnes–Hut gravitational n-body simulation, serial and MPI+OpenMP.
 | `manifests/` | Machine-readable experiment plans (pilot, proposed formal studies, local test manifests) |
 | `jobs/vanda/` | PBS jobs, gate library, submission wrapper (see below) |
 | `docker/` | Development image and `run.sh`; `twonode/` two-container simulation; `tex/` LaTeX compile test |
-| `artifacts/local/` | Local development evidence and simulations (macOS and Docker). Never cluster results |
-| `artifacts/cluster/` | Genuine Vanda evidence only: job runs, PBS logs, site checks |
+| `artifacts/local/`, `artifacts/cluster/` | Written when you run the tests or jobs. Local simulations and Vanda evidence are kept apart. Both are left out of the source package, which has no logs or terminal output |
 
 ## Build and check
 
@@ -151,15 +150,16 @@ after it; kinds are critical, required and optional. Step-by-step:
 | `correctness.pbs` | 1 x 8 cores, 30 min | serial, hybrid, placement, sanitizer gates on one node | PASSED as job 1503779 |
 | `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch | PASSED as job 1514458 (comparison unbound; 1506687 and 1507215 did not reach it) |
 | `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
-| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node.json` | 1514774 failed at entry and measured nothing; fixed locally; rerun awaits approval |
+| `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node_v2.json` | 1514774 and 1519637 failed before any run and measured nothing; launcher fixed; rerun 1522998 submitted |
+| `pilot16.pbs` | 1 x 16 cores, 16 GB, 60 min | `manifests/pilot_single_node_16core.json`: provisional sizes while the 64-core pilot waits | prepared, NOT approved |
 | `gpu_validate.pbs` | 1 GPU, 36 cores, 60 GB, 30 min | device, correctness and `nvidia-smi` gates | PASSED as job 1514775, A40; no timing |
-| `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB, 60 min | G2: `manifests/gpu_timing.json`, device against cpu backend | prepared, NOT approved |
+| `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB, 60 min | G2: `manifests/gpu_timing.json`, device against cpu backend | PASSED as job 1519638, A40 |
 | `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |
 
-Results so far: correctness job 1503779 (one node) passed; no performance
-measurement exists.
+Results so far: correctness passed on one node (1503779) and two nodes (1514458), and the GPU was
+timed (1519638). No CPU scaling measurement exists.
 
-## OpenMP target solver (validated on an A40, job 1514775; no timing yet)
+## OpenMP target solver (validated on an A40, job 1514775; timed in job 1519638)
 
 `gpu/bh_gpu.cpp` offloads the force traversal; the tree is built on the host. `--backend device`
 uses `target`, and `--backend cpu` runs the same kernel on host threads. `--require-device` exits 7
@@ -170,6 +170,6 @@ runs it on a device.
 ```sh
 docker/run.sh make check-gpu                                   # local, no GPU
 make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" \
-    GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node, not yet run
+    GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node
 ```
 
