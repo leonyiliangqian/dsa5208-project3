@@ -668,3 +668,7 @@ Sizing rules applied in `plan_256core.md`. Local checks for the new plans, never
 with a frozen 8-core copy of its plan at N/100 (`artifacts/local/runs/simulated-bench16-20261105/`): 9 of 9 gates, 64 of 64 runs. It refuses a plan that is not frozen
 (`simulated-bench16-refuse-20261105`). Docker cannot bind, so `verify_run.py` flags its stderr warnings there, which is the intended behaviour. `1522998` stayed queued and unchanged.
 
+### `bench16` submitted, job 1523703, 5 Nov (Vanda)
+
+Leon approved one job. Clone `~/dsa5208-p3-e86bf5d` created from a bundle of commit `e86bf5d`; commit, tree `96eed32`, manifest hash, resources, scheduling, queues and rate 0 verified; no `p3_bench16` in current jobs or history. Dry run without `--yes`, then submitted once at 17:20:38 SGT. It started at 17:20:44 on IN-002 in `cpu_parallel`, rate 0, and was running at 17:20:47. PBS shows `project = personal-leonyil.qian`. `1522998` unchanged, still Q. Nothing measured yet. Records: `artifacts/cluster/discovery/vanda_bench16_dryrun_e86bf5d_20261105T1719.txt`, `artifacts/cluster/discovery/vanda_bench16_submit_e86bf5d_20261105T1720.txt`.
+

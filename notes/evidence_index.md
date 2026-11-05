@@ -20,6 +20,7 @@ Original evidence is never edited. Paths are under `code/artifacts/`. **Supports
 | `1519638` | 4 Nov | GPU timing | `8a50c8f` | Passed, 5 of 5 gates, 24 of 24 runs, A40, GN-A40-004 | `cluster/runs/gpu_timing-20261104T111747Z-1519638/`, `cluster/logs/1519638.stdct-mgmt-02.OU` | **Formal report result**, one job, one GPU, three repetitions |
 | `1522998` | 5 Nov | 64-core pilot rerun | `3f77e87` | **Queued, no result.** Status in [HANDOFF.md](../HANDOFF.md) | `cluster/discovery/vanda_pilot_rerun_submit_3f77e87_20261105T134621.txt` | Nothing yet. Would be provisional sizing at 64 cores |
 | `1523275` | 5 Nov | 16-core pilot | `96a37ba` | Passed, exit 0, 15 min 12 s, 5 of 5 gates, 20 of 20 runs, IN-002 | `cluster/runs/pilot16-20261105T063623Z-1523275/`, `cluster/logs/1523275.stdct-mgmt-02.OU`, `cluster/logs/1523275_qstat_xf.txt`, `cluster/discovery/vanda_pilot16_retrieval_20261105T1650.txt` | **Provisional sizing only.** One repetition. Not a scaling result, and proves nothing at 64 or 256 cores |
+| `1523703` | 5 Nov | `bench16`: formal studies on 16 cores | `e86bf5d` | **Submitted, no result yet.** Status in [HANDOFF.md](../HANDOFF.md) | `cluster/discovery/vanda_bench16_submit_e86bf5d_20261105T1720.txt`, `cluster/discovery/vanda_bench16_dryrun_e86bf5d_20261105T1719.txt` | Nothing yet. Would be a formal result for 16 cores or fewer, if its gates pass; never 64 or 256 cores |
 
 Site checks, dry runs and submission records are in `cluster/discovery/`, and name the job or commit in the file name.
 

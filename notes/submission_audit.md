@@ -18,7 +18,7 @@ check the Canvas page. A repository link should not be assumed to meet the requi
 | Requirement | Points | Where | Status |
 |---|---|---|---|
 | Explain the algorithm | 5 | Report: Problem and Method | Drafted; group review open |
-| Serial runtime against N | 5 | Report: Results; `bench16` or `bench1` | **Missing.** No formal run |
+| Serial runtime against N | 5 | Report: Results; `bench16` (job `1523703`) or `bench1` | **Missing.** Job submitted, no result yet |
 | MPI strong and weak to at least 256 CPU cores, with speedup, efficiency, communication | 10 | Report: Results; `bench4` | **Missing.** Needs a charged queue and Leon's decision |
 | MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `bench4` | **Missing** |
 | At least one GPU test | | Job `1519638` | Measured; review open |

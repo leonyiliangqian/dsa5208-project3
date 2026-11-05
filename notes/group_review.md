@@ -28,7 +28,7 @@ The report's declaration must not claim more than this table. Each member fills 
 
 These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275` does not fill any of them.
 
-- [ ] Serial runtime against N.
+- [ ] Serial runtime against N. `bench16` (job `1523703`) is running for this; no result yet.
 - [ ] MPI strong and weak scaling to at least 256 CPU cores, with speedup and efficiency.
 - [ ] MPI+OpenMP strong and weak scaling.
 - [ ] Communication share of runtime and phase times.

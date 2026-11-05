@@ -11,8 +11,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | Job | State | Means |
 |---|---|---|
 | `1523275` 16-core pilot | **Finished, 14:51 SGT:** exit 0, 15 min 12 s, 5 of 5 gates, 20 of 20 runs, IN-002 | Provisional sizing only. Not a scaling result, and proves nothing at 64 or 256 cores |
-| `1522998` 64-core pilot | **Queued at 16:47 SGT**, never started; waits for a whole node | Do not resubmit or cancel. Nothing is watching it. Check once with `qstat -xf 1522998` when asked |
-| `bench16` | **Not approved, not submitted** | Formal free 16-core studies, request in [notes/approval_requests.md](notes/approval_requests.md) |
+| `1522998` 64-core pilot | **Queued at 17:20 SGT**, never started; waits for a whole node | Do not resubmit or cancel. Nothing is watching it. Check once with `qstat -xf 1522998` when asked |
+| `1523703` `bench16` | **Running at 17:20:47 SGT**, IN-002, started 17:20:44, rate 0, 16 cores, 4 h limit; about 95 min expected | Formal free 16-core studies. Submitted once; do not resubmit or cancel. Nothing is watching it, and nothing is measured until its evidence is retrieved and verified |
 | `pilot2`, `pilot4`, `bench4`, `bench1` | **Not approved**, sizes provisional | Order and rules in [notes/plan_256core.md](notes/plan_256core.md) |
 
 - **Formal CPU results: none.** Serial against N, and MPI and MPI+OpenMP scaling, are all still `[PENDING]` in the report.
@@ -24,7 +24,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 
 **Next, in order:**
 
-1. Leon decides on the `bench16` request. It costs no charge at rate 0 and does not need a whole node.
+1. When asked, retrieve and verify `1523703`. If a gate failed, diagnose and do not retry.
 2. When asked, check `1522998` once. If it passes, apply the rules for its 64-core checks; if it fails, diagnose and do not retry.
 3. Leon reads the balance and decides on 256 cores.
 4. Group items in [notes/group_review.md](notes/group_review.md).

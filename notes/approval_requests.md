@@ -2,7 +2,10 @@
 
 **No approval is open.** Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
-## Ready to request: `bench16`, formal free 16-core studies
+## Consumed, 5 November 2026: `bench16`, formal free 16-core studies
+
+**Approved by Leon and submitted once on 5 Nov at 17:20:38 SGT as job `1523703`. This approval is used up.** All rechecks passed first; `1522998` was left untouched. A failure is not retried. Records:
+`code/artifacts/cluster/discovery/vanda_bench16_dryrun_e86bf5d_20261105T1719.txt`, `code/artifacts/cluster/discovery/vanda_bench16_submit_e86bf5d_20261105T1720.txt`. The request as reviewed:
 
 **Why now:** it secures serial runtime against N and the parameter studies for the report without waiting for a whole 64-core node,
 which `1522998` has been waiting for since 13:46. At 16:47 SGT no free-pool node had 32 cores free, and 2 had at least 16. That is one
@@ -20,7 +23,7 @@ moment and counts cores only. It does **not** supply 256-core scaling, and it do
 | If a gate fails | The job stops, with no retry |
 | Limits of the results | Possibly shared node of either CPU model; speedups only inside this job. |
 
-Text to approve, if wanted:
+Text that was proposed:
 
 > Leon explicitly approves exactly ONE bench16 submission: source `e86bf5d076c51c01f131f3980fc17618e9c24f61` in a new clone ~/dsa5208-p3-e86bf5d, manifest studies_16core.json
 > SHA256 2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd, 1 node x 16 cores, 16 GB, 4 h, auto_free, no -P, ZERO CHARGE ONLY. Prepare the clone from an exact-source bundle, then use
@@ -40,7 +43,7 @@ That runs:
 qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o /home/svu/leonyil.qian/dsa5208-p3-e86bf5d/code/artifacts/cluster/logs/ jobs/vanda/bench16.pbs
 ```
 
-Local dry run from a clean clone of this commit: `code/artifacts/local/bench16_dryrun_20261105.txt`. There is no `qsub` on this machine, so its paths differ. The Vanda dry run is part of this request.
+Local dry run from a clean clone of this commit: `code/artifacts/local/bench16_dryrun_20261105.txt`. There is no `qsub` on this machine, so its paths differ. The Vanda dry run passed before submission.
 
 ## Conditional requests: not ready to approve
 

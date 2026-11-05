@@ -25,7 +25,7 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | **Failed at `placement`, 0 of 20 runs** |
 | 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | **Submitted once as `1522998`, 5 Nov 13:46 SGT**; queued at submission |
 | 0c | `pilot16` `1523275` | 1 x 16 cores, 16 GB, 60 min | `auto_free`, 0 | 16 | 15 min, measured | **Passed.** Provisional sizing only: see "Pilot16 results" |
-| 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | Plan frozen. Approval only; needs no 64-core result. Does not supply 256 cores |
+| 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | **Submitted once as `1523703`, 5 Nov 17:20 SGT.** Does not supply 256 cores |
 | A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 54 min, 230 core-hours | Step B passed, manifest resized and frozen, charge approval |

@@ -1,0 +1,62 @@
+bench16 preparation on Vanda, 5 Nov 2026. Clone created from an exact-source bundle; dry run without --yes; nothing submitted by this record.
+Thu Nov  5 05:19:37 PM +08 2026
+stdct-login-01
+== bundle
+da924953000f68be875712e04c5558772a4f973e0a2e8d4b21059b898c155dd3  /home/svu/leonyil.qian/dsa5208-p3-e86bf5d.bundle
+== source
+commit e86bf5d076c51c01f131f3980fc17618e9c24f61
+tree 96eed32b4aec96fdaee9082e5e41b35552c64415
+manifest 2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd
+status lines: 0
+commit=ok
+tree=ok
+manifest=ok
+manifest id studies-16core-v1 | frozen
+== resources
+#PBS -N p3_bench16
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=16gb
+#PBS -l walltime=04:00:00
+#PBS -j oe
+== budget
+request: 1 x 16 cores, 16 GB each, 14400 s = 64 core-hours requested
+credits at assumed rate 0 per core-hour: 0 if charged on the request
+runs: 121, estimated 4789 s, worst case 12285 s, budget 13158 s after 900 s of gates and 342 s reserved at the end
+expected job time: 95 min = 25 core-hours used
+largest node memory: 3 GB of 16 GB
+PLAN OK
+== scheduler
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_default.queue_charge_rate = 0
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e0030005=16]
+    max_run = [u:e0540410=9]
+    max_run = [u:e0983460=28]
+    max_run = [u:e1554743=3]
+    max_run = [u:sauyong=12]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== user jobs
+                                                            Req'd  Req'd   Elap
+Job ID          Username Queue    Jobname    SessID NDS TSK Memory Time  S Time
+--------------- -------- -------- ---------- ------ --- --- ------ ----- - -----
+1522998.stdct-* leonyil* cpu_par* p3_pilot1     --    1  64  120gb 01:00 Q   -- 
+== duplicates by name, current and history
+count_done
+== 1522998
+    job_state = Q
+    mtime = Thu Nov  5 13:46:30 2026
+    comment = Not Running: Insufficient amount of resource: node_pool 
+== dry run, no --yes
+command: qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o /home/svu/leonyil.qian/dsa5208-p3-e86bf5d/code/artifacts/cluster/logs/ jobs/vanda/bench16.pbs
+dry run: add --yes to submit
+== after
+0
+0

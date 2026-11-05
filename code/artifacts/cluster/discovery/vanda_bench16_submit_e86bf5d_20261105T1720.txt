@@ -1,0 +1,40 @@
+bench16 submission on Vanda, 5 Nov 2026, approved by Leon for exactly one job. Nothing measured yet in this record.
+== submission
+Thu Nov  5 05:20:38 PM +08 2026
+duplicates_before=0
+command: qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o /home/svu/leonyil.qian/dsa5208-p3-e86bf5d/code/artifacts/cluster/logs/ jobs/vanda/bench16.pbs
+1523703.stdct-mgmt-02
+submit_rc=0
+Thu Nov  5 05:20:38 PM +08 2026
+
+== first status, one read-only query
+Thu Nov  5 05:20:47 PM +08 2026
+== 1523703
+    Job_Name = p3_bench16
+    job_state = R
+    queue = cpu_parallel
+    exec_host = IN-002/11*16
+    exec_vnode = (IN-002[1]:ncpus=16:mem=16gb)
+    mtime = Thu Nov  5 17:20:44 2026
+    qtime = Thu Nov  5 17:20:38 2026
+    Resource_List.mem = 16gb
+    Resource_List.ncpus = 16
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=16:mpiprocs=16:mem=16gb
+    Resource_List.walltime = 04:00:00
+    stime = Thu Nov  5 17:20:44 2026
+    comment = Job run at Thu Nov 05 at 17:20 on (IN-002[1]:ncpus=16:mem=16gb)
+    run_count = 1
+    project = personal-leonyil.qian
+SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61
+SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61
+== 1522998
+    job_state = Q
+    queue = cpu_parallel
+    mtime = Thu Nov  5 13:46:30 2026
+    comment = Not Running: Insufficient amount of resource: node_pool 
+== p3_bench16 by name, history included
+1523703.stdct-mgmt-02
+== unfinished
+1522998.stdct-* leonyil* cpu_par* p3_pilot1     --    1  64  120gb 01:00 Q   -- 
+1523703.stdct-* leonyil* cpu_par* p3_bench16 518300   1  16   16gb 04:00 R 00:00
