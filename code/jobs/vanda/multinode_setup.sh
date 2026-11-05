@@ -34,7 +34,8 @@ python3 -c 'import sys; sys.exit(sys.version_info < (3, 7))' \
 #              start as PBS tasks. One run passed in job 1514029; reliability unproven.
 #              Daemons stay attached so PBS keeps owning them, and only mpirun starts
 #              them, the launch path job 1514029 did not exercise beyond two nodes.
-#   hostfile   node file only: single-node jobs and local simulation (no PBS).
+#   hostfile   node file only: local simulation (no PBS). It does not avoid tm under PBS:
+#              with libpbs on the path mpirun still selects tm, even on one node (job 1519637).
 # REQUIRE_PBS_TM=0 selects hostfile unless MPI_LAUNCHER says otherwise.
 [ -d /opt/pbs/lib ] && export LD_LIBRARY_PATH=/opt/pbs/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}
 REQUIRE_PBS_TM=${REQUIRE_PBS_TM:-1}

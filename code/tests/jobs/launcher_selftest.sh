@@ -165,7 +165,7 @@ alloc() {  # alloc NAME WANT_RC LAUNCH NODES_TEXT LOG_TEXT
     printf '%s\n' "$4" > "$out/in_nodes"; printf '%s\n' "$5" > "$out/in_log"
     printf '#!/bin/bash\ncat %s/in_nodes\ncat %s/in_log >&2\n' "$out" "$out" > "$out/stub"
     chmod +x "$out/stub"
-    MPI=$out/stub ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh "$out" 2 "$3" > "$out/stdout" 2>&1
+    MPI=$out/stub ALLOC_EXPECT_NODES=${ALLOC_N:-2} ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh "$out" "${ALLOC_N:-2}" "$3" > "$out/stdout" 2>&1
     rc=$?
     check "allocation $1: exit $2 (got $rc)" test "$rc" -eq "$2"
 }
@@ -187,6 +187,59 @@ alloc wrong_cpuset 1 pbs_tmrsh "${good_nodes//$ALLOWED/0,2,4,6}" "$good_log"
 alloc one_host 1 pbs_tmrsh "node $HEAD allowed=$ALLOWED arch=x86_64 model=m ancestry=bash pbs_jobid_env=yes isa=a" "$good_log"
 tm_log='[h:1] mca:base:select:(  plm) Selected component [tm]'
 alloc tm_mode_unchanged 0 tm "$good_nodes" "$tm_log"
+
+# 9. One node. Values follow job 1519637, whose only process ran under a daemon it started.
+one_node="node $HEAD allowed=$ALLOWED arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=a"
+ALLOC_N=1 alloc one_good 0 pbs_tmrsh "$one_node" "$good_log"
+ALLOC_N=1 alloc one_no_daemon 0 pbs_tmrsh "${one_node/orted/mpirun}" "$good_log"
+ALLOC_N=1 alloc one_tm_selected 1 pbs_tmrsh "$one_node" "$tm_log"
+ALLOC_N=1 alloc one_via_sshd 1 pbs_tmrsh "${one_node/pbs_shepherd<pbs_mom/sshd<systemd}" "$good_log"
+ALLOC_N=1 alloc one_outside_pbs 1 pbs_tmrsh "${one_node/pbs_shepherd<pbs_mom/systemd}" "$good_log"
+ALLOC_N=1 alloc one_no_jobid 1 pbs_tmrsh "${one_node/pbs_jobid_env=yes/pbs_jobid_env=no}" "$good_log"
+ALLOC_N=1 alloc hostfile_rsh 0 hostfile "$one_node" "${good_log}"
+# The launch job 1519637 passed here and then hung on: hostfile, with tm selected.
+ALLOC_N=1 alloc hostfile_tm_1519637 1 hostfile "$one_node" "$tm_log"
+
+# 10. One host, the shape of job 1519637: mpirun is not on its only node, so all ranks run
+# under one daemon started through the agent. Docker cannot show tm itself hanging. The
+# stand-in agent goes through sshd, so the allocation check must refuse it, and only for that.
+one_file=$OUTROOT/nodefile_one
+for i in 1 2 3 4 5 6 7 8; do echo node2; done > "$one_file"
+# The measurement runner on this launch line, as measure.sh calls it: the two-node test
+# cases, on one node.
+one_manifest=$OUTROOT/one_host_manifest.json
+python3 -c 'import json, sys
+d = json.load(open("manifests/local_sim_twonode.json"))
+d["id"], d["defaults"]["nodes"] = "local-one-host", 1
+json.dump(d, open(sys.argv[1], "w"))' "$one_manifest"
+body='export MPI; make BIN=$BIN MPIRUN="$MPI" $BIN/placement_check >/dev/null
+gate allocation 60 optional env ALLOC_EXPECT_NODES=1 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
+gate pe4_2x4 60 required make BIN=$BIN MPIRUN="$MPI" placement PLACE_NODES=1 PLACE_R=2 PLACE_T=4
+gate pe1_8x1 60 required make BIN=$BIN MPIRUN="$MPI" placement PLACE_NODES=1 PLACE_R=8 PLACE_T=1
+gate pe8_1x8 60 required make BIN=$BIN MPIRUN="$MPI" placement PLACE_NODES=1 PLACE_R=1 PLACE_T=8
+make BIN=$BIN all hybrid >/dev/null
+gate runs 240 required python3 scripts/run_manifest.py '"$one_manifest"' --out "$OUT" --bin "$BIN" --mpirun "$MPI" \
+    --cores-per-node 8 --nodes 1 --first-cpu 0 --deadline $(( $(date +%s) + 200 )) --scale 1'
+PBS_NODEFILE=$one_file scenario one_host "$AGENT" "$body"
+check "one_host: verdict PASS"              test "$SC_RC" -eq 0
+check "one_host: daemon started by the agent" test -s "$FAKE/agent.log"
+check "one_host: plain ssh never called"    no_plain_ssh
+check "one_host: rsh selected, one host"    has "1_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_rsh_selected=ok" "$SC_OUT/gate_allocation.log"
+check "one_host: stand-in refused for sshd" has "remote_orted_not_sshd=FAIL remote_under_pbs_mom=FAIL" "$SC_OUT/gate_allocation.log"
+check "one_host: every measurement run passed" has '^runs PASS ' "$SC_OUT/gates.txt"
+check "one_host: ranks ran on the one host" bash -c "grep -q 'host=node2' '$SC_OUT/gate_pe4_2x4.log' && ! grep -q 'host=node1' '$SC_OUT/gate_pe4_2x4.log'"
+
+# 11. A one-node job script needs pbs_tmrsh unless simulation is asked for by name.
+wrap_out=$OUTROOT/wrapper
+for w in pilot bench1; do
+    mkdir -p "$wrap_out"
+    PATH=$FAKE/path:$PATH PBS_O_WORKDIR=$PWD PBS_JOBID=wrap$w.sim ALLOW_NO_MODULES=1 RUNS_ROOT=$wrap_out \
+        PBS_NODEFILE=$one_file bash "jobs/vanda/$w.pbs" > "$wrap_out/$w.stdout" 2>&1
+    rc=$?
+    check "wrapper $w: no pbs_tmrsh, exit 3 (got $rc)" test "$rc" -eq 3
+    check "wrapper $w: says no ssh fallback" has 'not falling back to ssh' "$wrap_out/$w.stdout"
+    check "wrapper $w: stops before any gate" bash -c "! grep -q '===== gate' '$wrap_out/$w.stdout'"
+done
 
 rm -rf "$FAKE" "$BIN"
 echo "launcher_selftest passed=$pass failed=$fail $([ "$fail" -eq 0 ] && echo PASS || echo FAIL)" | tee -a "$RESULTS"

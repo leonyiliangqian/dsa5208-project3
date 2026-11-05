@@ -15,8 +15,8 @@
 # ONE CPU model, since timings are compared only within a model), build
 # (critical, -march=native, which one model makes safe), placement (critical),
 # runs (required: scripts/run_manifest.py with per-run timeouts and a deadline
-# that leaves room for cleanup), analyze (required). Multi-node jobs launch
-# through pbs_tmrsh (multinode_setup.sh); single-node jobs use a hostfile launch.
+# that leaves room for cleanup), analyze (required). Every job launches through
+# pbs_tmrsh (multinode_setup.sh); REQUIRE_PBS_TM=0 is for local simulation only.
 # PILOT_SCALE divides every N and PILOT_PLACEMENT="R T" overrides the probe,
 # for local simulation only, as does SIM_CPUS_PER_NODE (the job scripts'
 # CPUS_PER_NODE default); all are recorded.
@@ -32,8 +32,8 @@ exec > >(tee "$OUT/job.log") 2>&1
 echo "run_id=$RUN_ID job=${PBS_JOBID} host=$(hostname) start=$(date -Is) source_rev=${SOURCE_GIT_REV:-unset}"
 echo "manifest=$MANIFEST scale=${PILOT_SCALE:-1} placement_override=${PILOT_PLACEMENT:-none} sim_cpus_per_node=${SIM_CPUS_PER_NODE:-none}"
 
-[ "$EXPECT_NODES" -gt 1 ] || export REQUIRE_PBS_TM=${REQUIRE_PBS_TM:-0}
 # tm launches with binding hang on Vanda (job 1514029); pbs_tmrsh passed twonode (job 1514458).
+# One node is no exception: with only a hostfile, job 1519637 still selected tm and hung.
 [ "${REQUIRE_PBS_TM:-1}" = 1 ] && export MPI_LAUNCHER=${MPI_LAUNCHER:-pbs_tmrsh}
 source jobs/vanda/multinode_setup.sh
 {

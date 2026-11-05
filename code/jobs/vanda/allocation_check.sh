@@ -12,8 +12,10 @@
 # Environment: ALLOC_EXPECT_NODES (required) is the number of distinct hosts
 # the job must have; ALLOC_CPUS_PER_NODE (default 8) is the exact cpuset size
 # expected on every node; ALLOC_SAME_MODEL=1 (timing jobs) also requires one
-# CPU model on all nodes. With one node the host and launcher checks reduce
-# to "one host" and are not about remote processes.
+# CPU model on all nodes. With one node there is no remote process, so under
+# pbs_tmrsh the only process must be under pbs_mom and not sshd; it may start
+# from mpirun or orted. Under hostfile, a log selecting tm fails the check: that
+# launch hung in job 1519637 after this check had passed it.
 # Writes OUT/env/nodes.txt and OUT/env/launch_verbose.txt.
 set -o pipefail
 OUT=${1:?OUT} NODES=${2:?NODES} LAUNCH=${3:?LAUNCH}
@@ -55,8 +57,12 @@ if launch == "tm" and want > 1:
     checks["plm_tm_selected"] = selected["plm"] == ["tm"]
     checks["remote_orted_not_sshd"] = len(remote) == want - 1 and all(
         "orted" in a.split("<") and "sshd" not in a.split("<") for a in remote)
-if launch == "pbs_tmrsh" and want > 1:
-    chain = [a.split("<") for a in remote]
+if launch == "hostfile":
+    checks["plm_not_tm"] = "tm" not in selected["plm"]
+if launch == "pbs_tmrsh":
+    where = remote if want > 1 else [field(l, "ancestry") for l in lines]
+    chain = [a.split("<") for a in where]
+    expect_where = want - 1 if want > 1 else 1
     # Where the remote process really runs decides this. An ssh daemon descends from sshd, and
     # a daemonized one leaves pbs_mom. The log can only reject: daemons may log through the
     # launcher too, and the template line's wording has not been seen on Vanda.
@@ -64,9 +70,9 @@ if launch == "pbs_tmrsh" and want > 1:
     checks["plm_rsh_selected"] = bool(selected["plm"]) and set(selected["plm"]) == {"rsh"}
     checks["agent_not_contradicted"] = not argv or argv.group(1).split()[0].rsplit("/", 1)[-1] == "pbs_tmrsh"
     checks["daemonize_not_seen"] = not argv or "--daemonize" not in argv.group(1)
-    checks["remote_orted_not_sshd"] = len(remote) == want - 1 and all(
-        "orted" in c and "sshd" not in c for c in chain)
-    checks["remote_under_pbs_mom"] = len(remote) == want - 1 and all("pbs_mom" in c for c in chain)
+    checks["remote_orted_not_sshd"] = len(where) == expect_where and all(
+        ("orted" in c or want == 1) and "sshd" not in c for c in chain)
+    checks["remote_under_pbs_mom"] = len(where) == expect_where and all("pbs_mom" in c for c in chain)
     checks["pbs_jobid_on_every_node"] = len(lines) == want and all(field(l, "pbs_jobid_env") == "yes" for l in lines)
 ok = all(checks.values())
 # Supporting evidence only: ras may log no selection line, and /proc may hide
@@ -75,7 +81,7 @@ pbs_mom = [("pbs_mom" in a.split("<")) for a in remote]
 print(f"allocation hosts={sorted(hosts)} head={head} allowed_cpus={cpus} archs={sorted(archs)}")
 print(f"launcher={launch} plm_selected={selected['plm']} ras_selected={selected['ras']} "
       f"remote_ancestry={remote} remote_pbs_mom_visible={pbs_mom}")
-if launch == "pbs_tmrsh" and want > 1:
+if launch == "pbs_tmrsh":
     print(f"recorded_only template_line_seen={bool(argv)}")
 print(f"recorded_only models={models} mixed_models={len(models) > 1} isa_lists_equal={len(isas) == 1} "
       f"pbs_jobid_env={[field(l, 'pbs_jobid_env') for l in lines]}")
