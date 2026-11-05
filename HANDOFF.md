@@ -13,8 +13,9 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Fix, commit `3f77e87`:** every job launches through `pbs_tmrsh`. Passed locally only; Docker has no PBS or `tm`.
 - **Rerun submitted once: job `1522998`**, 5 Nov 13:46:25 SGT, source `3f77e87`, 1 x 64 cores, 120 GB, 60 min, `cpu_parallel`, rate 0.
   Queued at submission. Nothing is watching it. The approval is used up: do not resubmit or cancel it. The last wait was 10 h 1 min.
-- **Proposed, not approved:** a free 16-core pilot `pilot16`, in case `1522998` keeps waiting. Its clone `~/dsa5208-p3-96a37ba` and
-  dry run are ready (5 Nov 14:31 SGT). See `notes/approval_requests.md`.
+- **16-core pilot submitted once: job `1523275`**, 5 Nov 14:36:19 SGT, source `96a37ba`, 1 x 16 cores, 16 GB, 60 min, `cpu_parallel`,
+  rate 0. Queued at submission. It sets provisional sizes only, and the 64-core checks remain. The approval is used up; nothing is
+  watching either job. Do not resubmit or cancel either.
 - **Report:** terms, input generation, test purposes and parallelization decisions are drafted. CPU results remain red `[PENDING]`
   markers, because none exists. It compiles to 8 pages in a scratch copy.
 - **Source package:** checked by `code/tests/jobs/package_test.sh`. Group items are in [notes/group_review.md](notes/group_review.md).

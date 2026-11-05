@@ -151,7 +151,7 @@ after it; kinds are critical, required and optional. Step-by-step:
 | `twonode.pbs` | 2 x 8 cores, scatter, 30 min | two-host correctness, portable build, `pbs_tmrsh` launch | PASSED as job 1514458 (comparison unbound; 1506687 and 1507215 did not reach it) |
 | `diag.pbs` | 2 x 8 cores, 4 GB, 20 min | locate the 1507215 stall (one factor per step) | ran as job 1514029: stall reproduced under tm, cause unknown |
 | `pilot.pbs` | 1 x 64 cores, 120 GB, 60 min | `manifests/pilot_single_node_v2.json` | 1514774 and 1519637 failed before any run and measured nothing; launcher fixed; rerun 1522998 submitted |
-| `pilot16.pbs` | 1 x 16 cores, 16 GB, 60 min | `manifests/pilot_single_node_16core.json`: provisional sizes while the 64-core pilot waits | prepared, NOT approved |
+| `pilot16.pbs` | 1 x 16 cores, 16 GB, 60 min | `manifests/pilot_single_node_16core.json`: provisional sizes while the 64-core pilot waits | submitted once as job 1523275 |
 | `gpu_validate.pbs` | 1 GPU, 36 cores, 60 GB, 30 min | device, correctness and `nvidia-smi` gates | PASSED as job 1514775, A40; no timing |
 | `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB, 60 min | G2: `manifests/gpu_timing.json`, device against cpu backend | PASSED as job 1519638, A40 |
 | `bench1.pbs` / `bench2.pbs` | 1 or 2 x 64 cores | formal studies from a frozen manifest (refuse a proposed one; one CPU model required) | walltime placeholder; after pilot |

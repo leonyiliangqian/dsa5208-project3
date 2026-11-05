@@ -624,3 +624,9 @@ and the `pilot16` dry run run without `--yes`; every check passed and nothing wa
 
 Report: all 8 pages now inspected as images. Terms added for warm-up, schedule, chunk, NUMA, kernel and flattening; the GPU timing
 paragraph separated from validation; Table 6 moved next to its text. No overfull box. No numbers changed.
+
+### Pilot16 submitted, job 1523275, 5 Nov (Vanda)
+
+Leon approved one job. All rechecks passed, and `1522998` was still Q with no start time, run count or run directory. Submitted once at
+14:36:19 SGT from `~/dsa5208-p3-96a37ba/code`; state Q in `cpu_parallel`, rate 0. `1522998` unchanged afterwards. PBS shows
+`project = personal-leonyil.qian`. Nothing measured yet. Record: `artifacts/cluster/discovery/vanda_pilot16_submit_96a37ba_20261105T143606.txt`.

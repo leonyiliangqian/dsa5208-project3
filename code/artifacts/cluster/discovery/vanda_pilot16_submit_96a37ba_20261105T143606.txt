@@ -1,0 +1,46 @@
+one approved pilot16: checks, then submit only if every check passes; no amgr login
+2026-11-05 14:36:06 +08
+stdct-login-01
+ok   qstat_1522998_rc: 0
+    job_state = Q
+    mtime = Thu Nov  5 13:46:30 2026
+    comment = Not Running: Insufficient amount of resource: node_pool 
+ok   1522998_state: Q
+ok   1522998_stime_absent: 0
+ok   1522998_exec_host_absent: 0
+ok   1522998_run_count: 0
+ok   1522998_run_dirs: 0
+ok   commit: 96a37ba1d5dfa810dfa24bb740e58aad9aa5388d
+ok   tree: 2e833d8567bba10e71da1b6ad63017262c215bd2
+ok   clone_status_lines: 0
+ok   manifest_sha256: 340af523ae17b4f996426dffe7d4bd42adcd4bf400a8807a9b2a61cd545c0690
+ok   select: 1:ncpus=16:mpiprocs=16:mem=16gb
+ok   walltime: 01:00:00
+ok   scheduling: True
+ok   auto_free.enabled: True
+ok   auto_free.started: True
+ok   auto_free.rate: 0
+ok   cpu_parallel.enabled: True
+ok   cpu_parallel.started: True
+ok   cpu_parallel.rate: 0
+ok   unfinished_jobs: 1522998.stdct-mgmt-02
+ok   p3_pilot16_any_state: 
+== all checks passed; submitting once 14:36:18
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_16core.json,SOURCE_GIT_REV=96a37ba1d5dfa810dfa24bb740e58aad9aa5388d -o /home/svu/leonyil.qian/dsa5208-p3-96a37ba/code/artifacts/cluster/logs/ jobs/vanda/pilot16.pbs
+1523275.stdct-mgmt-02
+submit_rc=0
+== after 14:36:19
+p3_pilot16: [1523275.stdct-mgmt-02 ]
+Job Id: 1523275.stdct-mgmt-02
+    Job_Name = p3_pilot16
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Thu Nov  5 14:36:19 2026
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=16:mpiprocs=16:mem=16gb
+    Resource_List.walltime = 01:00:00
+    project = personal-leonyil.qian
+SOURCE_GIT_REV=96a37ba1d5dfa810dfa24bb740e58aad9aa5388d
+== 1522998 after
+    job_state = Q
+    mtime = Thu Nov  5 13:46:30 2026

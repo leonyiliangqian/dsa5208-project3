@@ -1,9 +1,11 @@
 # Approval requests
 
-## Open, 5 November 2026: 16-core pilot, not approved
+## Consumed, 5 November 2026: 16-core pilot
 
-**Not approved and not submitted.** Reasoning is in `plan_256core.md`, "Smaller pilot". Use it only if `1522998` has not started;
-if `1522998` has started or passed its gates, this request lapses.
+**Approved by Leon and submitted once on 5 Nov at 14:36:19 SGT as job `1523275`. This approval is used up, and no approval is open.**
+All rechecks passed first, including that `1522998` was still queued and had never started; it was left untouched. The job was queued
+in `cpu_parallel` at rate 0. A failure is not retried. Record:
+`code/artifacts/cluster/discovery/vanda_pilot16_submit_96a37ba_20261105T143606.txt`. Reasoning is in `plan_256core.md`, "Smaller pilot".
 
 | | |
 |---|---|
@@ -19,7 +21,7 @@ if `1522998` has started or passed its gates, this request lapses.
 `cpu_parallel` enabled and started, rate 0. The only unfinished job is `1522998`, and no `p3_pilot16` exists. Dry run printed the
 command and submitted nothing. Record: `code/artifacts/cluster/discovery/vanda_pilot16_dryrun_96a37ba_20261105T143058.txt`.
 
-After approval: recheck commit, tree, manifest hash, rate 0, queues, duplicates and that `1522998` has not started, then run once:
+After approval: recheck commit, tree, manifest hash, rate 0, queues, duplicates and that `1522998` has not started, then run once. This is what ran:
 
 ```sh
 cd ~/dsa5208-p3-96a37ba/code

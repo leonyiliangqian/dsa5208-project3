@@ -9,7 +9,7 @@ membership and student IDs in `report/main.tex` before submission.
 
 ## Latest state
 
-See the top of [HANDOFF.md](HANDOFF.md). In short, on 5 November: pilot rerun `1522998` is queued, no CPU scaling result exists, and
+See the top of [HANDOFF.md](HANDOFF.md). In short, on 5 November: pilot rerun `1522998` and 16-core pilot `1523275` are queued, no CPU scaling result exists, and
 GPU timing is done (job 1519638). The list below is from 30 October.
 
 ## State on 30 October 2026

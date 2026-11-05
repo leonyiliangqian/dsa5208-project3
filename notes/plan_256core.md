@@ -38,7 +38,7 @@ node before paying for one. `bench2` is needed only if the 256-core route fails.
 `bench1` has 148 runs. Its 4 h covers the worst case, 13020 s, if every run uses its whole limit. A long request may wait
 longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline.
 
-## Smaller pilot: `pilot16`, not approved
+## Smaller pilot: `pilot16`, submitted once as `1523275`
 
 **Why:** `1522998` waits for a whole 64-core node. A snapshot at 14:20 SGT on 5 Nov had no free-pool node with 64 or even 32 cores
 free, and 6 with at least 16 (5 Gold 6438N, 1 Platinum 8452Y). That counts cores only, not memory, and it is one moment, so it does
