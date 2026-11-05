@@ -1,0 +1,10 @@
+== after allocation 14:36:31
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 14:36:39
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after placement 14:36:44
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after runs 14:51:19
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after analyze 14:51:29
+leftover_check host=IN-002 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

@@ -630,3 +630,41 @@ paragraph separated from validation; Table 6 moved next to its text. No overfull
 Leon approved one job. All rechecks passed, and `1522998` was still Q with no start time, run count or run directory. Submitted once at
 14:36:19 SGT from `~/dsa5208-p3-96a37ba/code`; state Q in `cpu_parallel`, rate 0. `1522998` unchanged afterwards. PBS shows
 `project = personal-leonyil.qian`. Nothing measured yet. Record: `artifacts/cluster/discovery/vanda_pilot16_submit_96a37ba_20261105T143606.txt`.
+
+### Pilot16 finished, job 1523275, 5 Nov (Vanda): provisional sizing only
+
+Ran 14:36:22-14:51:42 on IN-002 (Gold 6438N), exit 0, 15 min 12 s, rate 0. Gates `allocation`, `build`, `placement`, `runs`, `analyze`
+all PASS. 20 of 20 runs completed; none skipped or timed out. **One repetition on 16 cores of a possibly shared node: this is not a
+scaling result, and says nothing about 64 or 256 cores.** Retrieved read-only by tar over ssh; 73 files, 0 checksum mismatches. Originals
+stay in `~/dsa5208-p3-96a37ba`. Record: `artifacts/cluster/discovery/vanda_pilot16_retrieval_20261105T1650.txt`.
+
+Revalidated with the new `scripts/verify_run.py`, which catches a changed record, a changed summary and a missing record (controls run).
+`analyze.py` regenerates `summary.csv` identically apart from the folder name. All 16 timed records share one source tree, CPU model,
+host and pair of binaries.
+
+| Case, N = 10^6 unless given, 2 timed steps | Wall s | Traverse s | Exchange s (share) | Peak RSS per rank, MiB |
+|---|---:|---:|---:|---:|
+| Serial 10^5 / 3 x 10^5 | 3.44 / 13.74 | 3.42 / 13.66 | | 17.0 / 46.1 |
+| Serial 10^6 / 2 x 10^6 | 62.71 / 156.77 | 62.22 / 155.83 | | 142.4 / 277.5 |
+| Hybrid 1 x 1 | 60.05 | 59.68 | 0 | 156.1 |
+| Hybrid 1 x 16 | 3.54 | 3.19 | 0 | 159.0 |
+| Hybrid 4 x 4 | 5.46 | 5.06 | 0.036 (0.7%) | 155.8 |
+| Hybrid 16 x 1 | 6.70 | 6.13 | 0.087 (1.3%) | 156.2 |
+
+Findings, all from one repetition and unexplained until repeated:
+
+- **Same 16 cores, very different times:** 1 x 16 took 3.54 s and 16 x 1 took 6.70 s, and exchange explains almost none of the gap. The traverse is about 1.9 times
+  longer. A possible cause is 16 separate tree copies competing for one shared cache, against one tree shared by threads. **Untested.**
+  `bench16` measures this with repetitions.
+- **Efficiency above 1 at 1 x 16:** 1.11 against serial, and 1.06 against hybrid 1 x 1. It should not be reported or trusted from one repetition.
+- **Run-to-run conditions moved:** `integrate_s` differs by a factor of 2 between the serial 3 x 10^5 runs (0.0048 s at 14:37; about 0.0098 s at 14:41 to 14:43), though it does not depend on leaf size. So the leaf comparison is not clean.
+- **Placement:** the 4 x 4 probe passed, with 16 threads on 16 distinct CPUs. All 16 allocated CPUs are odd-numbered, so all are on NUMA node 1, one socket. **16 x 1 had no probe**; its traverse times per rank match within 2%
+  (6.03 to 6.13 s), which argues against ranks sharing a core but does not prove it. `bench16` adds that probe.
+- **Budget fault found:** a run does one more force evaluation than `plan_budget.py` counted, because warmup includes the initial one (`setup_s` is about equal to `wall_s`). Fixed. The refit estimate is within 6% of the four largest serial and hybrid runs.
+
+Accuracy (N = 20,000, serial `--validate`), max and mean relative error: theta 0.3: 1.41e-2, 4.2e-4; 0.5: 6.76e-2, 1.7e-3; 0.7: 0.229, 4.5e-3; 0.9: 0.390, 9.7e-3.
+
+Sizing rules applied in `plan_256core.md`. Local checks for the new plans, never measurements: `plan_budget_test`, `pbs_entry_test`, and the `bench16` wrapper in Docker
+with a frozen 8-core copy of its plan at N/100 (`artifacts/local/runs/simulated-bench16-20261105/`): 9 of 9 gates, 64 of 64 runs. It refuses a plan that is not frozen
+(`simulated-bench16-refuse-20261105`). Docker cannot bind, so `verify_run.py` flags its stderr warnings there, which is the intended behaviour. `1522998` stayed queued and unchanged.
+

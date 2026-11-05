@@ -140,7 +140,7 @@ Barnes–Hut, never direct summation, as the speedup denominator.
 python3 scripts/run_manifest.py manifests/<m>.json --out <run dir> --bin <bin dir> \
     [--mpirun ...] [--cores-per-node C] [--nodes K] [--first-cpu CPU] [--deadline EPOCH] [--plan-only]
 python3 scripts/analyze.py <run dir> [<run dir> ...] [--out <dir>]     # summary.csv/json
-python3 scripts/report_figures.py <summary.json> [...] --out <dir>     # pgfplots figures and tables
+python3 scripts/report_figures.py <summary.json> [...] --allow-local --out <dir>     # pgfplots figures and tables
 ```
 
 A manifest lists cases; list-valued fields are swept. Repetitions are

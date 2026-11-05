@@ -1,5 +1,7 @@
 # Cluster access, transfer and discovery
 
+> Vanda runbook is current. Sections 1 to 4 use Atlas host names and are historical.
+
 For the group member doing the cluster login. Replace `NUSNETID` with your
 NUSNET ID. Vanda (PBS) is the working cluster; its runbook is at the end.
 Sections 1–4 were written before access and use Atlas host names; on Vanda use

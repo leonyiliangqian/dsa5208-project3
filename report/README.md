@@ -2,13 +2,18 @@
 
 Group members: Yan Yixin, Zhang Yue, Leon Yiliang Qian (names and IDs to be confirmed).
 
-| File | Purpose |
-|---|---|
-| `main.tex` | Report source. Drafted: method, parallel design, correctness, methodology. Cluster-dependent text is marked `\pending{...}` and renders in red |
-| `rho.bib` | Bibliography; every entry checked against its DOI/ADS record (28 Oct 2026) |
-| `generated/*.tex` | Tables and sentences generated from retained evidence. Do not edit by hand |
-| `figures/` | Figures generated from cluster runs (none yet) |
-| `rho-class/` | Two-column template (`rho.cls` and style files) |
+**This folder is the working report.** It has red `[PENDING]` markers and no PDF in it. The **final submission PDF** is a separate
+file made at the end, kept as `report/DSA5208_Project3_Report.pdf`. No such file exists yet, so nothing here is ready to hand in.
+
+| Path | Purpose | Edit by hand? |
+|---|---|---|
+| `main.tex` | Report text. Text that depends on cluster results is marked `\pending{...}`, which renders in red | Yes |
+| `generated/*.tex` | Tables, sentences and plots written from retained evidence, and read with `\input`. `fig_*` are pgfplots plots, `tab_*` tables, the rest tables and notes | **Never**: regenerate |
+| `figures/` | Hand-drawn static images only ([why](figures/README.md)). None yet. Data plots are in `generated/`, not here | Yes |
+| `rho.bib` | Bibliography; every entry checked against its DOI/ADS record (28 Oct 2026) | Yes |
+| `rho-class/` | Two-column template (`rho.cls` and style files) | No |
+
+A missing `generated/fig_*` or `tab_*` file is not an error: `\resultslot` in `main.tex` prints a `[PENDING]` marker until a real run produces it.
 
 ## Compiling on Overleaf
 
@@ -20,16 +25,26 @@ Overleaf project, or sync it. Settings: compiler pdfLaTeX, main document
 `code/docker/tex` compiles it (`pdflatex -shell-escape`, `biber`). No local TeX
 installation is needed.
 
+Without Overleaf, compile a scratch copy, so that build files stay out of this folder. The image comes from `code/docker/tex/Dockerfile`:
+
+```sh
+docker build -t dsa5208-p3-tex:bookworm code/docker/tex
+cp -R report /tmp/report-build && cd /tmp/report-build
+docker run --rm -v "$PWD":/w -w /w dsa5208-p3-tex:bookworm sh -c \
+  'pdflatex -shell-escape main.tex && biber main && pdflatex -shell-escape main.tex && pdflatex -shell-escape main.tex'
+```
+
 ## Regenerating content from evidence
 
 From `code/`:
 
 ```sh
-python3 scripts/report_tables.py   # rewrites report/generated/*.tex
+python3 scripts/report_tables.py                     # validation tables and notes, from retained evidence
+python3 scripts/report_figures.py <summary.json> ... # scaling plots and tables, from Vanda runs only
 ```
 
-Then re-upload the changed `generated/` files. Numbers in the report's tables
-and generated sentences come only from files under `code/artifacts/`.
+Then re-upload the changed `generated/` files. Numbers in the report's tables and generated sentences come only from files under
+`code/artifacts/`. Rerunning `report_tables.py` with unchanged evidence must leave `generated/` unchanged.
 
 ## Before submission
 

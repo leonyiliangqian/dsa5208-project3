@@ -1,7 +1,7 @@
 # Plan to 256 cores: requests for approval
 
-Written 4 November 2026. **Nothing here is approved or submitted, and every size and time is provisional.** No job here
-has run on Vanda. Simulated and local checks are in `notes/experiments.md`.
+Written 4 November 2026, resized 5 November from pilot `1523275`. **Nothing here is approved or submitted beyond the jobs marked, and every size and
+time is provisional.** Current status is in `../HANDOFF.md`; simulated and local checks are in `experiments.md`.
 
 ## Decision needed
 
@@ -24,21 +24,58 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 |---|---|---|---|---|---|---|
 | 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | **Failed at `placement`, 0 of 20 runs** |
 | 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | **Submitted once as `1522998`, 5 Nov 13:46 SGT**; queued at submission |
-| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
-| B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project, balance and charge approval |
-| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge approval |
-| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 4 h | `auto_free`, 0 | 256 | 79 min, 84 core-hours | Step 0, manifest resized and frozen |
+| 0c | `pilot16` `1523275` | 1 x 16 cores, 16 GB, 60 min | `auto_free`, 0 | 16 | 15 min, measured | **Passed.** Provisional sizing only: see "Pilot16 results" |
+| 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | Plan frozen. Approval only; needs no 64-core result. Does not supply 256 cores |
+| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
+| B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
+| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 54 min, 230 core-hours | Step B passed, manifest resized and frozen, charge approval |
+| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 97 min, 103 core-hours | Step 0, manifest resized and frozen |
 
-"Expected use" comes from `scripts/plan_budget.py` and is rough. The same estimate could be off by a factor of two or more:
-one local Docker run was about 2.5 times slower per particle, though on a different machine.
+"Expected use" comes from `scripts/plan_budget.py`, refit to pilot `1523275`. It matches that pilot closely, but 64 and 256 ranks and N above 2 x 10^6 are
+extrapolated, so it could still be off by a factor of two or more there.
 
 Step A can be skipped to save queue time. It costs nothing, and it is the only way to find a launch fault at 64 ranks per
 node before paying for one. `bench2` is needed only if the 256-core route fails.
 
-`bench1` has 148 runs. Its 4 h covers the worst case, 13020 s, if every run uses its whole limit. A long request may wait
-longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline.
+`bench1` has 148 runs. Its 5 h covers the worst case, 16020 s, if every run uses its whole limit. A long request may wait
+longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline, and if `bench16` passes it can drop its serial and parameter runs.
 
-## Smaller pilot: `pilot16`, submitted once as `1523275`
+## Pilot16 results: provisional sizing, 16 cores only
+
+Job `1523275` passed all gates, with 20 of 20 runs (details in `experiments.md`). **One repetition, on a possibly shared node. Not a scaling result. None of this
+is proven at 64 or 256 cores.** The rules below were set before any result existed.
+
+| Rule | Reading | Provisional outcome |
+|---|---|---|
+| 1, gates | All 5 passed | Sizing may proceed |
+| 2, timeouts | None; none skipped | No lower bounds needed |
+| 3, CPU model | Gold 6438N, IN-002 | Later baselines stay within their own job and model |
+| 4, serial time per step | 31.4 s at 10^6; 78.4 s at 2 x 10^6 | **Keep N_s = 10^6**. 3 steps is 94 s, inside the 60-120 s target |
+| 5, `hybrid 1x1` | 4.2% faster than serial | Under the 20% limit, nothing to investigate |
+| 6, 16 x 1 efficiency | 0.58 | Warning not raised. Says nothing about 64 x 1 |
+| 7, peak RSS per rank | 156.2 MiB at 16 x 1 | **Keep 50,000 per core** as an estimate. MPI memory may grow with ranks |
+| 8, exchange share | 1.3% at 16 x 1 | Under 50%. A lower bound, since volume per node grows with ranks |
+| 9, schedules at 1 x 16 | static 2.3% and guided 1.8% slower than dynamic | **Keep dynamic, chunk 64** |
+| 10, leaf size at 3 x 10^5 | 4, 16, 32 took 27.6%, 17.0%, 37.4% longer than 8 | **Keep 8.** The runs were minutes apart and conditions moved, so `bench16` repeats this |
+| 11, theta | 0.3 / 0.7 / 0.9 traverse 3.75 / 0.41 / 0.22 times theta 0.5's; 0.5's accuracy run exited 0 | **Keep 0.5**. Estimate now theta^-2.6 |
+| 12, constants | Replaced in `plan_budget.py`, plus one more force evaluation per run | Every plan rerun, below |
+
+**Budgets after rule 12.** Rule 12 says raise walltime on free queues, and on `bench4` lower N_s or drop the ranks x threads points. Rule 4 keeps N_s, so:
+
+| Plan | Change | Runs | Worst case and budget, s | Core-hours requested |
+|---|---|---|---|---|
+| `pilot2` | None | 6 | 1020 of 1040 | 64 |
+| `pilot4` | Serial limit 240 to 260 s and others resized | 9 | 1225 of 1704 | 192, unchanged |
+| `bench4` | Limits raised. **Dropped ranks x threads at 256 (12 runs) and strong hybrid 1 x 1 (3 runs)** so as not to raise the charge | 90 | 8700 of 8904 | 704, unchanged |
+| `bench1` | Limits raised, walltime 4 h to 5 h | 148 | 16020 of 17358 | 320 |
+| `bench16` | New, frozen | 121 | 12285 of 13158, with 900 s of gates | 64 |
+
+Dropping the hybrid 1 x 1 point means `bench4`'s strong curves start from the serial baseline, and ranks x threads would rest on `bench16` and `bench1`. The group can restore them with a longer request: 3 h 15 min would hold all 105 runs (worst case 10245 s), at 832 core-hours.
+
+**Not answered, and still needs 64 cores:** launch at 64 ranks on a node (16 is now the most shown on one node, with `pbs_tmrsh`); 64 x 1 efficiency, RSS and exchange;
+1 x 64 across both sockets (all of this job was on one socket); a whole node. `1522998` or `pilot2` must supply these before any plan is frozen for a charged job.
+
+## Smaller pilot: `pilot16`, why and how, written before it ran
 
 **Why:** `1522998` waits for a whole 64-core node. A snapshot at 14:20 SGT on 5 Nov had no free-pool node with 64 or even 32 cores
 free, and 6 with at least 16 (5 Gold 6438N, 1 Platinum 8452Y). That counts cores only, not memory, and it is one moment, so it does
@@ -142,16 +179,16 @@ leaf size 8, dynamic schedule with chunk 64, and 3 timed steps after 1 warmup st
 
 | Series | Points | Runs |
 |---|---|---|
-| Strong, MPI only | serial, 1 x 1, then P = 2, 4, ... 256 ranks | 10 x 3 |
+| Strong, MPI only | serial, then P = 2, 4, ... 256 ranks | 9 x 3 |
 | Strong, MPI+OpenMP | 8 threads per rank, P = 8 to 256 | 6 x 3 |
 | Weak, MPI only | P = 1 to 256 | 9 x 3 |
 | Weak, MPI+OpenMP | 8 threads per rank, P = 8 to 256 | 6 x 3 |
-| Ranks x threads at 256 | 64 x 4, 16 x 16, 8 x 32, 4 x 64 | 4 x 3 |
+| Ranks x threads | Dropped from `bench4` by rule 12; in `bench16` and `bench1` at 16 and 64 cores | |
 
-Memory: about 136 MiB per rank per million particles, measured locally, plus 30%. That gives **about 143 GB of the 240 GB
-requested per node** at 64 ranks x 12.8 x 10^6, the largest case. It has not been measured on Vanda, and step B measures it.
+Memory: about 136 MiB per rank per million particles, in line with pilot `1523275`, plus 30%. That gives **about 143 GB of the 240 GB
+requested per node** at 64 ranks x 12.8 x 10^6, the largest case. Above 16 ranks it has not been measured on Vanda, and step B measures it.
 
-Replace all of this from steps 0 and B before freezing. If 12.8 x 10^6 does not fit or takes too long, step B's 6.4 x 10^6
+Replace all of this from steps 0b and B before freezing. If 12.8 x 10^6 does not fit or takes too long, step B's 6.4 x 10^6
 case gives the fallback of 25,000 per core, and step A would show the problem at 128 cores first.
 
 ## Dry runs
@@ -181,6 +218,7 @@ python3 scripts/plan_budget.py manifests/pilot_two_node.json jobs/vanda/pilot2.p
 python3 scripts/plan_budget.py manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1 --runs
 python3 scripts/plan_budget.py manifests/studies_four_node.json jobs/vanda/bench4.pbs --rate 1 --runs
 python3 scripts/plan_budget.py manifests/studies_single_node.json jobs/vanda/bench1.pbs --runs
+python3 scripts/plan_budget.py manifests/studies_16core.json jobs/vanda/bench16.pbs --startup-s 900 --runs
 ```
 
 Before each submission, recheck `scheduling = True`, the queue enabled and started, its charge rate, current jobs and

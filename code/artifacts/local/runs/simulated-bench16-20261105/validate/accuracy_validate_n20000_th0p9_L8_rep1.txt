@@ -1,0 +1,1 @@
+validate n=200 theta=0.900 leaf_size=8 nodes=91 max_rel_err=9.353e-02 mean_rel_err=1.927e-02 max_abs_err=2.228e-02

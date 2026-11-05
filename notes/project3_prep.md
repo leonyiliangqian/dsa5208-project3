@@ -1,5 +1,7 @@
 # Project 3 readiness
 
+> **Historical, 28 October.** Superseded by `requirements_plan.md` and `submission_audit.md`. Kept as a record; statuses here are out of date.
+
 Updated 28 October 2026 from the supplied assignment and current local files.
 
 ## Requirements and evidence

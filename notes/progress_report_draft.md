@@ -1,5 +1,7 @@
 # Optional progress report — DRAFT for group review, not sent
 
+> **Historical. Never sent, and the 30 October date has passed.** Do not revise or send. Kept as a record.
+
 To: Anthony Chen <cygnari@nus.edu.sg>
 Optional progress reports are accepted before 30 October 2026, so it must go
 out by tomorrow if the group wants to use it. Updated 29 Oct with the Vanda result.

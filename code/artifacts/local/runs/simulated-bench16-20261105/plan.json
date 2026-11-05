@@ -1,0 +1,1918 @@
+{
+  "manifest": "bin/sim_studies.json",
+  "manifest_id": "studies-16core-v1",
+  "manifest_status": "frozen: sizes from pilot 1523275 on the same core count (N = 10^6 by rule 4, dynamic chunk 64, leaf size 8, theta 0.5)",
+  "manifest_sha256": "28afc2f393392190752813d1c7cbf032058942982f6f95cdc9a929d0fdec7947",
+  "scale": 100,
+  "nodes": 1,
+  "cores_per_node": 8,
+  "deadline": 1793882790.0,
+  "runs": [
+    {
+      "case": "serial_n_serial_n10000_th0p5_L8",
+      "rep": 1,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "100",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n30000_th0p5_L8",
+      "rep": 1,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "300",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n100000_th0p5_L8",
+      "rep": 1,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n300000_th0p5_L8",
+      "rep": 1,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "serial_n_serial_n2000000_th0p5_L8",
+      "rep": 1,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "20000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 800
+    },
+    {
+      "case": "strong_serial_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_1x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_2x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 190
+    },
+    {
+      "case": "strong_hybrid_4x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 110
+    },
+    {
+      "case": "strong_hybrid_8x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "strong_hybrid_1x4_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "4",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 90
+    },
+    {
+      "case": "strong_hybrid_1x8_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 50
+    },
+    {
+      "case": "weak_hybrid_1x1_dynamic64_n50000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "500",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_2x1_dynamic64_n100000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_4x1_dynamic64_n200000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "2000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_8x1_dynamic64_n400000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_1x8_dynamic64_n400000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L4",
+      "rep": 1,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "4",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L16",
+      "rep": 1,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "16",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L32",
+      "rep": 1,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "32",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "accuracy_validate_n20000_th0p3_L8",
+      "rep": 1,
+      "study": "accuracy",
+      "program": "validate",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--validate",
+        "--n",
+        "200",
+        "--theta",
+        "0.3",
+        "--leaf-size",
+        "8"
+      ],
+      "timeout_s": 120
+    },
+    {
+      "case": "accuracy_validate_n20000_th0p5_L8",
+      "rep": 1,
+      "study": "accuracy",
+      "program": "validate",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--validate",
+        "--n",
+        "200",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8"
+      ],
+      "timeout_s": 120
+    },
+    {
+      "case": "accuracy_validate_n20000_th0p7_L8",
+      "rep": 1,
+      "study": "accuracy",
+      "program": "validate",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--validate",
+        "--n",
+        "200",
+        "--theta",
+        "0.7",
+        "--leaf-size",
+        "8"
+      ],
+      "timeout_s": 120
+    },
+    {
+      "case": "accuracy_validate_n20000_th0p9_L8",
+      "rep": 1,
+      "study": "accuracy",
+      "program": "validate",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--validate",
+        "--n",
+        "200",
+        "--theta",
+        "0.9",
+        "--leaf-size",
+        "8"
+      ],
+      "timeout_s": 120
+    },
+    {
+      "case": "serial_n_serial_n10000_th0p5_L8",
+      "rep": 2,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "100",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n30000_th0p5_L8",
+      "rep": 2,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "300",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n100000_th0p5_L8",
+      "rep": 2,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n300000_th0p5_L8",
+      "rep": 2,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "serial_n_serial_n2000000_th0p5_L8",
+      "rep": 2,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "20000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 800
+    },
+    {
+      "case": "strong_serial_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_1x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_2x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 190
+    },
+    {
+      "case": "strong_hybrid_4x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 110
+    },
+    {
+      "case": "strong_hybrid_8x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "strong_hybrid_1x4_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "4",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 90
+    },
+    {
+      "case": "strong_hybrid_1x8_dynamic64_n1000000_th0p5_L8",
+      "rep": 2,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 50
+    },
+    {
+      "case": "weak_hybrid_1x1_dynamic64_n50000_th0p5_L8",
+      "rep": 2,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "500",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_2x1_dynamic64_n100000_th0p5_L8",
+      "rep": 2,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_4x1_dynamic64_n200000_th0p5_L8",
+      "rep": 2,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "2000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_8x1_dynamic64_n400000_th0p5_L8",
+      "rep": 2,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_1x8_dynamic64_n400000_th0p5_L8",
+      "rep": 2,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L4",
+      "rep": 2,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "4",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L16",
+      "rep": 2,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "16",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L32",
+      "rep": 2,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "32",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "serial_n_serial_n10000_th0p5_L8",
+      "rep": 3,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "100",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n30000_th0p5_L8",
+      "rep": 3,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "300",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n100000_th0p5_L8",
+      "rep": 3,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "serial_n_serial_n300000_th0p5_L8",
+      "rep": 3,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "serial_n_serial_n2000000_th0p5_L8",
+      "rep": 3,
+      "study": "serial_n",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "20000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 800
+    },
+    {
+      "case": "strong_serial_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_1x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 320
+    },
+    {
+      "case": "strong_hybrid_2x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 190
+    },
+    {
+      "case": "strong_hybrid_4x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 110
+    },
+    {
+      "case": "strong_hybrid_8x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 70
+    },
+    {
+      "case": "strong_hybrid_1x4_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=4 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "4",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 90
+    },
+    {
+      "case": "strong_hybrid_1x8_dynamic64_n1000000_th0p5_L8",
+      "rep": 3,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "10000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 50
+    },
+    {
+      "case": "weak_hybrid_1x1_dynamic64_n50000_th0p5_L8",
+      "rep": 3,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "500",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_2x1_dynamic64_n100000_th0p5_L8",
+      "rep": 3,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:2:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 2,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "1000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_4x1_dynamic64_n200000_th0p5_L8",
+      "rep": 3,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 4 --map-by ppr:4:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 4,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "2000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_8x1_dynamic64_n400000_th0p5_L8",
+      "rep": 3,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:8:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "weak_hybrid_1x8_dynamic64_n400000_th0p5_L8",
+      "rep": 3,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 8,
+      "argv": [
+        "bin/vanda-99162/bh_hybrid",
+        "--n",
+        "4000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L4",
+      "rep": 3,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "4",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L16",
+      "rep": 3,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "16",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    },
+    {
+      "case": "leaf_serial_n300000_th0p5_L32",
+      "rep": 3,
+      "study": "leaf",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-99162/bh_serial",
+        "--n",
+        "3000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "32",
+        "--steps",
+        "3",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 100
+    }
+  ]
+}

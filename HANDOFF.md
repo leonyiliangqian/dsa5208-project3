@@ -1,9 +1,39 @@
-# Project 3 handoff: state of the work and how to finish the report
+# Project 3 handoff: current status
 
-Status at handoff: 30 October 2026. Vanda is closed for maintenance until
-**Mon 2 Nov 17:00 SGT**. Report due **13 Nov 2026 23:59 SGT**.
+**This is the only place for changing job status.** Report due **13 Nov 2026 23:59 SGT**. Not ready to hand in: see
+[notes/group_review.md](notes/group_review.md). Everything under "History" is dated and may be out of date.
 
-## Update, 5 November 2026 (read this first)
+Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
+[notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
+
+## Current status, 5 November 2026
+
+| Job | State | Means |
+|---|---|---|
+| `1523275` 16-core pilot | **Finished, 14:51 SGT:** exit 0, 15 min 12 s, 5 of 5 gates, 20 of 20 runs, IN-002 | Provisional sizing only. Not a scaling result, and proves nothing at 64 or 256 cores |
+| `1522998` 64-core pilot | **Queued at 16:47 SGT**, never started; waits for a whole node | Do not resubmit or cancel. Nothing is watching it. Check once with `qstat -xf 1522998` when asked |
+| `bench16` | **Not approved, not submitted** | Formal free 16-core studies, request in [notes/approval_requests.md](notes/approval_requests.md) |
+| `pilot2`, `pilot4`, `bench4`, `bench1` | **Not approved**, sizes provisional | Order and rules in [notes/plan_256core.md](notes/plan_256core.md) |
+
+- **Formal CPU results: none.** Serial against N, and MPI and MPI+OpenMP scaling, are all still `[PENDING]` in the report.
+- **GPU test:** measured in job `1519638`, in the report, review open.
+- **Biggest open item:** 256 cores, 10 points. It needs a charged queue, so Leon reads the balance with `amgr login` and decides.
+- **Sizing from the pilot, provisional:** keep N_s = 10^6, 50,000 particles per core, theta 0.5, leaf size 8, dynamic chunk 64. All rules are in `plan_256core.md`.
+- **New finding to test:** on the same 16 cores, 16 x 1 took about 1.9 times as long as 1 x 16, and exchange was only 1.3% of its time. One repetition; cause untested.
+- **Approvals:** none open. Lecturer contact is closed. No job is retried without a new approval.
+
+**Next, in order:**
+
+1. Leon decides on the `bench16` request. It costs no charge at rate 0 and does not need a whole node.
+2. When asked, check `1522998` once. If it passes, apply the rules for its 64-core checks; if it fails, diagnose and do not retry.
+3. Leon reads the balance and decides on 256 cores.
+4. Group items in [notes/group_review.md](notes/group_review.md).
+
+# History
+
+Dated notes, newest first. Each was true when written; job states here are superseded by the table above.
+
+## Update, 5 November 2026, before pilot16 finished
 
 - **Pilot `1519637` failed at its third gate and measured nothing.** It ran 05:11:16 to 05:13:07 on IN-020 with exit 5, rate 0.
   `allocation` and `build` passed; `placement` timed out at 90 s. 0 of 20 runs started, so there is **no sizing data** and rule 1
@@ -19,7 +49,6 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Report:** terms, input generation, test purposes and parallelization decisions are drafted. CPU results remain red `[PENDING]`
   markers, because none exists. It compiles to 8 pages in a scratch copy.
 - **Source package:** checked by `code/tests/jobs/package_test.sh`. Group items are in [notes/group_review.md](notes/group_review.md).
-- The items below still apply, except that sizing now waits for this rerun.
 
 ## Update, 4 November 2026, 23:21 SGT
 
@@ -66,10 +95,12 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
   and 3e6. The kernel is at least 97% of the gap; mapping and transfers are under 1% of device wall time. One job, one
   node, three repetitions. Cause not investigated. See `notes/experiments.md`.
 - **Pilot v2 1519637 still queued** (22:50 SGT, 4 Nov; PBS: insufficient `node_pool`). No sizing data yet.
-- **Pilot order risk:** `pilot_single_node.json` can skip every 64-core case if its serial cases run slow; `..._v2.json`
+- **Pilot order risk:** `pilot_single_node.json` can skip every 64-core case if its serial cases run slow; `pilot_single_node_v2.json`
   has the same 20 runs with those first. See `notes/experiments.md`.
 - **Still no scaling measurement.** 256 cores do not fit the free queue.
 - **Approvals:** both requests in [notes/approval_requests.md](notes/approval_requests.md) are used. None is open.
+
+## Written 30 October: status at that time, when Vanda was closed for maintenance until 2 Nov
 
 ## Open before submission (13 Nov 23:59 SGT)
 

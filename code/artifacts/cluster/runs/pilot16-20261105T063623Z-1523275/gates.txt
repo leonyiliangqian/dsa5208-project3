@@ -1,0 +1,5 @@
+allocation PASS rc=0 secs=2 kind=critical 
+build PASS rc=0 secs=8 kind=critical 
+placement PASS rc=0 secs=5 kind=critical 
+runs PASS rc=0 secs=874 kind=required limit cut from 99999s to 3437s (worst-case overhead 81s) to fit the walltime
+analyze PASS rc=0 secs=6 kind=required 

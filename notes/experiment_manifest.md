@@ -1,5 +1,7 @@
 # Experiment manifest — PROPOSED, not frozen
 
+> Current for why each study exists. Sizes and limits changed after pilot `1523275`: see `plan_256core.md`. `studies_16core.json` (`bench16.pbs`) is now the only frozen CPU plan.
+
 Machine-readable versions (what the jobs actually run): `code/manifests/`
 `pilot_single_node.json` (the pilot), `studies_single_node.json` and
 `studies_two_node.json` (formal studies, status proposed; `bench1.pbs` and

@@ -292,7 +292,7 @@ In this timing job (PBS 1519638, commit \texttt{8a50c8f}; Figure~\ref{fig:gpu-ru
 \pending{interpretation.}
 
 \subsection{Failed and Skipped Runs}
-Two pilot jobs ended before any run and so measured nothing. Job 1514774 stopped at entry after one second because of a job-script path error. Job 1519637 stopped at its placement step (see Correctness). \resultslot{tab_failed_runs}{table of failed, timed-out and skipped runs.}
+Two pilot jobs ended before any run and so measured nothing. Job 1514774 stopped at entry after one second because of a job-script path error. Job 1519637 stopped at its placement step (see Correctness). A 16-core pilot, job 1523275, completed all its runs and was used only to choose sizes: it has one repetition on a possibly shared node, so its times are not reported as results. \resultslot{tab_failed_runs}{table of failed, timed-out and skipped runs.}
 
 \section{Discussion}
 \subsection{Parallelization Decisions}

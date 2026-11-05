@@ -15,7 +15,7 @@ import sys
 
 root = Path(subprocess.check_output(["git", "rev-parse", "--show-toplevel"], text=True).strip())
 LINK = re.compile(r"\]\(([^)#\s]+)(?:#[^)]*)?\)")
-CODE = re.compile(r"`((?:code|notes|report|artifacts|manifests|jobs|scripts|tests)/[^`\s]+|[\w./-]+\.(?:md|json|pbs|py|sh|tex))`")
+CODE = re.compile(r"`((?:code|notes|report|artifacts|cluster|local|manifests|jobs|scripts|tests)/[^`\s]+|[\w./-]+\.(?:md|json|pbs|py|sh|tex))`")
 
 
 # Named in the documents, and produced only at the end.
@@ -27,7 +27,7 @@ def exists(ref, base):
         return True
     for start in (base, root, root / "code", root / "code/artifacts/cluster", root / "code/artifacts/cluster/discovery",
                   root / "notes", root / "report", root / "code/manifests", root / "code/scripts", root / "code/jobs/vanda",
-                  root / "code/tests", root / "code/docker", *map(Path, glob.glob(str(root / "code/artifacts/cluster/runs/*")))):
+                  root / "code/tests", root / "code/tests/jobs", root / "code/docker", root / "code/artifacts", *map(Path, glob.glob(str(root / "code/artifacts/cluster/runs/*")))):
         if glob.glob(str(start / ref)) or (start / ref).exists():
             return True
     return False

@@ -1,96 +1,61 @@
-# DSA5208 Project 3: MPI+OpenMP Barnes–Hut
+# DSA5208 Project 3: Barnes–Hut with MPI+OpenMP
 
-Due **13 November 2026, 23:59 Singapore time**. Worth **35 points**.
+Due **13 November 2026, 23:59 Singapore time**, 35 points. Group listing to confirm: Yan Yixin, Zhang Yue, Leon Yiliang Qian.
 
-Existing group listing: Yan Yixin, Zhang Yue, Leon Yiliang Qian. Confirm the
-membership and student IDs in `report/main.tex` before submission.
+This repository is the group's internal research record. It holds the code, the report source, and every job's evidence. **What gets
+handed in is smaller:** a PDF report and a clean source package built from `code/`, as [notes/submission_audit.md](notes/submission_audit.md)
+explains. **Job status changes daily and lives only in [HANDOFF.md](HANDOFF.md).** Start there if you are writing the report.
 
-**Teammates writing the report: start with [HANDOFF.md](HANDOFF.md).**
+## What it is
 
-## Latest state
+Gravitational n-body simulation with the Barnes–Hut tree approximation, on Plummer-profile synthetic input, in C++17:
 
-See the top of [HANDOFF.md](HANDOFF.md). In short, on 5 November: pilot rerun `1522998` and 16-core pilot `1523275` are queued, no CPU scaling result exists, and
-GPU timing is done (job 1519638). The list below is from 30 October.
+| Program | Source | Parallelism |
+|---|---|---|
+| `bh_serial` | `code/serial/barnes_hut.cpp` | None: the reference, and the denominator for speedup |
+| `bh_hybrid` | `code/hybrid/bh_hybrid.cpp` | MPI between ranks with a replicated global tree, OpenMP inside each rank |
+| `bh_gpu` | `code/gpu/bh_gpu.cpp` | OpenMP target offload of the force traversal |
 
-## State on 30 October 2026
+Shared physics and tree code is in `code/common/`.
 
-- Topic: Barnes–Hut n-body, C++17, MPI+OpenMP.
-- Serial reference audited and fixed; serial gate passes on macOS, Docker and Vanda.
-- Replicated-tree MPI+OpenMP solver matches serial bitwise in 15 configurations,
-  locally (Docker) and on a Vanda compute node.
-- Vanda (PBS) correctness job 1503779 passed all 9 gates on node IN-003 (8 cores,
-  zero-rate `auto_free`).
-- Two-node correctness job 1514458 passed all 17 gates on Vanda: 22 of 22 hybrid-serial
-  cases matched exactly, 17 across both nodes, all **unbound**. Binding was checked only by
-  separate placement probes and one bound smoke run, not against serial. One job, and the
-  1514029 tm hang is unexplained; multi-node jobs use `pbs_tmrsh`.
-  See notes/experiments.md and notes/cluster_access.md.
-- GPU validation job 1514775 ran on a real NVIDIA A40 and passed its device and correctness gates. No GPU timing yet.
-- Pilot job 1514774 failed at entry in 1 s and measured nothing; fixed locally, rerun awaits approval.
-- Measurement pipeline complete and tested locally (manifests, time-limited runs,
-  analysis, report figures/tables); no performance measurement exists yet.
-- Report: method, parallel design, correctness (Vanda) and methodology drafted
-  in `report/` for Overleaf; results slots fill from Vanda runs only.
+## Folder map
 
-## Limitations at this point (read before writing)
+| Path | Holds | Goes in the hand-in? |
+|---|---|---|
+| [code/](code/) | Source, `Makefile`, tests, scripts, plans, job scripts, Docker, and the [run README](code/README.md) | Yes, through the package script |
+| [code/artifacts/](code/artifacts/) | Evidence: Vanda runs in `cluster/`, local tests in `local/`. Never edited. Indexed in [notes/evidence_index.md](notes/evidence_index.md) | No |
+| [report/](report/) | Working report source ([how it is laid out](report/README.md)) | Only as the final PDF |
+| [notes/](notes/) | Requirements, design, experiment history, approvals, group review ([index](notes/README.md)) | No |
+| [HANDOFF.md](HANDOFF.md) | Current status, and a dated history below it | No |
 
-- Single-node correctness passed on Vanda (job 1503779).
-- **Two-node correctness rests on one job (1514458) on one pair of nodes**, with the
-  serial comparison unbound; no bound result has been compared with serial.
-- **Local Docker simulations are tests, not Vanda performance results.**
-- **No formal cluster scaling measurement has been collected.**
-- Every cluster job needs Leon's approval first; see notes/approval_requests.md.
+## Quick start
 
-## Start here
+Docker Desktop must be running for the commands that use `docker/run.sh`.
 
 ```sh
 cd code
-make check                                   # serial gate (macOS or Linux)
-docker/run.sh make check check-hybrid        # serial + hybrid gates in Linux (Docker)
+make check                                   # serial gate
+docker/run.sh make check-hybrid              # MPI+OpenMP against serial
+docker/run.sh make check-gpu                 # GPU solver's logic, on the host
 docker/run.sh bash tests/pipeline_e2e.sh     # measurement pipeline on tiny inputs
-docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'   # job gate library, two simulated nodes
+
+bash scripts/package_submission.sh ../dsa5208-project3-source.zip   # source package, from the committed tree
+bash tests/jobs/package_test.sh              # what the package must and must not hold
+python3 tests/repo_links_test.py             # every path the documents name exists
 ```
 
-Report figures and tables are generated, never typed: `code/scripts/report_tables.py`
-(validation tables, from the Vanda correctness run) and `code/scripts/report_figures.py`
-(scaling results, from Vanda runs only). See [HANDOFF.md](HANDOFF.md) for the
-commands and [code/README.md](code/README.md) for details.
+Build commands, dependencies and options are in [code/README.md](code/README.md). The report is compiled as [report/README.md](report/README.md) describes.
 
-## Evidence
+## Verified results
 
-| Where | What | Status |
+These are stable results from real Vanda jobs. Sources and limits are in [notes/evidence_index.md](notes/evidence_index.md).
+
+| Result | Job | Scope |
 |---|---|---|
-| [code/artifacts/cluster/](code/artifacts/cluster/) | Genuine Vanda runs (passed and failed jobs), PBS logs, site and charging checks | cluster evidence |
-| [code/artifacts/local/](code/artifacts/local/) | macOS/Docker validation, simulations and pipeline tests | local only, never results |
+| Serial and hybrid correctness, one node | `1503779` | 8 cores, all 9 gates |
+| Hybrid matches serial across two nodes | `1514458` | One node pair, 16 cores, comparison unbound |
+| GPU solver correct on a real device | `1514775` | NVIDIA A40 |
+| GPU against CPU timing | `1519638` | GPU slower than 36 CPU cores at all 4 sizes; one job, three repetitions |
 
-| File | Purpose |
-|---|---|
-| [HANDOFF.md](HANDOFF.md) | State of the work, evidence, commands after reopening, pending report items |
-| [notes/assignment_brief.txt](notes/assignment_brief.txt) | Assignment wording |
-| [notes/project_memory.md](notes/project_memory.md) | Lecture 12 requirements and grading |
-| [notes/requirements_plan.md](notes/requirements_plan.md) | Rubric, 256-core check, GPU proposal, job proposals |
-| [notes/approval_requests.md](notes/approval_requests.md) | Exact job commands awaiting approval |
-| [notes/project3_prep.md](notes/project3_prep.md) | Requirements, milestones and blockers |
-| [notes/design.md](notes/design.md) | Algorithm design and staged scope |
-| [notes/experiments.md](notes/experiments.md) | Validation and scaling protocol; every Vanda job and finding |
-| [notes/experiment_manifest.md](notes/experiment_manifest.md) | Study design (machine-readable plans in `code/manifests/`) |
-| [notes/ai_usage.md](notes/ai_usage.md) | AI-use record and declaration draft |
-| [notes/group_review.md](notes/group_review.md) | What the group must check before submission |
-| [notes/cluster_access.md](notes/cluster_access.md) | Vanda runbook |
-| [notes/progress_report_draft.md](notes/progress_report_draft.md) | Optional progress report draft (not sent) |
-| [code/](code/) | C++17 serial and MPI+OpenMP solvers, tests, measurement pipeline, Vanda jobs |
-| [report/](report/) | Overleaf-ready report source; method and validation drafted, results pending |
-
-## Submission
-
-Submit a PDF covering the algorithm, design choices, validation, scaling and
-efficiency, runtime figures from **Atlas or Vanda**, and AI usage. Include names
-and student IDs for group work. Real-data conclusions apply only if real data
-is used; the current design uses synthetic inputs.
-
-Lecture 12: include source code; exclude logs and terminal output
-(`code/scripts/package_submission.sh` builds the source package from the committed tree).
-
-The brief also requires source code and a run README, although the listed upload
-type is PDF. Confirm the source delivery mechanism on Canvas;
-do not assume a repository link alone meets the requirement. No email has been sent.
+**The graded CPU scaling results do not exist yet:** serial runtime against N, and MPI and MPI+OpenMP strong and weak scaling to 256
+cores. Pilot `1523275` set provisional sizes only, and is not a scaling result. Local Docker runs are tests and never results.

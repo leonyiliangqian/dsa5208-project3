@@ -1,0 +1,17 @@
+pilot16-20261105T063623Z-1523275: 16 records, 0 failed, 16 configurations
+  bh_serial  n=100000 1x1 P=1 -/0 reps=1 wall_med=3.4431s [3.4431,3.4431]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=16.0726s [16.0726,16.0726]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=18.8757s [18.8757,18.8757]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=17.5198s [17.5198,17.5198]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=13.7358s [13.7358,13.7358]
+  bh_hybrid  n=1000000 1x1 P=1 dynamic/64 reps=1 wall_med=60.0531s [60.0531,60.0531] speedup=1.04 eff=1.04
+  bh_hybrid  n=1000000 1x16 P=16 dynamic/64 reps=1 wall_med=3.5420s [3.5420,3.5420] speedup=17.71 eff=1.11
+  bh_hybrid  n=1000000 1x16 P=16 guided/0 reps=1 wall_med=3.6068s [3.6068,3.6068] speedup=17.39 eff=1.09
+  bh_hybrid  n=1000000 1x16 P=16 static/0 reps=1 wall_med=3.6229s [3.6229,3.6229] speedup=17.31 eff=1.08
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=5.4586s [5.4586,5.4586] speedup=11.49 eff=0.72
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=19.3666s [19.3666,19.3666]
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=2.6291s [2.6291,2.6291]
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=1.6863s [1.6863,1.6863]
+  bh_hybrid  n=1000000 16x1 P=16 dynamic/64 reps=1 wall_med=6.7038s [6.7038,6.7038] speedup=9.35 eff=0.58
+  bh_serial  n=1000000 1x1 P=1 -/0 reps=1 wall_med=62.7122s [62.7122,62.7122]
+  bh_serial  n=2000000 1x1 P=1 -/0 reps=1 wall_med=156.7667s [156.7667,156.7667]

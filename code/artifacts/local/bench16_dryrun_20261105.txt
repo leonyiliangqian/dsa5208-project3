@@ -1,0 +1,18 @@
+local dry run only: no qsub on this machine, nothing sent to Vanda; the paths change in a Vanda clone
+2026-11-05 17:03:55 +08
+e86bf5d076c51c01f131f3980fc17618e9c24f61
+96eed32b4aec96fdaee9082e5e41b35552c64415
+2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd  manifests/studies_16core.json
+#PBS -N p3_bench16
+#PBS -l select=1:ncpus=16:mpiprocs=16:mem=16gb
+#PBS -l walltime=04:00:00
+#PBS -j oe
+command: qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o <clone>/code/artifacts/cluster/logs/ jobs/vanda/bench16.pbs
+dry run: add --yes to submit
+request: 1 x 16 cores, 16 GB each, 14400 s = 64 core-hours requested
+credits at assumed rate 0 per core-hour: 0 if charged on the request
+runs: 121, estimated 4789 s, worst case 12285 s, budget 13158 s after 900 s of gates and 342 s reserved at the end
+expected job time: 95 min = 25 core-hours used
+largest node memory: 3 GB of 16 GB
+PLAN OK
+       0

@@ -1,0 +1,5 @@
+mpicxx -O2 -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-99162/internode_check tests/toolchain/internode_check.cpp
+INTERNODE_EXPECT_HOSTS=1 mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by node \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-99162/internode_check
+[node1:00662] Warning: could not find environment variable "LD_LIBRARY_PATH"
+internode_check ranks=8 hosts=1 [node1] offset=1 pairs_cross_host=0 data_ok=1 sendrecv_8MiB_max_s=0.0147 allgatherv_1000003x3_max_s=0.0243 expect_hosts=1 PASS

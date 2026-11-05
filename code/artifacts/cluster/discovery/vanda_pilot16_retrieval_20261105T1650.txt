@@ -1,0 +1,127 @@
+Retrieval and verification of pilot16 job 1523275, 5 Nov 2026 SGT. Read-only on Vanda; originals left in ~/dsa5208-p3-96a37ba.
+Pilot evidence: provisional sizing only, one repetition, 16 cores of a possibly shared node. Not a formal scaling result.
+
+== PBS
+    resources_used.cput = 00:35:41
+    resources_used.mem = 2287784kb
+    resources_used.walltime = 00:15:12
+    job_state = F
+    queue = cpu_parallel
+    exec_host = IN-002/10*16
+    exec_vnode = (IN-002[1]:ncpus=16:mem=16gb)
+    Resource_List.am_job_cache = {"job.queue_charge_rate": 0,
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=16:mpiprocs=16:mem=16gb
+    stime = Thu Nov  5 14:36:22 2026
+    obittime = Thu Nov  5 14:51:42 2026
+    run_count = 1
+    Exit_status = 0
+    project = personal-leonyil.qian
+
+== checksums: sha256 on Vanda, compared after tar over ssh; 73 files, 0 mismatches
+bf1ddfb5115ab2d1aa8021bb51510e8db5ba79d841ef548a99460d885122c3d4  logs/1523275.stdct-mgmt-02.OU
+3ee1e225fe50fd25d98bf7acd328d1d5bd99042abb38f9f6a2a3717d7b6f5c52  runs/pilot16-20261105T063623Z-1523275/cleanup.log
+746362b8935bd99fe6e76447e38c96f8511195152ccdd90e5442b65dfe8f6262  runs/pilot16-20261105T063623Z-1523275/env/environment.txt
+a36e3ef687ab505522d73cf95b409249aec06fb60f4a5df758c64022128ede70  runs/pilot16-20261105T063623Z-1523275/env/launch_verbose.txt
+cc387b1421890ef53c567d8f8fb012a9df03aaf3a97608475245f1182977665e  runs/pilot16-20261105T063623Z-1523275/env/nodes.txt
+5388e959db7595014ef50d19373caf8444cf34c32372e7d48165c31dd05e5226  runs/pilot16-20261105T063623Z-1523275/gate_allocation.log
+76a6ce20b267ce14c4325de1773932e6e4b45235fb8e5b29e894db565cf3478a  runs/pilot16-20261105T063623Z-1523275/gate_analyze.log
+0681b5e634032e418fd281a1aa01c1db7aa78e6589e22ea12d3356ab54efa836  runs/pilot16-20261105T063623Z-1523275/gate_build.log
+f364aa5097474cf0a88dcfb1f53aa2d87e9f3ecfbd04cb6b237785609390c699  runs/pilot16-20261105T063623Z-1523275/gate_placement.log
+c88248bcdc2ac4dcfa90592ef29db77d015b55b1d871af1bad07d2bdfa625384  runs/pilot16-20261105T063623Z-1523275/gate_runs.log
+d1a33200e4e40a736ad216aead5f83729e263fefa9dc843dccb45da8e06f1846  runs/pilot16-20261105T063623Z-1523275/gates.txt
+0a1ae204fdc1237789e94ba0cc99a7ee463ed0f61539b2a37a7d5685b8c6676f  runs/pilot16-20261105T063623Z-1523275/job.log
+340af523ae17b4f996426dffe7d4bd42adcd4bf400a8807a9b2a61cd545c0690  runs/pilot16-20261105T063623Z-1523275/manifest.json
+8d41c0bb0fe655433727fd14b97dd54597f19e1b467ebec10a87550c17645d50  runs/pilot16-20261105T063623Z-1523275/plan.json
+29cf1fd4d55ce067c266f0769e709f47838de716be906fa33e845e810aca8466  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_16x1_dynamic64_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_16x1_dynamic64_n1000000_th0p5_L8_rep1.stderr
+d235bdb17bfe21e16e46e1b6e964153291bdee7107885bffce63ff0621e20474  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_16x1_dynamic64_n1000000_th0p5_L8_rep1.stdout
+f046d7db56f5de6758405edf516bffe3341c272674a9daf6fa5e4f0c8cfb42c1  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x16_dynamic64_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x16_dynamic64_n1000000_th0p5_L8_rep1.stderr
+e28ab85b925fde8ade2e792eeddd1bea5ae646e8a7d79788324b6a53e37477ce  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x16_dynamic64_n1000000_th0p5_L8_rep1.stdout
+b454da7373e96d6fe42359e814adb10ad99d384d2e4819011321ea8aca433ab3  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x1_dynamic64_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x1_dynamic64_n1000000_th0p5_L8_rep1.stderr
+564d49e910b16a8452ad350752d43cb8c2eb2bb6445d814a7f7ab7db52a894a2  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_1x1_dynamic64_n1000000_th0p5_L8_rep1.stdout
+ff7162a35fc38443ecaa6a2d59d1ed41192b42e56c5411c1f0ac26e8d9b173cb  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_4x4_dynamic64_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_4x4_dynamic64_n1000000_th0p5_L8_rep1.stderr
+8fd55a950118b8e6e25ea9eeb61b42947e53a1fbd24feafec916d0dd8df5172c  runs/pilot16-20261105T063623Z-1523275/raw/hybrid_range_hybrid_4x4_dynamic64_n1000000_th0p5_L8_rep1.stdout
+17afd867f2f1085c7e99b2f2a1beb6ce48f4c9b6807de1e4c8b9efdbbc13a9d5  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L16_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L16_rep1.stderr
+f45be8b4ce052db475f3fd7e5968dbe2da9911775e32a1e6af46b9c124117c0a  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L16_rep1.stdout
+e552d329eb7d0509a03dccfdd2b2efb0141f10c8f402565902a7963d387eb9a9  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L32_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L32_rep1.stderr
+67936df1ce02e900b012402e59d6b6030f87606d00b7e35cbd20eacd8ecf7c5b  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L32_rep1.stdout
+481542644e5474104325b9473d06416cf987125ef692370833bccb1cbbd2ba06  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L4_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L4_rep1.stderr
+8ba02246f06ce7cbdde0eec5f58009d7b2ea57c9f28a20e0a262632f634da6c9  runs/pilot16-20261105T063623Z-1523275/raw/leaf_serial_n300000_th0p5_L4_rep1.stdout
+2788dc738263a956712b696993d33bd273f81718ab813e9bbfbb937d8db2da23  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_guided0_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_guided0_n1000000_th0p5_L8_rep1.stderr
+969592574f1bdf849906fc4c0bc15ad677aef4861a2d1b65eedf1bbedd6d0cd0  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_guided0_n1000000_th0p5_L8_rep1.stdout
+d32bde9f956d6412584dedae06de467a4715293a7f2ac6aea69d4cb373edbbe1  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_static0_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_static0_n1000000_th0p5_L8_rep1.stderr
+5762eed1e8e9fa386a56c1f66c74615b68ea811a3c8a819063ce82e8d8dc6201  runs/pilot16-20261105T063623Z-1523275/raw/schedule_hybrid_1x16_static0_n1000000_th0p5_L8_rep1.stdout
+90c5dfc83fd829a111ba408221791922b634aaaaf0e9d4a9d2caa88ea6cec7f0  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n1000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n1000000_th0p5_L8_rep1.stderr
+098df28f429c7f4ba683beea45959ad35844a39ada96fbf1bc4f68ac0d435c3c  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n1000000_th0p5_L8_rep1.stdout
+a0a88a419fe911f6377fcfa8d21fdacc962a5c8ae4ec6728833842617e6e3b07  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n100000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n100000_th0p5_L8_rep1.stderr
+3a722dcb8659d4a27485435deb6352478f9ba13afe56a585b7695d2e905354c9  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n100000_th0p5_L8_rep1.stdout
+6fd3fe2b8654f984c6bdcbe20d97ae5001ec2d1b88bd51731e10e523e0810a3b  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n2000000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n2000000_th0p5_L8_rep1.stderr
+1ec77ca85eca4a510966c5257066f659dd1e6d880819c3f89868657941aad952  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n2000000_th0p5_L8_rep1.stdout
+a05ddb92319e6544811be5c17c44f0696f731a33473bb457d9e6216d37437972  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n300000_th0p5_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n300000_th0p5_L8_rep1.stderr
+d058ab6885544b42cef85c6151be94bcd501a45172f176c432078885421af4b7  runs/pilot16-20261105T063623Z-1523275/raw/serial_n_serial_n300000_th0p5_L8_rep1.stdout
+df2306539d6fe18416099ccfa279712601f7aad81bec50ebf29f839ebe65b154  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p3_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p3_L8_rep1.stderr
+6077153b3f390fd6e9ced0540a8ecd10fb000fe631937b163f2edec2abe7885b  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p3_L8_rep1.stdout
+af3fbd1f122dde2ac46f2450324c6fe4e369a37722543fcafe5219823fca2aac  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p7_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p7_L8_rep1.stderr
+dd5d00bda6f3cb02ae2cceb1fed769cbf16b866f1336f14d530345e37aecb4cc  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p7_L8_rep1.stdout
+15e85f7be72db45b7987e475a7a334afa4494350efc1cdf270ad059f56f98441  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p9_L8_rep1.json
+e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p9_L8_rep1.stderr
+22caef93f3571ca1d883378cc3c5f39468adc13867fa56731dbf9806132355bd  runs/pilot16-20261105T063623Z-1523275/raw/theta_cost_hybrid_4x4_dynamic64_n1000000_th0p9_L8_rep1.stdout
+0461df8cda58b49da5fc5afe9580aa5ffcd6f1bc2ce334b4020ff75a8c9a7b9e  runs/pilot16-20261105T063623Z-1523275/summary.csv
+13067f9ba4ac1e37d8f37c98f7312afad3ccd519dfcba421ccc56e44840157be  runs/pilot16-20261105T063623Z-1523275/summary.json
+76a6ce20b267ce14c4325de1773932e6e4b45235fb8e5b29e894db565cf3478a  runs/pilot16-20261105T063623Z-1523275/summary.txt
+3bef3a805cc81fa4331dc55754c5133374604a1429a78d642d532bd9528978d0  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p3_L8_rep1.json
+dcf33b6efb7dae665a3b0282db323edd2507fcfeeb84d8e030dd114d963dd058  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p3_L8_rep1.txt
+46c214b2185663b69e723fdc1c839f29d568a41575743a7cba824a8969a87ca5  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p5_L8_rep1.json
+f88a39a82e69b636667d0745fc0de4bbabdb57481f6b222c6ab55c300b2da8c1  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p5_L8_rep1.txt
+8db107d5134186174f277ae52e627b2f8238b2a15dccdc536042e80bd0897e08  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p7_L8_rep1.json
+199c844419841c32b9e1690d68c0a5700b05ce64406e77d1cf78dc3580e32c52  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p7_L8_rep1.txt
+e09fc992bc9b421bb66303faa82749870fb25931bacd33419c100f2983058718  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p9_L8_rep1.json
+2d2ec51522ba22368ef74328ea776173c021b51cbadbf50063222d1c49e9493a  runs/pilot16-20261105T063623Z-1523275/validate/accuracy_validate_n20000_th0p9_L8_rep1.txt
+
+== independent revalidation: scripts/verify_run.py
+hybrid_range_hybrid_1x16_dynamic64_n1000000_th0p5_L8 rep=1 ok=True elapsed=9.1/60 wall=3.542 phases=3.542
+hybrid_range_hybrid_4x4_dynamic64_n1000000_th0p5_L8 rep=1 ok=True elapsed=13.2/60 wall=5.459 phases=5.490
+hybrid_range_hybrid_16x1_dynamic64_n1000000_th0p5_L8 rep=1 ok=True elapsed=16.5/60 wall=6.704 phases=6.770
+serial_n_serial_n100000_th0p5_L8 rep=1 ok=True elapsed=7.0/60 wall=3.443 phases=3.443
+serial_n_serial_n300000_th0p5_L8 rep=1 ok=True elapsed=27.6/120 wall=13.736 phases=13.736
+serial_n_serial_n1000000_th0p5_L8 rep=1 ok=True elapsed=127.7/300 wall=62.712 phases=62.712
+schedule_hybrid_1x16_static0_n1000000_th0p5_L8 rep=1 ok=True elapsed=16.6/60 wall=3.623 phases=3.623
+schedule_hybrid_1x16_guided0_n1000000_th0p5_L8 rep=1 ok=True elapsed=9.7/60 wall=3.607 phases=3.607
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p3_L8 rep=1 ok=True elapsed=40.9/120 wall=19.367 phases=19.661
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p7_L8 rep=1 ok=True elapsed=7.5/60 wall=2.629 phases=2.663
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p9_L8 rep=1 ok=True elapsed=5.8/60 wall=1.686 phases=1.710
+accuracy_validate_n20000_th0p3_L8 rep=1 ok=True elapsed=2.5/120
+accuracy_validate_n20000_th0p5_L8 rep=1 ok=True elapsed=2.0/120
+accuracy_validate_n20000_th0p7_L8 rep=1 ok=True elapsed=1.7/120
+accuracy_validate_n20000_th0p9_L8 rep=1 ok=True elapsed=1.8/120
+leaf_serial_n300000_th0p5_L4 rep=1 ok=True elapsed=35.4/100 wall=17.520 phases=17.520
+leaf_serial_n300000_th0p5_L16 rep=1 ok=True elapsed=32.7/100 wall=16.073 phases=16.073
+leaf_serial_n300000_th0p5_L32 rep=1 ok=True elapsed=40.4/100 wall=18.876 phases=18.876
+serial_n_serial_n2000000_th0p5_L8 rep=1 ok=True elapsed=318.6/500 wall=156.767 phases=156.767
+hybrid_range_hybrid_1x1_dynamic64_n1000000_th0p5_L8 rep=1 ok=True elapsed=133.4/300 wall=60.053 phases=60.053
+counts completed=20 failed=0 timed_out=0 skipped=0 planned=20
+provenance {('96a37ba1d5dfa810dfa24bb740e58aad9aa5388d', False)} {'Intel(R) Xeon(R) Gold 6438N'} {'IN-002'} {'1523275.stdct-mgmt-02'} {'461038acc1d18d2a959b227836625b10db3f096d4d488f36b18bd752ea28becd'}
+binaries {'bin/vanda-1523275/bh_hybrid': ['f20cba91df9fd35b7a7ddc0c4656d0b7260789e53fe8ecfc9d330390599ee1cb'], 'bin/vanda-1523275/bh_serial': ['2be063fa03e7f95e20d7c2c9894a4b4086fb2145126137fdd2411440513fb425']}
+VERIFY PASS
+
+== 1522998 at 16:47:10 SGT: read-only, unchanged
+job_state = Q, mtime 13:46:30, no stime, comment: Insufficient amount of resource: node_pool
+
+== free-pool snapshot 16:47:10 SGT, cores only, memory not counted
+nodes 23; >=64 free: 0; >=32 free: 0; >=16 free: 2
+free per node: 0 0 4 2 12 11 30 1 0 0 0 13 3 0 10 9 8 0 28 0 0 0 0

@@ -4,6 +4,7 @@ Update this record throughout the project; review the final statement as a group
 
 | Date | Tool | Work performed | Review status |
 |---|---|---|---|
+| 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Retrieved and rechecked pilot 1523275; wrote `verify_run.py`; applied the sizing rules; refit `plan_budget.py`; proposed `bench16` and resized plans; reorganized READMEs, notes index, evidence index, submission audit, package exclusions and group checklist. No solver code changed | Leon: pending review; group: pending |
 | 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Proposed the 16-core pilot; drafted report terms, input generation, test purposes, expected behaviour and parallelization decisions; package test; group review list | Leon: pending review; group: pending |
 | 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Retrieved and checked the evidence of failed pilot 1519637; compared it with earlier launcher runs; changed one-node jobs to `pbs_tmrsh`; tightened the allocation check; added tests; drafted the rerun request; after Leon's approvals, submitted rerun 1522998 and pilot16 1523275 once each | Leon: evidence and fix pending review |
 | 3-4 Nov 2026 | Claude Code (Claude Opus 5.5) | Lecture 12 plan; OpenMP target GPU solver and validator; `pbs_tmrsh` launcher; G2 timing runner and fallback refusal; job-entry and execution-label fixes; submitted Vanda jobs 1513781, 1514029, 1514458, 1514774 and 1514775 one at a time after Leon's approval, and analysed them; report text and package audit | Leon directed and approved jobs; group review pending |

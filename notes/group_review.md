@@ -1,36 +1,60 @@
-# Group review before final submission
+# Group checklist before hand-in
 
-Due 13 November 2026, 23:59 SGT. Nothing here has been submitted.
+Due 13 November 2026, 23:59 SGT. **Not ready: required measurements and reviews are missing.** Nothing has been submitted.
+Unticked means not done or not confirmed. Tick only what actually happened.
 
-## Decisions and details only the group can settle
+## Names and IDs
 
-- [ ] **Student details:** confirm the three names and student IDs in `report/main.tex`, and that the membership is final.
-- [ ] **AI disclosure:** confirm what each member actually reviewed. The draft says the group reviewed the code, tests and text.
-- [ ] **AI provenance:** did AI help with the earlier serial code and design? This is not established. Did OpenAI Codex have a
-      role in November? Some session messages mention a "Codex Claude-check schedule". Update the statement and `notes/ai_usage.md`.
-- [ ] **Source hand-in:** Lecture 12 asks for source, while Canvas lists PDF only. Check Canvas for how to hand it in.
-- [ ] **Report text:** read the new or changed parts: Terms Used, input generation, Table 1 (test purposes), Planned Studies, the
-      lines marked "expected", Parallelization Decisions and What the Results Support.
-- [ ] **GPU paragraph:** review it against job 1519638.
-- [ ] **256 cores:** Leon decides on charge approval, after reading the balance with `amgr login`. Without it, the report must
-      say that scaling stops short of 256 cores.
+- [ ] Membership is final. Listed so far, unconfirmed: Yan Yixin, Zhang Yue, Leon Yiliang Qian.
+- [ ] Each member's student ID is correct in the title block of `report/main.tex`. Not confirmed.
+
+## Who actually reviewed what
+
+The report's declaration must not claim more than this table. Each member fills in their own row. Nothing is recorded yet.
+
+| Member | Code reviewed | Tests rerun | Report sections read | Figures and numbers checked |
+|---|---|---|---|---|
+| Yan Yixin | | | | |
+| Zhang Yue | | | | |
+| Leon Yiliang Qian | | | | |
+
+## AI disclosure
+
+- [ ] The declaration in `report/main.tex` matches [ai_usage.md](ai_usage.md) and the table above.
+- [ ] Did AI help with the earlier serial code and design? Not established.
+- [ ] Did OpenAI Codex have a role in November? Some session messages mention a "Codex Claude-check schedule". Not established.
 
 ## Results still missing
 
-No CPU scaling result exists. These stay as red `[PENDING]` markers until Vanda runs fill them:
+These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275` does not fill any of them.
 
-- Serial runtime against N.
-- MPI and MPI+OpenMP strong and weak scaling to at least 256 cores, with speedup and efficiency.
-- Communication share of runtime and phase times.
-- Ranks x threads, schedule, leaf size, and accuracy against cost.
-- Measured findings, Discussion, Limitations from measurements, Conclusion.
-- Memory per node, interconnect, and the nodes used for measurement.
+- [ ] Serial runtime against N.
+- [ ] MPI strong and weak scaling to at least 256 CPU cores, with speedup and efficiency.
+- [ ] MPI+OpenMP strong and weak scaling.
+- [ ] Communication share of runtime and phase times.
+- [ ] Ranks x threads, schedule, leaf size, and accuracy against cost.
+- [ ] Measured findings, Discussion, Limitations from measurements, Conclusion.
+- [ ] Memory per node, interconnect, and the nodes used for measurement.
+- [ ] **256 cores:** Leon reads the balance with `amgr login` and decides on charge approval. Without it, the report must say that
+      scaling stops short of 256 cores.
 
-## Final checks
+## Report review
+
+- [ ] Read: Terms Used, input generation, Table 1 (test purposes), Planned Studies, the lines marked "expected", Parallelization
+      Decisions, What the Results Support, and the pilot paragraph in Results.
+- [ ] GPU paragraph, against job `1519638`.
+
+## Final PDF
 
 - [ ] `grep -n 'pending{' report/main.tex` prints nothing.
-- [ ] Every figure is regenerated from Vanda runs. Axes for time, N and core count are logarithmic.
-- [ ] No local simulation appears as a result.
-- [ ] `bash tests/jobs/package_test.sh` passes at the final commit, then build the package from `code/` with
-      `bash scripts/package_submission.sh`.
-- [ ] The Overleaf source matches `report/` (see `report/README.md`), and the PDF has the final names and results.
+- [ ] Every figure is regenerated from Vanda runs, with logarithmic time, N and core-count axes.
+- [ ] No local simulation or pilot number appears as a result.
+- [ ] Overleaf source matches `report/`, as `report/README.md` describes.
+- [ ] Every page read in the final PDF, with final names, results and AI declaration.
+
+## Final source
+
+- [ ] **How source reaches Canvas:** the brief lists PDF upload and also requires source. Check Canvas; do not assume a repository
+      link is enough. Not confirmed.
+- [ ] `bash tests/jobs/package_test.sh` passes at the final commit, then build with `bash scripts/package_submission.sh`, both from `code/`.
+- [ ] One member unzips the package elsewhere and follows its README from the start.

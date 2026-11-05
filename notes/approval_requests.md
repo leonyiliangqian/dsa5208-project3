@@ -1,8 +1,61 @@
 # Approval requests
 
+**No approval is open.** Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+
+## Ready to request: `bench16`, formal free 16-core studies
+
+**Why now:** it secures serial runtime against N and the parameter studies for the report without waiting for a whole 64-core node,
+which `1522998` has been waiting for since 13:46. At 16:47 SGT no free-pool node had 32 cores free, and 2 had at least 16. That is one
+moment and counts cores only. It does **not** supply 256-core scaling, and it does not replace `pilot2`, `pilot4` or `bench4`.
+
+| | |
+|---|---|
+| Source | `e86bf5d076c51c01f131f3980fc17618e9c24f61`, tree `96eed32b4aec96fdaee9082e5e41b35552c64415`, in a new clone `~/dsa5208-p3-e86bf5d` |
+| Manifest | `studies_16core.json`, status `frozen`, SHA-256 `2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd` |
+| Runs | 121: 3 interleaved repetitions of 39 cases, plus 4 accuracy runs |
+| Request | `select=1:ncpus=16:mpiprocs=16:mem=16gb`, 4 h, 64 core-hours at most; about 95 min expected. Worst case 12285 s fits the 13158 s budget |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck. PBS has shown `project = personal-leonyil.qian` on free jobs, and the balance is unread |
+| With `1522998` | Untouched. 64 + 16 cores is inside the 160-CPU, 2-running-job limit |
+| Gates | `allocation`, `build`, `placement` (4 x 4), `place_mpi` (16 x 1, the probe the pilot lacked), `internode`, `serial`, `bound_vs_serial`, `runs`, `analyze` |
+| If a gate fails | The job stops, with no retry |
+| Limits of the results | Possibly shared node of either CPU model; speedups only inside this job. |
+
+Text to approve, if wanted:
+
+> Leon explicitly approves exactly ONE bench16 submission: source `e86bf5d076c51c01f131f3980fc17618e9c24f61` in a new clone ~/dsa5208-p3-e86bf5d, manifest studies_16core.json
+> SHA256 2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd, 1 node x 16 cores, 16 GB, 4 h, auto_free, no -P, ZERO CHARGE ONLY. Prepare the clone from an exact-source bundle, then use
+> hard-bounded existing-auth checks to verify commit, tree, manifest and resources, scheduling and queues enabled and started with rate 0,
+> and no duplicate p3_bench16 in current jobs or history. Run the dry run without --yes, then if all conditions pass submit the command
+> below exactly once and record the job ID. Leave 1522998 untouched. No retries, other jobs, spending, credential or security changes,
+> monitoring loops, lecturer contact or final submission.
+
+```sh
+cd ~/dsa5208-p3-e86bf5d/code
+bash jobs/vanda/submit.sh bench16 --queue auto_free --no-project --yes
+```
+
+That runs:
+
+```sh
+qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o /home/svu/leonyil.qian/dsa5208-p3-e86bf5d/code/artifacts/cluster/logs/ jobs/vanda/bench16.pbs
+```
+
+Local dry run from a clean clone of this commit: `code/artifacts/local/bench16_dryrun_20261105.txt`. There is no `qsub` on this machine, so its paths differ. The Vanda dry run is part of this request.
+
+## Conditional requests: not ready to approve
+
+Each needs a new clean clone of the commit, its dry run, and the conditions here first. Sizes remain provisional.
+
+| Job | Needs first | Request, charge | Expected use | Manifest SHA-256 at `e86bf5d` |
+|---|---|---|---|---|
+| `pilot2` | `1522998` passed, so 64 ranks on a node is shown. Two whole free nodes must also come up | 2 x 64 cores, 120 GB each, 30 min, `auto_free`, rate 0 | 9 min | `c3ac455c7993821903e5f77b35cf00baeadd1b526756ee04994230194c662e67` |
+| `bench1` | `1522998` passed and plan frozen. After `bench16`, its serial and parameter runs can drop | 1 x 64 cores, 120 GB, 5 h, `auto_free`, rate 0 | 97 min | `ebea537b5731feba7ad2f0e71b1d5b5a5c338dce9c3efe23b98112273c395990` |
+| `pilot4` | `pilot2` passed, **Leon's `amgr login`, project ID and charge approval** | 4 x 64 cores, 240 GB each, 45 min, `auto`, **192 core-hours** | 12 min | `609267a4ff94d63822b5b69ca7af1582c1990c936b5f16aae1f519ea577a313e` |
+| `bench4` | `pilot4` passed, plan frozen from it, balance compared, **charge approval** | 4 x 64 cores, 240 GB each, 2 h 45 min, `auto`, **704 core-hours** | 54 min | `937a701bf930b698dee7a89f6ccbd2333259562af93a2186873059d4335e99e6`; changes when frozen |
+
 ## Consumed, 5 November 2026: 16-core pilot
 
-**Approved by Leon and submitted once on 5 Nov at 14:36:19 SGT as job `1523275`. This approval is used up, and no approval is open.**
+**Approved by Leon and submitted once on 5 Nov at 14:36:19 SGT as job `1523275`. This approval is used up.**
 All rechecks passed first, including that `1522998` was still queued and had never started; it was left untouched. The job was queued
 in `cpu_parallel` at rate 0. A failure is not retried. Record:
 `code/artifacts/cluster/discovery/vanda_pilot16_submit_96a37ba_20261105T143606.txt`. Reasoning is in `plan_256core.md`, "Smaller pilot".
@@ -31,7 +84,7 @@ bash jobs/vanda/submit.sh pilot16 --queue auto_free --no-project --var MANIFEST=
 
 ## Consumed, 5 November 2026: rerun the single-node pilot once
 
-**Approved by Leon and submitted once on 5 Nov at 13:46:25 SGT as job `1522998`. This approval is used up, and no approval is open.**
+**Approved by Leon and submitted once on 5 Nov at 13:46:25 SGT as job `1522998`. This approval is used up.**
 All rechecks passed first. The job was queued in `cpu_parallel` at rate 0. A failure is not retried: it needs a local fix and a new
 approval. Record: `code/artifacts/cluster/discovery/vanda_pilot_rerun_submit_3f77e87_20261105T134621.txt`.
 

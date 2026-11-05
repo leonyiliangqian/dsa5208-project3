@@ -1,0 +1,5 @@
+run_id=simulated-bench16-refuse-20261105 job=99161.sim host=node1 start=2026-11-05T08:52:12+00:00 source_rev=9228bd5515b82e183b1f6d7181d9531b9ea7d2ff
+manifest=manifests/local_e2e.json scale=1 placement_override=2 4 sim_cpus_per_node=8
+nodes=1 launcher=hostfile mpirun_base=mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH
+manifest_status=local pipeline test only: tiny inputs in Docker, never results sha256=6d85c8e71cf868c2de5d599625162979ad6c8c659bd3355248c1bb2cd11e57c6
+FATAL: manifests/local_e2e.json is not frozen (status: local pipeline test only: tiny inputs in Docker, never results); formal runs need a frozen manifest

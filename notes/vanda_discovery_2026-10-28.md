@@ -1,5 +1,7 @@
 # Vanda access discovery — 28 October 2026
 
+> **Historical, 28 October.** Recheck site facts before relying on them.
+
 Observed through the user's authenticated Vanda browser shell. No compute job was submitted, no compiler was run on the login node, and no allocation was consumed by this inspection.
 
 - Portal shell: `https://vanda.nus.edu.sg/pun/sys/shell/ssh/default`.

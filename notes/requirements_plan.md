@@ -1,5 +1,7 @@
 # Project 3 requirements and plan after Lecture 12
 
+> Current for the rubric. Job status below is dated 3 November; see `../HANDOFF.md` for the current state.
+
 Written 3 November 2026 from [project_memory.md](project_memory.md) and read-only
 checks saved in `code/artifacts/cluster/discovery/vanda_lecture12_checks_20261103.txt`.
 No job, allocation or charge below is approved unless marked done or queued.

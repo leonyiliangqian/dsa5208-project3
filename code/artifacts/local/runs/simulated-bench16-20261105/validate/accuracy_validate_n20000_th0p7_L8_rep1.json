@@ -1,0 +1,29 @@
+{
+  "case": "accuracy_validate_n20000_th0p7_L8",
+  "rep": 1,
+  "ok": true,
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_s": 0.009,
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "bin/vanda-99162/bh_serial",
+    "--validate",
+    "--n",
+    "200",
+    "--theta",
+    "0.7",
+    "--leaf-size",
+    "8"
+  ],
+  "timeout_s": 120,
+  "tags": {
+    "study": "accuracy",
+    "manifest_id": "studies-16core-v1",
+    "manifest_sha256": "28afc2f393392190752813d1c7cbf032058942982f6f95cdc9a929d0fdec7947",
+    "manifest_status": "frozen: sizes from pilot 1523275 on the same core count (N = 10^6 by rule 4, dynamic chunk 64, leaf size 8, theta 0.5)",
+    "scale": "100"
+  }
+}

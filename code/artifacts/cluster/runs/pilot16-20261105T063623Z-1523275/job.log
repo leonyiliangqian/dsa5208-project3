@@ -1,0 +1,122 @@
+run_id=pilot16-20261105T063623Z-1523275 job=1523275.stdct-mgmt-02 host=IN-002 start=2026-11-05T14:36:23+08:00 source_rev=96a37ba1d5dfa810dfa24bb740e58aad9aa5388d
+manifest=manifests/pilot_single_node_16core.json scale=1 placement_override=none sim_cpus_per_node=none
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=1 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1523275.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+manifest_status=proposed sha256=340af523ae17b4f996426dffe7d4bd42adcd4bf400a8807a9b2a61cd545c0690
+walltime_s=3600 end_reserve_s=60 gate_overhead_s=81 remote_exec=/opt/pbs/bin/pbs_tmrsh
+
+===== gate allocation (critical, limit 90s) 14:36:28: env ALLOC_EXPECT_NODES=1 ALLOC_CPUS_PER_NODE=16 ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/pilot16-20261105T063623Z-1523275 1 pbs_tmrsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	in-002: flags=0x10 slots=16 max_slots=0 slots_inuse=0 state=UP
+node IN-002 allowed=17,23,29,31,33,35,37,39,43,45,47,49,51,53,55,57 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['IN-002'] head=IN-002 allowed_cpus=[16] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh'] ras_selected=['tm'] remote_ancestry=[] remote_pbs_mom_visible=[]
+recorded_only template_line_seen=True
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes']
+1_hosts=ok cpus_16_each=ok arch_x86_64=ok one_cpu_model=ok plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=ok remote_under_pbs_mom=ok pbs_jobid_on_every_node=ok
+allocation PASS
+allocation PASS rc=0 secs=2 kind=critical 
+
+===== gate build (critical, limit 300s) 14:36:31: make BIN=bin/vanda-1523275 all hybrid
+mkdir -p bin/vanda-1523275
+g++ -O3 -std=c++17 -Wall -Wextra -march=native -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1523275/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=native -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1523275/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=8 kind=critical 
+
+===== gate placement (critical, limit 90s) 14:36:39: make BIN=bin/vanda-1523275 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1523275.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=1 PLACE_R=4 PLACE_T=4
+trace t=1793860603.564 host=IN-002 rank=0 pid=501957 stage=gather_done 
+trace t=1793860603.564 host=IN-002 rank=1 pid=501958 stage=bcast_begin 
+placement host=IN-002 rank=0 thread=0 cpu=17 mask_cpus=1
+placement host=IN-002 rank=0 thread=1 cpu=23 mask_cpus=1
+placement host=IN-002 rank=0 thread=2 cpu=29 mask_cpus=1
+placement host=IN-002 rank=0 thread=3 cpu=31 mask_cpus=1
+placement host=IN-002 rank=1 thread=0 cpu=33 mask_cpus=1
+placement host=IN-002 rank=1 thread=1 cpu=35 mask_cpus=1
+placement host=IN-002 rank=1 thread=2 cpu=37 mask_cpus=1
+placement host=IN-002 rank=1 thread=3 cpu=39 mask_cpus=1
+placement host=IN-002 rank=2 thread=0 cpu=43 mask_cpus=1
+placement host=IN-002 rank=2 thread=1 cpu=45 mask_cpus=1
+placement host=IN-002 rank=2 thread=2 cpu=47 mask_cpus=1
+placement host=IN-002 rank=2 thread=3 cpu=49 mask_cpus=1
+placement host=IN-002 rank=3 thread=0 cpu=51 mask_cpus=1
+placement host=IN-002 rank=3 thread=1 cpu=53 mask_cpus=1
+placement host=IN-002 rank=3 thread=2 cpu=55 mask_cpus=1
+placement host=IN-002 rank=3 thread=3 cpu=57 mask_cpus=1
+placement_host host=IN-002 threads=16 distinct_cpus=16
+placement_hosts distinct=1 expected=1
+placement_check ranks=4 threads=4 online_cpus=64 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793860603.564 host=IN-002 rank=2 pid=501959 stage=finalize_begin verdict=PASS
+trace t=1793860603.564 host=IN-002 rank=0 pid=501957 stage=bcast_begin 
+trace t=1793860603.564 host=IN-002 rank=0 pid=501957 stage=finalize_begin verdict=PASS
+trace t=1793860603.564 host=IN-002 rank=3 pid=501960 stage=finalize_begin verdict=PASS
+trace t=1793860603.564 host=IN-002 rank=1 pid=501958 stage=finalize_begin verdict=PASS
+trace t=1793860603.606 host=IN-002 rank=0 pid=501957 stage=finalize_done 
+trace t=1793860603.606 host=IN-002 rank=1 pid=501958 stage=finalize_done 
+trace t=1793860603.606 host=IN-002 rank=3 pid=501960 stage=finalize_done 
+trace t=1793860603.606 host=IN-002 rank=2 pid=501959 stage=finalize_done 
+placement PASS rc=0 secs=5 kind=critical 
+
+===== gate runs (required, limit 3437s) 14:36:45: python3 scripts/run_manifest.py manifests/pilot_single_node_16core.json --out artifacts/cluster/runs/pilot16-20261105T063623Z-1523275 --bin bin/vanda-1523275 --mpirun mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1523275.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH --cores-per-node 16 --nodes 1 --first-cpu 17 --deadline 1793863841 --scale 1
+hybrid_range_hybrid_1x16_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=3.541993
+hybrid_range_hybrid_4x4_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=5.458604
+hybrid_range_hybrid_16x1_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=6.703777
+serial_n_serial_n100000_th0p5_L8_rep1: exit=0 ok=True wall_s=3.443105
+serial_n_serial_n300000_th0p5_L8_rep1: exit=0 ok=True wall_s=13.735833
+serial_n_serial_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=62.712194
+schedule_hybrid_1x16_static0_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=3.622883
+schedule_hybrid_1x16_guided0_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=3.606779
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p3_L8_rep1: exit=0 ok=True wall_s=19.366601
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p7_L8_rep1: exit=0 ok=True wall_s=2.629115
+theta_cost_hybrid_4x4_dynamic64_n1000000_th0p9_L8_rep1: exit=0 ok=True wall_s=1.686302
+leaf_serial_n300000_th0p5_L4_rep1: exit=0 ok=True wall_s=17.519813
+leaf_serial_n300000_th0p5_L16_rep1: exit=0 ok=True wall_s=16.072581
+leaf_serial_n300000_th0p5_L32_rep1: exit=0 ok=True wall_s=18.875686
+serial_n_serial_n2000000_th0p5_L8_rep1: exit=0 ok=True wall_s=156.766725
+hybrid_range_hybrid_1x1_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=60.053051
+manifest pilot-single-node-16core-v1 (proposed) sha256=340af523ae17 runs=20 worst_case_s=2900 scale=1
+accuracy_validate_n20000_th0p3_L8_rep1: validate exit=0 ok=True
+accuracy_validate_n20000_th0p5_L8_rep1: validate exit=0 ok=True
+accuracy_validate_n20000_th0p7_L8_rep1: validate exit=0 ok=True
+accuracy_validate_n20000_th0p9_L8_rep1: validate exit=0 ok=True
+runs PASS rc=0 secs=874 kind=required limit cut from 99999s to 3437s (worst-case overhead 81s) to fit the walltime
+
+===== gate analyze (required, limit 120s) 14:51:22: python3 scripts/analyze.py artifacts/cluster/runs/pilot16-20261105T063623Z-1523275
+pilot16-20261105T063623Z-1523275: 16 records, 0 failed, 16 configurations
+  bh_serial  n=100000 1x1 P=1 -/0 reps=1 wall_med=3.4431s [3.4431,3.4431]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=16.0726s [16.0726,16.0726]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=18.8757s [18.8757,18.8757]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=17.5198s [17.5198,17.5198]
+  bh_serial  n=300000 1x1 P=1 -/0 reps=1 wall_med=13.7358s [13.7358,13.7358]
+  bh_hybrid  n=1000000 1x1 P=1 dynamic/64 reps=1 wall_med=60.0531s [60.0531,60.0531] speedup=1.04 eff=1.04
+  bh_hybrid  n=1000000 1x16 P=16 dynamic/64 reps=1 wall_med=3.5420s [3.5420,3.5420] speedup=17.71 eff=1.11
+  bh_hybrid  n=1000000 1x16 P=16 guided/0 reps=1 wall_med=3.6068s [3.6068,3.6068] speedup=17.39 eff=1.09
+  bh_hybrid  n=1000000 1x16 P=16 static/0 reps=1 wall_med=3.6229s [3.6229,3.6229] speedup=17.31 eff=1.08
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=5.4586s [5.4586,5.4586] speedup=11.49 eff=0.72
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=19.3666s [19.3666,19.3666]
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=2.6291s [2.6291,2.6291]
+  bh_hybrid  n=1000000 4x4 P=16 dynamic/64 reps=1 wall_med=1.6863s [1.6863,1.6863]
+  bh_hybrid  n=1000000 16x1 P=16 dynamic/64 reps=1 wall_med=6.7038s [6.7038,6.7038] speedup=9.35 eff=0.58
+  bh_serial  n=1000000 1x1 P=1 -/0 reps=1 wall_med=62.7122s [62.7122,62.7122]
+  bh_serial  n=2000000 1x1 P=1 -/0 reps=1 wall_med=156.7667s [156.7667,156.7667]
+analyze PASS rc=0 secs=6 kind=required 
+
+===== summary 14:51:33
+allocation PASS rc=0 secs=2 kind=critical 
+build PASS rc=0 secs=8 kind=critical 
+placement PASS rc=0 secs=5 kind=critical 
+runs PASS rc=0 secs=874 kind=required limit cut from 99999s to 3437s (worst-case overhead 81s) to fit the walltime
+analyze PASS rc=0 secs=6 kind=required 
+verdict required_or_critical=5 not_passed=0 optional: none
+verdict PASS
+end=2026-11-05T14:51:33+08:00 elapsed_s=910 walltime_s=3600
