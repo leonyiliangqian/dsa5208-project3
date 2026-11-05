@@ -23,7 +23,7 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | Step | Job | Request | Queue, rate | Core-hours requested | Expected use | Needs first |
 |---|---|---|---|---|---|---|
 | 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | **Failed at `placement`, 0 of 20 runs** |
-| 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | Not approved; request in `approval_requests.md` |
+| 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | **Submitted once as `1522998`, 5 Nov 13:46 SGT**; queued at submission |
 | A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge approval |

@@ -1,8 +1,10 @@
 # Approval requests
 
-## Open, 5 November 2026: rerun the single-node pilot once
+## Consumed, 5 November 2026: rerun the single-node pilot once
 
-**Not approved and not submitted.** It needs Leon's explicit yes.
+**Approved by Leon and submitted once on 5 Nov at 13:46:25 SGT as job `1522998`. This approval is used up, and no approval is open.**
+All rechecks passed first. The job was queued in `cpu_parallel` at rate 0. A failure is not retried: it needs a local fix and a new
+approval. Record: `code/artifacts/cluster/discovery/vanda_pilot_rerun_submit_3f77e87_20261105T134621.txt`.
 
 **Prepared on Vanda, 5 Nov 13:31 SGT:** clone `~/dsa5208-p3-3f77e87` created from a bundle holding only this commit. Commit, tree
 `00bf445fb0350de806d83aa0c10a5097bc32c636` and manifest hash verified, and the clone is clean. Scheduling on, `auto_free` and
@@ -20,7 +22,7 @@ run printed the command and submitted nothing. Recheck these just before submitt
 | Queue wait | `1519637` waited 10 h 1 min. This is no prediction |
 | If the launcher is still wrong | The `placement` gate stops the job in about 2 minutes, with no retry |
 
-If approved, this runs once, after rechecking the readiness items:
+The command that was run once:
 
 ```sh
 cd ~/dsa5208-p3-3f77e87/code

@@ -597,3 +597,10 @@ Local checks at `3f77e87`, Docker, stand-in agent over ssh, never measurements:
 - `pbs_entry_test` and `plan_budget_test` pass.
 
 Not shown: PBS, `tm`, the fix on Vanda, or `pbs_tmrsh` at 64 ranks on a node. The most shown there is 8 ranks per node in job 1514458.
+
+### Pilot rerun submitted, job 1522998, 5 Nov (Vanda)
+
+Leon approved one rerun. Commit `3f77e87`, tree, manifest hash, resources, scheduling, queues and rate 0 were rechecked, with no
+unfinished job and no other `p3_pilot1` in history. Submitted once at 13:46:25 SGT from `~/dsa5208-p3-3f77e87/code`; state Q in
+`cpu_parallel`, rate 0. PBS shows `project = personal-leonyil.qian`. Nothing measured yet. Record:
+`artifacts/cluster/discovery/vanda_pilot_rerun_submit_3f77e87_20261105T134621.txt`.

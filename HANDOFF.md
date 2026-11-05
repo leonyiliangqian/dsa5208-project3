@@ -11,8 +11,8 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Cause, as far as shown:** the job asked for a hostfile launch, but mpirun still selected `tm`, the launcher that hung with
   binding in job 1514029. Same process state too. Why `tm` hangs with binding is still unknown.
 - **Fix, commit `3f77e87`:** every job launches through `pbs_tmrsh`. Passed locally only; Docker has no PBS or `tm`.
-- **Waiting on Leon:** one rerun of the pilot, request in [notes/approval_requests.md](notes/approval_requests.md). Clone
-  `~/dsa5208-p3-3f77e87` and its dry run are ready (5 Nov 13:31 SGT). Not approved or submitted. The last wait was 10 h 1 min.
+- **Rerun submitted once: job `1522998`**, 5 Nov 13:46:25 SGT, source `3f77e87`, 1 x 64 cores, 120 GB, 60 min, `cpu_parallel`, rate 0.
+  Queued at submission. Nothing is watching it. The approval is used up: do not resubmit or cancel it. The last wait was 10 h 1 min.
 - The items below still apply, except that sizing now waits for this rerun.
 
 ## Update, 4 November 2026, 23:21 SGT
@@ -26,7 +26,7 @@ Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 - **Lecturer contact is closed:** Leon decided on 4 Nov that it is no longer needed. Do not draft or send lecturer messages.
   The final deadline stays 13 Nov 23:59 SGT.
 - **Remaining decisions:**
-  1. **Pilot sizing:** apply the rules in `plan_256core.md` once a pilot passes its gates (`1519637` did not).
+  1. **Pilot sizing:** apply the rules in `plan_256core.md` once a pilot passes its gates (`1519637` did not; `1522998` is queued).
   2. **256-core access:** Leon reads the current balance with `amgr login`, then decides on charge approval.
   3. **Formal experiments:** each job needs its own approval, after its manifest is frozen.
   4. **Report review:** the group reviews the GPU paragraph, AI declaration, membership and student IDs, and how source is handed in.

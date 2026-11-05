@@ -1,0 +1,35 @@
+one approved rerun: checks, then submit only if every check passes; no amgr login
+2026-11-05 13:46:21 +08
+stdct-login-01
+ok   commit: 3f77e8727a9876f77667d3b7d78b9934ad43897d
+ok   tree: 00bf445fb0350de806d83aa0c10a5097bc32c636
+ok   clone_status_lines: 0
+ok   manifest_sha256: 0a5f9f64cc5923a218ec9be9f3498be34baf2733c1aeaee1f4daa78c1e2f937a
+ok   select: 1:ncpus=64:mpiprocs=64:mem=120gb
+ok   walltime: 01:00:00
+ok   scheduling: True
+ok   auto_free.enabled: True
+ok   auto_free.started: True
+ok   auto_free.rate: 0
+ok   cpu_parallel.enabled: True
+ok   cpu_parallel.started: True
+ok   cpu_parallel.rate: 0
+ok   unfinished_jobs: 
+ok   p3_pilot1_history: 1514774.stdct-mgmt-02 1519637.stdct-mgmt-02
+== all checks passed; submitting once 13:46:24
+command: qsub -q auto_free -v MANIFEST=manifests/pilot_single_node_v2.json,SOURCE_GIT_REV=3f77e8727a9876f77667d3b7d78b9934ad43897d -o /home/svu/leonyil.qian/dsa5208-p3-3f77e87/code/artifacts/cluster/logs/ jobs/vanda/pilot.pbs
+1522998.stdct-mgmt-02
+submit_rc=0
+== after 13:46:25
+unfinished: [1522998.stdct-mgmt-02 ]
+Job Id: 1522998.stdct-mgmt-02
+    Job_Name = p3_pilot1
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Thu Nov  5 13:46:25 2026
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 01:00:00
+    project = personal-leonyil.qian
+SOURCE_GIT_REV=3f77e8727a9876f77667d3b7d78b9934ad43897d
+p3_pilot1 history now: 1514774.stdct-mgmt-02 1519637.stdct-mgmt-02 1522998.stdct-mgmt-02 
