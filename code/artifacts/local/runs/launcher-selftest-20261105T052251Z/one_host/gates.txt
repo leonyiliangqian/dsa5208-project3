@@ -1,0 +1,5 @@
+allocation FAIL rc=1 secs=1 kind=optional 
+pe4_2x4 PASS rc=0 secs=2 kind=required 
+pe1_8x1 PASS rc=0 secs=2 kind=required 
+pe8_1x8 PASS rc=0 secs=2 kind=required 
+runs PASS rc=0 secs=20 kind=required 

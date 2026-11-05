@@ -1,0 +1,63 @@
+[IN-020:214663] mca: base: components_register: registering framework plm components
+[IN-020:214663] mca: base: components_register: found loaded component rsh
+[IN-020:214663] mca: base: components_register: component rsh register function successful
+[IN-020:214663] mca: base: components_register: found loaded component slurm
+[IN-020:214663] mca: base: components_register: component slurm register function successful
+[IN-020:214663] mca: base: components_register: found loaded component isolated
+[IN-020:214663] mca: base: components_register: component isolated has no register or open function
+[IN-020:214663] mca: base: components_register: found loaded component tm
+[IN-020:214663] mca: base: components_register: component tm register function successful
+[IN-020:214663] mca: base: components_open: opening plm components
+[IN-020:214663] mca: base: components_open: found loaded component rsh
+[IN-020:214663] mca: base: components_open: component rsh open function successful
+[IN-020:214663] mca: base: components_open: found loaded component slurm
+[IN-020:214663] mca: base: components_open: component slurm open function successful
+[IN-020:214663] mca: base: components_open: found loaded component isolated
+[IN-020:214663] mca: base: components_open: component isolated open function successful
+[IN-020:214663] mca: base: components_open: found loaded component tm
+[IN-020:214663] mca: base: components_open: component tm open function successful
+[IN-020:214663] mca:base:select: Auto-selecting plm components
+[IN-020:214663] mca:base:select:(  plm) Querying component [rsh]
+[IN-020:214663] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-020:214663] mca:base:select:(  plm) Querying component [slurm]
+[IN-020:214663] mca:base:select:(  plm) Querying component [isolated]
+[IN-020:214663] mca:base:select:(  plm) Query of component [isolated] set priority to 0
+[IN-020:214663] mca:base:select:(  plm) Querying component [tm]
+[IN-020:214663] mca:base:select:(  plm) Query of component [tm] set priority to 75
+[IN-020:214663] mca:base:select:(  plm) Selected component [tm]
+[IN-020:214663] mca: base: close: component rsh closed
+[IN-020:214663] mca: base: close: unloading component rsh
+[IN-020:214663] mca: base: close: component slurm closed
+[IN-020:214663] mca: base: close: unloading component slurm
+[IN-020:214663] mca: base: close: component isolated closed
+[IN-020:214663] mca: base: close: unloading component isolated
+[IN-020:214663] mca: base: components_register: registering framework ras components
+[IN-020:214663] mca: base: components_register: found loaded component simulator
+[IN-020:214663] mca: base: components_register: component simulator register function successful
+[IN-020:214663] mca: base: components_register: found loaded component tm
+[IN-020:214663] mca: base: components_register: component tm register function successful
+[IN-020:214663] mca: base: components_register: found loaded component slurm
+[IN-020:214663] mca: base: components_register: component slurm register function successful
+[IN-020:214663] mca: base: components_open: opening ras components
+[IN-020:214663] mca: base: components_open: found loaded component simulator
+[IN-020:214663] mca: base: components_open: found loaded component tm
+[IN-020:214663] mca: base: components_open: component tm open function successful
+[IN-020:214663] mca: base: components_open: found loaded component slurm
+[IN-020:214663] mca: base: components_open: component slurm open function successful
+[IN-020:214663] mca:base:select: Auto-selecting ras components
+[IN-020:214663] mca:base:select:(  ras) Querying component [simulator]
+[IN-020:214663] mca:base:select:(  ras) Querying component [tm]
+[IN-020:214663] mca:base:select:(  ras) Query of component [tm] set priority to 100
+[IN-020:214663] mca:base:select:(  ras) Querying component [slurm]
+[IN-020:214663] mca:base:select:(  ras) Selected component [tm]
+[IN-020:214663] mca: base: close: unloading component simulator
+[IN-020:214663] mca: base: close: component slurm closed
+[IN-020:214663] mca: base: close: unloading component slurm
+[IN-020:214663] [[50209,0],0] complete_setup on job [50209,1]
+[IN-020:214663] [[50209,0],0] plm:base:receive update proc state command from [[50209,0],1]
+[IN-020:214663] [[50209,0],0] plm:base:receive got update_proc_state for job [50209,1]
+[IN-020:214663] [[50209,0],0] plm:base:receive update proc state command from [[50209,0],1]
+[IN-020:214663] [[50209,0],0] plm:base:receive got update_proc_state for job [50209,1]
+[IN-020:214663] mca: base: close: unloading component tm
+[IN-020:214663] mca: base: close: component tm closed
+[IN-020:214663] mca: base: close: unloading component tm

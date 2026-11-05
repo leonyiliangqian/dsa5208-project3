@@ -1,0 +1,25 @@
+== snapshot host=node1 t=1793856230.270
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+     20       0      20 Ss   do_wait                                00:58 bash tests/jobs/launcher_selftest.sh
+   2132      20      20 S    do_wait                                00:07  \_ bash -c source jobs/vanda/multinode_setup.sh; source jobs/vanda/gates.sh; gate launch 15 required $MPI -np 2 --map-by ppr:1:node --bind-to non
+   2175    2132    2175 Ss   do_wait                                00:07      \_ bash jobs/vanda/snapshot_watch.sh 7 launch
+   2191    2175    2191 S    sigsuspend.isra.0                      00:00      |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh launcher-test/
+   2192    2191    2191 S    do_wait                                00:00      |       \_ bash tests/toolchain/proc_snapshot.sh launcher-test/
+   2197    2192    2191 R    -                                      00:00      |           \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+   2198    2192    2191 S    anon_pipe_read                         00:00      |           \_ cut -c1-220
+   2176    2132    2176 S    sigsuspend.isra.0                      00:07      \_ timeout -k 5 15 mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/hang/pbs_tmrs
+   2177    2176    2176 Sl   poll_schedule_timeout.constprop.       00:07          \_ mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/hang/pbs_tmrsh --mca plm_
+   2182    2177    2182 S    hrtimer_nanosleep                      00:06              \_ sleep 1000
+-- pid=2177 comm=mpirun State: S (sleeping) Threads: 4 Cpus_allowed_list: 0,2,4,6,8,10,12,14 
+   tid=2177 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=2179 state=S wchan=do_epoll_wait
+   tid=2180 state=S wchan=poll_schedule_timeout.constprop.0
+   tid=2181 state=S wchan=poll_schedule_timeout.constprop.0
+== snapshot host=node2 t=1793856230.780
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+   1300    1294    1294 S    -                                      00:00 sshd: dev@notty
+   1301    1300    1301 Ss   do_wait                                00:00  \_ sh -c bash /work/code/tests/toolchain/run_to_file.sh /work/code/artifacts/local/runs/launcher-selftest-20261105T052251Z/agent_hangs/.remote.no
+   1302    1301    1301 S    do_wait                                00:00      \_ bash /work/code/tests/toolchain/run_to_file.sh /work/code/artifacts/local/runs/launcher-selftest-20261105T052251Z/agent_hangs/.remote.node
+   1303    1302    1301 S    do_wait                                00:00          \_ bash /work/code/tests/toolchain/proc_snapshot.sh launcher-test/
+   1308    1303    1301 R    -                                      00:00              \_ ps -u 1000 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+   1309    1303    1301 S    anon_pipe_read                         00:00              \_ cut -c1-220

@@ -1,0 +1,13 @@
+strong_serial_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.103578
+strong_hybrid_2x1_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.056861
+strong_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.022045
+ranks_threads_hybrid_2x4_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.025019
+weak_hybrid_2x2_dynamic64_n2000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.010714
+weak_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.020124
+strong_serial_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.134757
+strong_hybrid_2x1_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.051743
+strong_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.017218
+ranks_threads_hybrid_2x4_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.020402
+weak_hybrid_2x2_dynamic64_n2000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.016057
+weak_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.024123
+manifest local-one-host (frozen: local two-container simulation test only, never results) sha256=8da146042033 runs=12 worst_case_s=1620 scale=1

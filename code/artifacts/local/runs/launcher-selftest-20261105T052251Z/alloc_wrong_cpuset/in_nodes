@@ -1,0 +1,2 @@
+node node1 allowed=0,2,4,6 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=a
+node other allowed=0,2,4,6 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=a

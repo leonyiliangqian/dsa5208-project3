@@ -1,0 +1,3 @@
+allocation PASS rc=0 secs=2 kind=critical 
+build PASS rc=0 secs=8 kind=critical 
+placement TIMEOUT rc=124 secs=91 kind=critical no completion within 90s

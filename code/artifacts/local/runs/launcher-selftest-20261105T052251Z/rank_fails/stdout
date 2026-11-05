@@ -1,0 +1,23 @@
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+
+===== gate rank (required, limit 30s) 05:24:01: mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 2 --map-by ppr:1:node --bind-to none bash -c exit 3
+[node1:02732] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[16836,1],0]
+  Exit code:    3
+--------------------------------------------------------------------------
+rank FAIL rc=3 secs=6 kind=required 
+
+===== summary 05:24:07
+rank FAIL rc=3 secs=6 kind=required 
+verdict required_or_critical=1 not_passed=1 optional: none
+  not passed: rank FAIL rc=3 secs=6 kind=required 
+verdict FAIL
+end=2026-11-05T05:24:07+00:00 elapsed_s=7 walltime_s=900

@@ -562,3 +562,38 @@ had no HEAD; `origin/main` was checked out in it, and commit and tree match. No 
 `studies_single_node.json` is v1: 3 timed steps, each size with its own limit, serial leaf study at 3e5; `bench1` walltime is 4 h provisional.
 Estimates in `plan_budget.py` now scale with theta and leaf size. Decision rules for the pilot's results are in plan_256core.md,
 set before any result existed.
+
+### Pilot 1519637 failed at `placement`, 5 Nov (Vanda)
+
+Source `8a50c8f`, IN-020 (Gold 6438N, all 64 CPUs), queue `cpu_parallel`, rate 0. Queued 4 Nov 19:10:25, ran 5 Nov 05:11:16 to
+05:13:07, walltime 00:01:50, run_count 1, Exit_status 5. `allocation` PASS, `build` PASS, `placement` TIMEOUT at 90 s (8 x 8, the
+first bound launch). Later gates and all 20 runs did not start; there is no `summary.csv`. Cleanup was CLEAN after all three gates.
+All 11 retrieved files matched by SHA-256; originals remain in `~/dsa5208-p3-8a50c8f`. Evidence:
+`artifacts/cluster/runs/pilot1-20261104T211117Z-1519637/`, `logs/1519637.stdct-mgmt-02.OU`, `logs/1519637_qstat_xf.txt`.
+
+**Sizing: none.** Rule 1 of `plan_256core.md` applies. Only rule 3 has a value, the CPU model. No time, memory or efficiency exists.
+
+Observed:
+- The job's launcher line had only `--hostfile`, but `launch_verbose.txt` shows `plm` selected `tm`. The allocation check printed
+  this and passed: it did not test the launcher on one node. Fixed.
+- mpirun started a daemon on its only node: daemon `[[50209,0],1]`, ancestry `bash<orted<pbs_shepherd<pbs_mom`. Job 1514458 also
+  started daemons on its head node, through `pbs_tmrsh`.
+- At 81 s mpirun waited in `poll` with no daemon or rank visible, and no probe trace or binding report printed. Job 1514029's `tm`
+  hang, `d2_bind_pe4`, shows the same state.
+
+Inferred, not shown: this is the 1514029 `tm` hang. Job 1503779 probably passed on one node because `correctness.pbs` does not add
+`/opt/pbs/lib`, without which `tm` cannot load (1506687); its launch log was not recorded. Why `tm` hangs with binding is unknown.
+
+Fix, `3f77e87`: every `measure.sh` job launches through `pbs_tmrsh`, and `REQUIRE_PBS_TM=0` must be given by name for local
+simulation. The allocation check fails a hostfile launch that selects `tm`, and checks `pbs_tmrsh` on one node.
+
+Local checks at `3f77e87`, Docker, stand-in agent over ssh, never measurements:
+- `launcher_selftest` 82 of 82 (`artifacts/local/runs/launcher-selftest-20261105T052251Z/`), including one host with no rank on
+  mpirun's node: three mappings and 12 of 12 runner cases.
+- The allocation check on 1519637's real records now fails, on `plm_not_tm` alone.
+- Control: with the old line restored in a copy, `pilot.pbs` chose hostfile and began its gates; the new test requires exit 3.
+- `pilot.pbs` end to end with `REQUIRE_PBS_TM=0` (`artifacts/local/runs/simulated-pilot1-20261105/`): 36 runs passed; only the
+  manifest's deliberate timeout probe failed, so `runs` shows FAIL as designed.
+- `pbs_entry_test` and `plan_budget_test` pass.
+
+Not shown: PBS, `tm`, the fix on Vanda, or `pbs_tmrsh` at 64 ranks on a node. The most shown there is 8 ranks per node in job 1514458.

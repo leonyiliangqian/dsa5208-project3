@@ -1,0 +1,140 @@
+nodes=1 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+
+===== gate allocation (optional, limit 60s) 05:24:20: env ALLOC_EXPECT_NODES=1 ALLOC_CPUS_PER_NODE=8 bash jobs/vanda/allocation_check.sh artifacts/local/runs/launcher-selftest-20261105T052251Z/one_host 1 pbs_tmrsh
+
+	node2: flags=0x10 slots=8 max_slots=0 slots_inuse=0 state=UNKNOWN
+======================   ALLOCATED NODES   ======================
+=================================================================
+node node2 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz ancestry=bash<orted<sh<sshd<sshd pbs_jobid_env=yes isa=abm,adx,aes,avx,avx2,bmi1,bmi2,clflushopt,f16c,fma,movbe,popcnt,rdrand,rdseed,sse,sse2,sse4_1,sse4_2,ssse3,xsave,xsavec,xsaveopt
+allocation hosts=['node2'] head=node1 allowed_cpus=[8] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh', 'rsh'] ras_selected=[] remote_ancestry=['bash<orted<sh<sshd<sshd'] remote_pbs_mom_visible=[False]
+recorded_only template_line_seen=True
+recorded_only models=['Intel(R)_Core(TM)_i9-9880H_CPU_@_2.30GHz'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes']
+1_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=FAIL remote_under_pbs_mom=FAIL pbs_jobid_on_every_node=ok
+allocation FAIL
+allocation FAIL rc=1 secs=1 kind=optional 
+
+===== gate pe4_2x4 (required, limit 60s) 05:24:22: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=1 PLACE_R=2 PLACE_T=4
+trace t=1793856263.980 host=node2 rank=1 pid=1807 stage=allreduce_threads_begin threads=4
+trace t=1793856263.980 host=node2 rank=1 pid=1807 stage=allreduce_threads_done min=4 max=4
+trace t=1793856263.980 host=node2 rank=1 pid=1807 stage=omp_begin 
+trace t=1793856263.980 host=node2 rank=0 pid=1806 stage=omp_team_started team=4
+trace t=1793856263.980 host=node2 rank=1 pid=1807 stage=omp_team_started team=4
+trace t=1793856264.380 host=node2 rank=0 pid=1806 stage=omp_done thread_cpus=0,2,4,6
+trace t=1793856264.380 host=node2 rank=1 pid=1807 stage=omp_done thread_cpus=8,10,12,14
+trace t=1793856264.380 host=node2 rank=1 pid=1807 stage=gather_begin 
+trace t=1793856264.381 host=node2 rank=0 pid=1806 stage=gather_begin 
+trace t=1793856264.381 host=node2 rank=0 pid=1806 stage=gather_done 
+trace t=1793856264.381 host=node2 rank=1 pid=1807 stage=gather_done 
+trace t=1793856264.381 host=node2 rank=1 pid=1807 stage=bcast_begin 
+placement host=node2 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=14 mask_cpus=1
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=2 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856264.383 host=node2 rank=0 pid=1806 stage=bcast_begin 
+trace t=1793856264.383 host=node2 rank=1 pid=1807 stage=finalize_begin verdict=PASS
+trace t=1793856264.383 host=node2 rank=0 pid=1806 stage=finalize_begin verdict=PASS
+trace t=1793856264.431 host=node2 rank=1 pid=1807 stage=finalize_done 
+trace t=1793856264.432 host=node2 rank=0 pid=1806 stage=finalize_done 
+[node1:03549] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:03549] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe4_2x4 PASS rc=0 secs=2 kind=required 
+
+===== gate pe1_8x1 (required, limit 60s) 05:24:25: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=1 PLACE_R=8 PLACE_T=1
+placement host=node2 rank=3 thread=0 cpu=6 mask_cpus=1
+placement host=node2 rank=4 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=5 thread=0 cpu=10 mask_cpus=1
+placement host=node2 rank=6 thread=0 cpu=12 mask_cpus=1
+placement host=node2 rank=7 thread=0 cpu=14 mask_cpus=1
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=8 threads=1 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856267.486 host=node2 rank=0 pid=1887 stage=bcast_begin 
+trace t=1793856267.486 host=node2 rank=0 pid=1887 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=1 pid=1888 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=4 pid=1891 stage=gather_done 
+trace t=1793856267.486 host=node2 rank=4 pid=1891 stage=bcast_begin 
+trace t=1793856267.486 host=node2 rank=4 pid=1891 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=6 pid=1893 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=3 pid=1890 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=7 pid=1894 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=2 pid=1889 stage=finalize_begin verdict=PASS
+trace t=1793856267.486 host=node2 rank=5 pid=1892 stage=bcast_begin 
+trace t=1793856267.487 host=node2 rank=5 pid=1892 stage=finalize_begin verdict=PASS
+trace t=1793856267.532 host=node2 rank=3 pid=1890 stage=finalize_done 
+trace t=1793856267.532 host=node2 rank=7 pid=1894 stage=finalize_done 
+trace t=1793856267.532 host=node2 rank=1 pid=1888 stage=finalize_done 
+trace t=1793856267.532 host=node2 rank=6 pid=1893 stage=finalize_done 
+trace t=1793856267.535 host=node2 rank=0 pid=1887 stage=finalize_done 
+trace t=1793856267.533 host=node2 rank=2 pid=1889 stage=finalize_done 
+trace t=1793856267.533 host=node2 rank=5 pid=1892 stage=finalize_done 
+trace t=1793856267.533 host=node2 rank=4 pid=1891 stage=finalize_done 
+[node1:03597] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:03597] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe1_8x1 PASS rc=0 secs=2 kind=required 
+
+===== gate pe8_1x8 (required, limit 60s) 05:24:28: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=1 PLACE_R=1 PLACE_T=8
+  Application name:  bin/launcher-test/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node2:01977] MCW rank 0 is not bound (or bound to all available processors)
+trace t=1793856269.478 host=node2 rank=0 pid=1980 stage=start affinity=0 omp_num_threads=8
+trace t=1793856269.478 host=node2 rank=0 pid=1980 stage=mpi_init_begin 
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=mpi_init_done size=1 provided=1
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=allreduce_threads_begin threads=8
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=allreduce_threads_done min=8 max=8
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=omp_begin 
+trace t=1793856269.734 host=node2 rank=0 pid=1980 stage=omp_team_started team=8
+trace t=1793856270.134 host=node2 rank=0 pid=1980 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793856270.135 host=node2 rank=0 pid=1980 stage=gather_begin 
+placement host=node2 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=0 thread=4 cpu=8 mask_cpus=1
+trace t=1793856270.135 host=node2 rank=0 pid=1980 stage=gather_done 
+placement host=node2 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=0 thread=7 cpu=14 mask_cpus=1
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=1 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856270.136 host=node2 rank=0 pid=1980 stage=bcast_begin 
+trace t=1793856270.136 host=node2 rank=0 pid=1980 stage=finalize_begin verdict=PASS
+trace t=1793856270.182 host=node2 rank=0 pid=1980 stage=finalize_done 
+pe8_1x8 PASS rc=0 secs=2 kind=required 
+
+===== gate runs (required, limit 240s) 05:24:38: python3 scripts/run_manifest.py artifacts/local/runs/launcher-selftest-20261105T052251Z/one_host_manifest.json --out artifacts/local/runs/launcher-selftest-20261105T052251Z/one_host --bin bin/launcher-test --mpirun mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH --cores-per-node 8 --nodes 1 --first-cpu 0 --deadline 1793856478 --scale 1
+strong_serial_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.103578
+strong_hybrid_2x1_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.056861
+strong_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.022045
+ranks_threads_hybrid_2x4_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.025019
+weak_hybrid_2x2_dynamic64_n2000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.010714
+weak_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.020124
+strong_serial_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.134757
+strong_hybrid_2x1_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.051743
+strong_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.017218
+ranks_threads_hybrid_2x4_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.020402
+weak_hybrid_2x2_dynamic64_n2000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.016057
+weak_hybrid_4x2_dynamic64_n4000_th0p5_L8_rep2: exit=0 ok=True wall_s=0.024123
+manifest local-one-host (frozen: local two-container simulation test only, never results) sha256=8da146042033 runs=12 worst_case_s=1620 scale=1
+runs PASS rc=0 secs=20 kind=required 
+
+===== summary 05:24:58
+allocation FAIL rc=1 secs=1 kind=optional 
+pe4_2x4 PASS rc=0 secs=2 kind=required 
+pe1_8x1 PASS rc=0 secs=2 kind=required 
+pe8_1x8 PASS rc=0 secs=2 kind=required 
+runs PASS rc=0 secs=20 kind=required 
+verdict required_or_critical=4 not_passed=0 optional: allocation=FAIL
+verdict PASS
+end=2026-11-05T05:24:58+00:00 elapsed_s=39 walltime_s=900

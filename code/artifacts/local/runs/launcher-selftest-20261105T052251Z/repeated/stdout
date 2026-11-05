@@ -1,0 +1,414 @@
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+
+===== gate pe4_2x4_1 (required, limit 60s) 05:22:54: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856176.115 host=node1 rank=0 pid=103 stage=gather_done 
+trace t=1793856176.115 host=node1 rank=0 pid=103 stage=bcast_begin 
+trace t=1793856176.115 host=node1 rank=0 pid=103 stage=finalize_begin verdict=PASS
+trace t=1793856176.115 host=node1 rank=1 pid=104 stage=finalize_begin verdict=PASS
+trace t=1793856176.115 host=node2 rank=3 pid=27 stage=gather_done 
+trace t=1793856176.115 host=node2 rank=3 pid=27 stage=bcast_begin 
+trace t=1793856176.115 host=node2 rank=3 pid=27 stage=finalize_begin verdict=PASS
+trace t=1793856176.115 host=node2 rank=2 pid=26 stage=finalize_begin verdict=PASS
+trace t=1793856176.161 host=node2 rank=3 pid=27 stage=finalize_done 
+trace t=1793856176.162 host=node2 rank=2 pid=26 stage=finalize_done 
+trace t=1793856176.164 host=node1 rank=1 pid=104 stage=finalize_done 
+trace t=1793856176.165 host=node1 rank=0 pid=103 stage=finalize_done 
+[node1:00098] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00098] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe4_2x4_1 PASS rc=0 secs=2 kind=required 
+
+===== gate pe2_4x2_1 (required, limit 60s) 05:22:56: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+placement host=node2 rank=4 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=5 thread=0 cpu=4 mask_cpus=1
+placement host=node2 rank=5 thread=1 cpu=6 mask_cpus=1
+placement host=node2 rank=6 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=6 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=7 thread=0 cpu=12 mask_cpus=1
+placement host=node2 rank=7 thread=1 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=8 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856178.909 host=node1 rank=2 pid=215 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node1 rank=3 pid=216 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node1 rank=0 pid=213 stage=bcast_begin 
+trace t=1793856178.909 host=node1 rank=0 pid=213 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node1 rank=1 pid=214 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node2 rank=7 pid=110 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node2 rank=5 pid=108 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node2 rank=4 pid=107 stage=finalize_begin verdict=PASS
+trace t=1793856178.909 host=node2 rank=6 pid=109 stage=finalize_begin verdict=PASS
+trace t=1793856178.957 host=node2 rank=7 pid=110 stage=finalize_done 
+trace t=1793856178.957 host=node2 rank=4 pid=107 stage=finalize_done 
+trace t=1793856178.958 host=node2 rank=5 pid=108 stage=finalize_done 
+trace t=1793856178.959 host=node1 rank=2 pid=215 stage=finalize_done 
+trace t=1793856178.959 host=node1 rank=3 pid=216 stage=finalize_done 
+trace t=1793856178.960 host=node1 rank=0 pid=213 stage=finalize_done 
+trace t=1793856178.960 host=node1 rank=1 pid=214 stage=finalize_done 
+trace t=1793856178.960 host=node2 rank=6 pid=109 stage=finalize_done 
+[node1:00208] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00208] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe2_4x2_1 PASS rc=0 secs=3 kind=required 
+
+===== gate pe1_8x1_1 (required, limit 60s) 05:22:59: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+trace t=1793856182.089 host=node1 rank=6 pid=340 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node1 rank=5 pid=335 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node1 rank=7 pid=343 stage=finalize_begin verdict=PASS
+trace t=1793856182.088 host=node2 rank=12 pid=196 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node1 rank=2 pid=329 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node1 rank=3 pid=330 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node1 rank=1 pid=328 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node2 rank=9 pid=193 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node2 rank=10 pid=194 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node2 rank=8 pid=192 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node2 rank=13 pid=197 stage=finalize_begin verdict=PASS
+trace t=1793856182.089 host=node2 rank=11 pid=195 stage=finalize_begin verdict=PASS
+trace t=1793856182.140 host=node1 rank=3 pid=330 stage=finalize_done 
+trace t=1793856182.140 host=node1 rank=2 pid=329 stage=finalize_done 
+trace t=1793856182.141 host=node2 rank=14 pid=198 stage=finalize_done 
+trace t=1793856182.141 host=node2 rank=8 pid=192 stage=finalize_done 
+trace t=1793856182.141 host=node1 rank=1 pid=328 stage=finalize_done 
+trace t=1793856182.141 host=node1 rank=5 pid=335 stage=finalize_done 
+trace t=1793856182.143 host=node1 rank=7 pid=343 stage=finalize_done 
+trace t=1793856182.145 host=node1 rank=0 pid=327 stage=finalize_done 
+trace t=1793856182.145 host=node1 rank=4 pid=331 stage=finalize_done 
+trace t=1793856182.144 host=node2 rank=11 pid=195 stage=finalize_done 
+trace t=1793856182.146 host=node1 rank=6 pid=340 stage=finalize_done 
+trace t=1793856182.144 host=node2 rank=13 pid=197 stage=finalize_done 
+trace t=1793856182.144 host=node2 rank=9 pid=193 stage=finalize_done 
+trace t=1793856182.145 host=node2 rank=10 pid=194 stage=finalize_done 
+trace t=1793856182.146 host=node2 rank=15 pid=199 stage=finalize_done 
+trace t=1793856182.146 host=node2 rank=12 pid=196 stage=finalize_done 
+[node1:00322] 15 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00322] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe1_8x1_1 PASS rc=0 secs=3 kind=required 
+
+===== gate pe8_1x8_1 (required, limit 60s) 05:23:02: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793856184.839 host=node1 rank=0 pid=449 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793856184.839 host=node1 rank=0 pid=449 stage=gather_begin 
+trace t=1793856184.839 host=node1 rank=0 pid=449 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856184.840 host=node1 rank=0 pid=449 stage=bcast_begin 
+trace t=1793856184.840 host=node1 rank=0 pid=449 stage=finalize_begin verdict=PASS
+trace t=1793856184.840 host=node2 rank=1 pid=285 stage=finalize_begin verdict=PASS
+trace t=1793856184.891 host=node1 rank=0 pid=449 stage=finalize_done 
+trace t=1793856184.899 host=node2 rank=1 pid=285 stage=finalize_done 
+[node1:00444] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:00444] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe8_1x8_1 PASS rc=0 secs=3 kind=required 
+
+===== gate pe4_2x4_2 (required, limit 60s) 05:23:05: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+trace t=1793856187.613 host=node1 rank=0 pid=557 stage=finalize_begin verdict=PASS
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856187.613 host=node1 rank=1 pid=558 stage=finalize_begin verdict=PASS
+trace t=1793856187.613 host=node2 rank=2 pid=364 stage=finalize_begin verdict=PASS
+trace t=1793856187.613 host=node2 rank=3 pid=365 stage=finalize_begin verdict=PASS
+trace t=1793856187.661 host=node2 rank=3 pid=365 stage=finalize_done 
+trace t=1793856187.662 host=node1 rank=1 pid=558 stage=finalize_done 
+trace t=1793856187.662 host=node2 rank=2 pid=364 stage=finalize_done 
+trace t=1793856187.665 host=node1 rank=0 pid=557 stage=finalize_done 
+[node1:00552] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00552] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe4_2x4_2 PASS rc=0 secs=2 kind=required 
+
+===== gate pe2_4x2_2 (required, limit 60s) 05:23:08: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+placement host=node2 rank=7 thread=0 cpu=12 mask_cpus=1
+placement host=node2 rank=7 thread=1 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=8 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856190.389 host=node1 rank=1 pid=668 stage=finalize_begin verdict=PASS
+trace t=1793856190.389 host=node1 rank=0 pid=667 stage=gather_done 
+trace t=1793856190.389 host=node1 rank=0 pid=667 stage=bcast_begin 
+trace t=1793856190.389 host=node1 rank=0 pid=667 stage=finalize_begin verdict=PASS
+trace t=1793856190.389 host=node1 rank=2 pid=669 stage=finalize_begin verdict=PASS
+trace t=1793856190.386 host=node2 rank=6 pid=447 stage=gather_done 
+trace t=1793856190.386 host=node2 rank=4 pid=445 stage=gather_done 
+trace t=1793856190.386 host=node2 rank=4 pid=445 stage=bcast_begin 
+trace t=1793856190.390 host=node1 rank=3 pid=670 stage=finalize_begin verdict=PASS
+trace t=1793856190.390 host=node2 rank=6 pid=447 stage=bcast_begin 
+trace t=1793856190.390 host=node2 rank=5 pid=446 stage=finalize_begin verdict=PASS
+trace t=1793856190.390 host=node2 rank=7 pid=448 stage=finalize_begin verdict=PASS
+trace t=1793856190.390 host=node2 rank=4 pid=445 stage=finalize_begin verdict=PASS
+trace t=1793856190.390 host=node2 rank=6 pid=447 stage=finalize_begin verdict=PASS
+trace t=1793856190.443 host=node2 rank=5 pid=446 stage=finalize_done 
+trace t=1793856190.445 host=node1 rank=3 pid=670 stage=finalize_done 
+trace t=1793856190.444 host=node2 rank=6 pid=447 stage=finalize_done 
+trace t=1793856190.446 host=node1 rank=1 pid=668 stage=finalize_done 
+trace t=1793856190.445 host=node2 rank=4 pid=445 stage=finalize_done 
+trace t=1793856190.445 host=node2 rank=7 pid=448 stage=finalize_done 
+trace t=1793856190.449 host=node1 rank=0 pid=667 stage=finalize_done 
+trace t=1793856190.449 host=node1 rank=2 pid=669 stage=finalize_done 
+[node1:00662] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00662] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe2_4x2_2 PASS rc=0 secs=2 kind=required 
+
+===== gate pe1_8x1_2 (required, limit 60s) 05:23:11: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+trace t=1793856193.570 host=node1 rank=4 pid=785 stage=bcast_begin 
+trace t=1793856193.570 host=node1 rank=4 pid=785 stage=finalize_begin verdict=PASS
+trace t=1793856193.570 host=node1 rank=6 pid=792 stage=finalize_begin verdict=PASS
+trace t=1793856193.571 host=node1 rank=1 pid=782 stage=finalize_begin verdict=PASS
+trace t=1793856193.570 host=node2 rank=14 pid=536 stage=finalize_begin verdict=PASS
+trace t=1793856193.570 host=node2 rank=13 pid=535 stage=finalize_begin verdict=PASS
+trace t=1793856193.570 host=node2 rank=15 pid=537 stage=finalize_begin verdict=PASS
+trace t=1793856193.570 host=node2 rank=12 pid=534 stage=finalize_begin verdict=PASS
+trace t=1793856193.571 host=node2 rank=10 pid=532 stage=finalize_begin verdict=PASS
+trace t=1793856193.571 host=node2 rank=8 pid=530 stage=finalize_begin verdict=PASS
+trace t=1793856193.571 host=node2 rank=9 pid=531 stage=finalize_begin verdict=PASS
+trace t=1793856193.571 host=node2 rank=11 pid=533 stage=finalize_begin verdict=PASS
+trace t=1793856193.623 host=node1 rank=2 pid=783 stage=finalize_done 
+trace t=1793856193.624 host=node1 rank=3 pid=784 stage=finalize_done 
+trace t=1793856193.627 host=node1 rank=4 pid=785 stage=finalize_done 
+trace t=1793856193.628 host=node1 rank=5 pid=789 stage=finalize_done 
+trace t=1793856193.628 host=node1 rank=6 pid=792 stage=finalize_done 
+trace t=1793856193.627 host=node1 rank=0 pid=781 stage=finalize_done 
+trace t=1793856193.626 host=node2 rank=12 pid=534 stage=finalize_done 
+trace t=1793856193.626 host=node2 rank=13 pid=535 stage=finalize_done 
+trace t=1793856193.630 host=node1 rank=7 pid=796 stage=finalize_done 
+trace t=1793856193.630 host=node2 rank=11 pid=533 stage=finalize_done 
+trace t=1793856193.631 host=node2 rank=9 pid=531 stage=finalize_done 
+trace t=1793856193.631 host=node2 rank=10 pid=532 stage=finalize_done 
+trace t=1793856193.631 host=node2 rank=15 pid=537 stage=finalize_done 
+trace t=1793856193.632 host=node2 rank=8 pid=530 stage=finalize_done 
+trace t=1793856193.635 host=node1 rank=1 pid=782 stage=finalize_done 
+trace t=1793856193.634 host=node2 rank=14 pid=536 stage=finalize_done 
+[node1:00776] 15 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:00776] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe1_8x1_2 PASS rc=0 secs=2 kind=required 
+
+===== gate pe8_1x8_2 (required, limit 60s) 05:23:14: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793856196.319 host=node1 rank=0 pid=903 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+trace t=1793856196.319 host=node1 rank=0 pid=903 stage=gather_begin 
+trace t=1793856196.319 host=node1 rank=0 pid=903 stage=gather_done 
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856196.319 host=node1 rank=0 pid=903 stage=bcast_begin 
+trace t=1793856196.320 host=node1 rank=0 pid=903 stage=finalize_begin verdict=PASS
+trace t=1793856196.320 host=node2 rank=1 pid=623 stage=finalize_begin verdict=PASS
+trace t=1793856196.372 host=node2 rank=1 pid=623 stage=finalize_done 
+trace t=1793856196.379 host=node1 rank=0 pid=903 stage=finalize_done 
+[node1:00898] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:00898] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe8_1x8_2 PASS rc=0 secs=2 kind=required 
+
+===== gate pe4_2x4_3 (required, limit 60s) 05:23:17: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=2 PLACE_T=4
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=1 thread=0 cpu=8 mask_cpus=1
+placement host=node1 rank=1 thread=1 cpu=10 mask_cpus=1
+placement host=node1 rank=1 thread=2 cpu=12 mask_cpus=1
+placement host=node1 rank=1 thread=3 cpu=14 mask_cpus=1
+placement host=node2 rank=2 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=2 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=2 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=2 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=3 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=3 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=3 thread=2 cpu=12 mask_cpus=1
+placement host=node2 rank=3 thread=3 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=4 threads=4 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856199.126 host=node2 rank=2 pid=702 stage=gather_done 
+trace t=1793856199.126 host=node2 rank=2 pid=702 stage=bcast_begin 
+trace t=1793856199.131 host=node1 rank=1 pid=1012 stage=finalize_begin verdict=PASS
+trace t=1793856199.126 host=node2 rank=3 pid=703 stage=bcast_begin 
+trace t=1793856199.131 host=node2 rank=3 pid=703 stage=finalize_begin verdict=PASS
+trace t=1793856199.135 host=node1 rank=0 pid=1011 stage=finalize_begin verdict=PASS
+trace t=1793856199.135 host=node2 rank=2 pid=702 stage=finalize_begin verdict=PASS
+trace t=1793856199.182 host=node2 rank=2 pid=702 stage=finalize_done 
+trace t=1793856199.183 host=node2 rank=3 pid=703 stage=finalize_done 
+trace t=1793856199.184 host=node1 rank=1 pid=1012 stage=finalize_done 
+trace t=1793856199.185 host=node1 rank=0 pid=1011 stage=finalize_done 
+[node1:01006] 3 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:01006] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe4_2x4_3 PASS rc=0 secs=2 kind=required 
+
+===== gate pe2_4x2_3 (required, limit 60s) 05:23:20: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=4 PLACE_T=2
+placement host=node2 rank=4 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=4 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=5 thread=0 cpu=4 mask_cpus=1
+placement host=node2 rank=5 thread=1 cpu=6 mask_cpus=1
+placement host=node2 rank=6 thread=0 cpu=8 mask_cpus=1
+placement host=node2 rank=6 thread=1 cpu=10 mask_cpus=1
+placement host=node2 rank=7 thread=0 cpu=12 mask_cpus=1
+placement host=node2 rank=7 thread=1 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=8 threads=2 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856201.926 host=node1 rank=2 pid=1123 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node1 rank=0 pid=1121 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node1 rank=1 pid=1122 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node1 rank=3 pid=1124 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node2 rank=4 pid=783 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node2 rank=6 pid=785 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node2 rank=5 pid=784 stage=finalize_begin verdict=PASS
+trace t=1793856201.926 host=node2 rank=7 pid=786 stage=finalize_begin verdict=PASS
+trace t=1793856201.977 host=node1 rank=1 pid=1122 stage=finalize_done 
+trace t=1793856201.979 host=node1 rank=2 pid=1123 stage=finalize_done 
+trace t=1793856201.980 host=node2 rank=5 pid=784 stage=finalize_done 
+trace t=1793856201.980 host=node1 rank=3 pid=1124 stage=finalize_done 
+trace t=1793856201.982 host=node1 rank=0 pid=1121 stage=finalize_done 
+trace t=1793856201.983 host=node2 rank=4 pid=783 stage=finalize_done 
+trace t=1793856201.984 host=node2 rank=6 pid=785 stage=finalize_done 
+trace t=1793856201.984 host=node2 rank=7 pid=786 stage=finalize_done 
+[node1:01116] 7 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:01116] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe2_4x2_3 PASS rc=0 secs=2 kind=required 
+
+===== gate pe1_8x1_3 (required, limit 60s) 05:23:22: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=8 PLACE_T=1
+trace t=1793856204.929 host=node1 rank=5 pid=1243 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node1 rank=4 pid=1240 stage=finalize_begin verdict=PASS
+trace t=1793856204.928 host=node1 rank=2 pid=1237 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node1 rank=7 pid=1250 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=10 pid=870 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=8 pid=868 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=14 pid=874 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=15 pid=875 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=12 pid=872 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=9 pid=869 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=11 pid=871 stage=finalize_begin verdict=PASS
+trace t=1793856204.929 host=node2 rank=13 pid=873 stage=finalize_begin verdict=PASS
+trace t=1793856204.982 host=node1 rank=3 pid=1238 stage=finalize_done 
+trace t=1793856204.982 host=node1 rank=2 pid=1237 stage=finalize_done 
+trace t=1793856204.982 host=node1 rank=6 pid=1246 stage=finalize_done 
+trace t=1793856204.982 host=node1 rank=7 pid=1250 stage=finalize_done 
+trace t=1793856204.986 host=node1 rank=5 pid=1243 stage=finalize_done 
+trace t=1793856204.984 host=node2 rank=8 pid=868 stage=finalize_done 
+trace t=1793856204.987 host=node1 rank=4 pid=1240 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=13 pid=873 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=15 pid=875 stage=finalize_done 
+trace t=1793856204.984 host=node2 rank=12 pid=872 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=11 pid=871 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=9 pid=869 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=14 pid=874 stage=finalize_done 
+trace t=1793856204.990 host=node1 rank=1 pid=1236 stage=finalize_done 
+trace t=1793856204.985 host=node2 rank=10 pid=870 stage=finalize_done 
+trace t=1793856204.991 host=node1 rank=0 pid=1235 stage=finalize_done 
+[node1:01230] 15 more processes have sent help message help-orte-odls-default.txt / memory not bound
+[node1:01230] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe1_8x1_3 PASS rc=0 secs=3 kind=required 
+
+===== gate pe8_1x8_3 (required, limit 60s) 05:23:25: make BIN=bin/launcher-test MPIRUN=mpirun --prefix /usr --hostfile /tmp/nodefile --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=2 PLACE_R=1 PLACE_T=8
+trace t=1793856207.594 host=node1 rank=0 pid=1357 stage=gather_done 
+placement host=node1 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node1 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node1 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node1 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node1 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=node1 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node1 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node1 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=node2 rank=1 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=1 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=1 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=1 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=1 thread=4 cpu=8 mask_cpus=1
+placement host=node2 rank=1 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=1 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=1 thread=7 cpu=14 mask_cpus=1
+placement_host host=node1 threads=8 distinct_cpus=8
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=2 expected=2
+placement_check ranks=2 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856207.583 host=node2 rank=1 pid=961 stage=gather_done 
+trace t=1793856207.594 host=node1 rank=0 pid=1357 stage=bcast_begin 
+trace t=1793856207.583 host=node2 rank=1 pid=961 stage=bcast_begin 
+trace t=1793856207.595 host=node1 rank=0 pid=1357 stage=finalize_begin verdict=PASS
+trace t=1793856207.595 host=node2 rank=1 pid=961 stage=finalize_begin verdict=PASS
+trace t=1793856207.643 host=node1 rank=0 pid=1357 stage=finalize_done 
+trace t=1793856207.646 host=node2 rank=1 pid=961 stage=finalize_done 
+[node1:01352] 1 more process has sent help message help-orte-odls-default.txt / memory not bound
+[node1:01352] Set MCA parameter "orte_base_help_aggregate" to 0 to see all help / error messages
+pe8_1x8_3 PASS rc=0 secs=2 kind=required 
+
+===== summary 05:23:28
+pe4_2x4_1 PASS rc=0 secs=2 kind=required 
+pe2_4x2_1 PASS rc=0 secs=3 kind=required 
+pe1_8x1_1 PASS rc=0 secs=3 kind=required 
+pe8_1x8_1 PASS rc=0 secs=3 kind=required 
+pe4_2x4_2 PASS rc=0 secs=2 kind=required 
+pe2_4x2_2 PASS rc=0 secs=2 kind=required 
+pe1_8x1_2 PASS rc=0 secs=2 kind=required 
+pe8_1x8_2 PASS rc=0 secs=2 kind=required 
+pe4_2x4_3 PASS rc=0 secs=2 kind=required 
+pe2_4x2_3 PASS rc=0 secs=2 kind=required 
+pe1_8x1_3 PASS rc=0 secs=3 kind=required 
+pe8_1x8_3 PASS rc=0 secs=2 kind=required 
+verdict required_or_critical=12 not_passed=0 optional: none
+verdict PASS
+end=2026-11-05T05:23:28+00:00 elapsed_s=37 walltime_s=900

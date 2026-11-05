@@ -1,0 +1,2 @@
+launch TIMEOUT rc=124 secs=15 kind=required no completion within 15s
+after PASS rc=0 secs=0 kind=required 

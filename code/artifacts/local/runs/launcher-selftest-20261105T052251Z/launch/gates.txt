@@ -1,0 +1,2 @@
+launch PASS rc=0 secs=1 kind=required 
+attached PASS rc=0 secs=7 kind=required 

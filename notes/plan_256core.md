@@ -14,7 +14,7 @@ needs one of these:
 | Stop at 128 cores on the free queue | `bench1` and `bench2` | Does not meet "at least 256"; the report must say so |
 
 Leave time for queue waits, because the free pilot has already
-waited over 3.5 hours and the wait on `batch_cpu` has never been tested. Due 13 Nov 23:59 SGT.
+waited 10 h 1 min and the wait on `batch_cpu` has never been tested. Due 13 Nov 23:59 SGT.
 
 ## Order of jobs
 
@@ -22,8 +22,9 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 
 | Step | Job | Request | Queue, rate | Core-hours requested | Expected use | Needs first |
 |---|---|---|---|---|---|---|
-| 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | Already queued |
-| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0 finished; 64 + 128 cores exceeds the 160 limit |
+| 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | **Failed at `placement`, 0 of 20 runs** |
+| 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | Not approved; request in `approval_requests.md` |
+| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 8 min, 17 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 10 min, 42 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 47 min, 199 core-hours | Step B passed, manifest resized and frozen, charge approval |
 | D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 4 h | `auto_free`, 0 | 256 | 79 min, 84 core-hours | Step 0, manifest resized and frozen |

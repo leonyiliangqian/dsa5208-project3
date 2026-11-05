@@ -1,0 +1,37 @@
+== snapshot host=IN-020 t=1793826777.939
+    PID    PPID    PGID STAT WCHAN                                ELAPSED COMMAND
+ 214531  214530  214531 Ss   do_wait                                01:42 /bin/bash /var/spool/pbs/mom_priv/jobs/1519637.stdct-mgmt-02.SC
+ 214589  214531  214531 S    do_wait                                01:41  \_ /bin/bash /var/spool/pbs/mom_priv/jobs/1519637.stdct-mgmt-02.SC
+ 214591  214589  214531 S    pipe_read                              01:41  |   \_ tee artifacts/cluster/runs/pilot1-20261104T211117Z-1519637/job.log
+ 215003  214531  215003 Ss   do_wait                                01:23  \_ bash jobs/vanda/snapshot_watch.sh 82 placement
+ 215145  215003  215145 S    sigsuspend                             00:00  |   \_ timeout -k 2 12 bash tests/toolchain/proc_snapshot.sh vanda-1519637/
+ 215146  215145  215145 S    do_wait                                00:00  |       \_ bash tests/toolchain/proc_snapshot.sh vanda-1519637/
+ 215151  215146  215145 R    -                                      00:00  |           \_ ps -u 26435 -o pid,ppid,pgid,stat,wchan:32,etime,args --forest
+ 215152  215146  215145 S    pipe_read                              00:00  |           \_ cut -c1-220
+ 215004  214531  215004 S    sigsuspend                             01:23  \_ timeout -k 20 90 make BIN=bin/vanda-1519637 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile 
+ 215005  215004  215004 S    do_wait                                01:23      \_ make BIN=bin/vanda-1519637 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pb
+ 215014  215005  215004 Sl   do_poll.constprop.0                    01:21          \_ mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1519637.stdct-mgmt-02 -x
+-- pid=215014 comm=mpirun State: S (sleeping) Threads: 3 Cpus_allowed_list: 0-63 
+   tid=215014 state=S wchan=do_poll.constprop.0
+   tid=215015 state=S wchan=ep_poll
+   tid=215016 state=S wchan=do_select
+   Thread 3 (Thread 0x15554ffff640 (LWP 215016) "mpirun"):
+   #0  0x0000155554f5022d in select () from /lib64/libc.so.6
+   #1  0x00001555541faac2 in listen_thread (obj=<optimized out>) at oob_tcp_listener.c:705
+   #2  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #3  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 2 (Thread 0x155554413640 (LWP 215015) "mpirun"):
+   #0  0x0000155554f5a21e in epoll_wait () from /lib64/libc.so.6
+   #1  0x00001555551622e4 in epoll_dispatch (base=0x557190, tv=<optimized out>) at epoll.c:465
+   #2  0x0000155555158c85 in event_base_loop (base=0x557190, flags=flags@entry=1) at event.c:1992
+   #3  0x000015555454d631 in progress_engine (obj=<optimized out>) at runtime/pmix_progress_threads.c:230
+   #4  0x0000155554ed5c02 in start_thread () from /lib64/libc.so.6
+   #5  0x0000155554f5ac40 in clone3 () from /lib64/libc.so.6
+   Thread 1 (Thread 0x155554e4b4c0 (LWP 215014) "mpirun"):
+   #0  0x0000155554f4d9ff in poll () from /lib64/libc.so.6
+   #1  0x00001555551616f5 in poll_dispatch (base=0x461440, tv=0x0) at poll.c:182
+   #2  0x0000155555158c85 in event_base_loop (base=0x461440, flags=flags@entry=1) at event.c:1992
+   #3  0x000000000040133a in orterun (argc=<optimized out>, argv=0x7fffffff54a8) at orterun.c:179
+   #4  0x0000155554e75590 in __libc_start_call_main () from /lib64/libc.so.6
+   #5  0x0000155554e75640 in __libc_start_main_impl () from /lib64/libc.so.6
+   #6  0x000000000040114e in _start ()

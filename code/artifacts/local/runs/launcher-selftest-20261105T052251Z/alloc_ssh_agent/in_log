@@ -1,0 +1,3 @@
+[h:1] mca:base:select:(  plm) Selected component [rsh]
+[h:1] [[1,0],0] plm:rsh: final template argv:
+	/usr/bin/ssh <template> orted -mca ess env

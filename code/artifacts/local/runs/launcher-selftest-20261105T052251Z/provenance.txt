@@ -1,0 +1,8 @@
+date_utc=2026-11-05T05:22:51Z
+source_git_rev=3f77e8727a9876f77667d3b7d78b9934ad43897d source_dirty=0
+environment=local Docker two-container simulation; pbs_tmrsh is a stand-in over ssh; not PBS, not Vanda, no measurement
+mpirun (Open MPI) 4.1.4
+a3a6e06459de0308dd90de36b4ad49d027aad162364c08804ff2127eb5e5bc86  jobs/vanda/multinode_setup.sh
+fdbc82d6ec65644192fc1b8ac70d050b96fbe5f3a417a86e9282e9d6db6acb30  jobs/vanda/allocation_check.sh
+144bceba60aefc1a450bd49bef8ef7bff07b21c4d1ce3b7e71a8081b0622c7bb  jobs/vanda/gates.sh
+aeb1b2f62f095c91477ccb5ae7ab48d38d9de3c45d6cb7d3682b64c18ee897e0  tests/jobs/launcher_selftest.sh

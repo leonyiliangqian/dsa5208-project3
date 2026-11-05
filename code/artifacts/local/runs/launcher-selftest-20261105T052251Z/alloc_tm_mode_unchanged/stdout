@@ -1,0 +1,7 @@
+node node1 allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=a
+node other allowed=0,2,4,6,8,10,12,14 arch=x86_64 model=m ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=a
+allocation hosts=['node1', 'other'] head=node1 allowed_cpus=[8, 8] archs=['x86_64']
+launcher=tm plm_selected=['tm'] ras_selected=[] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only models=['m'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_8_each=ok arch_x86_64=ok plm_tm_selected=ok remote_orted_not_sshd=ok
+allocation PASS

@@ -1,7 +1,40 @@
-# Approval requests, 4 November 2026
+# Approval requests
 
-**Both requests below were approved and submitted once on 4 Nov at 19:10 SGT: pilot `1519637` and GPU timing `1519638`.
-No approval is open.** GPU timing finished; the pilot was still queued at 22:50 SGT. A failure is not retried
+## Open, 5 November 2026: rerun the single-node pilot once
+
+**Not approved and not submitted.** It needs Leon's explicit yes.
+
+| | |
+|---|---|
+| Why | Pilot `1519637` hung at `placement`, 0 of 20 runs. All sizing waits on this job |
+| Change from `1519637` | Launcher only: `pbs_tmrsh` instead of a hostfile launch that selected `tm` (commit `3f77e87`) |
+| Same as `1519637` | Manifest `pilot_single_node_v2.json` (SHA-256 `0a5f9f64cc5923a218ec9be9f3498be34baf2733c1aeaee1f4daa78c1e2f937a`, 20 runs), solver, gates, resources |
+| Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 60 min, 64 core-hours at most |
+| Queue, charge | `auto_free`, no `-P`, rate 0 last time. The dry run shows the command, and rate 0 is checked again before submitting |
+| Queue wait | `1519637` waited 10 h 1 min. This is no prediction |
+| If the launcher is still wrong | The `placement` gate stops the job in about 2 minutes, with no retry |
+
+If approved, these steps run once:
+
+```sh
+# Mac: copy the commit, using the existing SSH session
+git bundle create "$SP/p3-3f77e87.bundle" --all
+scp "$SP/p3-3f77e87.bundle" vanda:~/
+
+# Vanda: new clone, leaving every older clone as it is
+git clone ~/p3-3f77e87.bundle ~/dsa5208-p3-3f77e87
+cd ~/dsa5208-p3-3f77e87 && git checkout 3f77e8727a9876f77667d3b7d78b9934ad43897d && cd code
+bash jobs/vanda/submit.sh pilot --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_v2.json
+# stop here unless the commit, command, charge rate and absence of a duplicate job all check out
+bash jobs/vanda/submit.sh pilot --queue auto_free --no-project --var MANIFEST=manifests/pilot_single_node_v2.json --yes
+```
+
+`$SP` is a temporary directory on the Mac. Nothing here approves `pilot2`, `pilot4`, `bench1` or `bench4`, a charged queue, a
+retry, or monitoring. It also tests `pbs_tmrsh` at 64 ranks on one node for free, which no job has yet done.
+
+## Closed, 4 November 2026
+
+**Both requests below were approved and submitted once on 4 Nov at 19:10 SGT: pilot `1519637` and GPU timing `1519638`.** GPU timing finished. The pilot ran on 5 Nov and failed at `placement`, exit 5. A failure is not retried
 automatically: it needs a local fix and a new approval.
 
 **Vanda state, 4 Nov 18:59 SGT:** clean clone `~/dsa5208-p3-8a50c8f` created, commit and tree verified, dry runs printed the

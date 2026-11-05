@@ -1,0 +1,13 @@
+[node1:02922] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+ORTE has lost communication with a remote daemon.
+
+  HNP daemon   : [[16386,0],0] on node node1
+  Remote daemon: [[16386,0],1] on node node2
+
+This is usually due to either a failure of the TCP network
+connection to the node, or possibly an internal failure of
+the daemon itself. We cannot recover from this failure, and
+therefore will terminate the job.
+--------------------------------------------------------------------------
+Killed

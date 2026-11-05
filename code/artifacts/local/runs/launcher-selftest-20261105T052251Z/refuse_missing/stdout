@@ -1,0 +1,1 @@
+FATAL: MPI_LAUNCHER=pbs_tmrsh but no executable pbs_tmrsh ('/work/code/bin/launcher-fake/does_not_exist'); not falling back to ssh

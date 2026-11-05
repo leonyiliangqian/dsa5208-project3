@@ -3,18 +3,30 @@
 Status at handoff: 30 October 2026. Vanda is closed for maintenance until
 **Mon 2 Nov 17:00 SGT**. Report due **13 Nov 2026 23:59 SGT**.
 
-## Update, 4 November 2026, 23:21 SGT (read this first)
+## Update, 5 November 2026 (read this first)
+
+- **Pilot `1519637` failed at its third gate and measured nothing.** It ran 05:11:16 to 05:13:07 on IN-020 with exit 5, rate 0.
+  `allocation` and `build` passed; `placement` timed out at 90 s. 0 of 20 runs started, so there is **no sizing data** and rule 1
+  of `plan_256core.md` stops here. Only the CPU model is usable: Gold 6438N.
+- **Cause, as far as shown:** the job asked for a hostfile launch, but mpirun still selected `tm`, the launcher that hung with
+  binding in job 1514029. Same process state too. Why `tm` hangs with binding is still unknown.
+- **Fix, commit `3f77e87`:** every job launches through `pbs_tmrsh`. Passed locally only; Docker has no PBS or `tm`.
+- **Waiting on Leon:** one rerun of the pilot, request in [notes/approval_requests.md](notes/approval_requests.md). Not approved or
+  submitted. The last wait was 10 h 1 min.
+- The items below still apply, except that sizing now waits for this rerun.
+
+## Update, 4 November 2026, 23:21 SGT
 
 - **Done:** GPU timing (job 1519638) is in the report: the GPU was slower than the 36 CPU cores at every size. Please
   review that paragraph.
-- **Waiting:** pilot `1519637` was still queued at 23:20 SGT. It gives the sizes for everything below. Do not resubmit or cancel it. Nothing is watching it now: the 4-hour watch ended at 23:10, so check with `qstat -xf 1519637`.
+- **Waiting (superseded on 5 Nov):** pilot `1519637` was still queued at 23:20 SGT. It gives the sizes for everything below. Do not resubmit or cancel it. Nothing is watching it now: the 4-hour watch ended at 23:10, so check with `qstat -xf 1519637`.
 - **Biggest open item:** 256 cores, 10 points. [notes/plan_256core.md](notes/plan_256core.md) has the job order, exact
   requests, charge assumptions, dry runs and the rules for using the pilot's results. All sizes are provisional and none of
   those jobs is approved.
 - **Lecturer contact is closed:** Leon decided on 4 Nov that it is no longer needed. Do not draft or send lecturer messages.
   The final deadline stays 13 Nov 23:59 SGT.
 - **Remaining decisions:**
-  1. **Pilot sizing:** apply the rules in `plan_256core.md` once pilot `1519637` finishes.
+  1. **Pilot sizing:** apply the rules in `plan_256core.md` once a pilot passes its gates (`1519637` did not).
   2. **256-core access:** Leon reads the current balance with `amgr login`, then decides on charge approval.
   3. **Formal experiments:** each job needs its own approval, after its manifest is frozen.
   4. **Report review:** the group reviews the GPU paragraph, AI declaration, membership and student IDs, and how source is handed in.

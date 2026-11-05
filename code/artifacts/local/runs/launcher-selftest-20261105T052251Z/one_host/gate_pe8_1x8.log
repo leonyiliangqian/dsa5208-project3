@@ -1,0 +1,42 @@
+OMP_NUM_THREADS=8 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    PLACEMENT_EXPECT_HOSTS=1 PLACEMENT_TRACE=1 \
+    mpirun --prefix /usr --hostfile artifacts/local/runs/launcher-selftest-20261105T052251Z/nodefile_one --mca plm rsh --mca plm_rsh_agent /work/code/bin/launcher-fake/agent/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 1 --map-by ppr:1:node:PE=8 \
+    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/launcher-test/placement_check
+[node1:03645] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+WARNING: Open MPI tried to bind a process but failed.  This is a
+warning only; your job will continue, though performance may
+be degraded.
+
+  Local host:        node2
+  Application name:  bin/launcher-test/placement_check
+  Error message:     failed to bind memory
+  Location:          ../../../../../../orte/mca/rtc/hwloc/rtc_hwloc.c:447
+
+--------------------------------------------------------------------------
+[node2:01977] MCW rank 0 is not bound (or bound to all available processors)
+trace t=1793856269.478 host=node2 rank=0 pid=1980 stage=start affinity=0 omp_num_threads=8
+trace t=1793856269.478 host=node2 rank=0 pid=1980 stage=mpi_init_begin 
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=mpi_init_done size=1 provided=1
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=allreduce_threads_begin threads=8
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=allreduce_threads_done min=8 max=8
+trace t=1793856269.733 host=node2 rank=0 pid=1980 stage=omp_begin 
+trace t=1793856269.734 host=node2 rank=0 pid=1980 stage=omp_team_started team=8
+trace t=1793856270.134 host=node2 rank=0 pid=1980 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1793856270.135 host=node2 rank=0 pid=1980 stage=gather_begin 
+placement host=node2 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=node2 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=node2 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=node2 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=node2 rank=0 thread=4 cpu=8 mask_cpus=1
+trace t=1793856270.135 host=node2 rank=0 pid=1980 stage=gather_done 
+placement host=node2 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=node2 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=node2 rank=0 thread=7 cpu=14 mask_cpus=1
+placement_host host=node2 threads=8 distinct_cpus=8
+placement_hosts distinct=1 expected=1
+placement_check ranks=1 threads=8 online_cpus=16 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1793856270.136 host=node2 rank=0 pid=1980 stage=bcast_begin 
+trace t=1793856270.136 host=node2 rank=0 pid=1980 stage=finalize_begin verdict=PASS
+trace t=1793856270.182 host=node2 rank=0 pid=1980 stage=finalize_done 
