@@ -13,15 +13,15 @@ expect() { # NAME WANT_RC CMD...
 plan() { python3 scripts/plan_budget.py "$@"; }
 expect pilot4 0 plan manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1
 expect pilot2 0 plan manifests/pilot_two_node.json jobs/vanda/pilot2.pbs
-expect pilot16 0 plan manifests/pilot_single_node_16core.json jobs/vanda/pilot16.pbs
 expect bench4 0 plan manifests/studies_four_node.json jobs/vanda/bench4.pbs --rate 1
 expect bench1 0 plan manifests/studies_single_node.json jobs/vanda/bench1.pbs
+expect bench16 0 plan manifests/studies_16core.json jobs/vanda/bench16.pbs --startup-s 900
 sed 's/mem=240gb/mem=100gb/' jobs/vanda/pilot4.pbs > "$work/lowmem.pbs"
 expect control_memory 1 plan manifests/pilot_four_node.json "$work/lowmem.pbs"
 expect control_memory_reason 0 grep -q "over the 100 GB requested" <(plan manifests/pilot_four_node.json "$work/lowmem.pbs")
 sed 's/walltime=00:45:00/walltime=00:20:00/' jobs/vanda/pilot4.pbs > "$work/short.pbs"
 expect control_walltime 1 plan manifests/pilot_four_node.json "$work/short.pbs"
-sed 's/"timeout_s": 300/"timeout_s": 5/; s/"timeout_s": 240/"timeout_s": 5/' manifests/pilot_four_node.json > "$work/tight.json"
+sed -E 's/"timeout_s": [0-9]+/"timeout_s": 5/' manifests/pilot_four_node.json > "$work/tight.json"
 expect control_limit 1 plan "$work/tight.json" jobs/vanda/pilot4.pbs
 expect charge_stated 0 grep -q '192 if charged' <(plan manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1)
 echo "$([ "$failures" = 0 ] && echo PASS || echo FAIL): plan budget, $failures failed"

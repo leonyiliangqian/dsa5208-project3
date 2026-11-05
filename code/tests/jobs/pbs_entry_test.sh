@@ -43,7 +43,7 @@ for f in jobs/vanda/*.pbs; do
     out=$(cd "$work/home" && env -u PBS_O_WORKDIR bash "$work/tree/jobs/vanda/$name" 2>&1); rc=$?
     [ "$rc" != 0 ] && [[ "$out" != *measure_ran_in* ]]; result "no_workdir_${name%.pbs}" $? "rc=$rc"
 done
-[ "$wrappers" = 7 ]; result wrapper_count $? "wrappers=$wrappers"
+[ "$wrappers" = 8 ]; result wrapper_count $? "wrappers=$wrappers"
 
 # Negative control: the 1514774 failure, restored in a copy, must be caught both ways.
 grep -v '^cd "\${PBS_O_WORKDIR' jobs/vanda/pilot.pbs > "$work/broken/jobs/vanda/pilot.pbs"
