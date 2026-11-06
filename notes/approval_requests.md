@@ -1,11 +1,11 @@
 # Approval requests
 
-**No approval is open.** `pilot2` is submitted (`1526470`); `bench1` is prepared and waits for its own approval. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** `pilot2` (`1526470`) and `bench1` (`1526501`) are both submitted and queued. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Readiness review, 6 November 2026
 
-Reviewed without submitting anything. Order: **`pilot2` first, then `bench1`.** They cannot run together (128 + 64 cores is over the
-free queue's 160 CPUs per user), and `pilot2` is the gate for anything charged.
+Reviewed without submitting anything. Order: **`pilot2` first, then `bench1`.** They cannot run at the same time (128 + 64 cores is over the
+free queue's limit of 160 running CPUs per user), though both may be queued. `pilot2` is the gate for anything charged.
 
 **What `pilot2` checks before any timing.** Every gate is critical, and a failure stops the job:
 
@@ -66,7 +66,13 @@ cd ~/dsa5208-p3-367c630/code
 bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
 ```
 
-## Ready to request: `bench1`, formal free studies on one whole 64-core node
+## Consumed, 6 November 2026: `bench1`
+
+**Approved by Leon and submitted once on 6 Nov at 18:43:38 SGT as job `1526501`, to wait in the queue alongside `pilot2` `1526470`. This approval is used up.**
+Every check passed first: commit, tree, clean clone, frozen manifest hash, resources, scheduling, `auto_free` and `cpu_parallel` enabled and started at rate 0,
+no `p3_bench1` before. Queue rules read at submission: `cpu_parallel` limits **running** jobs per user, `max_run_res.ncpus = 160` and `max_run = 2`. No
+queued-job limit exists for users on the server, `auto_free` or `cpu_parallel`. So both jobs may stay queued together, and PBS starts them only within the running limit.
+128 + 64 = 192 exceeds 160, so they will not run at the same time. A failure is not retried. Record: `code/artifacts/cluster/discovery/vanda_bench1_submit_0647895_20261106T1843.txt`. The request as reviewed:
 
 | | |
 |---|---|

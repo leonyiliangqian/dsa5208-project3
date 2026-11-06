@@ -721,3 +721,11 @@ Leon approved one job. All checks passed in one session, and `qsub` ran once at 
 manifest hash, 2 x 64 cores, 120 GB, scatter, 30 min, scheduling on, queues enabled and started at rate 0, no `p3_pilot2` before, 0 running CPUs. The job was queued at 18:37:55 in
 `cpu_parallel`, rate 0; PBS shows `project = personal-leonyil.qian`. Nothing measured yet. Record: `artifacts/cluster/discovery/vanda_pilot2_submit_367c630_20261106T1837.txt`.
 
+### `bench1` submitted, job 1526501, 6 Nov (Vanda)
+
+Leon approved one job, allowed to wait in the queue alongside `pilot2`. All checks passed in one session, and `qsub` ran once at 18:43:38 SGT from `~/dsa5208-p3-0647895/code`. The checks:
+commit `0647895`, tree `0c20858`, clean clone, frozen manifest hash, 1 x 64 cores, 120 GB, 5 h, scheduling on, queues enabled and started at rate 0, no `p3_bench1` before.
+**Correction:** earlier notes treated the 160-CPU limit as if queued requests had to fit it. `cpu_parallel` limits running jobs per user (`max_run_res.ncpus = 160`,
+`max_run = 2`), and no queued-job limit exists for users on the server, `auto_free` or `cpu_parallel`. So both jobs stay queued, and PBS will not run them at the same time.
+At 18:43 both were Q; `1526470` had `Insufficient amount of resource: node_pool`. Record: `artifacts/cluster/discovery/vanda_bench1_submit_0647895_20261106T1843.txt`.
+

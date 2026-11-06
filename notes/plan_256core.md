@@ -29,7 +29,7 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | **Submitted once as `1526470`, 6 Nov 18:37 SGT; queued** |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 50 min | `auto`, 1 | **725** | 56 min, 240 core-hours | Step B passed, manifest resized and frozen, charge approval |
-| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 100 min, 106 core-hours | **Plan frozen, ready to request.** | Step 0, manifest resized and frozen |
+| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 100 min, 106 core-hours | **Plan frozen, ready to request.** | **Submitted once as `1526501`, 6 Nov 18:43 SGT; queued** |
 
 "Expected use" comes from `scripts/plan_budget.py`, refit to pilot `1523275`. It matches that pilot closely, but 64 and 256 ranks and N above 2 x 10^6 are
 extrapolated, so it could still be off by a factor of two or more there.

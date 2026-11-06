@@ -6,29 +6,29 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 6 November 2026, 18:38 SGT
+## Current status, 6 November 2026, 18:44 SGT
 
 | Job | State | Means |
 |---|---|---|
 | `1523703` `bench16` | **Finished, passed:** exit 0, 9 of 9 gates, 121 of 121 runs verified | **Formal 16-core results**, now in the report. One shared node; ranges are wide |
 | `1522998` 64-core pilot | **Finished, passed:** exit 0, 5 of 5 gates, 20 of 20 runs verified, whole node | Sizing only. Answered the 64-core rules |
 | `1523275` 16-core pilot | Finished, passed | Sizing only |
-| `1526470` `pilot2` | **Queued at 18:37:55 SGT**, `cpu_parallel`, rate 0; 2 x 64 cores, 30 min | Submitted once; approval used. Do not resubmit or cancel. Nothing is watching it. Sizing only when it runs |
-| `bench1` | **Prepared, waiting for approval**, free. Clone `~/dsa5208-p3-0647895` verified and dry-run | Text in [notes/approval_requests.md](notes/approval_requests.md). Cannot run while `pilot2` runs: 128 + 64 is over 160 |
+| `1526470` `pilot2` | **Queued at 18:43 SGT**, `cpu_parallel`, rate 0; PBS: insufficient `node_pool` | Submitted once; approval used. Do not resubmit or cancel. Sizing only when it runs |
+| `1526501` `bench1` | **Queued at 18:43 SGT**, `cpu_parallel`, rate 0; 1 x 64 cores, 5 h | Submitted once; approval used. Formal 64-core studies when it runs. PBS limits **running** CPUs to 160 per user, so the two will not run at the same time |
 | `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | Up to 192 and 725 core-hours. `bench4` must add its binding and correctness gates before a formal run |
 
 - **In the report:** serial runtime against N, strong and weak scaling to 16 cores, ranks x threads, schedule, leaf size, theta, communication share, all from `1523703`.
 - **Still missing:** MPI strong and weak scaling to at least 256 cores, and communication between nodes. 10 points. Needs a charged queue.
 - **Variability:** repetitions of one case differ by up to 61% on the shared node, so speedups are given as ranges. Efficiency above 1 appears and is reported, with
   the baseline effect shown; its cause is not established.
-- **`1526470` (`pilot2`) is queued.** Approvals: none open. Lecturer contact is closed. No job is retried without a new approval.
+- **`1526470` (`pilot2`) and `1526501` (`bench1`) are queued.** Nothing is watching them. Approvals: none open. Lecturer contact is closed. No job is retried without a new approval.
 - **Redaction:** job cookies removed from committed evidence; see `code/artifacts/cluster/REDACTIONS.md`. Originals are owner-only in
   `/Users/leon.qian/Desktop/DSA5208/p3-evidence-originals-private`, outside the repository, and on Vanda.
 
 **Next, in order:**
 
 1. When asked, check `1526470` once; when it has finished, retrieve and verify it. If a gate failed, diagnose and do not retry.
-1. Leon decides on `bench1`. It is free, but it cannot run while `pilot2` runs.
+1. Likewise for `1526501`.
 2. Leon reads the balance with `amgr login` and decides on `pilot4`, then `bench4`, for 256 cores.
 3. Group items in [notes/group_review.md](notes/group_review.md), including reading the new Results text.
 

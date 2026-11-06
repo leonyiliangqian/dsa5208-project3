@@ -1,0 +1,67 @@
+bench1 submission on Vanda, 6 Nov 2026, approved by Leon for exactly one job, allowed to wait in the queue alongside pilot2 1526470.
+Checks and submission ran in one session; qsub runs only if every check passes. Queue lines naming other users' limits are filtered out. Nothing measured yet.
+
+Fri Nov  6 06:43:34 PM +08 2026
+stdct-login-01
+== source
+commit 0647895d840a8ecae01b3fb60d6e5d2dcc1d315a
+tree 0c20858164e2ee79a254bdb730fe0de0a95693f3
+manifest ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b
+status lines 0
+manifest status frozen
+== resources
+#PBS -N p3_bench1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=05:00:00
+#PBS -j oe
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    queue_type = Route
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    queue_type = Execution
+    resources_max.ncpus = 160
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e1554743=3]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+queued-job limits for users: []
+== my jobs
+1526470.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 
+== duplicates p3_bench1
+current: [] history: []
+== all checks passed; submitting once
+Fri Nov  6 06:43:38 PM +08 2026
+command: qsub -q auto_free -v SOURCE_GIT_REV=0647895d840a8ecae01b3fb60d6e5d2dcc1d315a -o /home/svu/leonyil.qian/dsa5208-p3-0647895/code/artifacts/cluster/logs/ jobs/vanda/bench1.pbs
+1526501.stdct-mgmt-02
+submit_rc=0
+Fri Nov  6 06:43:38 PM +08 2026
+== immediate status of both
+    Job_Name = p3_pilot2
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Fri Nov  6 18:37:48 2026
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    comment = Not Running: Insufficient amount of resource: node_pool 
+    project = personal-leonyil.qian
+    Job_Name = p3_bench1
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Fri Nov  6 18:43:38 2026
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 05:00:00
+    project = personal-leonyil.qian
+1526470.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 
+1526501.stdct-* leonyil* cpu_par* p3_bench1     --    1  64  120gb 05:00 Q   -- 
