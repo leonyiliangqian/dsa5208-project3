@@ -96,15 +96,28 @@ def label(r):
 MARKS = ("*", "square*", "triangle*", "diamond*", "pentagon*")
 
 
+def log_ticks(series):
+    """Ticks a reader can name: 1, 2, 5 steps over a narrow range, decades over a wide one."""
+    ys = [v for _, pts in series for p in pts for v in p[1:] if v > 0]
+    lo, hi = math.floor(math.log10(min(ys))), math.ceil(math.log10(max(ys)))
+    steps = (1, 2, 5) if hi - lo <= 2 else (1,)
+    return ",".join(f"{m * 10 ** e:g}" for e in range(lo, hi + 1) for m in steps)
+
+
 def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=False, legend="north west",
            log_base_x=2, axis_opts=""):
     lines = ["\\begin{figure}[t]", "\\centering", "\\begin{tikzpicture}",
              "\\begin{axis}[width=0.9\\columnwidth, height=0.65\\columnwidth, "
              f"xlabel={{{xlabel}}}, ylabel={{{ylabel}}}, "
              + (f"xmode=log, log basis x={log_base_x}, " if logx else "")
-             + ("ymode=log, " if logy else "")
+             + ("log ticks with fixed point, " if logx or logy else "")
+             + (f"ymode=log, ytick={{{log_ticks(series)}}}, " if logy and "ytick" not in axis_opts else "")
+             + ("ymode=log, " if logy and "ytick" in axis_opts else "")
              + axis_opts
-             + f"legend pos={legend}, legend cell align=left, grid=major, grid style={{gray!25}}]"]
+             # Below the plot, so the legend never covers data; legend="inside" keeps the old placement.
+             + ("legend style={at={(0.5,-0.32)}, anchor=north, legend columns=2, font=\\footnotesize}, "
+                if legend != "inside" else "legend pos=north west, ")
+             + "legend cell align=left, grid=major, grid style={gray!25}]"]
     for (name, pts), mark in zip(series, itertools.cycle(MARKS)):
         # A point (x, y, lo, hi) draws lo..hi as an error bar.
         bars = any(len(p) == 4 for p in pts)
@@ -230,7 +243,7 @@ def serial_n(rows, w):
         "particles $N$", "timed-region wall time (s)",
         w.caption(f"Serial runtime against problem size, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, "
                   f"{r0['steps']} timed steps, median of repetitions. Least-squares slope on the log--log axes: "
-                  f"{slope:.3f}." + BARS), "fig:serial-n", logy=True))
+                  f"{slope:.3f}." + BARS), "fig:serial-n", logy=True, log_base_x=10))
 
 
 def weak(rows, w):
