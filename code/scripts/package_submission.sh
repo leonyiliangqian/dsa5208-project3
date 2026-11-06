@@ -11,7 +11,7 @@ cd "$(git rev-parse --show-toplevel)"
 paths=(code/README.md code/Makefile code/common code/serial code/hybrid code/gpu code/tests
        code/scripts code/manifests code/jobs code/docker
        ':(exclude)code/scripts/package_submission.sh' ':(exclude)code/tests/jobs/package_test.sh'
-       ':(exclude)code/tests/repo_links_test.py')
+       ':(exclude)code/tests/repo_links_test.py' ':(exclude)code/scripts/redact_evidence.py')
 bad=$(git ls-files -- "${paths[@]}" | grep -E '\.(log|OU|ER|out|txt|stdout|stderr|o|a|so|exe|bundle|zip|pdf|pem|key|pyc)$|(^|/)(artifacts|bin|__pycache__)/|(^|/)(\.env|id_rsa|credentials)' || true)
 if [ -n "$bad" ]; then
     echo "refusing: log, evidence, binary or credential files in the package paths:" >&2

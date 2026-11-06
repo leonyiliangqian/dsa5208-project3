@@ -12,7 +12,7 @@
 #PBS -N p3_bench4
 #PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
 #PBS -l place=scatter
-#PBS -l walltime=02:45:00
+#PBS -l walltime=02:50:00
 #PBS -j oe
 
 RUN_PREFIX=bench4

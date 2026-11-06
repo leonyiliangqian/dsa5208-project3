@@ -10,8 +10,8 @@
     {"study": "strong", "program": "hybrid", "ranks": 64, "threads": 1, "timeout_s": 30},
     {"study": "strong", "program": "serial", "timeout_s": 260},
     {"study": "weak", "program": "hybrid", "ranks": 256, "threads": 1, "nodes": 4, "n": 6400000, "timeout_s": 120},
-    {"study": "weak", "program": "hybrid", "ranks": 32, "threads": 8, "nodes": 4, "n": 6400000, "timeout_s": 100},
+    {"study": "weak", "program": "hybrid", "ranks": 32, "threads": 8, "nodes": 4, "n": 6400000, "timeout_s": 110},
     {"study": "weak", "program": "hybrid", "ranks": 256, "threads": 1, "nodes": 4, "n": 12800000, "timeout_s": 270},
-    {"study": "weak", "program": "hybrid", "ranks": 32, "threads": 8, "nodes": 4, "n": 12800000, "timeout_s": 220}
+    {"study": "weak", "program": "hybrid", "ranks": 32, "threads": 8, "nodes": 4, "n": 12800000, "timeout_s": 240}
   ]
 }

@@ -1,8 +1,7 @@
 #!/bin/bash
 # Formal single-node measurements from a FROZEN manifest (default
-# manifests/studies_single_node.json, which is still proposed, so this job
-# refuses to run until the manifest is frozen after the pilot). The walltime
-# is provisional: set it from pilot timings and recheck with scripts/plan_budget.py.
+# manifests/studies_single_node.json, frozen after pilots 1523275 and 1522998).
+# The walltime covers the worst case of scripts/plan_budget.py.
 # Submit only after approval, through jobs/vanda/submit.sh.
 #
 #PBS -N p3_bench1

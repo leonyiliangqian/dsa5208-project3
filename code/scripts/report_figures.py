@@ -25,7 +25,12 @@ Axes for time, problem size and core count are logarithmic (Lecture 12).
   fig_comm_fraction.tex                              exchange time / wall time, strong and weak
   tab_accuracy_cost.tex                              studies "accuracy" (validate) and "theta"
   fig_gpu_runtime.tex, tab_gpu.tex                   study "gpu_timing" (device and cpu on the same workloads)
+  tab_leaf.tex                                       study "leaf" (+ the leaf size 8 row of the same configuration)
+  tab_repetitions.tex                                strong runs at their largest N, each repetition against
+                                                     serial and hybrid 1x1 of the same repetition
   tab_failed_runs.tex                                every failed, timed-out or skipped run
+Runtime figures draw the min-max range of the repetitions as error bars. --context adds the
+same sentence (job, node, limits) to every caption.
 """
 import argparse
 import itertools
@@ -59,13 +64,13 @@ def load(paths):
 
 
 class Writer:
-    def __init__(self, out, inputs, local):
-        self.out, self.inputs, self.local = out, inputs, local
+    def __init__(self, out, inputs, local, context=""):
+        self.out, self.inputs, self.local, self.context = out, inputs, local, context
         self.written = []
 
     def caption(self, text):
         banner = "\\textbf{LOCAL PIPELINE TEST, NOT A MEASUREMENT.} " if self.local else ""
-        return banner + text
+        return banner + text + (" " + self.context if self.context else "")
 
     def write(self, name, body):
         stamp = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -73,6 +78,14 @@ class Writer:
                 f"% Inputs: {', '.join(self.inputs)}\n")
         (self.out / name).write_text(head + body)
         self.written.append(name)
+
+
+def spread(r, x):
+    """Point with the min-max range of the repetitions."""
+    return (x, r["wall_median_s"], r["wall_min_s"], r["wall_max_s"])
+
+
+BARS = " Bars: fastest to slowest repetition."
 
 
 def label(r):
@@ -93,8 +106,12 @@ def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=Fal
              + axis_opts
              + f"legend pos={legend}, legend cell align=left, grid=major, grid style={{gray!25}}]"]
     for (name, pts), mark in zip(series, itertools.cycle(MARKS)):
-        coords = " ".join(f"({x:g},{y:.4g})" for x, y in pts)
-        lines.append(f"\\addplot+[mark={mark}, thick] coordinates {{{coords}}};")
+        # A point (x, y, lo, hi) draws lo..hi as an error bar.
+        bars = any(len(p) == 4 for p in pts)
+        coords = " ".join(f"({p[0]:g},{p[1]:.4g})" + (f" += (0,{p[3] - p[1]:.4g}) -= (0,{p[1] - p[2]:.4g})"
+                                                       if len(p) == 4 else "") for p in pts)
+        opts = f"mark={mark}, thick" + (", error bars/.cd, y dir=both, y explicit" if bars else "")
+        lines.append(f"\\addplot+[{opts}] coordinates {{{coords}}};")
         lines.append(f"\\addlegendentry{{{esc(name)}}}")
     if ideal:
         coords = " ".join(f"({x:g},{y:g})" for x, y in ideal)
@@ -116,7 +133,7 @@ def strong(rows, w):
     for t, rs in sorted(by_t.items()):
         rs.sort(key=lambda r: r["cores"])
         name = "MPI only ($T=1$)" if t == 1 else f"$T={t}$ threads per rank"
-        series_t.append((name, [(r["cores"], r["wall_median_s"]) for r in rs]))
+        series_t.append((name, [spread(r, r["cores"]) for r in rs]))
         series_s.append((name, [(r["cores"], r["speedup_vs_serial"]) for r in rs]))
         series_e.append((name, [(r["cores"], r["efficiency"]) for r in rs]))
     pmax = max(r["cores"] for r in pts)
@@ -124,7 +141,7 @@ def strong(rows, w):
     base = (f"$N={','.join(map(str, n))}$, median of repetitions; serial Barnes--Hut baseline on the same "
             "CPU model and build.")
     w.write("fig_strong_runtime.tex", fig_xy(
-        series_t, "allocated cores $P$", "timed-region wall time (s)", w.caption("Strong-scaling runtime. " + base),
+        series_t, "allocated cores $P$", "timed-region wall time (s)", w.caption("Strong-scaling runtime. " + base + BARS),
         "fig:strong-runtime", logy=True, legend="north east"))
     w.write("fig_strong_speedup.tex", fig_xy(
         series_s, "allocated cores $P$", "speedup $S(P)$", w.caption("Strong-scaling speedup. " + base),
@@ -182,6 +199,10 @@ def schedule(rows, w):
               and x["n"] == r["n"] for x in rows))]
     if not any(has_study(r, "schedule") for r in rs):
         return
+    sched = [x for x in rows if has_study(x, "schedule")]
+    rs = [r for r in rs if has_study(r, "schedule") or any(
+        (x["ranks"], x["threads"], x["n"], x["theta"], x["leaf_size"])
+        == (r["ranks"], r["threads"], r["n"], r["theta"], r["leaf_size"]) for x in sched)]
     rs = sorted({id(r): r for r in rs}.values(), key=lambda r: (r["cores"], r["ranks"], r["schedule"], r["chunk"]))
     body = [[label(r), esc(r["schedule"]), str(r["chunk"]), fmt_wall(r),
              f"{r['traverse_imbalance']:.3f}" if "traverse_imbalance" in r else "--"] for r in rs]
@@ -205,11 +226,11 @@ def serial_n(rows, w):
     slope = sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sum((x - mx) ** 2 for x in xs)
     r0 = rs[0]
     w.write("fig_serial_n.tex", fig_xy(
-        [("serial Barnes--Hut", [(r["n"], r["wall_median_s"]) for r in rs])],
+        [("serial Barnes--Hut", [spread(r, r["n"]) for r in rs])],
         "particles $N$", "timed-region wall time (s)",
         w.caption(f"Serial runtime against problem size, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, "
                   f"{r0['steps']} timed steps, median of repetitions. Least-squares slope on the log--log axes: "
-                  f"{slope:.3f}."), "fig:serial-n", logy=True))
+                  f"{slope:.3f}." + BARS), "fig:serial-n", logy=True))
 
 
 def weak(rows, w):
@@ -224,7 +245,7 @@ def weak(rows, w):
     runtime, eff, ends, notes = [], [], set(), []
     for t, rs in sorted(by_t.items()):
         p0 = rs[0]
-        runtime.append((name(t), [(r["cores"], r["wall_median_s"]) for r in rs]))
+        runtime.append((name(t), [spread(r, r["cores"]) for r in rs]))
         eff.append((name(t), [(r["cores"], p0["wall_median_s"] / r["wall_median_s"]) for r in rs]))
         ends |= {p0["cores"], rs[-1]["cores"]}
         per_core = sorted({r["n"] // r["cores"] for r in rs})
@@ -232,7 +253,7 @@ def weak(rows, w):
     base = "; ".join(notes) + ". Constant particles per core is not constant work per core."
     w.write("fig_weak_runtime.tex", fig_xy(
         runtime, "allocated cores $P$", "timed-region wall time (s)",
-        w.caption("Weak-scaling runtime. " + base), "fig:weak-runtime", logy=True))
+        w.caption("Weak-scaling runtime. " + base + BARS), "fig:weak-runtime", logy=True))
     w.write("fig_weak_efficiency.tex", fig_xy(
         eff, "allocated cores $P$", "$T(P_0,N_0)/T(P,N)$", w.caption("Weak-scaling efficiency. " + base),
         "fig:weak", ideal=[(min(ends), 1), (max(ends), 1)], legend="south west"))
@@ -283,6 +304,14 @@ def accuracy(rows, inputs, w):
                     acc[float(m.group(2))] = (int(m.group(1)), m.group(3), m.group(4))
     cost = {r["theta"]: r for r in rows if r["program"] == "bh_hybrid"
             and (has_study(r, "theta") or has_study(r, "theta_cost"))}
+    if cost:
+        # The default theta is measured by another study at the same configuration.
+        c0 = next(iter(cost.values()))
+        for r in rows:
+            if (r["program"] == "bh_hybrid" and r["theta"] not in cost and r["schedule"] == c0["schedule"]
+                    and (r["ranks"], r["threads"], r["n"], r["leaf_size"], r["chunk"])
+                    == (c0["ranks"], c0["threads"], c0["n"], c0["leaf_size"], c0["chunk"])):
+                cost[r["theta"]] = r
     if not acc and not cost:
         return
     thetas = sorted(set(acc) | set(cost))
@@ -297,6 +326,68 @@ def accuracy(rows, inputs, w):
                     "summation (max and mean relative error at the stated $N$), and hybrid timed-region wall "
                     "time, median [min, max] in seconds."),
           "tab:accuracy-cost", ["$\\theta$", "$N$ (error)", "max rel.", "mean rel.", "config", "wall (s)"], body)
+
+
+def leaf(rows, w):
+    lf = [r for r in rows if has_study(r, "leaf")]
+    if not lf:
+        return
+    keys = {(r["program"], r["ranks"], r["threads"], r["n"], r["theta"], r["schedule"], r["chunk"]) for r in lf}
+    rs = [r for r in rows if (r["program"], r["ranks"], r["threads"], r["n"], r["theta"], r["schedule"], r["chunk"]) in keys
+          and (has_study(r, "leaf") or r["leaf_size"] == 8)]
+    rs = sorted({id(r): r for r in rs}.values(), key=lambda r: (r["program"], r["cores"], r["leaf_size"]))
+    ref = {(r["program"], r["ranks"], r["threads"]): r["wall_median_s"] for r in rs if r["leaf_size"] == 8}
+    body = [[esc(r["program"]), label(r), fmt_n(r["n"]), str(r["leaf_size"]), fmt_wall(r),
+             f"{r['wall_median_s'] / ref[(r['program'], r['ranks'], r['threads'])]:.2f}"
+             if (r["program"], r["ranks"], r["threads"]) in ref else "--"] for r in rs]
+    table("tab_leaf.tex", w,
+          w.caption("Leaf size: timed-region wall time, median [min, max] in seconds, and median relative to leaf "
+                    "size 8 in the same configuration."),
+          "tab:leaf", ["program", "ranks$\\times$threads", "$N$", "leaf", "wall (s)", "vs leaf 8"], body)
+
+
+def repetitions(rows, inputs, w):
+    """Each strong-scaling repetition against the serial and hybrid 1x1 runs of the same repetition.
+    Repetitions are interleaved, so runs of one repetition ran close together in time."""
+    strong_rows = [r for r in rows if has_study(r, "strong") or has_study(r, "ranks_threads")]
+    if not strong_rows:
+        return
+    n = max(r["n"] for r in strong_rows)
+    walls = {}
+    for d in inputs:
+        for f in Path(d).glob("raw/*.json"):
+            rec = json.loads(f.read_text())
+            res = rec.get("result") or {}
+            study = rec.get("tags", {}).get("study")
+            if rec.get("ok") and res.get("n") == n and study in ("strong", "ranks_threads") \
+                    and res.get("theta") == 0.5 and res.get("leaf_size") == 8:
+                key = ("serial", 1, 1) if res["program"] == "bh_serial" else ("hybrid", res["ranks"], res["threads"])
+                if key[0] == "hybrid" and res.get("schedule_effective") != "dynamic":
+                    continue
+                walls.setdefault(key, {})[rec["rep"]] = res["wall_s"]
+    s, one = walls.get(("serial", 1, 1)), walls.get(("hybrid", 1, 1))
+    if not s:
+        return
+    reps = sorted(s)
+
+    def rng(vals):
+        return f"{min(vals):.2f}--{max(vals):.2f}" if vals else "--"
+
+    body = []
+    for key in sorted(walls, key=lambda k: (k[1] * k[2], k[0] != "serial", -k[1])):
+        p = key[1] * key[2]
+        times = walls[key]
+        e_s = [s[i] / times[i] / p for i in reps if i in times]
+        e_1 = [one[i] / times[i] / p for i in reps if one and i in times and i in one]
+        body.append([("serial" if key[0] == "serial" else f"{key[1]}$\\times${key[2]}"), str(p),
+                     ", ".join(f"{times[i]:.2f}" if i in times else "--" for i in reps),
+                     rng(e_s) if key[0] != "serial" else "--", rng(e_1) if key[0] != "serial" and key != ("hybrid", 1, 1) else "--"])
+    table("tab_repetitions.tex", w,
+          w.caption(f"Every repetition of the strong-scaling runs at $N={fmt_n(n).strip('$')}$, with the efficiency of each "
+                    "repetition against the serial and the hybrid $1\\times1$ runs of the same repetition: "
+                    "the range shows how much the baseline alone moves the result. Efficiency above 1 means the "
+                    "core-time fell below the baseline's."),
+          "tab:repetitions", ["run", "$P$", "wall per repetition (s)", "$E$ vs serial", "$E$ vs $1\\times1$"], body)
 
 
 def fmt_n(n):
@@ -362,6 +453,7 @@ def main():
     ap.add_argument("summaries", nargs="+")
     ap.add_argument("--out", default=str(REPORT_GEN))
     ap.add_argument("--allow-local", action="store_true")
+    ap.add_argument("--context", default="", help="sentence added to every caption, e.g. the job and its limits")
     a = ap.parse_args()
     rows, failed, inputs = load(a.summaries)
     out = Path(a.out).resolve()
@@ -372,7 +464,7 @@ def main():
         if out == REPORT_GEN.resolve():
             sys.exit("refusing to write local/simulated results into report/generated/")
     out.mkdir(parents=True, exist_ok=True)
-    w = Writer(out, inputs, bool(non_cluster))
+    w = Writer(out, inputs, bool(non_cluster), a.context)
     serial_n(rows, w)
     strong(rows, w)
     ranks_threads(rows, w)
@@ -381,6 +473,8 @@ def main():
     phases(rows, w)
     comm_fraction(rows, w)
     accuracy(rows, inputs, w)
+    leaf(rows, w)
+    repetitions(rows, inputs, w)
     gpu_timing(rows, w)
     failed_runs(failed, w)
     print(f"wrote {len(w.written)} fragments to {out}: {', '.join(w.written)}"

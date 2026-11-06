@@ -21,23 +21,30 @@ import sys
 
 from run_manifest import GRACE_S, expand
 
-# All from pilot 1523275 (one repetition, 16 cores of a possibly shared Gold 6438N node), so
-# provisional: nothing here has been measured at 64 ranks per node or across nodes.
-# Serial traverse, core-microseconds per particle per force evaluation at N = 1e6.
+# From pilots 1523275 (16 cores of a shared Gold 6438N node) and 1522998 (a whole 64-core node),
+# one repetition each, and bench16 1523703 (three repetitions, shared node). Nothing here has been
+# measured across nodes.
+# Serial traverse, core-microseconds per particle per force evaluation at N = 1e6: 19.3 on the
+# whole node, 31 to 44 on the shared one. 31 is kept; limits are at least twice the estimate.
 KERNEL_US = 31.0
 # Growth with N: 17, 23, 31 and 39 us at 1e5, 3e5, 1e6 and 2e6. Beyond 2e6 is extrapolation.
 KERNEL_N_EXPONENT = 0.33
-# Extra kernel cost with more ranks on a node: 1.30 at 4 x 4 and 1.58 at 16 x 1, none from threads
-# (1 x 16 was below serial). The cause is untested and 64 or 256 ranks are extrapolated.
+# Extra kernel core-time against serial on the whole node: 2.08 at 64 x 1, 1.71 at 8 x 8, and 1.59
+# at 1 x 64, so threads cost too at 64. These factors give 1.90, 1.89 and 1.60. Causes untested;
+# more than 64 ranks is extrapolated.
 RANK_KERNEL_PER_DOUBLING = 0.15
+THREAD_KERNEL_PER_DOUBLING = 0.10
 # Smaller theta opens more cells: 3.7 times the traverse time from 0.5 to 0.3, theta^-2.6. Other
 # leaf sizes took 1.17 to 1.37 times leaf size 8; 1.5 covers them.
 THETA_REF, THETA_EXPONENT, OTHER_LEAF_FACTOR = 0.5, 2.6, 1.5
 # Tree build per rank, microseconds per particle per evaluation at N = 1e6: slowest of the pilot (16 x 1).
 BUILD_US = 0.28
-# Allgatherv: 24 bytes per particle into every rank of a node. The pilot gave 5.4 GB/s at 4 ranks and
-# 8.8 at 16, on one node and including waiting; the lower is used, and between nodes is not measured.
+# Allgatherv: 24 bytes per particle into every rank of a node, at 5 GB/s, the lowest seen on one node.
+# A measured exchange includes waiting for the slowest rank: 0.076 s per step at 8 x 8 and N = 1e6,
+# above the byte estimate, so each exchange takes at least EXCHANGE_FLOOR_S per million particles.
+# Between nodes is not measured.
 NODE_BYTES_PER_S = 5e9
+EXCHANGE_FLOOR_S = 0.08
 # Setup, microseconds per particle: serial setup less its two force evaluations.
 SETUP_US = 2.2
 # A run does the initial evaluation, one per warmup step and one per timed step.
@@ -70,8 +77,9 @@ def estimate_s(p):
     if p["program"] == "serial":
         return SETUP_US * 1e-6 * n + evaluations * (kernel + build)
     per_node = p["ranks"] / p.get("nodes", 1)
-    exchange = 24 * n * per_node / NODE_BYTES_PER_S if p["ranks"] > 1 else 0.0
+    exchange = max(24 * n * per_node / NODE_BYTES_PER_S, EXCHANGE_FLOOR_S * n / 1e6) if p["ranks"] > 1 else 0.0
     kernel *= 1 + RANK_KERNEL_PER_DOUBLING * math.log2(p["ranks"])
+    kernel *= 1 + THREAD_KERNEL_PER_DOUBLING * math.log2(p["threads"])
     return SETUP_US * 1e-6 * n + evaluations * (kernel / (p["ranks"] * p["threads"]) + build + exchange)
 
 
