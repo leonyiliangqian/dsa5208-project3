@@ -1,0 +1,56 @@
+pilot2 submission on Vanda, 6 Nov 2026, approved by Leon for exactly one job. Checks and submission ran in one session; qsub runs only if every check passes.
+Nothing measured yet. Pilot evidence when it runs: sizing only, not formal results.
+
+== checks and submission
+Fri Nov  6 06:37:38 PM +08 2026
+stdct-login-01
+== source
+commit 367c63046583a2d7f26a0ddc1109bd07d99b2fad
+tree f0ba7fae95dc917837ac7f0370736313189ad985
+manifest 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+status lines 0
+== resources
+#PBS -N p3_pilot2
+#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+== scheduler
+    server_state = Scheduling
+    scheduling = True
+== queue auto_free
+    resources_default.queue_charge_rate = 0
+    enabled = True
+    started = True
+== queue cpu_parallel
+    resources_default.queue_charge_rate = 0
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== my jobs
+running CPUs now: 0; after pilot2 starts: 128
+== duplicates p3_pilot2
+current: [] history: []
+== all checks passed; submitting once
+Fri Nov  6 06:37:41 PM +08 2026
+command: qsub -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+1526470.stdct-mgmt-02
+submit_rc=0
+Fri Nov  6 06:37:48 PM +08 2026
+
+== first status, one read-only query
+Fri Nov  6 06:37:55 PM +08 2026
+    Job_Name = p3_pilot2
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Fri Nov  6 18:37:48 2026
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    project = personal-leonyil.qian
+SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad
+== p3_pilot2 history
+1526470.stdct-mgmt-02
+== my jobs
+1526470.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 

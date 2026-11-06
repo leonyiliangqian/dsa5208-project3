@@ -1,6 +1,6 @@
 # Approval requests
 
-**No approval is open.** Two free jobs are ready to request below, `pilot2` first. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** `pilot2` is submitted (`1526470`); `bench1` is prepared and waits for its own approval. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Readiness review, 6 November 2026
 
@@ -40,7 +40,11 @@ So **`bench1` needs a new clone at `0647895`**. `pilot2` is unchanged: its job s
 
 **Required for `bench4` (Leon, 6 Nov):** its binding and correctness gates (`place_mpi`, `internode`, `serial`, `bound_vs_serial` on all 256 cores) are mandatory before a formal run. They must not be left out to reduce cost; the budget includes their time. To be done when `bench4` is frozen after `pilot4`, not now.
 
-## Ready to request: `pilot2`, free 128-core rehearsal on two nodes
+## Consumed, 6 November 2026: `pilot2`
+
+**Approved by Leon and submitted once on 6 Nov at 18:37:48 SGT as job `1526470`. This approval is used up.** Every check passed first, and none
+failed: commit, tree, clean clone, manifest hash, resources, scheduling, queues enabled and started at rate 0, no `p3_pilot2` before, 0 running CPUs
+(128 with this job). Queued in `cpu_parallel` at 18:37:55. A failure is not retried. Record: `code/artifacts/cluster/discovery/vanda_pilot2_submit_367c630_20261106T1837.txt`. The request as reviewed:
 
 | | |
 |---|---|
@@ -62,7 +66,7 @@ cd ~/dsa5208-p3-367c630/code
 bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
 ```
 
-## Ready to request after `pilot2`: `bench1`, formal free studies on one whole 64-core node
+## Ready to request: `bench1`, formal free studies on one whole 64-core node
 
 | | |
 |---|---|

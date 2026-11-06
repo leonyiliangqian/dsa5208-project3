@@ -26,7 +26,7 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | 9 min, measured | **Passed as `1522998`**, whole node IN-016. Sizing only: see "64-core pilot results" |
 | 0c | `pilot16` `1523275` | 1 x 16 cores, 16 GB, 60 min | `auto_free`, 0 | 16 | 15 min, measured | **Passed.** Provisional sizing only: see "Pilot16 results" |
 | 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | **Passed as `1523703`**, 121 of 121 runs: formal 16-core data. Does not supply 256 cores |
-| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | **Ready to request.** Needs two whole free nodes; 128 + 64 cores with `bench1` is over the 160 limit, so one waits |
+| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | **Submitted once as `1526470`, 6 Nov 18:37 SGT; queued** |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 50 min | `auto`, 1 | **725** | 56 min, 240 core-hours | Step B passed, manifest resized and frozen, charge approval |
 | D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 100 min, 106 core-hours | **Plan frozen, ready to request.** | Step 0, manifest resized and frozen |

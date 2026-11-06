@@ -715,3 +715,9 @@ Clone `~/dsa5208-p3-0647895` of commit `0647895`: commit, tree `0c20858`, frozen
 and its hash matched. `git clone` took about 10 minutes on the 99%-full NFS home; it outlived its time bound and was waited for once. No job was queued. Record:
 `artifacts/cluster/discovery/vanda_bench1_dryrun_0647895_20261106T1832.txt`.
 
+### `pilot2` submitted, job 1526470, 6 Nov (Vanda)
+
+Leon approved one job. All checks passed in one session, and `qsub` ran once at 18:37:48 SGT from `~/dsa5208-p3-367c630/code`. The checks: commit `367c630`, tree `f0ba7fa`, clean clone,
+manifest hash, 2 x 64 cores, 120 GB, scatter, 30 min, scheduling on, queues enabled and started at rate 0, no `p3_pilot2` before, 0 running CPUs. The job was queued at 18:37:55 in
+`cpu_parallel`, rate 0; PBS shows `project = personal-leonyil.qian`. Nothing measured yet. Record: `artifacts/cluster/discovery/vanda_pilot2_submit_367c630_20261106T1837.txt`.
+
