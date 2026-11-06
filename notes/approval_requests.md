@@ -1,60 +1,92 @@
 # Approval requests
 
-**No approval is open.** Two free jobs are ready to request below. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** Two free jobs are ready to request below, `pilot2` first. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+
+## Readiness review, 6 November 2026
+
+Reviewed without submitting anything. Order: **`pilot2` first, then `bench1`.** They cannot run together (128 + 64 cores is over the
+free queue's 160 CPUs per user), and `pilot2` is the gate for anything charged.
+
+**What `pilot2` checks before any timing.** Every gate is critical, and a failure stops the job:
+
+| Gate | Establishes |
+|---|---|
+| `allocation` | 2 distinct hosts, each with a cpuset of exactly 64 CPUs and one CPU model; the launch is `pbs_tmrsh` (`plm rsh`, not `tm`); the remote daemon runs under `pbs_mom` with the PBS job ID, so its processes belong to this job |
+| `placement` | 8 ranks x 8 threads per node: each thread bound to one CPU, all 64 distinct on each host |
+| `place_mpi` | **64 ranks per node, 128 in all**, each bound to one distinct CPU on each host: the first 64-per-node launch across nodes |
+| `internode` | Point-to-point and `Allgatherv` across all 128 ranks on both hosts |
+| `serial` | Serial gate on the node |
+| `bound_vs_serial` | Bound runs on all 128 cores against serial: 128 x 1 and 16 x 8 for 10 steps, 32 x 4 with guided, one-step forces, theta = 0, ranks that own nothing. First cross-node comparison with bound ranks |
+| after every gate | Leftover processes of this job are stopped and checked on both nodes. Processes of unknown ownership are reported, never killed |
+
+**What its six timed cases give: sizing, not results.** One repetition each, not frozen, so not formal scaling:
+
+| Case | Use |
+|---|---|
+| 128 x 1 and 16 x 8 across 2 nodes, N = 10^6 | First time and exchange share across the network; speedup against the in-job serial, sizing only |
+| 64 x 1 on one node, N = 10^6 | Same job, so it separates the network's cost from the second node |
+| Serial, N = 10^6 | Baseline in the same job |
+| 128 x 1 and 16 x 8 at N = 6.4 x 10^6 | Memory at 64 ranks per node (estimated 73 of 120 GB) and time at the weak size, for `pilot4` |
+
+It cannot show 256 cores, more than 2 nodes, the charged pool, or the variance three repetitions would give.
+
+**Budgets.** `pilot2`: worst case 730 s within 1040 s. The six runs still fit if the gates take up to about 600 s; `bench16`'s full gates took 76 s on 16 cores.
+If they ran longer, the last runs (the weak sizes) would be skipped and recorded, not run past the walltime. `bench1`: worst case 16140 s within 17358 s, and
+still fits with 900 s of gates. Largest node memory: 73 GB for `pilot2` and 37 GB for `bench1`, against 120 GB.
+
+**Defect fixed:** `bench1` would have measured 64 cores without the 64 x 1 placement probe or a bound comparison with serial on 64 cores, and no job has run
+either. Commit `0647895` adds them (`SCALE_CHECKS=1`). Locally simulated in Docker: 9 of 9 gates, 36 of 36 runs (`code/artifacts/local/runs/simulated-bench1-20261106/`).
+So **`bench1` needs a new clone at `0647895`**. `pilot2` is unchanged: its job script, plan, `measure.sh` and `gates.sh` are identical, so the prepared clone stays valid.
+
+**Open for `bench4`:** it has the same gap. Adding the gates there costs a few minutes of 256 charged cores, so decide when it is frozen after `pilot4`.
 
 ## Ready to request: `pilot2`, free 128-core rehearsal on two nodes
 
-**Why:** it is the only free test of launch, binding and correctness across nodes at 64 ranks per node before anything is charged. `pilot4` and `bench4`
-should not be approved until it passes. It gives sizing only, not results, and cannot show 256 cores.
-
 | | |
 |---|---|
-| Source | `367c63046583a2d7f26a0ddc1109bd07d99b2fad`, tree `f0ba7fae95dc917837ac7f0370736313189ad985`, clone `~/dsa5208-p3-367c630`, prepared and clean |
+| Source | `367c63046583a2d7f26a0ddc1109bd07d99b2fad`, tree `f0ba7fae95dc917837ac7f0370736313189ad985`, clone `~/dsa5208-p3-367c630`, prepared and dry-run on 6 Nov |
 | Manifest | `pilot_two_node.json`, status `proposed` (allowed for a pilot), SHA-256 `27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74`, 6 runs |
-| Request | `select=2:ncpus=64:mpiprocs=64:mem=120gb`, `place=scatter`, 30 min, 64 core-hours at most; about 9 min expected. Worst case 730 s fits the 1040 s budget |
-| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck. PBS has shown `project = personal-leonyil.qian` on free jobs, and the balance is unread |
-| Gates | `allocation`, `build`, `placement`, `place_mpi`, `internode`, `serial`, `bound_vs_serial`, `runs`, `analyze` |
-| With `bench1` | 128 + 64 cores is over the 160-CPU limit, so PBS runs them one after the other if both are approved |
-| Wait | Needs two whole free nodes, which may take hours |
+| Request | `select=2:ncpus=64:mpiprocs=64:mem=120gb`, `place=scatter`, 30 min, 64 core-hours at most; about 9 min expected |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck. PBS has shown `project = personal-leonyil.qian` on free jobs; the balance is unread |
+| Wait | Needs two free 64-core nodes of one CPU model at once, which may take hours |
 
-> Leon explicitly approves exactly ONE pilot2 submission: source `367c63046583a2d7f26a0ddc1109bd07d99b2fad` in ~/dsa5208-p3-367c630, manifest pilot_two_node.json SHA256 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74,
-> 2 nodes x 64 cores, 120 GB each, scatter, 30 min, auto_free, no -P, ZERO CHARGE ONLY. Before submitting, use hard-bounded existing-auth checks to verify
-> commit, tree, manifest and resources, scheduling and queues enabled and started with rate 0, and no duplicate p3_pilot2 in current jobs or history. If all
-> pass, submit the command below exactly once and record the job ID. No retries, other jobs, spending, credential or security changes, monitoring loops,
-> lecturer contact or final submission.
+> Leon explicitly approves exactly ONE pilot2 submission: source 367c63046583a2d7f26a0ddc1109bd07d99b2fad in the existing clone ~/dsa5208-p3-367c630, manifest pilot_two_node.json
+> SHA256 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74, 2 nodes x 64 cores, 120 GB per node, place=scatter, 30 min, auto_free, no -P, rate 0, ZERO CHARGE ONLY. Before submitting, use
+> hard-bounded existing-auth checks to verify commit, tree, clean clone, manifest and resources; scheduling on; auto_free and cpu_parallel enabled and
+> started at rate 0; no duplicate p3_pilot2 in current jobs or history; and that no other job of mine would push running CPUs over 160. If all pass,
+> submit the command below exactly once and record the job ID. No retries, cancellations, other jobs, spending, credential or security changes,
+> monitoring loops, lecturer contact or final submission.
 
 ```sh
 cd ~/dsa5208-p3-367c630/code
 bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
 ```
 
-## Ready to request: `bench1`, formal free studies on one whole 64-core node
-
-**Why:** a whole node gives the serial, single-node strong and weak, ranks x threads, schedule, leaf and theta studies to 64 cores without the sharing
-that widened `bench16`'s ranges. It does not supply 256 cores.
+## Ready to request after `pilot2`: `bench1`, formal free studies on one whole 64-core node
 
 | | |
 |---|---|
-| Source | `367c63046583a2d7f26a0ddc1109bd07d99b2fad`, tree `f0ba7fae95dc917837ac7f0370736313189ad985`, clone `~/dsa5208-p3-367c630`, prepared and clean |
-| Manifest | `studies_single_node.json`, status `frozen`, SHA-256 `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b`, 148 runs |
-| Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 5 h, 320 core-hours at most; about 100 min expected. Worst case 16140 s fits the 17358 s budget |
+| Source | `0647895d840a8ecae01b3fb60d6e5d2dcc1d315a`, tree `0c20858164e2ee79a254bdb730fe0de0a95693f3`, **new clone `~/dsa5208-p3-0647895`**, to be prepared under the approval |
+| Manifest | `studies_single_node.json`, status `frozen`, SHA-256 `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b` (unchanged), 148 runs |
+| Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 5 h, 320 core-hours at most; about 100 min expected |
 | Queue, charge | `auto_free`, no `-P`, rate 0 to recheck |
-| Wait | Needs a whole free node: `1522998` waited about 4 h for one |
+| Gates | `allocation`, `build`, `placement` (8 x 8), `place_mpi` (64 x 1), `internode`, `serial`, `bound_vs_serial` (64 cores), `runs`, `analyze` |
 
-> Leon explicitly approves exactly ONE bench1 submission: source `367c63046583a2d7f26a0ddc1109bd07d99b2fad` in ~/dsa5208-p3-367c630, manifest studies_single_node.json SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b,
-> 1 node x 64 cores, 120 GB, 5 h, auto_free, no -P, ZERO CHARGE ONLY. Same checks as for pilot2, with no duplicate p3_bench1; then submit once and record
-> the job ID. No retries, other jobs, spending, credential or security changes, monitoring loops, lecturer contact or final submission.
+> Leon explicitly approves exactly ONE bench1 submission: source 0647895d840a8ecae01b3fb60d6e5d2dcc1d315a in a new clone ~/dsa5208-p3-0647895, manifest studies_single_node.json
+> SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b, 1 node x 64 cores, 120 GB, 5 h, auto_free, no -P, rate 0, ZERO CHARGE ONLY. Prepare the clone from an exact-source bundle,
+> leaving existing clones and evidence untouched; verify commit, tree, clean clone, manifest and resources; run the dry run without --yes; recheck
+> scheduling, queues enabled and started at rate 0, no duplicate p3_bench1 in current jobs or history, and that running CPUs would stay within 160.
+> If all pass, submit the command below exactly once and record the job ID. No retries, cancellations, other jobs, spending, credential or security
+> changes, monitoring loops, lecturer contact or final submission.
 
 ```sh
-cd ~/dsa5208-p3-367c630/code
+cd ~/dsa5208-p3-0647895/code
 bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
 ```
 
-Dry runs of both printed these and submitted nothing: `code/artifacts/cluster/discovery/vanda_dryrun_367c630_20261106T1723.txt`. Each runs `qsub -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artifacts/cluster/logs/ jobs/vanda/<job>.pbs`.
-
 ## Conditional: `pilot4` and `bench4`, charged, not ready
 
-Both need `pilot2` to pass, **Leon's `amgr login`, the project ID, the balance, and charge approval**. `bench4` also needs its plan frozen from `pilot4`'s
+Both need `pilot2` to pass, then **Leon's `amgr login`, the project ID, the balance, and charge approval**. `bench4` also needs its plan frozen from `pilot4`'s
 result, which changes its hash. Neither has a Vanda dry run, because `submit.sh` needs the real project ID for a correct one.
 
 | Job | Request | Most it could charge, at 1 per core-hour (assumed) | Expected use | Manifest SHA-256 at `367c630` |

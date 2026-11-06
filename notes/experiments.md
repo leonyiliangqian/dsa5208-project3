@@ -701,3 +701,10 @@ Then: budget constants refit (threads now cost at 64, exchange has a floor); eve
 `pilot2`, `pilot4`, `bench4` resized and still proposed; `bench4` needs 2 h 50 min, 725 core-hours. Clean clone `~/dsa5208-p3-367c630` of commit `367c630`, tree verified,
 `pilot2` and `bench1` dry runs printed their commands and submitted nothing. Record: `artifacts/cluster/discovery/vanda_dryrun_367c630_20261106T1723.txt`. Report Results rewritten for the 16-core data; 256 cores still pending.
 
+### Readiness review of `pilot2` and `bench1`, 6 Nov (local; nothing submitted)
+
+`bench1` lacked `SCALE_CHECKS`, so it would have timed 64 cores with no 64 x 1 placement probe and no bound comparison with serial on 64 cores. Fixed in `0647895`.
+Docker simulation of the wrapper, never results: 9 of 9 gates, 36 of 36 runs (`artifacts/local/runs/simulated-bench1-20261106/`). `pilot2` is unchanged since
+`367c630`. Its budget holds with up to about 600 s of gates. `bench4` has the same gap, left for when it is frozen. Source package rebuilt at `0647895` and tested extracted.
+Review and requests: `notes/approval_requests.md`.
+

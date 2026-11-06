@@ -47,7 +47,12 @@ only from the committed tree, so private connection files on a machine cannot en
 `report_tables.py` reads `artifacts/local/`, and `report_figures.py` writes to the report by default. Both are included for
 transparency, and the run README's `--allow-local --out` form works alone.
 
-## Verified, 5 November, at `e86bf5d`, rechecked at the final commit by `package_test`
+## Verified, 6 November, at `0647895`
+
+The package was rebuilt after the figure and report scripts changed. It has 80 files and includes the reviewed `report_figures.py`. It has no logs, terminal output, run records,
+job cookies, binaries, personal paths, `redact_evidence.py` or package tools. Extracted alone in Docker, it passed each command below again. `make check` also passes on macOS.
+
+## Verified, 5 November, at `e86bf5d`
 
 - `package_test` passes: 29 checks with three refusal controls; 80 files.
 - Extracted alone, outside the repository, in Docker: `make all hybrid gpu`, `make check`, `make check-hybrid`, `make check-gpu`, each

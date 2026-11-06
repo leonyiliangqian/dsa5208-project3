@@ -1,0 +1,47 @@
+[node1:00099] mca: base: components_register: registering framework plm components
+[node1:00099] mca: base: components_register: found loaded component slurm
+[node1:00099] mca: base: components_register: component slurm register function successful
+[node1:00099] mca: base: components_register: found loaded component isolated
+[node1:00099] mca: base: components_register: component isolated has no register or open function
+[node1:00099] mca: base: components_register: found loaded component rsh
+[node1:00099] mca: base: components_register: component rsh register function successful
+[node1:00099] mca: base: components_open: opening plm components
+[node1:00099] mca: base: components_open: found loaded component slurm
+[node1:00099] mca: base: components_open: component slurm open function successful
+[node1:00099] mca: base: components_open: found loaded component isolated
+[node1:00099] mca: base: components_open: component isolated open function successful
+[node1:00099] mca: base: components_open: found loaded component rsh
+[node1:00099] mca: base: components_open: component rsh open function successful
+[node1:00099] mca:base:select: Auto-selecting plm components
+[node1:00099] mca:base:select:(  plm) Querying component [slurm]
+[node1:00099] mca:base:select:(  plm) Querying component [isolated]
+[node1:00099] mca:base:select:(  plm) Query of component [isolated] set priority to 0
+[node1:00099] mca:base:select:(  plm) Querying component [rsh]
+[node1:00099] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[node1:00099] mca:base:select:(  plm) Selected component [rsh]
+[node1:00099] mca: base: close: component slurm closed
+[node1:00099] mca: base: close: unloading component slurm
+[node1:00099] mca: base: close: component isolated closed
+[node1:00099] mca: base: close: unloading component isolated
+[node1:00099] mca: base: components_register: registering framework ras components
+[node1:00099] mca: base: components_register: found loaded component simulator
+[node1:00099] mca: base: components_register: component simulator register function successful
+[node1:00099] mca: base: components_register: found loaded component gridengine
+[node1:00099] mca: base: components_register: component gridengine register function successful
+[node1:00099] mca: base: components_register: found loaded component slurm
+[node1:00099] mca: base: components_register: component slurm register function successful
+[node1:00099] mca: base: components_open: opening ras components
+[node1:00099] mca: base: components_open: found loaded component simulator
+[node1:00099] mca: base: components_open: found loaded component gridengine
+[node1:00099] mca: base: components_open: component gridengine open function successful
+[node1:00099] mca: base: components_open: found loaded component slurm
+[node1:00099] mca: base: components_open: component slurm open function successful
+[node1:00099] mca:base:select: Auto-selecting ras components
+[node1:00099] mca:base:select:(  ras) Querying component [simulator]
+[node1:00099] mca:base:select:(  ras) Querying component [gridengine]
+[node1:00099] mca:base:select:(  ras) Querying component [slurm]
+[node1:00099] mca:base:select:(  ras) No component selected!
+[node1:00099] Warning: could not find environment variable "LD_LIBRARY_PATH"
+[node1:00099] [[19211,0],0] complete_setup on job [19211,1]
+[node1:00099] mca: base: close: component rsh closed
+[node1:00099] mca: base: close: unloading component rsh

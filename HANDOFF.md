@@ -13,7 +13,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1523703` `bench16` | **Finished, passed:** exit 0, 9 of 9 gates, 121 of 121 runs verified | **Formal 16-core results**, now in the report. One shared node; ranges are wide |
 | `1522998` 64-core pilot | **Finished, passed:** exit 0, 5 of 5 gates, 20 of 20 runs verified, whole node | Sizing only. Answered the 64-core rules |
 | `1523275` 16-core pilot | Finished, passed | Sizing only |
-| `pilot2`, `bench1` | **Ready to request**, free, dry runs done on Vanda | Exact text in [notes/approval_requests.md](notes/approval_requests.md) |
+| `pilot2`, `bench1` | **Reviewed, ready to request**, free. `pilot2` clone prepared at `367c630`; `bench1` now at `0647895`, needs a new clone | Exact text and review in [notes/approval_requests.md](notes/approval_requests.md) |
 | `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | Up to 192 and 725 core-hours |
 
 - **In the report:** serial runtime against N, strong and weak scaling to 16 cores, ranks x threads, schedule, leaf size, theta, communication share, all from `1523703`.
@@ -26,7 +26,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 
 **Next, in order:**
 
-1. Leon decides on `pilot2` and `bench1`. Both are free; they cannot run at the same time.
+1. Leon decides on `pilot2`, then `bench1`. Both are free; they cannot run at the same time.
 2. Leon reads the balance with `amgr login` and decides on `pilot4`, then `bench4`, for 256 cores.
 3. Group items in [notes/group_review.md](notes/group_review.md), including reading the new Results text.
 

@@ -1,0 +1,13 @@
+simulated-bench1-20261106: 36 records, 0 failed, 12 configurations
+  bh_serial  n=100 1x1 P=1 -/0 reps=3 wall_med=0.0002s [0.0002,0.0003]
+  bh_serial  n=300 1x1 P=1 -/0 reps=3 wall_med=0.0019s [0.0018,0.0028]
+  bh_hybrid  n=500 1x1 P=1 dynamic/64 reps=3 wall_med=0.0050s [0.0049,0.0050]
+  bh_serial  n=1000 1x1 P=1 -/0 reps=3 wall_med=0.0178s [0.0177,0.0180]
+  bh_serial  n=3000 1x1 P=1 -/0 reps=3 wall_med=0.1013s [0.0958,0.1064]
+  bh_hybrid  n=10000 1x1 P=1 dynamic/64 reps=3 wall_med=0.5688s [0.5214,0.5734] speedup=0.92 eff=0.92
+  bh_hybrid  n=10000 2x1 P=2 dynamic/64 reps=3 wall_med=0.2759s [0.2704,0.2948] speedup=1.90 eff=0.95
+  bh_hybrid  n=10000 4x1 P=4 dynamic/64 reps=3 wall_med=0.1515s [0.1487,0.2225] speedup=3.45 eff=0.86
+  bh_hybrid  n=10000 1x8 P=8 dynamic/64 reps=3 wall_med=0.0882s [0.0874,0.0887] speedup=5.93 eff=0.74
+  bh_hybrid  n=10000 8x1 P=8 dynamic/64 reps=3 wall_med=0.1146s [0.1050,0.1304] speedup=4.56 eff=0.57
+  bh_serial  n=10000 1x1 P=1 -/0 reps=3 wall_med=0.5230s [0.5083,0.5289]
+  bh_serial  n=30000 1x1 P=1 -/0 reps=3 wall_med=2.3113s [2.2367,2.3175]
