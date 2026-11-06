@@ -13,8 +13,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1523703` `bench16` | **Finished, passed:** exit 0, 9 of 9 gates, 121 of 121 runs verified | **Formal 16-core results**, now in the report. One shared node; ranges are wide |
 | `1522998` 64-core pilot | **Finished, passed:** exit 0, 5 of 5 gates, 20 of 20 runs verified, whole node | Sizing only. Answered the 64-core rules |
 | `1523275` 16-core pilot | Finished, passed | Sizing only |
-| `pilot2`, `bench1` | **Reviewed, ready to request**, free. `pilot2` clone prepared at `367c630`; `bench1` now at `0647895`, needs a new clone | Exact text and review in [notes/approval_requests.md](notes/approval_requests.md) |
-| `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | Up to 192 and 725 core-hours |
+| `pilot2`, `bench1` | **Prepared, waiting for approval**, free. Clones `~/dsa5208-p3-367c630` (`pilot2`) and `~/dsa5208-p3-0647895` (`bench1`) verified and dry-run | Exact text in [notes/approval_requests.md](notes/approval_requests.md). `pilot2` first |
+| `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | Up to 192 and 725 core-hours. `bench4` must add its binding and correctness gates before a formal run |
 
 - **In the report:** serial runtime against N, strong and weak scaling to 16 cores, ranks x threads, schedule, leaf size, theta, communication share, all from `1523703`.
 - **Still missing:** MPI strong and weak scaling to at least 256 cores, and communication between nodes. 10 points. Needs a charged queue.

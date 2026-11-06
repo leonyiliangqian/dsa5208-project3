@@ -38,7 +38,7 @@ still fits with 900 s of gates. Largest node memory: 73 GB for `pilot2` and 37 G
 either. Commit `0647895` adds them (`SCALE_CHECKS=1`). Locally simulated in Docker: 9 of 9 gates, 36 of 36 runs (`code/artifacts/local/runs/simulated-bench1-20261106/`).
 So **`bench1` needs a new clone at `0647895`**. `pilot2` is unchanged: its job script, plan, `measure.sh` and `gates.sh` are identical, so the prepared clone stays valid.
 
-**Open for `bench4`:** it has the same gap. Adding the gates there costs a few minutes of 256 charged cores, so decide when it is frozen after `pilot4`.
+**Required for `bench4` (Leon, 6 Nov):** its binding and correctness gates (`place_mpi`, `internode`, `serial`, `bound_vs_serial` on all 256 cores) are mandatory before a formal run. They must not be left out to reduce cost; the budget includes their time. To be done when `bench4` is frozen after `pilot4`, not now.
 
 ## Ready to request: `pilot2`, free 128-core rehearsal on two nodes
 
@@ -66,18 +66,18 @@ bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
 
 | | |
 |---|---|
-| Source | `0647895d840a8ecae01b3fb60d6e5d2dcc1d315a`, tree `0c20858164e2ee79a254bdb730fe0de0a95693f3`, **new clone `~/dsa5208-p3-0647895`**, to be prepared under the approval |
+| Source | `0647895d840a8ecae01b3fb60d6e5d2dcc1d315a`, tree `0c20858164e2ee79a254bdb730fe0de0a95693f3`, clone `~/dsa5208-p3-0647895`, **prepared and dry-run on 6 Nov 18:32**: commit, tree, manifest hash, resources and a clean clone verified. Record: `code/artifacts/cluster/discovery/vanda_bench1_dryrun_0647895_20261106T1832.txt` |
 | Manifest | `studies_single_node.json`, status `frozen`, SHA-256 `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b` (unchanged), 148 runs |
 | Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 5 h, 320 core-hours at most; about 100 min expected |
 | Queue, charge | `auto_free`, no `-P`, rate 0 to recheck |
 | Gates | `allocation`, `build`, `placement` (8 x 8), `place_mpi` (64 x 1), `internode`, `serial`, `bound_vs_serial` (64 cores), `runs`, `analyze` |
 
-> Leon explicitly approves exactly ONE bench1 submission: source 0647895d840a8ecae01b3fb60d6e5d2dcc1d315a in a new clone ~/dsa5208-p3-0647895, manifest studies_single_node.json
-> SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b, 1 node x 64 cores, 120 GB, 5 h, auto_free, no -P, rate 0, ZERO CHARGE ONLY. Prepare the clone from an exact-source bundle,
-> leaving existing clones and evidence untouched; verify commit, tree, clean clone, manifest and resources; run the dry run without --yes; recheck
-> scheduling, queues enabled and started at rate 0, no duplicate p3_bench1 in current jobs or history, and that running CPUs would stay within 160.
-> If all pass, submit the command below exactly once and record the job ID. No retries, cancellations, other jobs, spending, credential or security
-> changes, monitoring loops, lecturer contact or final submission.
+> Leon explicitly approves exactly ONE bench1 submission: source 0647895d840a8ecae01b3fb60d6e5d2dcc1d315a in the existing clone ~/dsa5208-p3-0647895,
+> manifest studies_single_node.json SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b, 1 node x 64 cores, 120 GB, 5 h, auto_free,
+> no -P, rate 0, ZERO CHARGE ONLY. Before submitting, use hard-bounded existing-auth checks to verify commit, tree, clean clone, manifest and resources;
+> scheduling on; auto_free and cpu_parallel enabled and started at rate 0; no duplicate p3_bench1 in current jobs or history; and that running CPUs
+> would stay within 160. If all pass, submit the command below exactly once and record the job ID. No retries, cancellations, other jobs, spending,
+> credential or security changes, monitoring loops, lecturer contact or final submission.
 
 ```sh
 cd ~/dsa5208-p3-0647895/code

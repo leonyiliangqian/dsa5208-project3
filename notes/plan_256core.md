@@ -71,6 +71,8 @@ sockets (done), a whole node (done). **Still not shown:** more than one node at 
 | `pilot4` | 9 | 1255 of 1704 | 192 | Proposed |
 | `bench4` | 90 | 8940 of 9204 | **725**, from 704 | Proposed. 5 more minutes keep every point; dropping strong 2 x 1 instead would keep 704 |
 
+**`bench4` must also check its own allocation (Leon, 6 Nov):** it lacks `SCALE_CHECKS`, so it would not probe 64 ranks per node, the exchange or bound correctness on its own 256 cores. These gates are mandatory before a formal run, not optional to save cost. Add them and include their time in the budget when `bench4` is frozen after `pilot4`.
+
 The kernel constant stays at 31 core-microseconds: whole-node runs took 19.3 and the shared node 31 to 44. Every measured run of `1522998` and `1523703` took 0.34 to 1.83 times its estimate.
 
 ## Pilot16 results: provisional sizing, 16 cores only

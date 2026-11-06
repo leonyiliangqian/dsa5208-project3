@@ -708,3 +708,10 @@ Docker simulation of the wrapper, never results: 9 of 9 gates, 36 of 36 runs (`a
 `367c630`. Its budget holds with up to about 600 s of gates. `bench4` has the same gap, left for when it is frozen. Source package rebuilt at `0647895` and tested extracted.
 Review and requests: `notes/approval_requests.md`.
 
+### `bench1` clone prepared, 6 Nov 18:20-18:32 (Vanda; nothing submitted)
+
+Clone `~/dsa5208-p3-0647895` of commit `0647895`: commit, tree `0c20858`, frozen manifest hash, 64 cores, 120 GB and 5 h verified, and the clone is clean. The dry run printed the
+`qsub` line and submitted nothing. The login node again could not map the user ID to a name, and `scp` failed with no file written. The bundle went over the ssh session,
+and its hash matched. `git clone` took about 10 minutes on the 99%-full NFS home; it outlived its time bound and was waited for once. No job was queued. Record:
+`artifacts/cluster/discovery/vanda_bench1_dryrun_0647895_20261106T1832.txt`.
+
