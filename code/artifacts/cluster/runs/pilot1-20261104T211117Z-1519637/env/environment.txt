@@ -9,7 +9,7 @@ mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 
 NCPUS=64
 OMP_NUM_THREADS=64
 PBS_ENVIRONMENT=PBS_BATCH
-PBS_JOBCOOKIE=34487A7277CD65A33C364E8B5EFA008D
+PBS_JOBCOOKIE=[REDACTED: see artifacts/cluster/REDACTIONS.md]
 PBS_JOBDIR=/home/svu/leonyil.qian
 PBS_JOBID=1519637.stdct-mgmt-02
 PBS_JOBNAME=p3_pilot1

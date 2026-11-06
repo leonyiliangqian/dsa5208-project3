@@ -4,6 +4,7 @@ Update this record throughout the project; review the final statement as a group
 
 | Date | Tool | Work performed | Review status |
 |---|---|---|---|
+| 6 Nov 2026 | Claude Code (Claude Opus 5.5) | Retrieved and rechecked jobs 1523703 and 1522998; redacted job cookies from evidence; extended the figure script (ranges, leaf and repetition tables); wrote the 16-core Results text; applied the 64-core sizing rules; refit budgets; froze bench1; prepared pilot2 and bench1 requests | Leon: pending review; group: pending |
 | 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Retrieved and rechecked pilot 1523275; wrote `verify_run.py`; applied the sizing rules; refit `plan_budget.py`; proposed `bench16` and resized plans; reorganized READMEs, notes index, evidence index, submission audit, package exclusions and group checklist. No solver code changed | Leon: pending review; group: pending |
 | 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Proposed the 16-core pilot; drafted report terms, input generation, test purposes, expected behaviour and parallelization decisions; package test; group review list | Leon: pending review; group: pending |
 | 5 Nov 2026 | Claude Code (Claude Opus 5.5) | Retrieved and checked the evidence of failed pilot 1519637; compared it with earlier launcher runs; changed one-node jobs to `pbs_tmrsh`; tightened the allocation check; added tests; drafted the rerun request; after Leon's approvals, submitted rerun 1522998 and pilot16 1523275 once each | Leon: evidence and fix pending review |

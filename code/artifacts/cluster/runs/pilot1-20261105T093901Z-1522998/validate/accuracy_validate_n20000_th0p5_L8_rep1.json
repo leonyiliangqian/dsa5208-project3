@@ -1,0 +1,29 @@
+{
+  "case": "accuracy_validate_n20000_th0p5_L8",
+  "rep": 1,
+  "ok": true,
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_s": 1.355,
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "bin/vanda-1522998/bh_serial",
+    "--validate",
+    "--n",
+    "20000",
+    "--theta",
+    "0.5",
+    "--leaf-size",
+    "8"
+  ],
+  "timeout_s": 120,
+  "tags": {
+    "study": "accuracy",
+    "manifest_id": "pilot-single-node-v2",
+    "manifest_sha256": "0a5f9f64cc5923a218ec9be9f3498be34baf2733c1aeaee1f4daa78c1e2f937a",
+    "manifest_status": "proposed",
+    "scale": "1"
+  }
+}

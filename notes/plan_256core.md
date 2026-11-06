@@ -23,13 +23,13 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | Step | Job | Request | Queue, rate | Core-hours requested | Expected use | Needs first |
 |---|---|---|---|---|---|---|
 | 0 | `pilot` `1519637` | 1 x 64 cores, 120 GB, 60 min | `cpu_parallel`, 0 | 64 | | **Failed at `placement`, 0 of 20 runs** |
-| 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | Same 20 runs | **Submitted once as `1522998`, 5 Nov 13:46 SGT**; queued at submission |
+| 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | 9 min, measured | **Passed as `1522998`**, whole node IN-016. Sizing only: see "64-core pilot results" |
 | 0c | `pilot16` `1523275` | 1 x 16 cores, 16 GB, 60 min | `auto_free`, 0 | 16 | 15 min, measured | **Passed.** Provisional sizing only: see "Pilot16 results" |
-| 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | **Submitted once as `1523703`, 5 Nov 17:20 SGT.** Does not supply 256 cores |
-| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | Step 0b passed; 64 + 128 cores exceeds the 160 limit |
+| 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | **Passed as `1523703`**, 121 of 121 runs: formal 16-core data. Does not supply 256 cores |
+| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | **Ready to request.** Needs two whole free nodes; 128 + 64 cores with `bench1` is over the 160 limit, so one waits |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
-| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 45 min | `auto`, 1 | **704** | 54 min, 230 core-hours | Step B passed, manifest resized and frozen, charge approval |
-| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 97 min, 103 core-hours | Step 0, manifest resized and frozen |
+| C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 50 min | `auto`, 1 | **725** | 56 min, 240 core-hours | Step B passed, manifest resized and frozen, charge approval |
+| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 100 min, 106 core-hours | **Plan frozen, ready to request.** | Step 0, manifest resized and frozen |
 
 "Expected use" comes from `scripts/plan_budget.py`, refit to pilot `1523275`. It matches that pilot closely, but 64 and 256 ranks and N above 2 x 10^6 are
 extrapolated, so it could still be off by a factor of two or more there.
@@ -39,6 +39,39 @@ node before paying for one. `bench2` is needed only if the 256-core route fails.
 
 `bench1` has 148 runs. Its 5 h covers the worst case, 16020 s, if every run uses its whole limit. A long request may wait
 longer in the queue. If `bench4` is approved, `bench1` can drop its strong and weak runs after the serial baseline, and if `bench16` passes it can drop its serial and parameter runs.
+
+## 64-core pilot results: sizing, one whole node
+
+Job `1522998` passed all gates on IN-016 with all 64 cores of both sockets: 20 of 20 runs. **One repetition. Sizing only, not a result. Nothing here is shown across
+nodes or at 256 cores.** The rules were set before any result existed.
+
+| Rule | Reading at 64 cores | Outcome |
+|---|---|---|
+| 1, 2 | All gates passed; nothing timed out or skipped | Sizing may proceed |
+| 3, CPU model | Gold 6438N | Later baselines stay within their own job |
+| 4, serial time per step | 19.4 s at 10^6; 46.3 s at 2 x 10^6 | Under 20 s, but 2 x 10^6 is over its 40 s condition, so **keep N_s = 10^6**. 3 steps is 58 s, just under the 60-120 s target |
+| 5, `hybrid 1x1` | 1.3% slower than serial | Fine |
+| 6, 64 x 1 efficiency | 0.34 | Above 0.25: keep N_s |
+| 7, peak RSS per rank, 64 x 1 | 161.2 MiB | Under 240 MiB: **keep 50,000 per core** |
+| 8, exchange share, 64 x 1 | 9.2% | Under 50% |
+| 9, schedules at 1 x 64 | guided 7.3% and static 4.8% faster than dynamic 64 | Under 10%: **keep dynamic, chunk 64**. `bench16` gave the lowest median to dynamic 64 |
+| 10, leaf at 3 x 10^5 | 16 was 0.8% faster than 8; 4 and 32 slower | **Keep 8** |
+| 11, theta | 0.3 took 3.75 times the traverse of 0.5; 0.5's accuracy run exited 0 | **Keep 0.5** |
+| 12, constants | Kernel core-time against serial: 2.08 at 64 x 1, 1.71 at 8 x 8, 1.59 at 1 x 64. Exchange 0.076 s per step at 8 x 8 | Thread cost added, exchange floor added; every plan rerun |
+
+Previously "still needs 64 cores": launch at 64 ranks on a node through `pbs_tmrsh` (done, 64 x 1 ran), 64 x 1 efficiency, RSS and exchange (above), 1 x 64 across both
+sockets (done), a whole node (done). **Still not shown:** more than one node at 64 ranks each, the charged pool, and the network exchange.
+
+**Budgets after rule 12**, at commit `367c630`. The 2.5x margin stays only for what is extrapolated: more than one node, or N above 2 x 10^6.
+
+| Plan | Runs | Worst case and budget, s | Core-hours requested | Status |
+|---|---|---|---|---|
+| `pilot2` | 6 | 730 of 1040 | 64 | Proposed (a pilot may run a proposed plan) |
+| `bench1` | 148 | 16140 of 17358 | 320 | **Frozen** |
+| `pilot4` | 9 | 1255 of 1704 | 192 | Proposed |
+| `bench4` | 90 | 8940 of 9204 | **725**, from 704 | Proposed. 5 more minutes keep every point; dropping strong 2 x 1 instead would keep 704 |
+
+The kernel constant stays at 31 core-microseconds: whole-node runs took 19.3 and the shared node 31 to 44. Every measured run of `1522998` and `1523703` took 0.34 to 1.83 times its estimate.
 
 ## Pilot16 results: provisional sizing, 16 cores only
 

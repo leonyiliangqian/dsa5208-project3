@@ -656,7 +656,7 @@ Findings, all from one repetition and unexplained until repeated:
 - **Same 16 cores, very different times:** 1 x 16 took 3.54 s and 16 x 1 took 6.70 s, and exchange explains almost none of the gap. The traverse is about 1.9 times
   longer. A possible cause is 16 separate tree copies competing for one shared cache, against one tree shared by threads. **Untested.**
   `bench16` measures this with repetitions.
-- **Efficiency above 1 at 1 x 16:** 1.11 against serial, and 1.06 against hybrid 1 x 1. It should not be reported or trusted from one repetition.
+- **Efficiency above 1 at 1 x 16:** 1.11 against serial, and 1.06 against hybrid 1 x 1. Efficiency above 1 (superlinear speedup) is possible, for example when the combined caches of many cores hold what one core's cache cannot. One repetition cannot say whether it is real here. *Corrected 6 Nov: an earlier summary called it impossible; `bench16` repeated it, see below.*
 - **Run-to-run conditions moved:** `integrate_s` differs by a factor of 2 between the serial 3 x 10^5 runs (0.0048 s at 14:37; about 0.0098 s at 14:41 to 14:43), though it does not depend on leaf size. So the leaf comparison is not clean.
 - **Placement:** the 4 x 4 probe passed, with 16 threads on 16 distinct CPUs. All 16 allocated CPUs are odd-numbered, so all are on NUMA node 1, one socket. **16 x 1 had no probe**; its traverse times per rank match within 2%
   (6.03 to 6.13 s), which argues against ranks sharing a core but does not prove it. `bench16` adds that probe.
@@ -671,4 +671,33 @@ with a frozen 8-core copy of its plan at N/100 (`artifacts/local/runs/simulated-
 ### `bench16` submitted, job 1523703, 5 Nov (Vanda)
 
 Leon approved one job. Clone `~/dsa5208-p3-e86bf5d` created from a bundle of commit `e86bf5d`; commit, tree `96eed32`, manifest hash, resources, scheduling, queues and rate 0 verified; no `p3_bench16` in current jobs or history. Dry run without `--yes`, then submitted once at 17:20:38 SGT. It started at 17:20:44 on IN-002 in `cpu_parallel`, rate 0, and was running at 17:20:47. PBS shows `project = personal-leonyil.qian`. `1522998` unchanged, still Q. Nothing measured yet. Records: `artifacts/cluster/discovery/vanda_bench16_dryrun_e86bf5d_20261105T1719.txt`, `artifacts/cluster/discovery/vanda_bench16_submit_e86bf5d_20261105T1720.txt`.
+
+### `bench16` 1523703 and 64-core pilot 1522998 finished, retrieved 6 Nov (Vanda)
+
+Both finished on 5 Nov with exit 0, and both passed every gate. `1523703`: 17:20:44-18:49:06 on IN-002, 1 h 28 min, 9 of 9 gates. `1522998`: 17:39:00-17:47:51
+on IN-016, a whole node across both sockets (`exec_vnode` IN-016[0] and IN-016[1], 32 cores each), 8 min 49 s, 5 of 5 gates. Rate 0 for both; PBS shows `project =
+personal-leonyil.qian`. Retrieved read-only: 382 and 73 files, 0 checksum mismatches. `verify_run.py` passed every record: **121 of 121** and **20 of 20**, none failed, timed
+out or skipped, each with one commit, source tree, CPU model (Gold 6438N), host and pair of binaries. Both jobs used byte-identical binaries. Every cleanup check was CLEAN. At
+17:09-17:12 the login node could not map the user ID to a name and `qstat` refused every job ID; it worked at 17:23. Record: `artifacts/cluster/discovery/vanda_retrieval_1523703_1522998_20261106.txt`.
+
+Redaction: `PBS_JOBCOOKIE` removed from every committed `env/environment.txt` (12 files), with hashes in `artifacts/cluster/REDACTIONS.md`. Originals kept outside the repository,
+owner-only, and still on Vanda; older copies remain in earlier commits, which are not rewritten.
+
+**`1523703`, formal, 16 cores of a shared node, 3 interleaved repetitions.** Analysed into `artifacts/cluster/analysis/bench16-1523703/`, which reproduces the job's own
+`summary.csv`; figures and tables regenerated into `report/generated/`. Findings, measured only:
+
+- Serial slope 1.33 on log-log axes from N = 10^4 to 2 x 10^6, above the 1.09 that N log N would give over that range. Cause not tested.
+- Traversal at least 88% of every strong and weak run; exchange at most 1.9% in medians, 2.8% in one repetition; tree build at most 10%.
+- At 16 cores, 1 x 16 took 5.64 s and 16 x 1 took 9.24 s; most of the gap is in the traversal.
+- **Variability:** repetitions of one case differ by up to 61% (median 18%). Serial against hybrid 1 x 1, the same algorithm on one core, ranges 0.95 to 1.30 across repetitions.
+- **Efficiency above 1:** against serial, 1 x 4, 1 x 8 and 1 x 16 reach 1.42-1.48 in medians. Part of that is the baseline: serial was slower than 1 x 1 in two of three repetitions.
+  Against 1 x 1 of the same repetition the thread-only runs still stay above 1 (1.06-1.27). Cache behaviour was not measured, so no cause is claimed.
+- Same binary, same CPU model: serial 10^6 took 42.7 s per step here and 19.4 s per step in `1522998`, which had a whole node. The records cannot show other jobs on IN-002.
+
+**`1522998`, sizing only, one repetition.** Rules in `plan_256core.md`: keep N_s = 10^6, 50,000 per core, theta 0.5, leaf 8, dynamic 64. 64 x 1 efficiency 0.34, RSS 161 MiB per
+rank, exchange 9.2% of wall. 1 x 64 efficiency 0.46; no efficiency above 1 on this node. Kernel core-time against serial: 2.08 at 64 x 1, 1.71 at 8 x 8, 1.59 at 1 x 64.
+
+Then: budget constants refit (threads now cost at 64, exchange has a floor); every measured run of both jobs falls at 0.34 to 1.83 times its estimate. `bench1` frozen;
+`pilot2`, `pilot4`, `bench4` resized and still proposed; `bench4` needs 2 h 50 min, 725 core-hours. Clean clone `~/dsa5208-p3-367c630` of commit `367c630`, tree verified,
+`pilot2` and `bench1` dry runs printed their commands and submitted nothing. Record: `artifacts/cluster/discovery/vanda_dryrun_367c630_20261106T1723.txt`. Report Results rewritten for the 16-core data; 256 cores still pending.
 

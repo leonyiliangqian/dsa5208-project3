@@ -1,6 +1,66 @@
 # Approval requests
 
-**No approval is open.** Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** Two free jobs are ready to request below. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+
+## Ready to request: `pilot2`, free 128-core rehearsal on two nodes
+
+**Why:** it is the only free test of launch, binding and correctness across nodes at 64 ranks per node before anything is charged. `pilot4` and `bench4`
+should not be approved until it passes. It gives sizing only, not results, and cannot show 256 cores.
+
+| | |
+|---|---|
+| Source | `367c63046583a2d7f26a0ddc1109bd07d99b2fad`, tree `f0ba7fae95dc917837ac7f0370736313189ad985`, clone `~/dsa5208-p3-367c630`, prepared and clean |
+| Manifest | `pilot_two_node.json`, status `proposed` (allowed for a pilot), SHA-256 `27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74`, 6 runs |
+| Request | `select=2:ncpus=64:mpiprocs=64:mem=120gb`, `place=scatter`, 30 min, 64 core-hours at most; about 9 min expected. Worst case 730 s fits the 1040 s budget |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck. PBS has shown `project = personal-leonyil.qian` on free jobs, and the balance is unread |
+| Gates | `allocation`, `build`, `placement`, `place_mpi`, `internode`, `serial`, `bound_vs_serial`, `runs`, `analyze` |
+| With `bench1` | 128 + 64 cores is over the 160-CPU limit, so PBS runs them one after the other if both are approved |
+| Wait | Needs two whole free nodes, which may take hours |
+
+> Leon explicitly approves exactly ONE pilot2 submission: source `367c63046583a2d7f26a0ddc1109bd07d99b2fad` in ~/dsa5208-p3-367c630, manifest pilot_two_node.json SHA256 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74,
+> 2 nodes x 64 cores, 120 GB each, scatter, 30 min, auto_free, no -P, ZERO CHARGE ONLY. Before submitting, use hard-bounded existing-auth checks to verify
+> commit, tree, manifest and resources, scheduling and queues enabled and started with rate 0, and no duplicate p3_pilot2 in current jobs or history. If all
+> pass, submit the command below exactly once and record the job ID. No retries, other jobs, spending, credential or security changes, monitoring loops,
+> lecturer contact or final submission.
+
+```sh
+cd ~/dsa5208-p3-367c630/code
+bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
+```
+
+## Ready to request: `bench1`, formal free studies on one whole 64-core node
+
+**Why:** a whole node gives the serial, single-node strong and weak, ranks x threads, schedule, leaf and theta studies to 64 cores without the sharing
+that widened `bench16`'s ranges. It does not supply 256 cores.
+
+| | |
+|---|---|
+| Source | `367c63046583a2d7f26a0ddc1109bd07d99b2fad`, tree `f0ba7fae95dc917837ac7f0370736313189ad985`, clone `~/dsa5208-p3-367c630`, prepared and clean |
+| Manifest | `studies_single_node.json`, status `frozen`, SHA-256 `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b`, 148 runs |
+| Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 5 h, 320 core-hours at most; about 100 min expected. Worst case 16140 s fits the 17358 s budget |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck |
+| Wait | Needs a whole free node: `1522998` waited about 4 h for one |
+
+> Leon explicitly approves exactly ONE bench1 submission: source `367c63046583a2d7f26a0ddc1109bd07d99b2fad` in ~/dsa5208-p3-367c630, manifest studies_single_node.json SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b,
+> 1 node x 64 cores, 120 GB, 5 h, auto_free, no -P, ZERO CHARGE ONLY. Same checks as for pilot2, with no duplicate p3_bench1; then submit once and record
+> the job ID. No retries, other jobs, spending, credential or security changes, monitoring loops, lecturer contact or final submission.
+
+```sh
+cd ~/dsa5208-p3-367c630/code
+bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
+```
+
+Dry runs of both printed these and submitted nothing: `code/artifacts/cluster/discovery/vanda_dryrun_367c630_20261106T1723.txt`. Each runs `qsub -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artifacts/cluster/logs/ jobs/vanda/<job>.pbs`.
+
+## Conditional: `pilot4` and `bench4`, charged, not ready
+
+Both need `pilot2` to pass, **Leon's `amgr login`, the project ID, the balance, and charge approval**. `bench4` also needs its plan frozen from `pilot4`'s
+result, which changes its hash. Neither has a Vanda dry run, because `submit.sh` needs the real project ID for a correct one.
+
+| Job | Request | Most it could charge, at 1 per core-hour (assumed) | Expected use | Manifest SHA-256 at `367c630` |
+|---|---|---|---|---|
+| `pilot4` | 4 x 64 cores, 240 GB each, 45 min, `auto` | 192 | 12 min | `0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823` |
+| `bench4` | 4 x 64 cores, 240 GB each, 2 h 50 min, `auto` | 725 | 56 min | `45c24936ec8185f0c0d86695fe1b3f8ef18136982d8259a777f212f62d39772d`, proposed |
 
 ## Consumed, 5 November 2026: `bench16`, formal free 16-core studies
 
@@ -45,7 +105,7 @@ qsub -q auto_free -v SOURCE_GIT_REV=e86bf5d076c51c01f131f3980fc17618e9c24f61 -o 
 
 Local dry run from a clean clone of this commit: `code/artifacts/local/bench16_dryrun_20261105.txt`. There is no `qsub` on this machine, so its paths differ. The Vanda dry run passed before submission.
 
-## Conditional requests: not ready to approve
+## Superseded 6 Nov: conditional requests as of 5 Nov
 
 Each needs a new clean clone of the commit, its dry run, and the conditions here first. Sizes remain provisional.
 

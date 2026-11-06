@@ -18,14 +18,14 @@ check the Canvas page. A repository link should not be assumed to meet the requi
 | Requirement | Points | Where | Status |
 |---|---|---|---|
 | Explain the algorithm | 5 | Report: Problem and Method | Drafted; group review open |
-| Serial runtime against N | 5 | Report: Results; `bench16` (job `1523703`) or `bench1` | **Missing.** Job submitted, no result yet |
+| Serial runtime against N | 5 | Report: Results; job `1523703` | **Measured** on 16 cores of a shared node, 10^4 to 2 x 10^6. `bench1` would repeat it on a whole node |
 | MPI strong and weak to at least 256 CPU cores, with speedup, efficiency, communication | 10 | Report: Results; `bench4` | **Missing.** Needs a charged queue and Leon's decision |
-| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `bench4` | **Missing** |
+| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `1523703`, then `bench4` | **Partial:** to 16 cores only |
 | At least one GPU test | | Job `1519638` | Measured; review open |
 | Discussion of decisions, techniques, communication | 5 | Report: Parallelization Decisions, Discussion | Decisions drafted; Discussion needs results |
-| Scaling and efficiency discussion | | Report: Results, Discussion | **Missing** |
+| Scaling and efficiency discussion | | Report: Results, Discussion | **Partial:** to 16 cores, with variability |
 | Parallel algorithm validated, with why each test matters | | Report: Correctness, Table 1 | Drafted |
-| Runtime figures from Atlas or Vanda; logarithmic time, N and CPU axes | | `report_figures.py` | Axes reviewed in code; figures need data |
+| Runtime figures from Atlas or Vanda; logarithmic time, N and CPU axes | | `report_figures.py` | 16-core figures generated from Vanda; 256 cores missing |
 | Non-standard terms defined | | Report: Terms Used | Drafted |
 | Synthetic generator explained, no equilibrium claim | | Report: input generation | Drafted |
 | Conclusions about real data | | Not applicable: synthetic input | None needed |

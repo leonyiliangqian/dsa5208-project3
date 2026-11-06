@@ -1,0 +1,48 @@
+Clean-clone dry runs for pilot2 and bench1 on Vanda, 6 Nov 2026. Clone created from an exact-source bundle. Dry runs without --yes; nothing submitted.
+Fri Nov  6 05:23:41 PM +08 2026
+da66f4466a0c6b539371f84c74403f9f50ae4ba67bf164e1e50767c94277a972  /home/svu/leonyil.qian/dsa5208-p3-367c630.bundle
+commit 367c63046583a2d7f26a0ddc1109bd07d99b2fad ok
+tree f0ba7fae95dc917837ac7f0370736313189ad985 ok
+status lines 0
+27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74  manifests/pilot_two_node.json
+ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b  manifests/studies_single_node.json
+== pilot2
+#PBS -N p3_pilot2
+#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+== bench1
+#PBS -N p3_bench1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=05:00:00
+#PBS -j oe
+== budgets
+runs: 6, estimated 258 s, worst case 730 s, budget 1040 s after 300 s of gates and 460 s reserved at the end
+expected job time: 9 min = 20 core-hours used
+largest node memory: 73 GB of 120 GB
+PLAN OK
+runs: 148, estimated 5681 s, worst case 16140 s, budget 17358 s after 300 s of gates and 342 s reserved at the end
+expected job time: 100 min = 106 core-hours used
+largest node memory: 37 GB of 120 GB
+PLAN OK
+== scheduler
+    server_state = Scheduling
+    scheduling = True
+    resources_default.queue_charge_rate = 0
+    enabled = True
+    started = True
+    resources_default.queue_charge_rate = 0
+    enabled = True
+    started = True
+== unfinished jobs
+== duplicates
+0
+0
+== dry runs, no --yes
+command: qsub -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+dry run: add --yes to submit
+command: qsub -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artifacts/cluster/logs/ jobs/vanda/bench1.pbs
+dry run: add --yes to submit
+== after
+0
