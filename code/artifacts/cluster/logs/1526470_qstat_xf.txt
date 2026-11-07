@@ -1,0 +1,74 @@
+Job Id: 1526470.stdct-mgmt-02
+    Job_Name = p3_pilot2
+    Job_Owner = leonyil.qian@vanda.nus.edu.sg
+    resources_used.cpupercent = 20
+    resources_used.cput = 00:00:02
+    resources_used.mem = 3384kb
+    resources_used.ncpus = 128
+    resources_used.ngpus = 0
+    resources_used.vmem = 80268kb
+    resources_used.walltime = 00:00:13
+    job_state = F
+    queue = cpu_parallel
+    server = stdct-mgmt-02
+    Checkpoint = u
+    ctime = Fri Nov  6 18:37:47 2026
+    Error_Path = vanda.nus.edu.sg:/nfs/home/svu/leonyil.qian/dsa5208-p3-367c630
+	/code/p3_pilot2.e1526470
+    exec_host = IN-004/0*0+CN-158/0*0
+    exec_vnode = (IN-004[0]:mem=120gb:ncpus=32+IN-004[1]:ncpus=32)+(CN-158[0]:m
+	em=120gb:ncpus=36+CN-158[1]:ncpus=28)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Sat Nov  7 07:38:12 2026
+    Output_Path = stdct-login-01.stdct.loc:/home/svu/leonyil.qian/dsa5208-p3-36
+	7c630/code/artifacts/cluster/logs/
+    Priority = 0
+    qtime = Fri Nov  6 18:37:48 2026
+    Rerunable = True
+    Resource_List.am_job_cache = {"job.queue_charge_rate": 0,
+	 "job.walltime": 1800, "job.ncpus": 128.0, "job.ngpus": 0,
+	 "am_cloud_enabled": false}
+    Resource_List.mem = 240gb
+    Resource_List.mpiprocs = 128
+    Resource_List.ncpus = 128
+    Resource_List.ngpus = 0
+    Resource_List.nodect = 2
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    stime = Sat Nov  7 07:37:57 2026
+    obittime = Sat Nov  7 07:38:12 2026
+    session_id = 1761216
+    jobdir = /home/svu/leonyil.qian
+    substate = 93
+    Variable_List = PBS_O_HOME=/home/svu/leonyil.qian,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=leonyil.qian,
+	PBS_O_PATH=/home/svu/leonyil.qian/.local/bin:/home/svu/leonyil.qian/bi
+	n:/cm/shared/apps/apptainer/1.4.1/bin:/cm/local/apps/environment-module
+	s/4.5.3//bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/am/
+	python/bin:/sbin:/usr/sbin:/cm/local/apps/environment-modules/4.5.3/bin
+	:/opt/pbs/bin,PBS_O_SHELL=/bin/bash,
+	PBS_O_INTERACTIVE_AUTH_METHOD=resvport,
+	PBS_O_HOST=stdct-login-01.stdct.loc,
+	PBS_O_WORKDIR=/nfs/home/svu/leonyil.qian/dsa5208-p3-367c630/code,
+	PBS_O_SYSTEM=Linux,
+	SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad,
+	PBS_O_QUEUE=auto_free
+    comment = Job run at Sat Nov 07 at 07:37 on (IN-004[0]:mem=120gb:ncpus=32+I
+	N-004[1]:ncpus=32)+(CN-158[0]:mem=120gb:ncpus=36+CN-158[1]:ncpus=28) an
+	d failed
+    etime = Fri Nov  6 18:37:48 2026
+    run_count = 1
+    Stageout_status = 1
+    Exit_status = 5
+    Submit_arguments = -q auto_free -v SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1
+	109bd07d99b2fad -o /home/svu/leonyil.qian/dsa5208-p3-367c630/code/artif
+	acts/cluster/logs/ jobs/vanda/pilot2.pbs
+    history_timestamp = 1794008292
+    project = personal-leonyil.qian
+    Submit_Host = vanda.nus.edu.sg
+

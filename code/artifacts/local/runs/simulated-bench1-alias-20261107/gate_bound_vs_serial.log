@@ -1,0 +1,16 @@
+python3 tests/validate_hybrid.py --serial bin/vanda-99301/bh_serial --hybrid bin/vanda-99301/bh_hybrid \
+    --mpirun mpirun --mpirun-flags "--prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH" \
+    --out artifacts/local/runs/simulated-bench1-alias-20261107/hybrid_validation_vanda-99301.json --max-cores 8 --suite bound --expect-hosts 1
+hybrid case=bound_8x1_traj n=20011 steps=10 ranks=8 threads=1 schedule=dynamic/64 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_1x8_traj n=20011 steps=10 ranks=1 threads=8 schedule=dynamic/64 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_2x4_guided n=20003 steps=10 ranks=2 threads=4 schedule=guided/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_1x8_accel n=20011 steps=1 ranks=1 threads=8 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_1x8_theta0 n=4001 steps=1 ranks=1 threads=8 schedule=static/0 hosts=1 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_8x1_zero_owned n=10 steps=10 ranks=8 threads=1 schedule=static/0 hosts=1 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)

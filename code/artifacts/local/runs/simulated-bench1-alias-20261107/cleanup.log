@@ -1,0 +1,18 @@
+== after allocation 03:26:03
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 03:26:04
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after placement 03:26:06
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_mpi 03:26:09
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after internode 03:26:11
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after serial 03:26:13
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after bound_vs_serial 03:27:13
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after runs 03:28:42
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after analyze 03:28:42
+leftover_check host=NODE1 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

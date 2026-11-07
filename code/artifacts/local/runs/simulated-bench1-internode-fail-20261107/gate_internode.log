@@ -1,0 +1,14 @@
+INTERNODE_EXPECT_HOSTS=1 mpirun --prefix /usr --hostfile /tmp/nf1 -x PATH -x LD_LIBRARY_PATH -np 8 --map-by ppr:4:node:PE=1 --bind-to core \
+    -x INTERNODE_EXPECT_HOSTS bin/vanda-99303/internode_check
+[NODE1:05392] Warning: could not find environment variable "LD_LIBRARY_PATH"
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: bin/vanda-99303/internode_check
+  Number of procs:  8
+  PPR: 4:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+make: *** [Makefile:112: internode] Error 1

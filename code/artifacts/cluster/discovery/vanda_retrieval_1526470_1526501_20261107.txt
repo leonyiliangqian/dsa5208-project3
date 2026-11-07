@@ -1,0 +1,76 @@
+Retrieval of jobs 1526470 (pilot2) and 1526501 (bench1), 7 Nov 2026 ~11:05-11:20 SGT, existing ssh
+connection (BatchMode), each command bounded. Read-only: no job submitted, cancelled or changed.
+Remote originals left in place: ~/dsa5208-p3-367c630 (1526470) and ~/dsa5208-p3-0647895 (1526501),
+plus logs/<job>_qstat_xf.txt written there from qstat -xf.
+
+== transfer: tar over ssh into a fresh local directory; remote sha256sum vs local shasum -a 256 -c: 22 of 22 OK
+-- 1526470 (clone 367c630)
+cd441237266632a3a18c52e1c17291c381e5aac697b5b95a85ea9f9839211373  logs/1526470_qstat_xf.txt
+86a519844969a7d47ac8d922f9dda971d28460a8b3574351208a929d11a57d6e  logs/1526470.stdct-mgmt-02.OU
+daf563001b5472125564ea037a0b56d2610e50ad9d35beca491cbaf90ca0221a  runs/pilot2-20261106T233758Z-1526470/cleanup.log
+b747553e97ba6faa954048c9651b33897afc7fb2804d176d510b10098abb5ec2  runs/pilot2-20261106T233758Z-1526470/env/environment.txt
+2991e1b0ca9c1d494af863cdaf11ed8c35290e5692cbc2bbc5a88f9395b8c144  runs/pilot2-20261106T233758Z-1526470/env/launch_verbose.txt
+b1c5106c0915569217a35e951740af7735d526f6460cc04117d29d0cab50454f  runs/pilot2-20261106T233758Z-1526470/env/nodes.txt
+3a8046e1cdddcbf0c9a2910a675de69717833d1c29573bed9fa5adabefd51f7a  runs/pilot2-20261106T233758Z-1526470/gate_allocation.log
+c2e48ea898cae4f8f881252c643dd69ac9a82c239e11c71d37238cf65e559a9e  runs/pilot2-20261106T233758Z-1526470/gates.txt
+a21aadc9a0fcdb1501c855fb31f74b6f78ac92cda8390f23a97d04bdf5564eb8  runs/pilot2-20261106T233758Z-1526470/job.log
+-- 1526501 (clone 0647895)
+8b96e93b3491c0c2f49a70ceabadfd1defb03f909392269a5db7d61ebff84678  logs/1526501_qstat_xf.txt
+8612b6d12630e6930c2e90424d5a4911b0a98b8299238a69280aa14ba6068308  logs/1526501.stdct-mgmt-02.OU
+71053f5db54e59e75eed6e79db711d415da5777325d3c7a41a4282669f992e55  runs/bench1-20261106T130250Z-1526501/cleanup.log
+cc3f4926d3f10ba6b49f201a37c70d6bbe0ebadf2e3a1bc5c7ebcfc273a5e42e  runs/bench1-20261106T130250Z-1526501/env/environment.txt
+f97fa069a73d346af6bbdab67dfd438dc0cbed4ba6816f9c1cb11246eb85f327  runs/bench1-20261106T130250Z-1526501/env/launch_verbose.txt
+331a2a5cf089fd5c8cb52bf4b6217e34c389cadd8de3bcc648e47b79e1a17d99  runs/bench1-20261106T130250Z-1526501/env/nodes.txt
+12ee0ebb156f79875fcf0e4e831f2d0256e87d32981795c36ad3b796771f63ca  runs/bench1-20261106T130250Z-1526501/gate_allocation.log
+fe4489ef0252f9494e66c2c9ad9df22e56d7f76ff8a4cac0e68ad0f47bbcf2da  runs/bench1-20261106T130250Z-1526501/gate_build.log
+318be55817b6d16aaf9ebfb6bcc4c24ff9655bb4de8e464918609427510d8e93  runs/bench1-20261106T130250Z-1526501/gate_internode.log
+b9664816a161bcd4578beeb8d6647410b891d7cfac9e3732bd257f4c0840c158  runs/bench1-20261106T130250Z-1526501/gate_placement.log
+24ee4be9da23a48d14f553a899027a3b99af3c4130005469a9505f4b5f735ad5  runs/bench1-20261106T130250Z-1526501/gate_place_mpi.log
+1e83a2d1a95d9bff30d8503768c18bb2a88932285d72314a23c01d93d61a42b0  runs/bench1-20261106T130250Z-1526501/gates.txt
+1cfd70af37697fbc791616afc5cc4322eb86e30e6ee3472efb8beb3e45d080e6  runs/bench1-20261106T130250Z-1526501/job.log
+In the repository, env/environment.txt of both runs is redacted (PBS_JOBCOOKIE); see artifacts/cluster/REDACTIONS.md.
+
+== PBS outcomes (qstat -xf, cookie lines excluded)
+Job Id: 1526470.stdct-mgmt-02
+    resources_used.mem = 3384kb
+    resources_used.ncpus = 128
+    resources_used.walltime = 00:00:13
+    job_state = F
+    queue = cpu_parallel
+    exec_host = IN-004/0*0+CN-158/0*0
+    exec_vnode = (IN-004[0]:mem=120gb:ncpus=32+IN-004[1]:ncpus=32)+(CN-158[0]:m
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    stime = Sat Nov  7 07:37:57 2026
+    obittime = Sat Nov  7 07:38:12 2026
+    Exit_status = 5
+
+Job Id: 1526501.stdct-mgmt-02
+    resources_used.mem = 363268kb
+    resources_used.ncpus = 64
+    resources_used.walltime = 00:00:35
+    job_state = F
+    queue = cpu_parallel
+    exec_host = CN-158/0*0
+    exec_vnode = (CN-158[0]:mem=120gb:ncpus=36+CN-158[1]:ncpus=28)
+    Resource_List.place = free
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 05:00:00
+    stime = Fri Nov  6 21:02:48 2026
+    obittime = Fri Nov  6 21:03:24 2026
+    Exit_status = 5
+
+== scheduler discovery for a CPU-model constraint (pbsnodes -a / -av, qmgr -c 'list resource', qstat -Qf)
+Resources defined: no CPU-model or CPU-type resource. Host-level string resources: node_pool, switch, Qlist, gpu-type, location.
+switch is set only on charged/GPU vnodes (ccid-01..10,cpu_all; gcid-01..05,gpu_all); none on cpu_free. Qlist and location unset.
+cpu_parallel: default_chunk.node_pool=cpu_free, resources_max.ncpus=160, max_run=[u:PBS_GENERIC=2], max_run_res.ncpus=[u:PBS_GENERIC=160].
+cpu_free hosts and resources_available.ncpus:
+  in-001 .. in-020: 64 each (2 vnodes x 32). Seen in jobs: IN-002, IN-004, IN-016, IN-020 report Gold 6438N.
+  cn-158, cn-159, cn-161, rn-003: 72 each (2 vnodes x 36). Seen in jobs: CN-158 reports Platinum 8452Y; the others unseen.
+  (cn-162, cn-163: 72, node_pool large_mem.)
+A 64-CPU chunk on a 72-CPU host gets an uneven cpuset: 1526501 had CN-158[0] 36 + CN-158[1] 28.
+No supported resource selects a CPU model. Requesting ncpus=72 per chunk would exclude the 64-CPU hosts,
+but the model of cn-159, cn-161 and rn-003 is unverified. host= would pin hosts and is not used.

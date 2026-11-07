@@ -1,0 +1,10 @@
+== after allocation 21:02:56
+leftover_check host=CN-158 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 21:03:05
+leftover_check host=CN-158 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after placement 21:03:11
+leftover_check host=CN-158 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_mpi 21:03:19
+leftover_check host=CN-158 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after internode 21:03:22
+leftover_check host=CN-158 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

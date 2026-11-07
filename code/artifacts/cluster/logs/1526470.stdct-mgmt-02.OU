@@ -1,0 +1,63 @@
+run_id=pilot2-20261106T233758Z-1526470 job=1526470.stdct-mgmt-02 host=IN-004 start=2026-11-07T07:37:58+08:00 source_rev=367c63046583a2d7f26a0ddc1109bd07d99b2fad
+manifest=manifests/pilot_two_node.json scale=1 placement_override=none sim_cpus_per_node=none
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=2 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1526470.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+manifest_status=proposed sha256=27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+walltime_s=1800 end_reserve_s=60 gate_overhead_s=140 remote_exec=/opt/pbs/bin/pbs_tmrsh
+
+===== gate allocation (critical, limit 90s) 07:38:04: env ALLOC_EXPECT_NODES=2 ALLOC_CPUS_PER_NODE=64 ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/pilot2-20261106T233758Z-1526470 2 pbs_tmrsh
+[IN-004:1761406] mca: base: components_register: registering framework plm components
+[IN-004:1761406] mca: base: components_register: found loaded component rsh
+[IN-004:1761406] mca: base: components_register: component rsh register function successful
+[IN-004:1761406] mca: base: components_open: opening plm components
+[IN-004:1761406] mca: base: components_open: found loaded component rsh
+[IN-004:1761406] mca: base: components_open: component rsh open function successful
+[IN-004:1761406] mca:base:select: Auto-selecting plm components
+[IN-004:1761406] mca:base:select:(  plm) Querying component [rsh]
+[IN-004:1761406] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-004:1761406] mca:base:select:(  plm) Selected component [rsh]
+[CN-158:1265357] mca: base: components_register: registering framework plm components
+[CN-158:1265357] mca: base: components_register: found loaded component rsh
+[CN-158:1265357] mca: base: components_register: component rsh register function successful
+[CN-158:1265357] mca: base: components_open: opening plm components
+[CN-158:1265357] mca: base: components_open: found loaded component rsh
+[CN-158:1265357] mca: base: components_open: component rsh open function successful
+[CN-158:1265357] mca:base:select: Auto-selecting plm components
+[CN-158:1265357] mca:base:select:(  plm) Querying component [rsh]
+[CN-158:1265357] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[CN-158:1265357] mca:base:select:(  plm) Selected component [rsh]
+[CN-158:1265357] mca: base: close: component rsh closed
+[CN-158:1265357] mca: base: close: unloading component rsh
+[IN-004:1761406] mca: base: close: component rsh closed
+[IN-004:1761406] mca: base: close: unloading component rsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	cn-158: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+	in-004: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+node CN-158 allowed=0-56,58,60,62,64,66,68,70 arch=x86_64 model=Intel(R)_Xeon(R)_Platinum_8452Y ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node IN-004 allowed=0-63 arch=x86_64 model=Intel(R)_Xeon(R)_Gold_6438N ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['CN-158', 'IN-004'] head=IN-004 allowed_cpus=[64, 64] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True]
+recorded_only template_line_seen=True
+recorded_only models=['Intel(R)_Xeon(R)_Gold_6438N', 'Intel(R)_Xeon(R)_Platinum_8452Y'] mixed_models=True isa_lists_equal=True pbs_jobid_env=['yes', 'yes']
+2_hosts=ok cpus_64_each=ok arch_x86_64=ok one_cpu_model=FAIL plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=ok remote_under_pbs_mom=ok pbs_jobid_on_every_node=ok
+allocation FAIL
+allocation FAIL rc=1 secs=4 kind=critical 
+STOP: critical gate allocation FAIL; later gates would not mean what they claim
+
+===== summary 07:38:10
+allocation FAIL rc=1 secs=4 kind=critical 
+verdict required_or_critical=1 not_passed=1 optional: none
+  not passed: allocation FAIL rc=1 secs=4 kind=critical 
+verdict FAIL
+end=2026-11-07T07:38:10+08:00 elapsed_s=12 walltime_s=1800

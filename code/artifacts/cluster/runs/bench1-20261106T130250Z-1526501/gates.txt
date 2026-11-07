@@ -1,0 +1,5 @@
+allocation PASS rc=0 secs=3 kind=critical 
+build PASS rc=0 secs=9 kind=critical 
+placement PASS rc=0 secs=5 kind=critical 
+place_mpi PASS rc=0 secs=8 kind=critical 
+internode FAIL rc=2 secs=3 kind=critical 
