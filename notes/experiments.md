@@ -783,3 +783,10 @@ Record: `artifacts/cluster/discovery/vanda_bench1_submit_a64e0fe_20261107T1139.t
 Leon approved one job. The prechecks ran in one session; one failed, so `qsub` was not run and nothing was queued (confirmed with `qselect`). The failing check
 refused any `pilot2` run directory in the clone, but the one found is `1526470`'s committed evidence, tracked in source `a64e0fe`. All other checks passed.
 `1528774` (`bench1`) was running by then. Record: `artifacts/cluster/discovery/vanda_pilot2_precheck_stopped_a64e0fe_20261107T1147.txt`.
+
+### `pilot2` rerun submitted, job 1528798, 7 Nov 11:50 (Vanda)
+
+Under the same approval (unused after the 11:47 stop), with only the false-positive check corrected: the `1526470` directory equals its tracked files in `a64e0fe`,
+unmodified, and the only untracked or ignored file is the dry run's bytecode cache (Python bytecode of run_manifest in the Vanda clone, written 11:34:00). All checks
+passed, and `qsub` ran once at 11:50:37 SGT. Queued in `cpu_parallel`, rate 0, `project = personal-leonyil.qian`. `1528774` was running on IN-008 since 11:39:25.
+Record: `artifacts/cluster/discovery/vanda_pilot2_submit_a64e0fe_20261107T1150.txt`.

@@ -1,0 +1,140 @@
+pilot2 rerun submission, 7 Nov 2026 11:50 SGT, under Leon's approval for one job (unused after the 11:47 stop). One bounded session; checks then one submit.
+Only change from the 11:47 script: the run-directory check now requires the 1526470 directory to equal the files tracked in a64e0fe, unmodified,
+and fails on any untracked or ignored file except code/scripts/__pycache__/run_manifest.cpython-39.pyc, written 11:34:00 by the 11:33 dry run
+(plan_budget.py imports run_manifest). bench1 1528774 is recorded only, not required.
+
+== script
+C=a64e0fed6df1d5f4bb971471a6548c68f7656c3c; T=a9e1767dcc07d907b9b6987ffd934755cf05751a; M=27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+fail=0; bad(){ echo "CHECK FAILED: $*"; fail=1; }
+date; hostname
+cd ~/dsa5208-p3-a64e0fe-pilot2/code || { echo "no clone"; exit 9; }
+echo "== source"; h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/pilot_two_node.json | cut -d' ' -f1); st=$(git status --porcelain | wc -l)
+echo "commit $h"; echo "tree $t"; echo "manifest $s"; echo "status lines $st"
+[ "$h" = "$C" ] || bad commit; [ "$t" = "$T" ] || bad tree; [ "$s" = "$M" ] || bad manifest; [ "$st" = 0 ] || bad "clone not clean"
+echo "== pilot2 run dirs in clone (only tracked 1526470 evidence allowed)"
+E=artifacts/cluster/runs/pilot2-20261106T233758Z-1526470
+for d in $(ls -d artifacts/cluster/runs/pilot2-* 2>/dev/null); do [ "$d" = "$E" ] || bad "unexpected pilot2 run dir $d"; done
+ondisk=$(cd .. && find code/$E -type f | sort); tracked=$(cd .. && git ls-tree -r --name-only $C code/$E | sort)
+echo "files on disk $(echo "$ondisk" | grep -c .) tracked in $C $(echo "$tracked" | grep -c .)"
+[ -n "$tracked" ] && [ "$ondisk" = "$tracked" ] || bad "1526470 dir differs from tracked evidence"
+git diff --quiet $C -- $E && git diff --quiet --cached $C -- $E || bad "1526470 evidence modified"
+# Allowed: the bytecode cache the 11:33 dry run wrote (plan_budget.py imports run_manifest). Anything else fails.
+git status --porcelain --ignored --untracked-files=all | head -5
+other=$(git status --porcelain --ignored --untracked-files=all | grep -vx '!! code/scripts/__pycache__/run_manifest.cpython-39.pyc' | wc -l)
+echo "untracked/ignored other than the dry run's bytecode cache: $other"; [ "$other" = 0 ] || bad "unexplained untracked or ignored files present"
+ls artifacts/cluster/logs | grep -v -E '^(1[0-9]{6}\.stdct-mgmt-02\.OU|1[0-9]{6}_qstat_xf\.txt)$' | head -3
+python3 -c "import json;m=json.load(open('manifests/pilot_two_node.json'));print('manifest',m['id'],m['status'][:9],'cases',len(m['cases']))"
+echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN|^EXPECT_NODES' jobs/vanda/pilot2.pbs
+grep -qx '#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb' jobs/vanda/pilot2.pbs || bad select
+grep -qx '#PBS -l place=scatter' jobs/vanda/pilot2.pbs || bad place
+grep -qx '#PBS -l walltime=00:30:00' jobs/vanda/pilot2.pbs || bad walltime
+echo "== same-model gate"; grep -n 'ALLOC_SAME_MODEL=1' jobs/vanda/measure.sh || bad "same-model gate not retained"
+grep -q 'checks\["one_cpu_model"\]' jobs/vanda/allocation_check.sh || bad "one_cpu_model check missing"
+grep -q 'PE=1 --bind-to core --report-bindings' Makefile || bad "internode fix not present"
+echo "== server"; B=$(timeout 30 qstat -Bf 2>&1); echo "$B" | grep -E 'scheduling|server_state'
+echo "$B" | grep -q 'scheduling = True' || bad "scheduling not True or qstat failed"
+for q in auto_free cpu_parallel; do Q=$(timeout 30 qstat -Qf $q 2>&1); echo "== queue $q"; echo "$Q" | grep -E 'queue_type|enabled|started|queue_charge_rate|route_destinations|max_run|max_queued|queued_jobs_threshold|resources_max.ncpus|resources_max.nodect|resources_max.walltime' | grep -vE '\[u:(e0|e1|sau)'
+  echo "$Q" | grep -q 'enabled = True' || bad "$q not enabled"; echo "$Q" | grep -q 'started = True' || bad "$q not started"
+  echo "$Q" | grep -q 'resources_default.queue_charge_rate = 0$' || bad "$q rate not 0"; done
+CP=$(timeout 30 qstat -Qf cpu_parallel 2>&1)
+echo "$CP" | grep -q 'max_run_res.ncpus = \[u:PBS_GENERIC=160\]' || bad "running-CPU limit 160 per user not found"
+echo "$CP" | grep -q 'max_run = \[u:PBS_GENERIC=2\]' || bad "running-job limit 2 per user not found"
+echo "$CP" | grep -q 'resources_max.ncpus = 160' || bad "resources_max.ncpus 160 not found (128 must be admissible)"
+lim=$(echo "$CP $(timeout 30 qstat -Qf auto_free) $(timeout 30 qstat -Bf)" | grep -oE '(max_queued(_res\.ncpus)?|queued_jobs_threshold(_res\.ncpus)?) = \[[^]]*PBS_GENERIC=[0-9]+\]' | head -5); echo "queued-job limits for users: [${lim}]"
+for l in $(echo "$lim" | grep -oE '(max_queued|queued_jobs_threshold)(_res\.ncpus)? = \[[^]]*PBS_GENERIC=[0-9]+' | sed 's/ //g'); do n=${l##*=}; case $l in *ncpus*) [ $n -ge 192 ] || bad "queued CPU limit $n < 192";; *) [ $n -ge 2 ] || bad "queued job limit $n < 2";; esac; done
+echo "== my jobs"; J=$(timeout 30 qstat -u leonyil.qian 2>&1); rc=$?; echo "$J" | tail -n +6; [ $rc = 0 ] || bad "qstat -u failed"
+echo "bench1 1528774 (left alone, recorded only): $(echo "$J" | grep '^1528774' | awk '{print $10}')"
+echo "== duplicates p3_pilot2 from source $C"
+D1=$(timeout 30 qselect -u leonyil.qian -N p3_pilot2 2>&1); r1=$?; D2=$(timeout 30 qselect -x -u leonyil.qian -N p3_pilot2 2>&1); r2=$?
+echo "current: [$D1] history: [$D2]"; [ $r1 = 0 ] && [ $r2 = 0 ] || bad "qselect failed"
+[ -z "$D1" ] || bad "a p3_pilot2 is queued or running"
+for j in $D2; do src=$(timeout 30 qstat -xf "$j" 2>&1 | tr -d '\n\t ' | grep -o 'SOURCE_GIT_REV=[0-9a-f]*' | head -1); echo "history $j $src"
+  [ -n "$src" ] || bad "cannot read source of $j"; [ "$src" = "SOURCE_GIT_REV=$C" ] && bad "duplicate: $j already used source $C"
+  case $j in 1526470.*) ;; *) bad "unexpected p3_pilot2 job $j in history";; esac; done
+if [ $fail != 0 ]; then echo "NOT SUBMITTED"; exit 8; fi
+echo "== all checks passed; submitting once"; date
+bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes; echo "submit_rc=$?"; date
+echo "== immediate status of both"; for j in 1528774 $(qselect -u leonyil.qian -N p3_pilot2); do qstat -xf ${j%%.*}.stdct-mgmt-02 2>&1 | grep -E 'Job_Name|job_state|queue =|qtime|stime|exec_host|comment|Resource_List.(select|place|walltime|queue_charge_rate)|project'; echo; done
+qstat -u leonyil.qian | tail -n +6
+
+== output
+Sat Nov  7 11:50:34 AM +08 2026
+stdct-login-01
+== source
+commit a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+tree a9e1767dcc07d907b9b6987ffd934755cf05751a
+manifest 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+status lines 0
+== pilot2 run dirs in clone (only tracked 1526470 evidence allowed)
+files on disk 7 tracked in a64e0fed6df1d5f4bb971471a6548c68f7656c3c 7
+!! code/scripts/__pycache__/run_manifest.cpython-39.pyc
+untracked/ignored other than the dry run's bytecode cache: 0
+manifest pilot-two-node-v1 proposed cases 6
+== resources
+#PBS -N p3_pilot2
+#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+EXPECT_NODES=2 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+== same-model gate
+69:    ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    queue_type = Route
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    queue_type = Execution
+    resources_max.ncpus = 160
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+queued-job limits for users: []
+== my jobs
+1528774.stdct-* leonyil* cpu_par* p3_bench1  10590*   1  64  120gb 05:00 R 00:10
+bench1 1528774 (left alone, recorded only): R
+== duplicates p3_pilot2 from source a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+current: [] history: [1526470.stdct-mgmt-02]
+history 1526470.stdct-mgmt-02 SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad
+== all checks passed; submitting once
+Sat Nov  7 11:50:37 AM +08 2026
+command: qsub -q auto_free -v SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a6548c68f7656c3c -o /home/svu/leonyil.qian/dsa5208-p3-a64e0fe-pilot2/code/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+1528798.stdct-mgmt-02
+submit_rc=0
+Sat Nov  7 11:50:37 AM +08 2026
+== immediate status of both
+    Job_Name = p3_bench1
+    job_state = R
+    queue = cpu_parallel
+    exec_host = IN-008/0*0
+    qtime = Sat Nov  7 11:39:19 2026
+    Resource_List.place = free
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 05:00:00
+    stime = Sat Nov  7 11:39:25 2026
+    comment = Job run at Sat Nov 07 at 11:39 on (IN-008[0]:mem=120gb:ncpus=32+I
+    project = personal-leonyil.qian
+
+    Job_Name = p3_pilot2
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Sat Nov  7 11:50:37 2026
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    project = personal-leonyil.qian
+
+1528774.stdct-* leonyil* cpu_par* p3_bench1  10590*   1  64  120gb 05:00 R 00:10
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 

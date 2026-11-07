@@ -1,7 +1,7 @@
 # Approval requests
 
-**No approval is open.** The `bench1` rerun was approved and submitted once on 7 Nov as job `1528774`; that approval is used up. The `pilot2` rerun
-below is proposed, not approved. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
+both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Proposed reruns, 7 November 2026: not approved
 
@@ -49,7 +49,13 @@ cd ~/dsa5208-p3-a64e0fe-bench1/code
 bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
 ```
 
-### `pilot2` rerun
+### `pilot2` rerun: consumed, job `1528798`
+
+**Submitted once on 7 Nov at 11:50:37 SGT as job `1528798.stdct-mgmt-02` under the same approval, after Leon confirmed it was unused. This approval is used up.**
+The one false-positive check was corrected: the `1526470` directory must equal the files tracked in `a64e0fe`, unmodified, and any untracked or ignored file fails
+except the bytecode cache the 11:33 dry run wrote (Python bytecode of run_manifest in the Vanda clone, written 11:34:00). All checks passed again, including history
+by source (only `1526470` from `367c630`). Queued in `cpu_parallel`, rate 0, while `1528774` runs; PBS enforces 160 running CPUs per user, so it waits.
+Record: `code/artifacts/cluster/discovery/vanda_pilot2_submit_a64e0fe_20261107T1150.txt`.
 
 **7 Nov 11:47 SGT: approved by Leon for one submission, stopped before `qsub`, nothing submitted.** One precheck failed: the script refused a `pilot2` run
 directory already in the clone. That directory is the committed evidence of failed job `1526470`, tracked in source `a64e0fe`, so the check was wrong for
