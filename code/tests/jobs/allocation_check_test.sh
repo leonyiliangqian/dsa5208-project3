@@ -54,7 +54,7 @@ node CN-158 0-56,58,60,62,64,66,68,70 "$PLAT" "$UNDER_MOM" | setup one_alias
 log "CN-[3:158],cn-[3:158]@0(2)" > "$work/one_alias/log.in"
 run one_alias 1 CN-158 64 1
 check "one node, case alias: PASS"                 test "$RC" -eq 0
-check "one node, case alias: alias recorded"       grep -q "case_aliases=\['cn-\[3:158\]'\]" "$work/one_alias/out"
+check "one node, case alias: alias recorded"       grep -q "case_aliases=\['cn-158'\]" "$work/one_alias/out"
 
 # 2. Two nodes with the head given in PBS form (lower case, domain): the head is
 #    still recognised, so only the other node must be under orted and pbs_mom.
@@ -87,6 +87,7 @@ check "mixed models, not required: recorded"       grep -q "mixed_models=True" "
 log "IN-[3:4],in-[3:4-5]@0(3)" > "$work/same/log.in"
 run same 2 IN-004 64 1
 check "same model on both nodes: PASS"             test "$RC" -eq 0
+check "compressed node list expanded: alias in-004" grep -q "case_aliases=\['in-004'\]" "$work/same/out"
 node CN-159 0-71 "$PLAT" "$UNDER_MOM" | setup wrong_cpus
 log "CN-[3:159],cn-[3:159]@0(2)" > "$work/wrong_cpus/log.in"
 run wrong_cpus 1 CN-159 64 1
@@ -101,7 +102,7 @@ for spec in "pilot2-20261106T233758Z-1526470 2 IN-004 1" "bench1-20261106T130250
     run "$1" "$2" "$3" 64 1
     check "replay $1: exit $4 as on Vanda" test "$RC" -eq "$4"
 done
-check "replay 1526501: alias recorded" sh -c "[ ! -d '$work/bench1-20261106T130250Z-1526501' ] || grep -q \"case_aliases=\['cn-\[3:158\]'\]\" '$work/bench1-20261106T130250Z-1526501/out'"
+check "replay 1526501: alias recorded" sh -c "[ ! -d '$work/bench1-20261106T130250Z-1526501' ] || grep -q \"case_aliases=\['cn-158'\]\" '$work/bench1-20261106T130250Z-1526501/out'"
 
 echo "allocation_check_test: $pass passed, $fail failed (work: $work)"
 [ "$fail" -eq 0 ]

@@ -54,8 +54,19 @@ log = open(verbose, errors="replace").read()
 selected = {k: re.findall(rf"\(\s*{k}\) Selected component \[(\w+)\]", log) for k in ("plm", "ras")}
 remote = [field(l, "ancestry") for l in lines if short(l.split()[1]) != head]
 # Names in Open MPI's node list that differ only in case: one host, two daemons.
+# The list compresses names as prefix[width:ranges], e.g. "IN-[3:4],in-[3:4-5]".
+def expand(item):
+    m = re.fullmatch(r"(.*)\[(\d+):([\d,-]+)\](.*)", item)
+    if not m:
+        return [item]
+    out = []
+    for part in m.group(3).split(","):
+        a, _, b = part.partition("-")
+        out += [f"{m.group(1)}{i:0{int(m.group(2))}d}{m.group(4)}" for i in range(int(a), int(b or a) + 1)]
+    return out
 regex = re.search(r'orte_node_regex "([^"@]*)', log)
-names = [n.strip() for n in re.split(r",(?![^\[]*\])", regex.group(1))] if regex else []
+items = [n.strip() for n in re.split(r",(?![^\[]*\])", regex.group(1))] if regex else []
+names = [n for item in items for n in expand(item)]
 aliased = sorted({n.lower() for n in names if [m.lower() for m in names].count(n.lower()) > 1})
 checks = {
     f"{expect}_hosts": len(hosts) == expect == want and len(lines) == expect,
