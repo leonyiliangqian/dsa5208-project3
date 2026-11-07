@@ -9,7 +9,9 @@
 #                    does not start with "frozen" (the pilot runs a proposed one)
 #
 #   SCALE_CHECKS     1 adds, after placement, critical gates that use every core:
-#                    MPI-only placement, data exchange, and bound runs against serial
+#                    MPI-only placement, data exchange, and bound runs against serial.
+#                    Every launch states its placement and binding; the exchange gate
+#                    uses place_mpi's (make internode, after job 1526501)
 #
 # Gates (jobs/vanda/gates.sh): allocation (critical: hosts, exact cpusets and
 # ONE CPU model, since timings are compared only within a model), build

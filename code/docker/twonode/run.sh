@@ -4,6 +4,9 @@
 # /tmp/nodefile (each host listed once per CPU, 8 each), then remove both
 # containers.
 #   docker/twonode/run.sh 'mpirun --hostfile /tmp/nodefile -np 2 hostname'
+# TWONODE_UPPER_HOSTNAME=1 gives each container an upper-case hostname (NODE1)
+# while the node file and DNS keep node1, as on Vanda (hostname CN-158, PBS
+# cn-158), so Open MPI starts a second daemon on the head node.
 set -eu
 here=$(cd "$(dirname "$0")" && pwd)
 project=$(cd "$here/../../.." && pwd)
@@ -16,7 +19,8 @@ docker network create "$net" >/dev/null
 cleanup() { docker rm -f node1 node2 >/dev/null 2>&1 || true; docker network rm "$net" >/dev/null 2>&1 || true; }
 trap cleanup EXIT INT TERM
 for n in node1 node2; do
-    docker run -d --rm --name "$n" --hostname "$n" --network "$net" --cpuset-cpus="$cpus" \
+    hn=$n; [ "${TWONODE_UPPER_HOSTNAME:-0}" = 1 ] && hn=$(echo "$n" | tr '[:lower:]' '[:upper:]')
+    docker run -d --rm --name "$n" --hostname "$hn" --network "$net" --network-alias "$n" --cpuset-cpus="$cpus" \
         -v "$project":/work "$image" >/dev/null
 done
 for n in node1 node2; do for i in 1 2 3 4 5 6 7 8; do echo $n; done; done | docker exec -i -u dev node1 sh -c 'cat > /tmp/nodefile'

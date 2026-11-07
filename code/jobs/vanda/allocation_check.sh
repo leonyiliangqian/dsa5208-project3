@@ -16,6 +16,11 @@
 # pbs_tmrsh the only process must be under pbs_mom and not sshd; it may start
 # from mpirun or orted. Under hostfile, a log selecting tm fails the check: that
 # launch hung in job 1519637 after this check had passed it.
+# Host names are compared in short, lower-case form, as gates.sh does: PBS lists
+# nodes in lower case (cn-158) while hostname reports CN-158. Open MPI 4.1 does not
+# match the two, so it starts a second daemon on the head node through the launcher;
+# that happened in every Vanda job so far, passing and failing, and is recorded only.
+# ALLOC_HEAD overrides the head node's name (tests).
 # Writes OUT/env/nodes.txt and OUT/env/launch_verbose.txt.
 set -o pipefail
 OUT=${1:?OUT} NODES=${2:?NODES} LAUNCH=${3:?LAUNCH}
@@ -23,10 +28,12 @@ OUT=${1:?OUT} NODES=${2:?NODES} LAUNCH=${3:?LAUNCH}
 $MPI --mca plm_base_verbose 10 --mca ras_base_verbose 10 -np "$NODES" --map-by ppr:1:node \
     --bind-to none bash tests/toolchain/node_report.sh \
     2> "$OUT/env/launch_verbose.txt" | sort | tee "$OUT/env/nodes.txt"
-python3 - "$OUT/env/nodes.txt" "$NODES" "$OUT/env/launch_verbose.txt" "$LAUNCH" "$(hostname -s)" \
+python3 - "$OUT/env/nodes.txt" "$NODES" "$OUT/env/launch_verbose.txt" "$LAUNCH" "${ALLOC_HEAD:-$(hostname -s)}" \
     "${ALLOC_CPUS_PER_NODE:-8}" "${ALLOC_SAME_MODEL:-0}" "${ALLOC_EXPECT_NODES:?set ALLOC_EXPECT_NODES}" <<'EOF'
 import re, sys
-nodes, want, verbose, launch, head = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], sys.argv[5]
+def short(h):
+    return h.split(".", 1)[0].lower()
+nodes, want, verbose, launch, head = sys.argv[1], int(sys.argv[2]), sys.argv[3], sys.argv[4], short(sys.argv[5])
 per_node, same_model, expect = int(sys.argv[6]), sys.argv[7] == "1", int(sys.argv[8])
 lines = [l for l in open(nodes) if l.startswith("node ")]
 def field(l, k):
@@ -38,14 +45,18 @@ def count(spec):
         a, _, b = part.partition("-")
         n += int(b) - int(a) + 1 if b else 1
     return n
-hosts = {l.split()[1] for l in lines}
+hosts = {short(l.split()[1]) for l in lines}
 cpus = [count(field(l, "allowed")) for l in lines]
 archs = {field(l, "arch") for l in lines}
 models = sorted({field(l, "model") for l in lines})
 isas = {field(l, "isa") for l in lines}
 log = open(verbose, errors="replace").read()
 selected = {k: re.findall(rf"\(\s*{k}\) Selected component \[(\w+)\]", log) for k in ("plm", "ras")}
-remote = [field(l, "ancestry") for l in lines if l.split()[1] != head]
+remote = [field(l, "ancestry") for l in lines if short(l.split()[1]) != head]
+# Names in Open MPI's node list that differ only in case: one host, two daemons.
+regex = re.search(r'orte_node_regex "([^"@]*)', log)
+names = [n.strip() for n in re.split(r",(?![^\[]*\])", regex.group(1))] if regex else []
+aliased = sorted({n.lower() for n in names if [m.lower() for m in names].count(n.lower()) > 1})
 checks = {
     f"{expect}_hosts": len(hosts) == expect == want and len(lines) == expect,
     f"cpus_{per_node}_each": len(cpus) == want and all(c == per_node for c in cpus),
@@ -83,6 +94,7 @@ print(f"launcher={launch} plm_selected={selected['plm']} ras_selected={selected[
       f"remote_ancestry={remote} remote_pbs_mom_visible={pbs_mom}")
 if launch == "pbs_tmrsh":
     print(f"recorded_only template_line_seen={bool(argv)}")
+print(f"recorded_only orte_node_list={names} case_aliases={aliased}")
 print(f"recorded_only models={models} mixed_models={len(models) > 1} isa_lists_equal={len(isas) == 1} "
       f"pbs_jobid_env={[field(l, 'pbs_jobid_env') for l in lines]}")
 print(" ".join(f"{k}={'ok' if v else 'FAIL'}" for k, v in checks.items()))

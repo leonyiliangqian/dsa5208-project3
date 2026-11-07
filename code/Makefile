@@ -96,11 +96,21 @@ placement: $(BIN)/placement_check  ## Check placement: PLACE_R ranks/node x PLAC
 	    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
 	    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE $(BIN)/placement_check
 
-# Inter-node MPI: ranks round-robin over hosts, verified point-to-point and Allgatherv.
+# Inter-node MPI: INTERNODE_NP/INTERNODE_HOSTS ranks per host, verified point-to-point
+# (the probe pairs ranks on different hosts whatever the mapping) and Allgatherv.
+# Placement is explicit and the same as place_mpi: one core per rank, bound. With
+# no binding given, Open MPI binds each of more than two ranks to a package or NUMA
+# domain; the old --map-by node launch relied on that and failed in job 1526501 on
+# a cpuset split 36 + 28 over two packages, while bound launches on the same node
+# passed. The cause of that failure is not established. Tests may override INTERNODE_PLACE.
 INTERNODE_NP ?= 2
 INTERNODE_HOSTS ?= 1
+INTERNODE_PER_HOST = $(shell expr $(INTERNODE_NP) / $(INTERNODE_HOSTS))
+INTERNODE_PLACE ?= --map-by ppr:$(INTERNODE_PER_HOST):node:PE=1 --bind-to core --report-bindings
 internode: $(BIN)/internode_check  ## Verify MPI data exchange across INTERNODE_HOSTS hosts
-	INTERNODE_EXPECT_HOSTS=$(INTERNODE_HOSTS) $(MPIRUN) -np $(INTERNODE_NP) --map-by node \
+	@[ $$(( $(INTERNODE_NP) % $(INTERNODE_HOSTS) )) -eq 0 ] || { echo "internode: INTERNODE_NP=$(INTERNODE_NP)" \
+	    "is not a multiple of INTERNODE_HOSTS=$(INTERNODE_HOSTS)"; exit 2; }
+	INTERNODE_EXPECT_HOSTS=$(INTERNODE_HOSTS) $(MPIRUN) -np $(INTERNODE_NP) $(INTERNODE_PLACE) \
 	    -x INTERNODE_EXPECT_HOSTS $(BIN)/internode_check
 
 toolchain: $(BIN)/omp_check $(BIN)/mpi_check $(BIN)/hybrid_check  ## Verify OpenMP, MPI and MPI+OpenMP work
