@@ -1,0 +1,42 @@
+[IN-008:1059197] mca: base: components_register: registering framework plm components
+[IN-008:1059197] mca: base: components_register: found loaded component rsh
+[IN-008:1059197] mca: base: components_register: component rsh register function successful
+[IN-008:1059197] mca: base: components_open: opening plm components
+[IN-008:1059197] mca: base: components_open: found loaded component rsh
+[IN-008:1059197] mca: base: components_open: component rsh open function successful
+[IN-008:1059197] mca:base:select: Auto-selecting plm components
+[IN-008:1059197] mca:base:select:(  plm) Querying component [rsh]
+[IN-008:1059197] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[IN-008:1059197] mca:base:select:(  plm) Selected component [rsh]
+[IN-008:1059197] mca: base: components_register: registering framework ras components
+[IN-008:1059197] mca: base: components_register: found loaded component simulator
+[IN-008:1059197] mca: base: components_register: component simulator register function successful
+[IN-008:1059197] mca: base: components_register: found loaded component tm
+[IN-008:1059197] mca: base: components_register: component tm register function successful
+[IN-008:1059197] mca: base: components_register: found loaded component slurm
+[IN-008:1059197] mca: base: components_register: component slurm register function successful
+[IN-008:1059197] mca: base: components_open: opening ras components
+[IN-008:1059197] mca: base: components_open: found loaded component simulator
+[IN-008:1059197] mca: base: components_open: found loaded component tm
+[IN-008:1059197] mca: base: components_open: component tm open function successful
+[IN-008:1059197] mca: base: components_open: found loaded component slurm
+[IN-008:1059197] mca: base: components_open: component slurm open function successful
+[IN-008:1059197] mca:base:select: Auto-selecting ras components
+[IN-008:1059197] mca:base:select:(  ras) Querying component [simulator]
+[IN-008:1059197] mca:base:select:(  ras) Querying component [tm]
+[IN-008:1059197] mca:base:select:(  ras) Query of component [tm] set priority to 100
+[IN-008:1059197] mca:base:select:(  ras) Querying component [slurm]
+[IN-008:1059197] mca:base:select:(  ras) Selected component [tm]
+[IN-008:1059197] mca: base: close: unloading component simulator
+[IN-008:1059197] mca: base: close: component slurm closed
+[IN-008:1059197] mca: base: close: unloading component slurm
+[IN-008:1059197] [[19107,0],0] plm:rsh: final template argv:
+	/opt/pbs/bin/pbs_tmrsh <template>           PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${LD_LIBRARY_PATH:-} ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${DYLD_LIBRARY_PATH:-} ; export DYLD_LIBRARY_PATH ;   /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin/orted -mca orte_leave_session_attached "1" -mca ess "env" -mca ess_base_jobid "1252196352" -mca ess_base_vpid "<template>" -mca ess_base_num_procs "2" -mca orte_node_regex "IN-[3:8],in-[3:8]@0(2)" -mca orte_hnp_uri "1252196352.0;tcp://192.168.23.128:55377" --mca plm_rsh_agent "/opt/pbs/bin/pbs_tmrsh" --mca plm_rsh_no_tree_spawn "1" --mca plm_base_verbose "10" --mca ras_base_verbose "10" -mca plm "rsh" -mca btl "self,vader,tcp" -mca pml "ob1" -mca hwloc_base_binding_policy "none" -mca rmaps_base_mapping_policy "ppr:1:node" -mca pmix "^s1,s2,cray,isolated"
+[IN-008:1059197] [[19107,0],0] complete_setup on job [19107,1]
+[IN-008:1059197] [[19107,0],0] plm:base:receive update proc state command from [[19107,0],1]
+[IN-008:1059197] [[19107,0],0] plm:base:receive got update_proc_state for job [19107,1]
+[IN-008:1059197] [[19107,0],0] plm:base:receive update proc state command from [[19107,0],1]
+[IN-008:1059197] [[19107,0],0] plm:base:receive got update_proc_state for job [19107,1]
+[IN-008:1059197] mca: base: close: unloading component tm
+[IN-008:1059197] mca: base: close: component rsh closed
+[IN-008:1059197] mca: base: close: unloading component rsh

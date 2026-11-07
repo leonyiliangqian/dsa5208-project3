@@ -28,11 +28,11 @@ The report's declaration must not claim more than this table. Each member fills 
 
 These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275` does not fill any of them.
 
-- [x] Serial runtime against N: measured in job `1523703`, 16 cores of a shared node. Group review of the text still open.
+- [x] Serial runtime against N: measured in job `1528774`, a whole 64-core node (earlier `1523703`, 16 shared cores). Group review of the text still open.
 - [ ] MPI strong and weak scaling to at least 256 CPU cores, with speedup and efficiency.
-- [ ] MPI+OpenMP strong and weak scaling: to 16 cores only, from job `1523703`. Missing at 64 to 256 cores.
+- [ ] MPI+OpenMP strong and weak scaling: to 64 cores of one node, from job `1528774`. Missing beyond one node, to 256 cores.
 - [ ] Communication share of runtime and phase times: within one node only. Missing between nodes.
-- [x] Ranks x threads, schedule, leaf size, and accuracy against cost: at 16 cores, job `1523703`.
+- [x] Ranks x threads, schedule, leaf size, and accuracy against cost: at 64 cores, job `1528774`.
 - [ ] Measured findings, Discussion, Limitations from measurements, Conclusion.
 - [ ] Memory per node, interconnect, and the nodes used for measurement.
 - [ ] **256 cores:** Leon reads the balance with `amgr login` and decides on charge approval. Without it, the report must say that
@@ -40,7 +40,7 @@ These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275
 
 ## Report review
 
-- [ ] Read the new Results text from job `1523703`, especially the variability and efficiency-above-1 paragraphs.
+- [ ] Read the Results text, now from job `1528774` (7 Nov), especially the tree-build, schedule (8 x 8) and efficiency-above-1 paragraphs.
 - [ ] Read: Terms Used, input generation, Table 1 (test purposes), Planned Studies, the lines marked "expected", Parallelization
       Decisions, What the Results Support, and the pilot paragraph in Results.
 - [ ] GPU paragraph, against job `1519638`.

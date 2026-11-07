@@ -6,7 +6,7 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 7 November 2026, 11:51 SGT
+## Current status, 7 November 2026, 13:00 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -14,21 +14,24 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1522998`, `1523275` pilots | Finished, passed | Sizing only |
 | `1526470` `pilot2` | **Failed, 7 Nov 07:38:** exit 5 in 13 s at `allocation`: mixed CPU models (IN-004 Gold 6438N + CN-158 Platinum 8452Y), as designed | Nothing measured. Approval used; not retried |
 | `1526501` `bench1` | **Failed, 6 Nov 21:03:** exit 5 in 35 s on CN-158; 4 gates passed, then `internode` lost Open MPI's second daemon | Nothing measured. Approval used; not retried |
-| `1528774` `bench1` rerun | **Running since 11:39:25 SGT** on IN-008 (whole node), `cpu_parallel`, rate 0; 1 x 64 cores, 5 h; source `a64e0fe` | Submitted once; approval used. Do not resubmit or cancel. Formal 64-core studies if its gates pass; first Vanda test of the `internode` fix |
-| `1528798` `pilot2` rerun | **Queued at 11:50 SGT**, `cpu_parallel`, rate 0; 2 x 64 cores, scatter, 30 min; source `a64e0fe`. Waits while `1528774` runs (160 running CPUs per user) | Submitted once; approval used. Do not resubmit or cancel. Sizing only; may stop at `allocation` if nodes are mixed |
+| `1528774` `bench1` rerun | **Finished, passed and verified:** exit 0, 54 min 36 s on IN-008 (whole Gold 6438N node), 9 of 9 gates, 148 of 148 runs verified, 9 of 9 cleanups CLEAN | **Formal 1 to 64-core results**, now the source of the report's CPU figures and tables. One node only |
+| `1528798` `pilot2` rerun | **Queued** at 12:40 SGT (since 11:50), `cpu_parallel`, rate 0; PBS: insufficient `node_pool` | Submitted once; approval used. Do not resubmit or cancel. Sizing only; may stop at `allocation` if nodes are mixed |
 | `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | `bench4` must add its binding and correctness gates before a formal run |
 
+- **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23
+  (64 x 1, efficiency 0.36) to 39 (2 x 32, 0.61); the per-rank tree build grows to about 31% and the exchange about 9% of the 64-rank run; static beat
+  dynamic chunk 64 by 14% at 8 x 8. `1523703` is kept as the earlier shared-node study. Group to read the new Results text.
 - **Diagnosis** ([notes/experiments.md](notes/experiments.md), 7 Nov): `internode` was the only launch with no binding policy, and failed on a 64-CPU cpuset
   split 36 + 28 over two packages of a 72-CPU node, while bound launches on that node passed. **Its cause is not established.** Open MPI also runs a second
   daemon on the head node because PBS and the host spell its name in different case; that happened in every passing job too, so it is not shown to be the cause.
 - **Fixed** in `1c50f92` and `0339f20`: explicit bound placement for `internode`; host names compared in one form; alias recorded. Tested locally only.
 - **Mixed nodes:** no PBS resource selects a CPU model, so the same-model rule stays and a two-node job may again stop at `allocation`.
-- **Still missing from the report:** scaling to 64 and to at least 256 cores (10 points), communication between nodes.
-- **Approvals: none open.** Nothing is watching `1528774` or `1528798`. Lecturer contact is closed. Evidence redaction as below.
+- **Still missing from the report:** scaling beyond one node to at least 256 cores (10 points), communication between nodes.
+- **Approvals: none open.** Nothing is watching `1528798`. Lecturer contact is closed. Evidence redaction as below.
 
 **Next, in order:**
 
-1. When asked, check `1528774` and `1528798` once each; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
+1. When asked, check `1528798` once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
 2. Leon reads the balance with `amgr login` and decides on `pilot4`, then `bench4`, for 256 cores.
 3. Group items in [notes/group_review.md](notes/group_review.md).
 

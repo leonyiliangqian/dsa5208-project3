@@ -790,3 +790,34 @@ Under the same approval (unused after the 11:47 stop), with only the false-posit
 unmodified, and the only untracked or ignored file is the dry run's bytecode cache (Python bytecode of run_manifest in the Vanda clone, written 11:34:00). All checks
 passed, and `qsub` ran once at 11:50:37 SGT. Queued in `cpu_parallel`, rate 0, `project = personal-leonyil.qian`. `1528774` was running on IN-008 since 11:39:25.
 Record: `artifacts/cluster/discovery/vanda_pilot2_submit_a64e0fe_20261107T1150.txt`.
+
+### `bench1` rerun 1528774: passed and verified; report updated, 7 Nov (Vanda job finished 12:34)
+
+**Outcome.** Exit 0, 11:39:25-12:34:03 SGT (54 min 36 s, against about 110 min expected) on IN-008, a whole Gold 6438N node (cpuset 0-63, 32 + 32), rate 0.
+Retrieved over the existing ssh session with bounded commands, 464 of 464 files checksum-verified, the job cookie redacted with a ledger row. Record:
+`artifacts/cluster/discovery/vanda_retrieval_1528774_20261107.txt`. Exit 0 was not taken as the result; each part was checked on the copy:
+
+- **Gates:** 9 of 9 PASS. `allocation`: one host, 64 CPUs, one model, `pbs_tmrsh` with the process under `pbs_mom` and the PBS job ID; Open MPI's head-node alias
+  recorded (`in-008`), as in every job. `placement` 8 x 8 and `place_mpi` 64 x 1: 64 distinct CPUs, one per thread or rank, 32 per socket.
+  `internode` (the fixed, bound launch): 64 ranks, data verified. `serial`: self-tests and theta = 0 against direct summation (1.1e-14). `bound_vs_serial`:
+  6 bound cases on all 64 cores, including 64 x 1, 8 x 8 and ranks owning nothing, all exactly equal to serial; repeatability, argument rejection and the
+  negative control passed.
+- **Runs:** `verify_run.py` PASS: 148 of 148 planned records completed, none failed, timed out or skipped; one source (`a64e0fe`, clean), one binary pair,
+  one host, one CPU model, empty stderr. 144 timed records form 48 configurations of 3 interleaved repetitions; 4 are accuracy runs.
+- **Cleanup:** 9 of 9 CLEAN. **Analysis:** `analyze.py` re-derived `analysis/bench1-1528774/` from the raw records; identical to the job's summary apart from the run name.
+
+**What it shows (1 to 64 cores of one node only).** Repetitions within 3% except the job's first two runs (serial N = 1e4 and 3e4, 80% and 14% slower than
+their later repetitions); serial and hybrid 1 x 1 within about 1%. Serial slope 1.21 over N = 1e4 to 3e6 (N log N would give 1.08). Strong, N = 1e6: 64 x 1
+speedup 23.0 (E 0.36), 8 x 8 27.4 (0.43), 1 x 64 37.8 (0.59), 2 x 32 39.2 (0.61); no efficiency above 1. Traversal 58.3 s to 1.70 s; build 0.30 s to 0.78 s
+(about 31% of the 64-rank run); exchange 8.9% at 64 ranks. Weak, 50,000 per core: 0.18 at 64 (T = 1), 0.36 (T = 8). Schedule: at 8 x 8 static was 14% faster
+than dynamic 64 in all repetitions, with traversal imbalance 1.10 against 1.01 and exchange 0.30-0.32 s against 0.03 s; the exchange is timed around
+`MPI_Allgatherv` and so includes waiting, which fits but does not prove the imbalance as the reason. Leaf 16 was 12% faster than 8 at 8 x 8 (that leaf-8 run
+is the imbalanced one); serially 8 and 16 were equal. Same serial binary at N = 1e6: about 2.2 times as long per step on the shared node of `1523703`.
+Causes of the build growth, of fewer ranks being faster, and of the 8 x 8 imbalance were not tested.
+
+**Report.** `report/generated/` regenerated from `analysis/bench1-1528774/summary.json` only (no mixing with `1523703`); Results, Discussion, Limitations,
+Conclusion and the introduction's summary rewritten from these values, `1523703` kept as the earlier shared-node study, `1526501` and `1526470` described
+under failed runs. Compiled in a scratch copy: 11 pages, no errors, undefined references or overfull boxes. Remaining pending markers: beyond one node, 256 cores,
+interconnect, Canvas source submission, group review.
+
+**pilot2 rerun 1528798:** one read at 12:40:49 SGT: Q since 11:50:37, `Insufficient amount of resource: node_pool`, rate 0. Not changed.

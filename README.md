@@ -56,7 +56,7 @@ These are stable results from real Vanda jobs. Sources and limits are in [notes/
 | Hybrid matches serial across two nodes | `1514458` | One node pair, 16 cores, comparison unbound |
 | GPU solver correct on a real device | `1514775` | NVIDIA A40 |
 | GPU against CPU timing | `1519638` | GPU slower than 36 CPU cores at all 4 sizes; one job, three repetitions |
-| Serial and MPI+OpenMP runtime, 1 to 16 cores | `1523703` | One shared node, three repetitions; ranges up to 61% |
+| Serial and MPI+OpenMP runtime, 1 to 64 cores | `1528774` | One whole node, three repetitions; ranges within 3% apart from the first two runs. Earlier: `1523703`, 16 shared cores |
 
 **MPI and MPI+OpenMP strong and weak scaling to 256 cores do not exist yet.** Pilots `1523275` and `1522998` set sizes only and are not
 results. Local Docker runs are tests and never results.

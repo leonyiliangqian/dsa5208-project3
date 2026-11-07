@@ -1,0 +1,29 @@
+{
+  "case": "accuracy_validate_n20000_th0p9_L8",
+  "rep": 1,
+  "ok": true,
+  "returncode": 0,
+  "timed_out": false,
+  "elapsed_s": 1.236,
+  "command": [
+    "taskset",
+    "-c",
+    "0",
+    "bin/vanda-1528774/bh_serial",
+    "--validate",
+    "--n",
+    "20000",
+    "--theta",
+    "0.9",
+    "--leaf-size",
+    "8"
+  ],
+  "timeout_s": 120,
+  "tags": {
+    "study": "accuracy",
+    "manifest_id": "studies-single-node-v1",
+    "manifest_sha256": "ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b",
+    "manifest_status": "frozen: sizes from pilots 1523275 and 1522998 by the rules in notes/plan_256core.md (N_s = 10^6, 50,000 particles per core, theta 0.5, leaf 8, dynamic 64)",
+    "scale": "1"
+  }
+}

@@ -264,6 +264,8 @@ duplicates, and read the balance.
 - **Launch above two nodes is untested.** `pbs_tmrsh` has only run on two nodes, and never at 64 ranks per node.
 - **Mixed CPU models:** `batch_cpu` could give a mixed set, and the job would stop at its first gate. It may still be charged.
   Nothing can prevent this in the request, and the next attempt needs a new approval.
+- **Tree build at many ranks (measured 7 Nov, `1528774`, one node):** the per-rank build grew from 0.30 s on 1 rank to 0.78 s on 64 ranks at N = 10^6, about 31% of
+  the 64-rank run, and MPI-only efficiency was 0.36 there. How it behaves at 256 ranks over 4 nodes is untested; layouts with fewer ranks per node ran faster on one node.
 - **Uneven cpusets on 72-core nodes (7 Nov):** 64 of 72 cores came as 36 + 28 over two packages on CN-158 (`1526501`). Bound launches passed there; the
   one unbound launch (`internode`) failed, cause not established, and now uses bound placement. Ranks x threads layouts such as 2 x 32 then straddle
   packages unevenly, which can change timings; the cpuset is recorded.

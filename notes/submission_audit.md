@@ -18,9 +18,9 @@ check the Canvas page. A repository link should not be assumed to meet the requi
 | Requirement | Points | Where | Status |
 |---|---|---|---|
 | Explain the algorithm | 5 | Report: Problem and Method | Drafted; group review open |
-| Serial runtime against N | 5 | Report: Results; job `1523703` | **Measured** on 16 cores of a shared node, 10^4 to 2 x 10^6. `bench1` would repeat it on a whole node |
+| Serial runtime against N | 5 | Report: Results; job `1528774` | **Measured** on a whole 64-core node, 10^4 to 3 x 10^6, three repetitions (earlier: `1523703`, shared node) |
 | MPI strong and weak to at least 256 CPU cores, with speedup, efficiency, communication | 10 | Report: Results; `bench4` | **Missing.** Needs a charged queue and Leon's decision |
-| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `1523703`, then `bench4` | **Partial:** to 16 cores only |
+| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `1528774`, then `bench4` | **Partial:** to 64 cores of one node; nothing beyond one node |
 | At least one GPU test | | Job `1519638` | Measured; review open |
 | Discussion of decisions, techniques, communication | 5 | Report: Parallelization Decisions, Discussion | Decisions drafted; Discussion needs results |
 | Scaling and efficiency discussion | | Report: Results, Discussion | **Partial:** to 16 cores, with variability |
