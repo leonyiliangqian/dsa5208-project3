@@ -1,0 +1,89 @@
+bench1 rerun submission, approved by Leon (one job), 7 Nov 2026. Existing ssh session, one bounded session (150 s); checks then one submit.
+
+== script
+C=a64e0fed6df1d5f4bb971471a6548c68f7656c3c; T=a9e1767dcc07d907b9b6987ffd934755cf05751a; M=ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b
+fail=0; bad(){ echo "CHECK FAILED: $*"; fail=1; }
+date; hostname
+cd ~/dsa5208-p3-a64e0fe-bench1/code || { echo "no clone"; exit 9; }
+echo "== source"; h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/studies_single_node.json | cut -d' ' -f1); st=$(git status --porcelain | wc -l)
+echo "commit $h"; echo "tree $t"; echo "manifest $s"; echo "status lines $st"
+[ "$h" = "$C" ] || bad commit; [ "$t" = "$T" ] || bad tree; [ "$s" = "$M" ] || bad manifest; [ "$st" = 0 ] || bad "clone not clean"
+ls artifacts/cluster/runs | grep -q '^bench1-.*' && ls artifacts/cluster/runs | grep '^bench1-' | grep -v 1526501 && bad "a bench1 run dir from another job exists in this clone"
+python3 -c "import json,sys;m=json.load(open('manifests/studies_single_node.json'));print('manifest status',m['status'][:6]);sys.exit(0 if m['status'].startswith('frozen') else 1)" || bad "manifest not frozen"
+echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN' jobs/vanda/bench1.pbs
+grep -qx '#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb' jobs/vanda/bench1.pbs || bad select
+grep -qx '#PBS -l walltime=05:00:00' jobs/vanda/bench1.pbs || bad walltime
+grep -q 'internode INTERNODE_NP=' jobs/vanda/measure.sh && grep -q 'PE=1 --bind-to core --report-bindings' Makefile || bad "internode fix not present"
+echo "== server"; B=$(timeout 30 qstat -Bf 2>&1); echo "$B" | grep -E 'scheduling|server_state'
+echo "$B" | grep -q 'scheduling = True' || bad "scheduling not True or qstat failed"
+for q in auto_free cpu_parallel; do Q=$(timeout 30 qstat -Qf $q 2>&1); echo "== queue $q"; echo "$Q" | grep -E 'queue_type|enabled|started|queue_charge_rate|route_destinations|max_run|resources_max.ncpus|resources_max.walltime' | grep -vE '\[u:(e0|sau)'
+  echo "$Q" | grep -q 'enabled = True' || bad "$q not enabled"; echo "$Q" | grep -q 'started = True' || bad "$q not started"
+  echo "$Q" | grep -q 'resources_default.queue_charge_rate = 0$' || bad "$q rate not 0"; done
+echo "== my jobs"; J=$(timeout 30 qstat -u leonyil.qian 2>&1); rc=$?; echo "$J" | tail -n +6; [ $rc = 0 ] || bad "qstat -u failed"
+echo "== duplicates p3_bench1 from source $C"
+D1=$(timeout 30 qselect -u leonyil.qian -N p3_bench1 2>&1); r1=$?; D2=$(timeout 30 qselect -x -u leonyil.qian -N p3_bench1 2>&1); r2=$?
+echo "current: [$D1] history: [$D2]"; [ $r1 = 0 ] && [ $r2 = 0 ] || bad "qselect failed"
+[ -z "$D1" ] || bad "a p3_bench1 is queued or running"
+for j in $D2; do src=$(timeout 30 qstat -xf "$j" 2>&1 | tr -d '\n\t ' | grep -o 'SOURCE_GIT_REV=[0-9a-f]*' | head -1); echo "history $j $src"
+  [ -n "$src" ] || bad "cannot read source of $j"; [ "$src" = "SOURCE_GIT_REV=$C" ] && bad "duplicate: $j already used source $C"
+  case $j in 1526501.*) ;; *) bad "unexpected p3_bench1 job $j in history";; esac; done
+if [ $fail != 0 ]; then echo "NOT SUBMITTED"; exit 8; fi
+echo "== all checks passed; submitting once"; date
+bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes; echo "submit_rc=$?"; date
+echo "== immediate status"; for j in $(qselect -u leonyil.qian -N p3_bench1); do qstat -xf ${j%%.*}.stdct-mgmt-02 2>&1 | grep -E 'Job_Name|job_state|queue =|qtime|stime|exec_host|comment|Resource_List.(select|walltime|queue_charge_rate)|project'; done
+qstat -u leonyil.qian | tail -n +6
+
+== output
+Sat Nov  7 11:39:16 AM +08 2026
+stdct-login-01
+== source
+commit a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+tree a9e1767dcc07d907b9b6987ffd934755cf05751a
+manifest ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b
+status lines 0
+manifest status frozen
+== resources
+#PBS -N p3_bench1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=05:00:00
+#PBS -j oe
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    queue_type = Route
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    queue_type = Execution
+    resources_max.ncpus = 160
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    max_run = [u:PBS_GENERIC=2]
+    max_run = [u:e1554743=3]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== my jobs
+== duplicates p3_bench1 from source a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+current: [] history: [1526501.stdct-mgmt-02]
+history 1526501.stdct-mgmt-02 SOURCE_GIT_REV=0647895d840a8ecae01b3fb60d6e5d2dcc1d315a
+== all checks passed; submitting once
+Sat Nov  7 11:39:19 AM +08 2026
+command: qsub -q auto_free -v SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a6548c68f7656c3c -o /home/svu/leonyil.qian/dsa5208-p3-a64e0fe-bench1/code/artifacts/cluster/logs/ jobs/vanda/bench1.pbs
+1528774.stdct-mgmt-02
+submit_rc=0
+Sat Nov  7 11:39:19 AM +08 2026
+== immediate status
+    Job_Name = p3_bench1
+    job_state = Q
+    queue = cpu_parallel
+    qtime = Sat Nov  7 11:39:19 2026
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 1:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 05:00:00
+    project = personal-leonyil.qian
+1528774.stdct-* leonyil* cpu_par* p3_bench1     --    1  64  120gb 05:00 Q   -- 

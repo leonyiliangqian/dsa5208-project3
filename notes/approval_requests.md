@@ -1,7 +1,7 @@
 # Approval requests
 
-**No approval is open.** `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. The two requests
-below are proposed, not approved. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** The `bench1` rerun was approved and submitted once on 7 Nov as job `1528774`; that approval is used up. The `pilot2` rerun
+below is proposed, not approved. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Proposed reruns, 7 November 2026: not approved
 
@@ -20,7 +20,13 @@ stops the job within about a minute at rate 0, and nothing is retried.
 which is not established; behaviour on a 72-CPU node whose 64-CPU cpuset is split unevenly (CN-158 gave 36 + 28), beyond the gates that passed there;
 the CPU model of `cn-159`, `cn-161` and `rn-003`.
 
-### `bench1` rerun
+### `bench1` rerun: consumed, job `1528774`
+
+**Approved by Leon and submitted once on 7 Nov at 11:39:19 SGT as job `1528774.stdct-mgmt-02`. This approval is used up.** Every check passed first:
+commit, tree, clean clone, frozen manifest hash, resources, the `internode` fix present, scheduling on, `auto_free` and `cpu_parallel` enabled and started
+at rate 0, nothing of mine queued or running, and the only `p3_bench1` in history was `1526501` from source `0647895`. Queued in `cpu_parallel` at 11:39:19,
+rate 0, `project = personal-leonyil.qian`. A failure is not retried. Record: `code/artifacts/cluster/discovery/vanda_bench1_submit_a64e0fe_20261107T1139.txt`.
+The request as reviewed:
 
 | | |
 |---|---|

@@ -770,3 +770,10 @@ records Open MPI's alias (`case_aliases=`) without failing. On Vanda every name 
 verifying data (oversubscribed and unbound, since Docker has 16 CPUs); two containers with upper-case host names and Open MPI's address matching off,
 which reproduces the alias (`NODE1`, `node1`, `node2`): `bench1` 9 of 9 gates and 36 of 36 runs, `pilot2` 9 of 9 gates and 6 of 6 runs with 16 ranks across
 2 hosts, and an injected `internode` failure stopping the job with 0 runs and cleanup CLEAN. `verify_run.py` flags only Docker's "memory not bound" stderr.
+
+### `bench1` rerun submitted, job 1528774, 7 Nov (Vanda)
+
+Leon approved one job. All checks passed in one session, and `qsub` ran once at 11:39:19 SGT from `~/dsa5208-p3-a64e0fe-bench1/code`: commit `a64e0fe`, tree `a9e1767`,
+clean clone, frozen manifest hash, 1 x 64 cores, 120 GB, 5 h, the `internode` fix present, scheduling on, queues enabled and started at rate 0, nothing of mine queued or
+running, and the only `p3_bench1` in history was `1526501` (source `0647895`). Queued in `cpu_parallel`, rate 0, `project = personal-leonyil.qian`. Nothing measured yet.
+Record: `artifacts/cluster/discovery/vanda_bench1_submit_a64e0fe_20261107T1139.txt`.
