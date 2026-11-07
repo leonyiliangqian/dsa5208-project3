@@ -51,6 +51,12 @@ bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
 
 ### `pilot2` rerun
 
+**7 Nov 11:47 SGT: approved by Leon for one submission, stopped before `qsub`, nothing submitted.** One precheck failed: the script refused a `pilot2` run
+directory already in the clone. That directory is the committed evidence of failed job `1526470`, tracked in source `a64e0fe`, so the check was wrong for
+this clone, but the approval said to stop on any failed check. Every other check passed (clone, manifest, resources, same-model gate, scheduling, queues at
+rate 0, running limits 160 CPUs and 2 jobs, no queued-job limit, `1528774` listed and running, only `1526470` from `367c630` in history). Leon decides whether
+to approve again. Record: `code/artifacts/cluster/discovery/vanda_pilot2_precheck_stopped_a64e0fe_20261107T1147.txt`.
+
 | | |
 |---|---|
 | Clone | `~/dsa5208-p3-a64e0fe-pilot2`, prepared and dry-run 7 Nov |

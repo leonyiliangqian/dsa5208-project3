@@ -777,3 +777,9 @@ Leon approved one job. All checks passed in one session, and `qsub` ran once at 
 clean clone, frozen manifest hash, 1 x 64 cores, 120 GB, 5 h, the `internode` fix present, scheduling on, queues enabled and started at rate 0, nothing of mine queued or
 running, and the only `p3_bench1` in history was `1526501` (source `0647895`). Queued in `cpu_parallel`, rate 0, `project = personal-leonyil.qian`. Nothing measured yet.
 Record: `artifacts/cluster/discovery/vanda_bench1_submit_a64e0fe_20261107T1139.txt`.
+
+### `pilot2` rerun stopped before submission, 7 Nov 11:47 (Vanda)
+
+Leon approved one job. The prechecks ran in one session; one failed, so `qsub` was not run and nothing was queued (confirmed with `qselect`). The failing check
+refused any `pilot2` run directory in the clone, but the one found is `1526470`'s committed evidence, tracked in source `a64e0fe`. All other checks passed.
+`1528774` (`bench1`) was running by then. Record: `artifacts/cluster/discovery/vanda_pilot2_precheck_stopped_a64e0fe_20261107T1147.txt`.

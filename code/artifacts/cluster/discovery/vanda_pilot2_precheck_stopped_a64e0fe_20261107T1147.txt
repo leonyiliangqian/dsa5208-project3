@@ -1,0 +1,95 @@
+pilot2 rerun precheck, 7 Nov 2026 11:47 SGT, approved by Leon for one submission. STOPPED at a failed check; qsub NOT run.
+The failing check (an extra one in this script) found pilot2-20261106T233758Z-1526470 in the clone's runs/: that is the committed,
+redacted evidence of the failed job 1526470, tracked in source a64e0fe (git status clean), not output of a new job. Afterwards
+qselect showed no p3_pilot2 queued or running.
+
+== script
+C=a64e0fed6df1d5f4bb971471a6548c68f7656c3c; T=a9e1767dcc07d907b9b6987ffd934755cf05751a; M=27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+fail=0; bad(){ echo "CHECK FAILED: $*"; fail=1; }
+date; hostname
+cd ~/dsa5208-p3-a64e0fe-pilot2/code || { echo "no clone"; exit 9; }
+echo "== source"; h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/pilot_two_node.json | cut -d' ' -f1); st=$(git status --porcelain | wc -l)
+echo "commit $h"; echo "tree $t"; echo "manifest $s"; echo "status lines $st"
+[ "$h" = "$C" ] || bad commit; [ "$t" = "$T" ] || bad tree; [ "$s" = "$M" ] || bad manifest; [ "$st" = 0 ] || bad "clone not clean"
+ls artifacts/cluster/runs | grep '^pilot2-' && bad "a pilot2 run dir already exists in this clone"
+python3 -c "import json;m=json.load(open('manifests/pilot_two_node.json'));print('manifest',m['id'],m['status'][:9],'cases',len(m['cases']))"
+echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN|^EXPECT_NODES' jobs/vanda/pilot2.pbs
+grep -qx '#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb' jobs/vanda/pilot2.pbs || bad select
+grep -qx '#PBS -l place=scatter' jobs/vanda/pilot2.pbs || bad place
+grep -qx '#PBS -l walltime=00:30:00' jobs/vanda/pilot2.pbs || bad walltime
+echo "== same-model gate"; grep -n 'ALLOC_SAME_MODEL=1' jobs/vanda/measure.sh || bad "same-model gate not retained"
+grep -q 'checks\["one_cpu_model"\]' jobs/vanda/allocation_check.sh || bad "one_cpu_model check missing"
+grep -q 'PE=1 --bind-to core --report-bindings' Makefile || bad "internode fix not present"
+echo "== server"; B=$(timeout 30 qstat -Bf 2>&1); echo "$B" | grep -E 'scheduling|server_state'
+echo "$B" | grep -q 'scheduling = True' || bad "scheduling not True or qstat failed"
+for q in auto_free cpu_parallel; do Q=$(timeout 30 qstat -Qf $q 2>&1); echo "== queue $q"; echo "$Q" | grep -E 'queue_type|enabled|started|queue_charge_rate|route_destinations|max_run|max_queued|queued_jobs_threshold|resources_max.ncpus|resources_max.nodect|resources_max.walltime' | grep -vE '\[u:(e0|e1|sau)'
+  echo "$Q" | grep -q 'enabled = True' || bad "$q not enabled"; echo "$Q" | grep -q 'started = True' || bad "$q not started"
+  echo "$Q" | grep -q 'resources_default.queue_charge_rate = 0$' || bad "$q rate not 0"; done
+CP=$(timeout 30 qstat -Qf cpu_parallel 2>&1)
+echo "$CP" | grep -q 'max_run_res.ncpus = \[u:PBS_GENERIC=160\]' || bad "running-CPU limit 160 per user not found"
+echo "$CP" | grep -q 'max_run = \[u:PBS_GENERIC=2\]' || bad "running-job limit 2 per user not found"
+echo "$CP" | grep -q 'resources_max.ncpus = 160' || bad "resources_max.ncpus 160 not found (128 must be admissible)"
+lim=$(echo "$CP $(timeout 30 qstat -Qf auto_free) $(timeout 30 qstat -Bf)" | grep -oE '(max_queued(_res\.ncpus)?|queued_jobs_threshold(_res\.ncpus)?) = \[[^]]*PBS_GENERIC=[0-9]+\]' | head -5); echo "queued-job limits for users: [${lim}]"
+for l in $(echo "$lim" | grep -oE '(max_queued|queued_jobs_threshold)(_res\.ncpus)? = \[[^]]*PBS_GENERIC=[0-9]+' | sed 's/ //g'); do n=${l##*=}; case $l in *ncpus*) [ $n -ge 192 ] || bad "queued CPU limit $n < 192";; *) [ $n -ge 2 ] || bad "queued job limit $n < 2";; esac; done
+echo "== my jobs"; J=$(timeout 30 qstat -u leonyil.qian 2>&1); rc=$?; echo "$J" | tail -n +6; [ $rc = 0 ] || bad "qstat -u failed"
+echo "$J" | grep -q '^1528774' || bad "bench1 1528774 not listed"
+echo "== duplicates p3_pilot2 from source $C"
+D1=$(timeout 30 qselect -u leonyil.qian -N p3_pilot2 2>&1); r1=$?; D2=$(timeout 30 qselect -x -u leonyil.qian -N p3_pilot2 2>&1); r2=$?
+echo "current: [$D1] history: [$D2]"; [ $r1 = 0 ] && [ $r2 = 0 ] || bad "qselect failed"
+[ -z "$D1" ] || bad "a p3_pilot2 is queued or running"
+for j in $D2; do src=$(timeout 30 qstat -xf "$j" 2>&1 | tr -d '\n\t ' | grep -o 'SOURCE_GIT_REV=[0-9a-f]*' | head -1); echo "history $j $src"
+  [ -n "$src" ] || bad "cannot read source of $j"; [ "$src" = "SOURCE_GIT_REV=$C" ] && bad "duplicate: $j already used source $C"
+  case $j in 1526470.*) ;; *) bad "unexpected p3_pilot2 job $j in history";; esac; done
+if [ $fail != 0 ]; then echo "NOT SUBMITTED"; exit 8; fi
+echo "== all checks passed; submitting once"; date
+bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes; echo "submit_rc=$?"; date
+echo "== immediate status of both"; for j in 1528774 $(qselect -u leonyil.qian -N p3_pilot2); do qstat -xf ${j%%.*}.stdct-mgmt-02 2>&1 | grep -E 'Job_Name|job_state|queue =|qtime|stime|exec_host|comment|Resource_List.(select|place|walltime|queue_charge_rate)|project'; echo; done
+qstat -u leonyil.qian | tail -n +6
+
+== output
+Sat Nov  7 11:47:47 AM +08 2026
+stdct-login-01
+== source
+commit a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+tree a9e1767dcc07d907b9b6987ffd934755cf05751a
+manifest 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74
+status lines 0
+pilot2-20261106T233758Z-1526470
+CHECK FAILED: a pilot2 run dir already exists in this clone
+manifest pilot-two-node-v1 proposed cases 6
+== resources
+#PBS -N p3_pilot2
+#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+EXPECT_NODES=2 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+== same-model gate
+69:    ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$LAUNCH"
+== server
+    server_state = Active
+    scheduling = True
+== queue auto_free
+    queue_type = Route
+    resources_default.queue_charge_rate = 0
+    route_destinations = cpu_serial,cpu_parallel,gpu
+    enabled = True
+    started = True
+== queue cpu_parallel
+    queue_type = Execution
+    resources_max.ncpus = 160
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+queued-job limits for users: []
+== my jobs
+1528774.stdct-* leonyil* cpu_par* p3_bench1  10590*   1  64  120gb 05:00 R 00:07
+== duplicates p3_pilot2 from source a64e0fed6df1d5f4bb971471a6548c68f7656c3c
+current: [] history: [1526470.stdct-mgmt-02]
+history 1526470.stdct-mgmt-02 SOURCE_GIT_REV=367c63046583a2d7f26a0ddc1109bd07d99b2fad
+NOT SUBMITTED
