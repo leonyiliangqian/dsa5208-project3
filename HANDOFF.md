@@ -6,7 +6,33 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 6 November 2026, 18:44 SGT
+## Current status, 7 November 2026, 12:00 SGT
+
+| Job | State | Means |
+|---|---|---|
+| `1523703` `bench16` | **Finished, passed:** 121 of 121 runs verified | **Formal 16-core results**, in the report |
+| `1522998`, `1523275` pilots | Finished, passed | Sizing only |
+| `1526470` `pilot2` | **Failed, 7 Nov 07:38:** exit 5 in 13 s at `allocation`: mixed CPU models (IN-004 Gold 6438N + CN-158 Platinum 8452Y), as designed | Nothing measured. Approval used; not retried |
+| `1526501` `bench1` | **Failed, 6 Nov 21:03:** exit 5 in 35 s on CN-158; 4 gates passed, then `internode` lost Open MPI's second daemon | Nothing measured. Approval used; not retried |
+| `bench1`, `pilot2` reruns | **Proposed, not approved.** Fixed source `a64e0fe`, clones prepared and dry-run on Vanda 7 Nov | Requests in [notes/approval_requests.md](notes/approval_requests.md) |
+| `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | `bench4` must add its binding and correctness gates before a formal run |
+
+- **Diagnosis** ([notes/experiments.md](notes/experiments.md), 7 Nov): `internode` was the only launch with no binding policy, and failed on a 64-CPU cpuset
+  split 36 + 28 over two packages of a 72-CPU node, while bound launches on that node passed. **Its cause is not established.** Open MPI also runs a second
+  daemon on the head node because PBS and the host spell its name in different case; that happened in every passing job too, so it is not shown to be the cause.
+- **Fixed** in `1c50f92` and `0339f20`: explicit bound placement for `internode`; host names compared in one form; alias recorded. Tested locally only.
+- **Mixed nodes:** no PBS resource selects a CPU model, so the same-model rule stays and a two-node job may again stop at `allocation`.
+- **Still missing from the report:** scaling to 64 and to at least 256 cores (10 points), communication between nodes.
+- **Approvals: none open.** Nothing is watching any job. Lecturer contact is closed. Evidence redaction as below.
+
+**Next, in order:**
+
+1. Leon decides on the `bench1` rerun, then the `pilot2` rerun (separate approvals).
+2. When asked, check each once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
+3. Leon reads the balance with `amgr login` and decides on `pilot4`, then `bench4`, for 256 cores.
+4. Group items in [notes/group_review.md](notes/group_review.md).
+
+## Status on 6 November 2026, 18:44 SGT, superseded
 
 | Job | State | Means |
 |---|---|---|

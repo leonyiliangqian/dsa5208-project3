@@ -1,0 +1,87 @@
+Staging and dry runs of pilot2 and bench1 at a64e0fe, 7 Nov 2026, existing ssh session, bounded. Nothing submitted.
+Bundle dsa5208-p3-a64e0fe.bundle sha256 73493ca4fad843476fb25fb968cbade5efb2906a6eaf3964a13cabef8d2a2f1d (local = remote).
+Clones: git clone -b main of the bundle into ~/dsa5208-p3-a64e0fe-pilot2 (11:32:44-11:33:12) and ~/dsa5208-p3-a64e0fe-bench1 (-11:33:41).
+
+== script
+C=a64e0fed6df1d5f4bb971471a6548c68f7656c3c; T=a9e1767dcc07d907b9b6987ffd934755cf05751a
+date; hostname
+for spec in "pilot2 manifests/pilot_two_node.json 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74" \
+            "bench1 manifests/studies_single_node.json ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b"; do
+  set -- $spec; job=$1; man=$2; M=$3
+  echo; echo "######## $job: clone ~/dsa5208-p3-a64e0fe-$job"
+  cd ~/dsa5208-p3-a64e0fe-$job/code || { echo "NO CLONE"; continue; }
+  h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum $man | cut -d' ' -f1)
+  echo "commit $h $([ $h = $C ] && echo ok || echo BAD)"; echo "tree $t $([ $t = $T ] && echo ok || echo BAD)"; echo "manifest $man $s $([ $s = $M ] && echo ok || echo BAD)"
+  echo "status lines $(git status --porcelain | wc -l)"
+  python3 -c "import json;m=json.load(open('$man'));print('manifest',m['id'],'|',m['status'][:9],'| cases',len(m['cases']))"
+  echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN|SCALE_CHECKS|PLACE_R' jobs/vanda/$job.pbs
+  echo "== internode target"; make -s -n BIN=x MPIRUN=mpirun internode INTERNODE_NP=64 INTERNODE_HOSTS=1 -o x/internode_check | head -1
+  echo "== budget"; if [ $job = bench1 ]; then python3 scripts/plan_budget.py $man jobs/vanda/$job.pbs --startup-s 900 | tail -4; else python3 scripts/plan_budget.py $man jobs/vanda/$job.pbs | tail -4; fi
+  echo "== dry run, no --yes"; bash jobs/vanda/submit.sh $job --queue auto_free --no-project
+  echo "== after: status lines $(git status --porcelain | wc -l)"
+done
+echo; echo "== clones"; ls -d ~/dsa5208-p3-*/ | wc -l
+echo "== scheduler, one read-only look"; timeout 20 qstat -Bf 2>&1 | grep -E 'scheduling|server_state|illegally|cannot' | head -3; timeout 20 qstat -u leonyil.qian 2>&1 | tail -n +6 | head -3; echo qstat_done
+
+== output
+Sat Nov  7 11:33:58 AM +08 2026
+stdct-login-01
+
+######## pilot2: clone ~/dsa5208-p3-a64e0fe-pilot2
+commit a64e0fed6df1d5f4bb971471a6548c68f7656c3c ok
+tree a9e1767dcc07d907b9b6987ffd934755cf05751a ok
+manifest manifests/pilot_two_node.json 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74 ok
+status lines 0
+manifest pilot-two-node-v1 | proposed | cases 6
+== resources
+#PBS -N p3_pilot2
+#PBS -l select=2:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l place=scatter
+#PBS -l walltime=00:30:00
+#PBS -j oe
+EXPECT_NODES=2 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+== internode target
+[ $(( 64 % 1 )) -eq 0 ] || { echo "internode: INTERNODE_NP=64" \
+== budget
+runs: 6, estimated 258 s, worst case 730 s, budget 1040 s after 300 s of gates and 460 s reserved at the end
+expected job time: 9 min = 20 core-hours used
+largest node memory: 73 GB of 120 GB
+PLAN OK
+== dry run, no --yes
+command: qsub -q auto_free -v SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a6548c68f7656c3c -o /home/svu/leonyil.qian/dsa5208-p3-a64e0fe-pilot2/code/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+dry run: add --yes to submit
+== after: status lines 0
+
+######## bench1: clone ~/dsa5208-p3-a64e0fe-bench1
+commit a64e0fed6df1d5f4bb971471a6548c68f7656c3c ok
+tree a9e1767dcc07d907b9b6987ffd934755cf05751a ok
+manifest manifests/studies_single_node.json ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b ok
+status lines 0
+manifest studies-single-node-v1 | frozen: s | cases 52
+== resources
+# The walltime covers the worst case of scripts/plan_budget.py. SCALE_CHECKS adds the 64 x 1
+#PBS -N p3_bench1
+#PBS -l select=1:ncpus=64:mpiprocs=64:mem=120gb
+#PBS -l walltime=05:00:00
+#PBS -j oe
+EXPECT_NODES=1 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+== internode target
+[ $(( 64 % 1 )) -eq 0 ] || { echo "internode: INTERNODE_NP=64" \
+== budget
+runs: 148, estimated 5681 s, worst case 16140 s, budget 16758 s after 900 s of gates and 342 s reserved at the end
+expected job time: 110 min = 117 core-hours used
+largest node memory: 37 GB of 120 GB
+PLAN OK
+== dry run, no --yes
+command: qsub -q auto_free -v SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a6548c68f7656c3c -o /home/svu/leonyil.qian/dsa5208-p3-a64e0fe-bench1/code/artifacts/cluster/logs/ jobs/vanda/bench1.pbs
+dry run: add --yes to submit
+== after: status lines 0
+
+== clones
+17
+== scheduler, one read-only look
+    server_state = Active
+    scheduling = True
+qstat_done

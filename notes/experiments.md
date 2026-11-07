@@ -729,3 +729,44 @@ commit `0647895`, tree `0c20858`, clean clone, frozen manifest hash, 1 x 64 core
 `max_run = 2`), and no queued-job limit exists for users on the server, `auto_free` or `cpu_parallel`. So both jobs stay queued, and PBS will not run them at the same time.
 At 18:43 both were Q; `1526470` had `Insufficient amount of resource: node_pool`. Record: `artifacts/cluster/discovery/vanda_bench1_submit_0647895_20261106T1843.txt`.
 
+
+### `pilot2` 1526470 and `bench1` 1526501 failed; diagnosis and fixes, 7 Nov (nothing submitted)
+
+Both finished before any timing; neither is retried. Originals stay on Vanda; copies were retrieved over the existing ssh session with every command
+bounded, 22 of 22 files checksum-verified, job cookies redacted with ledger rows. Record: `artifacts/cluster/discovery/vanda_retrieval_1526470_1526501_20261107.txt`.
+
+**`1526501` (`bench1`), 6 Nov 21:02:48-21:03:24, CN-158, exit 5.** `allocation`, `build`, `placement` (8 x 8, bound) and `place_mpi` (64 x 1, bound) passed;
+`internode` failed in 3 s with "ORTE has lost communication with a remote daemon", HNP `[[55357,0],0]` on `CN-158`, remote daemon `[[55357,0],1]` on `cn-158`.
+0 runs, so nothing measured; all 5 cleanups CLEAN. What the evidence shows:
+
+- **CN-158 is a different node type.** It has 72 CPUs (2 vnodes x 36) and reports Platinum 8452Y; every earlier job ran on 64-CPU IN nodes (Gold 6438N).
+  PBS gave 36 CPUs on one vnode and 28 on the other, and `--report-bindings` shows 36 bound ranks on package 0 and 28 on package 1.
+- **Open MPI starts a second daemon on the head node.** PBS lists the node as `cn-158`; the host calls itself `CN-158`; the daemon list is
+  `CN-[3:158],cn-[3:158]`, so a second `orted` started through `pbs_tmrsh` on the same host and ran every rank. **This is not shown to be the cause:** the same
+  pattern (`IN-[3:2],in-[3:2]`, `IN-[3:16],in-[3:16]`) appears in every passing job, including `bench16`'s `internode` gate, and in this job's four passing gates.
+- **`internode` was the only launch with no binding policy.** It used `--map-by node`, so Open MPI's default applied, which for more than two ranks binds each
+  to a package or NUMA domain. Every other launch states its binding: `--bind-to none` (allocation) or `--bind-to core` with ppr and PE (placement,
+  place_mpi, bound runs, timed runs). In `bench16` the 16 CPUs were all on one package, so a package binding could not overload there.
+- **Cause: not established.** The evidence fits the unbound launch on the uneven 36 + 28 cpuset, but the job recorded nothing from the remote daemon, and
+  a local attempt to reproduce it with a simulated topology was inconclusive (Docker cannot apply the simulated binding). It is a hypothesis only.
+
+**Fix, `1c50f92` and `0339f20`:** `make internode` uses `place_mpi`'s placement, `--map-by ppr:<NP/HOSTS>:node:PE=1 --bind-to core --report-bindings`,
+which passed with 64 ranks on this node, and refuses a rank count that does not divide over the hosts. The probe still verifies the data and, with two or
+more hosts, that every pair crosses hosts; nothing in it was relaxed. All other launch paths were reviewed: each already states its binding
+(`launch_policy_test.sh` checks them). `toolchain` (2 ranks, defaults to core binding) is used only by the historical correctness jobs.
+
+**`1526470` (`pilot2`), 7 Nov 07:37:57-07:38:12, IN-004 + CN-158, exit 5.** `allocation` found Gold 6438N and Platinum 8452Y and failed `one_cpu_model`, as designed;
+both nodes had exactly 64 CPUs, the remote daemon ran under `pbs_mom`, and both cleanups were CLEAN. The same check stopped `1506687` on 29 Oct.
+No supported PBS resource selects a CPU model: none is defined, `switch` is set only on charged and GPU vnodes, and `host=` would pin hosts. The free pool
+has 20 hosts with 64 CPUs (IN, the four seen are Gold 6438N) and 4 with 72 (`cn-158`, `cn-159`, `cn-161`, `rn-003`; only CN-158's model is known).
+So the same-model rule stays, and a rerun can again land on mixed nodes and stop in seconds at rate 0. A correctness-only mode on mixed nodes was not
+added: `pilot2`'s purpose is sizing, which mixed timings cannot give, and its correctness would not carry over to the charged pool's nodes.
+
+**Host names:** `allocation_check.sh` now compares names short and lower case, as `gates.sh` does, so one host under two spellings counts once, and it
+records Open MPI's alias (`case_aliases=`) without failing. On Vanda every name it compares came from `hostname -s`, so this did not change either verdict
+(replayed in `allocation_check_test.sh`: 1526470 still fails, 1526501 still passes).
+
+**Local tests (not Vanda evidence):** `allocation_check_test.sh` 15 of 15; `launch_policy_test.sh` 21 of 21, including 64 ranks on one node exchanging and
+verifying data (oversubscribed and unbound, since Docker has 16 CPUs); two containers with upper-case host names and Open MPI's address matching off,
+which reproduces the alias (`NODE1`, `node1`, `node2`): `bench1` 9 of 9 gates and 36 of 36 runs, `pilot2` 9 of 9 gates and 6 of 6 runs with 16 ranks across
+2 hosts, and an injected `internode` failure stopping the job with 0 runs and cleanup CLEAN. `verify_run.py` flags only Docker's "memory not bound" stderr.

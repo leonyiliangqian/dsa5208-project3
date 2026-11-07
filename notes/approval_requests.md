@@ -1,6 +1,70 @@
 # Approval requests
 
-**No approval is open.** `pilot2` (`1526470`) and `bench1` (`1526501`) are both submitted and queued. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+**No approval is open.** `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. The two requests
+below are proposed, not approved. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
+
+## Proposed reruns, 7 November 2026: not approved
+
+Diagnosis in [experiments.md](experiments.md) (7 Nov). Both clones were prepared and dry-run on 7 Nov at 11:33 SGT: commit, tree, manifest hash, resources
+and a clean clone verified, `qsub` printed and not run. Record: `code/artifacts/cluster/discovery/vanda_dryrun_a64e0fe_20261107T1133.txt`.
+Source for both: `a64e0fed6df1d5f4bb971471a6548c68f7656c3c`, tree `a9e1767dcc07d907b9b6987ffd934755cf05751a`; the code is `0339f20` plus evidence files.
+
+**What changed since the failed jobs:** `make internode` now uses `place_mpi`'s explicit, bound placement, and the allocation check compares host names in
+one form and records Open MPI's head-node alias. Nothing else in the job path, plans or budgets changed.
+
+**Suggested order:** `bench1` first, because it gives the formal 64-core results the report needs and is the first Vanda test of the fixed `internode` gate
+(64 ranks, one node). `pilot2` can be queued with it: PBS runs at most 160 CPUs per user, so they will not run together. Either may fail again; a failure
+stops the job within about a minute at rate 0, and nothing is retried.
+
+**What remains unverified, for both:** that the fixed `internode` launch passes on Vanda (only local simulations so far); the cause of `1526501`'s failure,
+which is not established; behaviour on a 72-CPU node whose 64-CPU cpuset is split unevenly (CN-158 gave 36 + 28), beyond the gates that passed there;
+the CPU model of `cn-159`, `cn-161` and `rn-003`.
+
+### `bench1` rerun
+
+| | |
+|---|---|
+| Clone | `~/dsa5208-p3-a64e0fe-bench1`, prepared and dry-run 7 Nov |
+| Manifest | `studies_single_node.json`, frozen, SHA-256 `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b` (unchanged), 148 runs |
+| Request | `select=1:ncpus=64:mpiprocs=64:mem=120gb`, 5 h, 320 core-hours at most; about 110 min expected; worst case 16140 s within 16758 s; 37 of 120 GB |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck |
+| Gates | `allocation`, `build`, `placement` (8 x 8), `place_mpi` (64 x 1), `internode` (64 x 1, bound), `serial`, `bound_vs_serial`, `runs`, `analyze` |
+| Risk | It may again get a 72-CPU node with an uneven cpuset and a different CPU model from `bench16` (Gold 6438N). Comparisons inside the job stay valid; any comparison with `bench16` must then say the models differ |
+
+> Leon explicitly approves exactly ONE bench1 rerun submission: source a64e0fed6df1d5f4bb971471a6548c68f7656c3c, tree a9e1767dcc07d907b9b6987ffd934755cf05751a,
+> in the existing clone ~/dsa5208-p3-a64e0fe-bench1, manifest studies_single_node.json SHA256 ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b,
+> 1 node x 64 cores, 120 GB, 5 h, auto_free, no -P, rate 0, ZERO CHARGE ONLY. Before submitting, use hard-bounded existing-auth checks to verify commit, tree,
+> clean clone, manifest and resources; scheduling on; auto_free and cpu_parallel enabled and started at rate 0; no p3_bench1 from source a64e0fe in current
+> jobs or history. If any check fails, authentication is needed or there is any charge, stop and report. Otherwise submit the command below exactly once and
+> record the job ID. No retries, cancellations, other jobs, spending, credential or security changes, monitoring loops, lecturer contact or final submission.
+
+```sh
+cd ~/dsa5208-p3-a64e0fe-bench1/code
+bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
+```
+
+### `pilot2` rerun
+
+| | |
+|---|---|
+| Clone | `~/dsa5208-p3-a64e0fe-pilot2`, prepared and dry-run 7 Nov |
+| Manifest | `pilot_two_node.json`, proposed (allowed for a pilot), SHA-256 `27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74` (unchanged), 6 runs |
+| Request | `select=2:ncpus=64:mpiprocs=64:mem=120gb`, `place=scatter`, 30 min, 64 core-hours at most; about 9 min expected; worst case 730 s within 1040 s; 73 of 120 GB |
+| Queue, charge | `auto_free`, no `-P`, rate 0 to recheck |
+| Mixed nodes | No PBS resource selects a CPU model, so it can again get one IN and one CN node. The same-model rule stays: it then stops at `allocation` in seconds, as `1526470` and `1506687` did. Hosts are not pinned |
+| Use | Sizing only: launch, binding and correctness at 128 ranks across 2 nodes, one repetition |
+
+> Leon explicitly approves exactly ONE pilot2 rerun submission: source a64e0fed6df1d5f4bb971471a6548c68f7656c3c, tree a9e1767dcc07d907b9b6987ffd934755cf05751a,
+> in the existing clone ~/dsa5208-p3-a64e0fe-pilot2, manifest pilot_two_node.json SHA256 27ea797af4203fd5ba72880b8b514ca7d2d23d6660e17740fbe932d770e68b74,
+> 2 nodes x 64 cores, 120 GB per node, place=scatter, 30 min, auto_free, no -P, rate 0, ZERO CHARGE ONLY. Before submitting, use hard-bounded existing-auth checks
+> to verify commit, tree, clean clone, manifest and resources; scheduling on; auto_free and cpu_parallel enabled and started at rate 0; no p3_pilot2 from source
+> a64e0fe in current jobs or history. If any check fails, authentication is needed or there is any charge, stop and report. Otherwise submit the command below
+> exactly once and record the job ID. No retries, cancellations, other jobs, spending, credential or security changes, monitoring loops, lecturer contact or final submission.
+
+```sh
+cd ~/dsa5208-p3-a64e0fe-pilot2/code
+bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
+```
 
 ## Readiness review, 6 November 2026
 
@@ -42,6 +106,8 @@ So **`bench1` needs a new clone at `0647895`**. `pilot2` is unchanged: its job s
 
 ## Consumed, 6 November 2026: `pilot2`
 
+**Outcome: failed, 7 Nov 07:38 SGT, exit 5 in 13 s.** `allocation` found mixed CPU models (IN-004 Gold 6438N, CN-158 Platinum 8452Y). Nothing measured.
+
 **Approved by Leon and submitted once on 6 Nov at 18:37:48 SGT as job `1526470`. This approval is used up.** Every check passed first, and none
 failed: commit, tree, clean clone, manifest hash, resources, scheduling, queues enabled and started at rate 0, no `p3_pilot2` before, 0 running CPUs
 (128 with this job). Queued in `cpu_parallel` at 18:37:55. A failure is not retried. Record: `code/artifacts/cluster/discovery/vanda_pilot2_submit_367c630_20261106T1837.txt`. The request as reviewed:
@@ -67,6 +133,8 @@ bash jobs/vanda/submit.sh pilot2 --queue auto_free --no-project --yes
 ```
 
 ## Consumed, 6 November 2026: `bench1`
+
+**Outcome: failed, 6 Nov 21:03 SGT, exit 5 in 35 s on CN-158.** Four gates passed; `internode` lost Open MPI's second daemon. 0 runs. Fixed in `1c50f92`.
 
 **Approved by Leon and submitted once on 6 Nov at 18:43:38 SGT as job `1526501`, to wait in the queue alongside `pilot2` `1526470`. This approval is used up.**
 Every check passed first: commit, tree, clean clone, frozen manifest hash, resources, scheduling, `auto_free` and `cpu_parallel` enabled and started at rate 0,

@@ -160,7 +160,14 @@ Tests: `docker/run.sh bash tests/pipeline_e2e.sh` (manifest -> runs -> analysis
 `bash tests/jobs/pbs_entry_test.sh` (job scripts started outside code/, as PBS does);
 `docker/run.sh bash tests/gpu_timing_e2e.sh` (G2 pipeline and fallback refusal, with a stub);
 `docker/twonode/run.sh 'bash tests/jobs/gates_selftest.sh'` (gate library fault
-injection on two simulated nodes).
+injection on two simulated nodes);
+`bash tests/jobs/allocation_check_test.sh` (allocation check: host-name case,
+Open MPI's head-node alias, mixed CPU models, CPU counts);
+`docker/run.sh bash tests/jobs/launch_policy_test.sh` (every cluster launch states
+its binding; the exchange probe with 64 ranks on one node, and its failure).
+`TWONODE_UPPER_HOSTNAME=1 docker/twonode/run.sh ...` gives the simulated nodes
+upper-case host names, as on Vanda; with `OMPI_MCA_if_base_do_not_resolve=1`
+Open MPI then starts a second daemon on the head node, as it does there.
 
 ## Vanda (PBS)
 

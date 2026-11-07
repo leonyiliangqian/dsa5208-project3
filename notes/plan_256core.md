@@ -264,6 +264,13 @@ duplicates, and read the balance.
 - **Launch above two nodes is untested.** `pbs_tmrsh` has only run on two nodes, and never at 64 ranks per node.
 - **Mixed CPU models:** `batch_cpu` could give a mixed set, and the job would stop at its first gate. It may still be charged.
   Nothing can prevent this in the request, and the next attempt needs a new approval.
+- **Uneven cpusets on 72-core nodes (7 Nov):** 64 of 72 cores came as 36 + 28 over two packages on CN-158 (`1526501`). Bound launches passed there; the
+  one unbound launch (`internode`) failed, cause not established, and now uses bound placement. Ranks x threads layouts such as 2 x 32 then straddle
+  packages unevenly, which can change timings; the cpuset is recorded.
+- **Head-node alias (7 Nov):** Open MPI starts a second daemon on the head node in every Vanda job, because PBS writes `cn-158` and the host says `CN-158`.
+  It has not failed a passing job; it is recorded by the allocation check and not changed.
+- **Mixed models in the free pool too (7 Nov):** `1526470` got IN-004 (Gold 6438N) and CN-158 (Platinum 8452Y). No PBS resource selects a model, so
+  two-node free jobs can stop at `allocation` again.
 - **Pool differences:** speedup is only computed within a job. Free-pool results do not carry over to `cpu_node` nodes.
 - **Sharing on larger nodes:** 64 of 72 cores leaves 8 free on a 72-core node, where another job could run. Hosts are recorded.
   `place=excl` is not proposed because its charge effect is unknown.
