@@ -6,7 +6,10 @@
 # charge rate 1. Blocked until two-node correctness passes and the charge is
 # approved. All nodes must be one CPU model (allocation gate). Walltime and
 # sizes are provisional: pilot4.pbs must pass first, then set them from its
-# timings and recheck with scripts/plan_budget.py.
+# timings and recheck with scripts/plan_budget.py. SCALE_CHECKS (required by
+# Leon, 6 Nov) runs the 64 x 1 per-node placement probe, the bound exchange
+# check and bound runs against serial on all 256 cores before any timing; the
+# walltime must cover their time, measured on 4 nodes by pilot4.
 # Submit only after approval, through jobs/vanda/submit.sh.
 #
 #PBS -N p3_bench4
@@ -18,7 +21,7 @@
 RUN_PREFIX=bench4
 MANIFEST=${MANIFEST:-manifests/studies_four_node.json}
 EXPECT_NODES=4 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
-REQUIRE_FROZEN=1
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
 # PBS starts a job in $HOME, so this relative path needs the cd (job 1514774).
 cd "${PBS_O_WORKDIR:?run under PBS, from the code/ directory}"
 source jobs/vanda/measure.sh

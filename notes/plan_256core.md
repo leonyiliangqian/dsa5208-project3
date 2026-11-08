@@ -10,11 +10,53 @@ needs one of these:
 
 | Route | What it takes | Effect |
 |---|---|---|
-| Charged `batch_cpu` | Leon's `amgr login`, then approval of each job below | Up to 896 core-hours requested in total |
+| Charged `batch_cpu` | Leon's `amgr login` (done 7 Nov), then approval of each job below | Up to 917 core-hours requested in total (192 + 725; the earlier 896 used an older 704 for `bench4`) |
 | Stop at 128 cores on the free queue | `bench1` and `bench2` | Does not meet "at least 256"; the report must say so |
 
 Leave time for queue waits, because the free pilot has already
 waited 10 h 1 min and the wait on `batch_cpu` has never been tested. Due 13 Nov 23:59 SGT.
+
+## Status and contingency, 8 November 2026
+
+**Where it stands (12:47 SGT):** `pilot2` `1528798` has been queued for 25 h (insufficient `node_pool`); no free-pool host was fully idle.
+`batch_cpu` had 462 jobs queued, 164 held and 149 running, and one `cpu_node` host was fully idle, so a charged job may also wait. Every
+live `cpu_node` host has 72 CPUs, so `pilot4` and `bench4` would get 64 of 72 cores per node, as `1526501` did on CN-158 (36 + 28 split); the
+models of those hosts are unverified. Record: `code/artifacts/cluster/discovery/vanda_queue_pools_20261108T1247.txt`.
+
+**Charging, verified against assumed:**
+
+| | Fact | Source |
+|---|---|---|
+| Verified | Balance 10,000 CPU-hours in `personal-leonyil.qian`, 7 Nov | Leon, `amgr login` and `hpc project` |
+| Verified | The balance read 10000.0 on 29 Oct and 10,000 on 7 Nov, with only rate-0 jobs between | Same; consistent with free jobs not being charged |
+| Verified | `auto` routes to `batch_cpu` at `queue_charge_rate = 1`; `batch_cpu` allows 720 CPUs and 6 running jobs per user, 10 nodes per job | `qstat -Qf`, 8 Nov |
+| Assumed | 1 CPU-hour charged per core-hour at rate 1 | Unit name only |
+| Unknown | Charged on the request (walltime x cores) or on use; whether a failed job is charged | Compare the balance before and after `pilot4` |
+
+Requested core-hours, the most that could be charged if charging is on the request: `pilot4` 192, `bench4` 725, together 917, or 9.2% of the balance.
+Expected use from `plan_budget.py`: 53 and 240. That model overestimated `bench1`'s runs by 1.8 times on one IN node (5681 s estimated, 3137 s measured);
+it is untested on 4 nodes or CN nodes.
+
+**Can be done now, without `pilot2`:**
+
+1. Done 8 Nov: `bench4.pbs` has `SCALE_CHECKS=1`, the required binding and correctness gates. Its budget passes with up to 300 s of gates and fails at 900 s;
+   `bench1`'s gates took about 140 s on one node, and the 4-node time is unknown until `pilot4`. (`bench2`, a fallback only, still lacks them.)
+2. `pilot4` budget: passes with up to 600 s of gates (1255 s worst case), 143 of 240 GB per node.
+3. Fresh balance read and a clean clone plus dry run of `pilot4` with `--project personal-leonyil.qian`. Staging writes to Vanda, so it needs Leon's approval;
+   it prints `qsub` and submits nothing.
+
+**Needs `pilot2` (by the current plan):** a 64-ranks-per-node launch and bound comparison across nodes before paying; exchange time over the network at
+128 ranks; memory and time at N = 6.4 x 10^6 with 64 ranks per node. `pilot4` repeats all of these on 4 nodes, so `pilot2` reduces risk but adds no step `pilot4` lacks.
+
+**Decision for Leon (proposed, not adopted): skip the `pilot2` gate if it has not started by Mon 9 Nov 18:00 SGT.** Then request `pilot4` directly, with
+`pilot2` left queued. Evidence gap accepted by doing so: no free multi-node run at 64 ranks per node has passed on Vanda; the uneven 64-of-72 cpuset is
+untested across nodes; a launch fault would cost up to 192 CPU-hours (1.9% of the balance) if charged on the request. Unchanged: same-model, placement,
+bound exchange, bound comparison with serial, cleanup and provenance gates, all in `pilot4`. Why that date: `bench4` needs `pilot4` verified, a manifest
+frozen from it, its own approval, a queue wait of unknown length and up to 2 h 50 min; with the report due 13 Nov 23:59, `bench4` should be submitted by
+about Wed 11 Nov.
+
+**If neither charged job runs in time:** the report keeps its 1 to 64-core results (`1528774`) and states the 256-core shortfall. Reporting `pilot4`'s
+one-repetition 256-core points as results would break the rule that pilots are sizing only; that would be Leon's decision, stated in the report.
 
 ## Order of jobs
 
@@ -26,10 +68,10 @@ Each job needs its own approval. A failure stops the sequence until it is fixed 
 | 0b | `pilot` rerun, commit `3f77e87` | 1 x 64 cores, 120 GB, 60 min | `auto_free`, 0 | 64 | 9 min, measured | **Passed as `1522998`**, whole node IN-016. Sizing only: see "64-core pilot results" |
 | 0c | `pilot16` `1523275` | 1 x 16 cores, 16 GB, 60 min | `auto_free`, 0 | 16 | 15 min, measured | **Passed.** Provisional sizing only: see "Pilot16 results" |
 | 0d | `bench16`, formal studies on 16 cores | 1 x 16 cores, 16 GB, 4 h | `auto_free`, 0 | 64 | 95 min, 25 core-hours | **Passed as `1523703`**, 121 of 121 runs: formal 16-core data. Does not supply 256 cores |
-| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | **Submitted once as `1526470`, 6 Nov 18:37 SGT; queued** |
+| A | `pilot2`, free rehearsal | 2 x 64 cores, 120 GB each, 30 min | `auto_free`, 0 | 64 | 9 min, 20 core-hours | `1526470` failed at `allocation` (mixed models). **Rerun `1528798` queued since 7 Nov 11:50 SGT** |
 | B | `pilot4`, 256-core correctness and sizing | 4 x 64 cores, 240 GB each, 45 min | `auto`, 1 | **192** | 12 min, 52 core-hours | Step A passed, project, balance and charge approval |
 | C | `bench4`, formal strong and weak | 4 x 64 cores, 240 GB each, 2 h 50 min | `auto`, 1 | **725** | 56 min, 240 core-hours | Step B passed, manifest resized and frozen, charge approval |
-| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 100 min, 106 core-hours | **Plan frozen, ready to request.** | **Submitted once as `1526501`, 6 Nov 18:43 SGT; queued** |
+| D | `bench1`, serial against N, schedule, leaf, theta, and single-node strong and weak | 1 x 64 cores, 120 GB, 5 h | `auto_free`, 0 | 320 | 110 min, 117 core-hours | `1526501` failed at `internode`. **Rerun `1528774` passed, 148 of 148 runs, 55 min: formal 1 to 64 cores** |
 
 "Expected use" comes from `scripts/plan_budget.py`, refit to pilot `1523275`. It matches that pilot closely, but 64 and 256 ranks and N above 2 x 10^6 are
 extrapolated, so it could still be off by a factor of two or more there.
@@ -151,8 +193,8 @@ manifest is frozen for a charged job. Results from this job size later jobs but 
   `queue_charge_rate = 1` is known.
 - **Upper bound: charged on the request.** PBS records `job.walltime` and `job.ncpus` for the allocation manager
   (`am_job_cache`), which suggests a request-based hold or charge. Whether unused time comes back is unknown.
-- Under these assumptions B + C is 896 credits at most, or 9% of the last balance read, 10000.0 on 29 Oct. That reading
-  predates every later job. **Leon must read the current balance with `amgr login`.**
+- Under these assumptions B + C is 917 credits at most (192 + 725), or 9.2% of the balance, 10,000 CPU-hours on 7 Nov (Leon, `amgr login`).
+  Read it again just before approving each charged job.
 - **Balance not available:** on 4 Nov at 23:20 SGT, `hpc project` still asked for `amgr login`, and `amgr balance` failed
   with an error before showing anything. The existing SSH login does not cover it.
 - A job that fails early may still be charged. Compare the balance before and after step B before approving step C.

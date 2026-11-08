@@ -6,7 +6,7 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 7 November 2026, 13:00 SGT
+## Current status, 8 November 2026, 13:00 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -15,8 +15,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1526470` `pilot2` | **Failed, 7 Nov 07:38:** exit 5 in 13 s at `allocation`: mixed CPU models (IN-004 Gold 6438N + CN-158 Platinum 8452Y), as designed | Nothing measured. Approval used; not retried |
 | `1526501` `bench1` | **Failed, 6 Nov 21:03:** exit 5 in 35 s on CN-158; 4 gates passed, then `internode` lost Open MPI's second daemon | Nothing measured. Approval used; not retried |
 | `1528774` `bench1` rerun | **Finished, passed and verified:** exit 0, 54 min 36 s on IN-008 (whole Gold 6438N node), 9 of 9 gates, 148 of 148 runs verified, 9 of 9 cleanups CLEAN | **Formal 1 to 64-core results**, now the source of the report's CPU figures and tables. One node only |
-| `1528798` `pilot2` rerun | **Queued** at 12:40 SGT (since 11:50), `cpu_parallel`, rate 0; PBS: insufficient `node_pool` | Submitted once; approval used. Do not resubmit or cancel. Sizing only; may stop at `allocation` if nodes are mixed |
-| `pilot4`, `bench4` | Not ready: charged, need `pilot2` to pass and Leon's balance check | `bench4` must add its binding and correctness gates before a formal run |
+| `1528798` `pilot2` rerun | **Queued** at 8 Nov 12:43 SGT (Codex), 25 h since 7 Nov 11:50, `cpu_parallel`, rate 0; PBS: insufficient `node_pool`, no start estimate | Submitted once; approval used. Do not resubmit or cancel. Sizing only; may stop at `allocation` if nodes are mixed |
+| `pilot4`, `bench4` | Not approved: charged, need `pilot2` to pass or Leon's decision to skip it; balance 10,000 CPU-hours on 7 Nov | Up to 192 + 725 = 917 core-hours requested. `bench4` has its gates since 8 Nov. Plan and contingency: [notes/plan_256core.md](notes/plan_256core.md) |
 
 - **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23
   (64 x 1, efficiency 0.36) to 39 (2 x 32, 0.61); the per-rank tree build grows to about 31% and the exchange about 9% of the 64-rank run; static beat
@@ -32,7 +32,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 **Next, in order:**
 
 1. When asked, check `1528798` once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
-2. Leon reads the balance with `amgr login` and decides on `pilot4`, then `bench4`, for 256 cores.
+2. **Mon 9 Nov 18:00 SGT, Leon decides:** if `1528798` has not started, whether to request `pilot4` without it (gap and cost in `plan_256core.md`).
+   Then a fresh balance read, a `pilot4` clone and dry run (needs approval), and `pilot4` itself (charge approval). `bench4` follows only a verified `pilot4`, by about Wed 11 Nov.
 3. Group items in [notes/group_review.md](notes/group_review.md).
 
 ## Status on 6 November 2026, 18:44 SGT, superseded

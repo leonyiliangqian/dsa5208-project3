@@ -182,8 +182,9 @@ bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project --yes
 
 ## Conditional: `pilot4` and `bench4`, charged, not ready
 
-Both need `pilot2` to pass, then **Leon's `amgr login`, the project ID, the balance, and charge approval**. `bench4` also needs its plan frozen from `pilot4`'s
-result, which changes its hash. Neither has a Vanda dry run, because `submit.sh` needs the real project ID for a correct one.
+Both need `pilot2` to pass (or Leon's decision to skip that gate: see `plan_256core.md`, 8 Nov), a fresh balance read and charge approval. Leon read the
+balance on 7 Nov: 10,000 CPU-hours in `personal-leonyil.qian`. `bench4` also needs its plan frozen from `pilot4`'s result, which changes its hash, and since
+8 Nov carries `SCALE_CHECKS=1`. Neither has a Vanda dry run yet; one needs a clean clone, which needs approval. Manifest hashes unchanged at `e05dea8`.
 
 | Job | Request | Most it could charge, at 1 per core-hour (assumed) | Expected use | Manifest SHA-256 at `367c630` |
 |---|---|---|---|---|

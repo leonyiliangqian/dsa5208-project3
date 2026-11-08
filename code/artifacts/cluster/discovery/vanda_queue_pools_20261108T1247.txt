@@ -1,0 +1,84 @@
+Read-only queue and node-pool discovery, 8 Nov 2026, existing ssh session, one bounded session (150 s). Nothing submitted or changed.
+Status reads of 1528798 earlier: 7 Nov 15:45:44 SGT Q (plain qstat -x; a first filtered query at 15:45:05 returned nothing); Codex: 8 Nov 12:43:32 Q, insufficient node_pool.
+
+== script
+date
+for q in auto batch_cpu cpu_parallel; do echo "== queue $q"; timeout 30 qstat -Qf $q 2>&1 | egrep "queue_type|enabled|started|queue_charge_rate|route_destinations|resources_max\.(ncpus|nodect|walltime|mem)|resources_default\.(walltime|queue_charge_rate)|default_chunk|max_run|state_count|total_jobs" | grep -vE "\[u:(e0|e1|sau)"; done
+echo "== hosts by pool: ncpus, state (natural nodes)"
+timeout 60 pbsnodes -a 2>/dev/null | awk '/^[A-Za-z]/{n=$1} /^ *state =/{st=$3} /resources_available.ncpus/{c=$3} /resources_available.node_pool/{p=$3} /resources_assigned.ncpus/{a=$3} /^$/{if(p!="")print p, c, st, a; p="";c="";st="";a=""}' | sort | uniq -c | sort -k2,2 -k3,3n | awk '$2=="cpu_node"||$2=="cpu_free"' | head -40
+echo "== cpu_node hosts fully idle (assigned 0, state free), by ncpus"
+timeout 60 pbsnodes -a 2>/dev/null | awk '/^[A-Za-z]/{n=$1} /^ *state =/{st=$3} /resources_available.ncpus/{c=$3} /resources_available.node_pool/{p=$3} /resources_assigned.ncpus/{a=$3} /^$/{if((p=="cpu_node"||p=="cpu_free") && st=="free" && a=="0")print p, c, substr(n,1,3); p="";c="";st="";a=""}' | sort | uniq -c
+echo "== my jobs"; timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+
+== output
+Sun Nov  8 12:47:28 PM +08 2026
+== queue auto
+    queue_type = Route
+    total_jobs = 1
+    state_count = Transit:0 Queued:0 Held:0 Waiting:1 Running:0 Exiting:0 Begun
+    resources_default.queue_charge_rate = 1
+    route_destinations = batch_cpu,batch_gpu
+    enabled = True
+    started = True
+== queue batch_cpu
+    queue_type = Execution
+    total_jobs = 735
+    state_count = Transit:0 Queued:462 Held:164 Waiting:-46 Running:149 Exiting
+    resources_max.ncpus = 720
+    resources_max.nodect = 10
+    resources_max.walltime = 240:00:00
+    resources_default.queue_charge_rate = 1
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_node
+    max_run = [u:PBS_GENERIC=6]
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== queue cpu_parallel
+    queue_type = Execution
+    total_jobs = 58
+    state_count = Transit:0 Queued:16 Held:12 Waiting:0 Running:28 Exiting:0 Be
+    resources_max.ncpus = 160
+    resources_max.nodect = 10
+    resources_max.walltime = 168:00:00
+    resources_default.queue_charge_rate = 0
+    resources_default.walltime = 24:00:00
+    default_chunk.node_pool = cpu_free
+    max_run = [u:PBS_GENERIC=2]
+    max_run_res.ncpus = [u:PBS_GENERIC=160]
+    enabled = True
+    started = True
+== hosts by pool: ncpus, state (natural nodes)
+      1 cpu_free 64 <various> 36
+      1 cpu_free 64 <various> 43
+      1 cpu_free 64 <various> 52
+      2 cpu_free 64 <various> 32
+      2 cpu_free 64 <various> 53
+      2 cpu_free 64 <various> 60
+      3 cpu_free 64 <various> 40
+      4 cpu_free 64 <various> 48
+      4 cpu_free 64 <various> 64
+      1 cpu_free 72 free 46
+      1 cpu_free 72 state-unknown,offline 0
+      2 cpu_free 72 <various> 64
+      2 cpu_node  state-unknown,offline 0
+      6 cpu_node  state-unknown,down 0
+     11 cpu_node 72 offline 0
+    131 cpu_node 72 <various> 72
+     17 cpu_node 72 <various> 40
+      1 cpu_node 72 free 0
+      1 cpu_node 72 free 48
+      1 cpu_node 72 free 64
+      1 cpu_node 72 free 68
+      1 cpu_node 72 <various> 48
+      1 cpu_node 72 <various> 53
+      2 cpu_node 72 down 0
+      2 cpu_node 72 state-unknown,offline 0
+      2 cpu_node 72 <various> 52
+      5 cpu_node 72 state-unknown,down 0
+      6 cpu_node 72 <various> 64
+      9 cpu_node 72 <various> 68
+== cpu_node hosts fully idle (assigned 0, state free), by ncpus
+      1 cpu_node 72 cn-
+== my jobs
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 
