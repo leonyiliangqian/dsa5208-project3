@@ -5,7 +5,7 @@ both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both f
 
 ## Proposed, 8 November 2026: `pilot4` staging, then `pilot4`: not approved
 
-Two separate approvals. Neither is approved; the first writes to Vanda but costs nothing, the second is charged. The current plan still needs `pilot2`
+Two separate approvals. Step 1 (staging) was approved and done on 8 Nov; step 2, charged, is not approved. The current plan still needs `pilot2`
 (`1528798`, queued) to pass before step 2, unless Leon decides at the proposed Mon 9 Nov 18:00 SGT point to go without it (`plan_256core.md`, 8 Nov).
 Checks behind this: `code/artifacts/cluster/discovery/vanda_pilot4_readiness_7f1b5a6_20261108T1256.txt`.
 
@@ -36,7 +36,16 @@ Checks behind this: `code/artifacts/cluster/discovery/vanda_pilot4_readiness_7f1
 is unverified, and the same-model gate stops a mixed set (possibly still charged). Queue wait unknown. Results would be on a different CPU model from `1528774`
 if the nodes are Platinum 8452Y; within-job comparisons stay valid.
 
-### Step 1: stage a clean clone and dry-run it on Vanda (no job, no charge)
+### Step 1: stage a clean clone and dry-run it on Vanda (no job, no charge): done 8 Nov, approval used
+
+**Approved by Leon for staging only and done on 8 Nov 13:29-13:31 SGT.** Bundle of `7f1b5a6` transferred once (SHA-256 `b85a34a9...`, local = remote),
+cloned to `~/dsa5208-p3-7f1b5a6-pilot4`: commit, tree `90488b5`, manifest hash and resources verified; the clone is clean, with no untracked or ignored
+files, before and after. Budget passes with 300 or 600 s of gates. The dry run printed
+`qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 -o /home/svu/leonyil.qian/dsa5208-p3-7f1b5a6-pilot4/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs`
+and submitted nothing: no `p3_pilot4` in current jobs or history before or after. `auto` and `batch_cpu` enabled and started at rate 1, scheduling on.
+Blockers left for step 2: a fresh balance read (needs Leon's `amgr login`), and `pilot2` passing or Leon's skip decision.
+Record: `code/artifacts/cluster/discovery/vanda_pilot4_staging_dryrun_7f1b5a6_20261108T1330.txt`. As proposed:
+
 
 Writes about 90 MB (bundle and clone) to the 99%-full NFS home (7 TB free). Exact actions:
 

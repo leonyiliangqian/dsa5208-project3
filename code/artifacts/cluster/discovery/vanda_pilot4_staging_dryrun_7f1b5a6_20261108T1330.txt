@@ -1,0 +1,74 @@
+pilot4 staging and dry run, 8 Nov 2026, approved by Leon for staging only. Nothing submitted; no charge.
+Bundle: git bundle of 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 (HEAD main) from a local scratch clone, verified with git bundle verify.
+Transfer once at 13:29:52 SGT over the existing ssh session: sha256 b85a34a93716d7628b5ef299dfa0e43b7242aaf1e55afd0e04d745d1f4dfce2b, 1502026 bytes, local = remote.
+Clone: git clone -q -b main ~/dsa5208-p3-7f1b5a6.bundle ~/dsa5208-p3-7f1b5a6-pilot4, 13:30:03-13:30:38, rc 0 (target absent before).
+
+== verification and dry-run script
+C=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079; T=90488b5b3e83fd0078597b80e18ecc713d78a750; M=0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823
+date; hostname
+cd ~/dsa5208-p3-7f1b5a6-pilot4/code || exit 9
+h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/pilot_four_node.json | cut -d' ' -f1)
+echo "commit $h $([ $h = $C ] && echo ok || echo BAD)"; echo "tree $t $([ $t = $T ] && echo ok || echo BAD)"; echo "manifest $s $([ $s = $M ] && echo ok || echo BAD)"
+echo "status incl. untracked/ignored: $(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)"
+python3 -c "import json;m=json.load(open('manifests/pilot_four_node.json'));print('manifest',m['id'],'|',m['status'],'| cases',len(m['cases']))"
+echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN|^EXPECT_NODES' jobs/vanda/pilot4.pbs
+echo "== same-model gate"; grep -c 'ALLOC_SAME_MODEL=1' jobs/vanda/measure.sh
+echo "== budget (rate 1)"; for g in 300 600; do python3 -B scripts/plan_budget.py manifests/pilot_four_node.json jobs/vanda/pilot4.pbs --rate 1 --startup-s $g | tail -4; done
+echo "== p3_pilot4 before"; echo "current [$(timeout 30 qselect -u leonyil.qian -N p3_pilot4 2>&1)] history [$(timeout 30 qselect -x -u leonyil.qian -N p3_pilot4 2>&1)]"
+echo "== dry run, no --yes"; bash jobs/vanda/submit.sh pilot4 --queue auto --project personal-leonyil.qian; echo "submit_rc=$?"
+echo "== p3_pilot4 after"; echo "current [$(timeout 30 qselect -u leonyil.qian -N p3_pilot4 2>&1)] history [$(timeout 30 qselect -x -u leonyil.qian -N p3_pilot4 2>&1)]"
+echo "== my jobs"; timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+echo "status after: $(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)"
+echo "== queues"; for q in auto batch_cpu; do timeout 30 qstat -Qf $q 2>&1 | egrep "Queue:|enabled|started|queue_charge_rate"; done; timeout 30 qstat -Bf 2>&1 | grep scheduling
+du -sh ~/dsa5208-p3-7f1b5a6-pilot4 ~/dsa5208-p3-7f1b5a6.bundle
+
+== output
+Sun Nov  8 01:30:53 PM +08 2026
+stdct-login-01
+commit 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 ok
+tree 90488b5b3e83fd0078597b80e18ecc713d78a750 ok
+manifest 0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823 ok
+status incl. untracked/ignored: 0
+manifest pilot-four-node-v1 | proposed | cases 9
+== resources
+#PBS -N p3_pilot4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=00:45:00
+#PBS -j oe
+EXPECT_NODES=4 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+== same-model gate
+1
+== budget (rate 1)
+runs: 9, estimated 443 s, worst case 1255 s, budget 1704 s after 300 s of gates and 696 s reserved at the end
+expected job time: 12 min = 53 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+runs: 9, estimated 443 s, worst case 1255 s, budget 1404 s after 600 s of gates and 696 s reserved at the end
+expected job time: 17 min = 74 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+== p3_pilot4 before
+current [] history []
+== dry run, no --yes
+command: qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 -o /home/svu/leonyil.qian/dsa5208-p3-7f1b5a6-pilot4/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs
+dry run: add --yes to submit
+submit_rc=0
+== p3_pilot4 after
+current [] history []
+== my jobs
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 Q   -- 
+status after: 0
+== queues
+Queue: auto
+    resources_default.queue_charge_rate = 1
+    enabled = True
+    started = True
+Queue: batch_cpu
+    resources_default.queue_charge_rate = 1
+    enabled = True
+    started = True
+    scheduling = True
+107M	/home/svu/leonyil.qian/dsa5208-p3-7f1b5a6-pilot4
+2.0M	/home/svu/leonyil.qian/dsa5208-p3-7f1b5a6.bundle
