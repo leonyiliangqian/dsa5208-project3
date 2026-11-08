@@ -33,7 +33,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 
 1. When asked, check `1528798` once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
 2. **Mon 9 Nov 18:00 SGT, Leon decides:** if `1528798` has not started, whether to request `pilot4` without it (gap and cost in `plan_256core.md`).
-   Then a fresh balance read, a `pilot4` clone and dry run (needs approval), and `pilot4` itself (charge approval). `bench4` follows only a verified `pilot4`, by about Wed 11 Nov.
+   Then a fresh balance read, a `pilot4` clone and dry run (needs approval), and `pilot4` itself (charge approval). Both requests are written in
+   [notes/approval_requests.md](notes/approval_requests.md) (8 Nov); the local dry run at `7f1b5a6` passed, and the balance needs Leon's `amgr login` again. `bench4` follows only a verified `pilot4`, by about Wed 11 Nov.
 3. Group items in [notes/group_review.md](notes/group_review.md).
 
 ## Status on 6 November 2026, 18:44 SGT, superseded

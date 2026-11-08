@@ -1,0 +1,96 @@
+pilot4 dry-run preparation, 8 Nov 2026. Nothing submitted, staged or changed on Vanda.
+
+== local dry run in a clean scratch clone of 7f1b5a6 (macOS)
+== local clean clone 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 tree 90488b5b3e83fd0078597b80e18ecc713d78a750 status_lines        0
+0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823  manifests/pilot_four_node.json
+pilot-four-node-v1 | proposed | cases 9
+== wrapper
+#PBS -N p3_pilot4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=00:45:00
+#PBS -j oe
+RUN_PREFIX=pilot4
+EXPECT_NODES=4 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+== gates (measure.sh with SCALE_CHECKS=1)
+gate allocation 90 critical env ALLOC_EXPECT_NODES="$EXPECT_NODES" ALL
+gate build     300 critical make BIN="$BIN" all hybrid
+gate placement  90 critical make BIN="$BIN" MPIRUN="$MPI" placement PL
+gate place_mpi  180 critical make BIN="$BIN" MPIRUN="$MPI" placement P
+gate internode  180 critical make BIN="$BIN" MPIRUN="$MPI" internode I
+gate serial     240 critical make BIN="$BIN" EVIDENCE="$OUT" check
+gate bound_vs_serial 480 critical make BIN="$BIN" EVIDENCE="$OUT" chec
+gate runs   99999 required python3 scripts/run_manifest.py "$MANIFEST"
+gate analyze   120 required python3 scripts/analyze.py "$OUT"
+69:    ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh "$OUT" "$NODES" "$
+== budget, rate 1
+credits at assumed rate 1 per core-hour: 192 if charged on the request
+runs: 9, estimated 443 s, worst case 1255 s, budget 1704 s after 300 s of gates and 696 s reserved at the end
+expected job time: 12 min = 53 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+credits at assumed rate 1 per core-hour: 192 if charged on the request
+runs: 9, estimated 443 s, worst case 1255 s, budget 1404 s after 600 s of gates and 696 s reserved at the end
+expected job time: 17 min = 74 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+== dry run (no --yes)
+command: qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 -o <scratch clone>/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs
+dry run: add --yes to submit
+status after:        0
+
+== Vanda, read-only, one bounded session (150 s)
+-- script
+date; hostname
+echo "== project/balance (read-only, no input)"; timeout 25 hpc project < /dev/null 2>&1 | head -25; echo "hpc_rc=${PIPESTATUS[0]}"
+echo "== queues"; for q in auto batch_cpu; do timeout 30 qstat -Qf $q 2>&1 | egrep "Queue:|queue_type|enabled|started|queue_charge_rate|route_destinations|resources_max\.(ncpus|nodect|walltime)|default_chunk|max_run|state_count|acl|from_route_only" | grep -vE "\[u:(e0|e1|sau)"; done
+echo "== server limits"; timeout 30 qstat -Bf 2>&1 | egrep "scheduling|server_state|max_run|max_queued|resources_max"
+echo "== pilot2"; timeout 30 qstat -x 1528798.stdct-mgmt-02 2>&1 | tail -1
+echo "== existing clones"; for d in ~/dsa5208-p3-a64e0fe-pilot2 ~/dsa5208-p3-a64e0fe-bench1 ~/dsa5208-p3-7f1b5a6*; do [ -d "$d" ] || { echo "$d absent"; continue; }; echo "$d $(git -C $d rev-parse --short HEAD) untracked+modified=$(git -C $d status --porcelain --untracked-files=all | wc -l) ignored=$(git -C $d status --porcelain --ignored | grep -c '^!!')"; done
+df -h ~ | tail -1
+-- output
+Sun Nov  8 12:56:39 PM +08 2026
+stdct-login-01
+== project/balance (read-only, no input)
+
+ To check PBS Project, credits and members, run this command in terminal first:
+   #  amgr login 
+
+ Please enter with your NUS password to login.
+
+
+hpc_rc=0
+== queues
+Queue: auto
+    queue_type = Route
+    state_count = Transit:0 Queued:0 Held:0 Waiting:1 Running:0 Exiting:0 Begun
+    acl_host_enable = False
+    from_route_only = False
+    resources_default.queue_charge_rate = 1
+    route_destinations = batch_cpu,batch_gpu
+    enabled = True
+    started = True
+Queue: batch_cpu
+    queue_type = Execution
+    state_count = Transit:0 Queued:447 Held:167 Waiting:-44 Running:149 Exiting
+    from_route_only = True
+    resources_max.ncpus = 720
+    resources_max.nodect = 10
+    resources_max.walltime = 240:00:00
+    resources_default.queue_charge_rate = 1
+    default_chunk.node_pool = cpu_node
+    max_run = [u:PBS_GENERIC=6]
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== server limits
+    server_state = Active
+    scheduling = True
+== pilot2
+1528798.stdct-mg* p3_pilot2        leonyil.qian             0 Q cpu_parallel    
+== existing clones
+/home/svu/leonyil.qian/dsa5208-p3-a64e0fe-pilot2 a64e0fe untracked+modified=0 ignored=1
+/home/svu/leonyil.qian/dsa5208-p3-a64e0fe-bench1 a64e0fe untracked+modified=464 ignored=3
+/home/svu/leonyil.qian/dsa5208-p3-7f1b5a6* absent
+nfs.stdct.local:/ifs/hpc/home/svu  709T  672T  7.0T  99% /nfs/home/svu

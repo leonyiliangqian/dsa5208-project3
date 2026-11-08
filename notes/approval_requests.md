@@ -3,6 +3,70 @@
 **No approval is open.** The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
 both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
+## Proposed, 8 November 2026: `pilot4` staging, then `pilot4`: not approved
+
+Two separate approvals. Neither is approved; the first writes to Vanda but costs nothing, the second is charged. The current plan still needs `pilot2`
+(`1528798`, queued) to pass before step 2, unless Leon decides at the proposed Mon 9 Nov 18:00 SGT point to go without it (`plan_256core.md`, 8 Nov).
+Checks behind this: `code/artifacts/cluster/discovery/vanda_pilot4_readiness_7f1b5a6_20261108T1256.txt`.
+
+**Verified on 8 Nov (local clean clone of `7f1b5a6` and read-only Vanda queries):**
+
+| | |
+|---|---|
+| Source | `7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079`, tree `90488b5b3e83fd0078597b80e18ecc713d78a750`. The `pilot4` job path is identical to `a64e0fe`, which `1528774` ran; since then only `bench4.pbs` and a README changed |
+| Manifest | `pilot_four_node.json`, `pilot-four-node-v1`, status `proposed` (allowed for a pilot), SHA-256 `0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823`, 9 runs, one repetition each: strong at N = 10^6 (256 x 1, 32 x 8, 128 x 1 on 2 nodes, 64 x 1, serial), weak at 6.4 and 12.8 x 10^6 (256 x 1, 32 x 8) |
+| Request | `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, 45 min |
+| Gates | `allocation` (4 hosts, 64 CPUs each, **one CPU model**, `pbs_tmrsh` under `pbs_mom`), `build`, `placement` 8 x 8 per node, `place_mpi` 64 x 1 per node, `internode` 256 bound ranks across 4 hosts, `serial`, `bound_vs_serial` on 256 cores, then `runs`, `analyze`; cleanup checked on every node after each. All critical gates stop the job on failure |
+| Budget | Worst case 1255 s; fits with up to 600 s of gates (1404 s budget). Largest node memory 143 of 240 GB. Expected 12-17 min |
+| Queue | `auto` (route, rate 1) to `batch_cpu` (rate 1, 720 CPUs, 10 nodes, 240 h, 6 running jobs per user), enabled and started. 447 queued, 149 running at 12:56 |
+| Dry run | Local, no `--yes`: `qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 -o <clone>/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs`; nothing submitted |
+| Clones | None reusable: `~/dsa5208-p3-a64e0fe-pilot2` is clean but is the working tree of queued `1528798`; `~/dsa5208-p3-a64e0fe-bench1` holds `1528774`'s outputs. A new clone is needed |
+
+**Charging:**
+
+| | |
+|---|---|
+| Verified | Rate 1 on `auto` and `batch_cpu`. Balance 10,000 CPU-hours in `personal-leonyil.qian` on 7 Nov (Leon). PBS shows that project on our jobs |
+| Not readable now | `hpc project` asked for `amgr login` again on 8 Nov 12:56; no login was attempted. **Leon must read the balance fresh before step 2** |
+| Assumed | 1 CPU-hour per core-hour at rate 1: at most 4 x 64 x 0.75 h = **192 CPU-hours** (1.9% of 10,000) if charged on the request |
+| Estimate | 53-74 core-hours used (12-17 min). The model overestimated `1528774` by 1.8 times on one node; 4 nodes untested |
+| Unknown | Request or use billing; whether a job failing at its first gate is charged; whether `-P personal-leonyil.qian` is accepted (if rejected, `qsub` fails and nothing runs). Compare the balance before and after |
+
+**Risks:** `batch_cpu` nodes all have 72 CPUs, so each node gives 64 of 72 cores, possibly split unevenly between sockets as on CN-158; their CPU model
+is unverified, and the same-model gate stops a mixed set (possibly still charged). Queue wait unknown. Results would be on a different CPU model from `1528774`
+if the nodes are Platinum 8452Y; within-job comparisons stay valid.
+
+### Step 1: stage a clean clone and dry-run it on Vanda (no job, no charge)
+
+Writes about 90 MB (bundle and clone) to the 99%-full NFS home (7 TB free). Exact actions:
+
+```sh
+# local: exact-source bundle from a scratch clone
+git clone -q --no-local <repo> <scratch>/r && git -C <scratch>/r checkout -q -B main 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079
+git -C <scratch>/r bundle create <scratch>/dsa5208-p3-7f1b5a6.bundle HEAD main && shasum -a 256 <scratch>/dsa5208-p3-7f1b5a6.bundle
+ssh vanda 'test -e ~/dsa5208-p3-7f1b5a6.bundle && echo EXISTS || cat > ~/dsa5208-p3-7f1b5a6.bundle' < <scratch>/dsa5208-p3-7f1b5a6.bundle
+ssh vanda 'sha256sum ~/dsa5208-p3-7f1b5a6.bundle'          # must match
+ssh vanda 'test -e ~/dsa5208-p3-7f1b5a6-pilot4 || git clone -q -b main ~/dsa5208-p3-7f1b5a6.bundle ~/dsa5208-p3-7f1b5a6-pilot4'
+# Vanda: verify commit, tree, clean status, manifest hash, resources and budget, then the dry run (no --yes)
+cd ~/dsa5208-p3-7f1b5a6-pilot4/code && bash jobs/vanda/submit.sh pilot4 --queue auto --project personal-leonyil.qian
+```
+
+> Leon approves staging only: create ~/dsa5208-p3-7f1b5a6-pilot4 from an exact-source bundle of 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 with bounded
+> existing-auth operations, verify commit, tree 90488b5b3e83fd0078597b80e18ecc713d78a750, clean clone and pilot_four_node.json SHA256
+> 0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823, and run submit.sh pilot4 --queue auto --project personal-leonyil.qian WITHOUT --yes.
+> No submission, charge, authentication or permission change.
+
+### Step 2: `pilot4` (charged; needs `pilot2` passed or Leon's skip decision, a fresh balance read, and step 1 done)
+
+> Leon explicitly approves exactly ONE pilot4 submission, CHARGED, at most 192 CPU-hours requested from personal-leonyil.qian: source
+> 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079, tree 90488b5b3e83fd0078597b80e18ecc713d78a750, clone ~/dsa5208-p3-7f1b5a6-pilot4, manifest pilot_four_node.json
+> SHA256 0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823, 4 nodes x 64 cores, 240 GB per node, place=scatter, 45 min, queue auto, -P
+> personal-leonyil.qian, rate 1. Balance read by Leon at <time>: <value>. Before submitting, use bounded existing-auth checks to verify commit, tree, clean
+> clone, manifest, resources, scheduling on, auto and batch_cpu enabled and started at rate 1, and no p3_pilot4 in current jobs or history. If anything
+> fails, authentication is needed or the charge would differ, stop and report. Otherwise run
+> `cd ~/dsa5208-p3-7f1b5a6-pilot4/code && bash jobs/vanda/submit.sh pilot4 --queue auto --project personal-leonyil.qian --yes` exactly once and record the
+> job ID. No retries, cancellations, other jobs, bench4, credential or security changes, monitoring loops or final submission.
+
 ## Proposed reruns, 7 November 2026: not approved
 
 Diagnosis in [experiments.md](experiments.md) (7 Nov). Both clones were prepared and dry-run on 7 Nov at 11:33 SGT: commit, tree, manifest hash, resources
