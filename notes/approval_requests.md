@@ -1,7 +1,6 @@
 # Approval requests
 
-**Open, conditional and unused: one `pilot4` run (charge approved 10 Nov, capped at 192 CPU-hours).** It may be submitted only after Leon provides a fresh
-available-balance reading and every check below passes; see "Step 2" below. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
+**No approval is open.** The `pilot4` charge approval (10 Nov, cap 192 CPU-hours) was used: job `1535640`, submitted once on 10 Nov 17:42:15 SGT. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
 both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Proposed, 8 November 2026: `pilot4` staging, then `pilot4`: not approved
@@ -68,7 +67,12 @@ cd ~/dsa5208-p3-7f1b5a6-pilot4/code && bash jobs/vanda/submit.sh pilot4 --queue 
 
 ### Step 2: `pilot4` (charged; needs `pilot2` passed or Leon's skip decision, a fresh balance read, and step 1 done)
 
-**Approved by Leon on 10 Nov, conditional, not yet used.** Decisions recorded with it: go to `pilot4` directly and leave `pilot2` `1528798` held;
+**Used: submitted once as `1535640.stdct-mgmt-02` on 10 Nov 17:42:15 SGT.** Balance before (Leon, about 17:39): CPU Net Balance 10000.0 CPU-hours
+for `personal-leonyil.qian`. Every check below passed in one session first. PBS changed the memory request to 444 GB per chunk; the charge basis it
+recorded is 256 CPUs x 2700 s at rate 1, which is 192 CPU-hours. Running at 17:42:18 on GN-A40-079, -080, -083 and -085. A failure is not retried.
+Record: `code/artifacts/cluster/discovery/vanda_pilot4_submit_7f1b5a6_20261110T1742.txt`.
+
+**As approved on 10 Nov (conditional at the time).** Decisions recorded with it: go to `pilot4` directly and leave `pilot2` `1528798` held;
 step 1 (staging) is done. Scope: exactly one submission of the staged run at `7f1b5a6`; 4 nodes x 64 cores, 240 GB per node, `place=scatter`,
 45 min, `auto` to `batch_cpu` at rate 1, `-P personal-leonyil.qian`; charge capped at 192 CPU-hours. It covers no probe, retry, resubmission or `bench4`.
 

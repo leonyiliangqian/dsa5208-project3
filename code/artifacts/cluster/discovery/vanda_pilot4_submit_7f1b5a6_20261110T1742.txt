@@ -1,0 +1,107 @@
+pilot4 submission, 10 Nov 2026, under Leon's conditional charge approval (one run, cap 192 CPU-hours).
+Balance before: Leon ran amgr login and hpc project himself, about 17:39 SGT: project personal-leonyil.qian, CPU Net Balance 10000.0 CPU-hours; no reserved/pending column shown; exact time not printed.
+One bounded session: all checks, then submit.sh --yes once. Lookup lines print only resolved/unresolved.
+
+== script
+C=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079; T=90488b5b3e83fd0078597b80e18ecc713d78a750; M=0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823
+fail=0; bad(){ echo "CHECK FAILED: $*"; fail=1; }
+date; hostname
+cd ~/dsa5208-p3-7f1b5a6-pilot4/code || { echo "no clone"; exit 9; }
+echo "== source"; h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/pilot_four_node.json | cut -d' ' -f1); st=$(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)
+echo "commit $h"; echo "tree $t"; echo "manifest $s"; echo "status incl. untracked/ignored $st"
+[ "$h" = "$C" ] || bad commit; [ "$t" = "$T" ] || bad tree; [ "$s" = "$M" ] || bad manifest; [ "$st" = 0 ] || bad "clone not clean"
+echo "== resources and cap"; grep -E '^#PBS|SCALE_CHECKS' jobs/vanda/pilot4.pbs
+grep -qx '#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb' jobs/vanda/pilot4.pbs || bad select
+grep -qx '#PBS -l place=scatter' jobs/vanda/pilot4.pbs || bad place
+grep -qx '#PBS -l walltime=00:45:00' jobs/vanda/pilot4.pbs || bad walltime
+[ "$(grep -c '^#PBS -l' jobs/vanda/pilot4.pbs)" = 3 ] || bad "unexpected extra resource lines"
+echo "requested core-hours: $(( 4*64*45 ))/60 = $(( 4*64*45/60 )) (cap 192)"; [ $(( 4*64*45 )) -le $(( 192*60 )) ] || bad "request over cap"
+grep -q 'ALLOC_SAME_MODEL=1' jobs/vanda/measure.sh || bad "same-model gate missing"
+echo "== 3 lookups"; for i in 1 2 3; do u=$(getent passwd "$(id -u)" | cut -d: -f1); g=$(getent group "$(id -g)" | cut -d: -f1); w=$(whoami 2>/dev/null); echo "$(date +%T) user=[${u:+resolved}] group=[${g:+resolved}] whoami=[${w:+resolved}]"; [ -n "$u" ] && [ -n "$g" ] && [ "$w" = "$u" ] || bad "lookup $i"; sleep 1; done
+echo "== server"; B=$(timeout 30 qstat -Bf 2>&1); echo "$B" | grep -E 'server_state|scheduling|errno|cannot'
+echo "$B" | grep -qE 'server_state = (Active|Scheduling)' || bad "server not active"; echo "$B" | grep -q 'scheduling = True' || bad "scheduling not True"
+for q in auto batch_cpu; do Q=$(timeout 30 qstat -Qf $q 2>&1); echo "== queue $q"; echo "$Q" | grep -E 'queue_type|enabled|started|queue_charge_rate|route_destinations|resources_max\.(ncpus|nodect|walltime)|max_run|default_chunk' | grep -vE '\[u:(e0|e1|sau)'
+  echo "$Q" | grep -q 'enabled = True' || bad "$q not enabled"; echo "$Q" | grep -q 'started = True' || bad "$q not started"
+  echo "$Q" | grep -q 'resources_default.queue_charge_rate = 1$' || bad "$q rate not 1"; done
+BC=$(timeout 30 qstat -Qf batch_cpu 2>&1); n=$(echo "$BC" | awk '/resources_max.ncpus/{print $3}'); d=$(echo "$BC" | awk '/resources_max.nodect/{print $3}'); [ "${n:-0}" -ge 256 ] && [ "${d:-0}" -ge 4 ] || bad "batch_cpu cannot admit 4 x 64"
+echo "== duplicates"; D1=$(timeout 30 qselect -u leonyil.qian -N p3_pilot4 2>&1); r1=$?; D2=$(timeout 30 qselect -x -u leonyil.qian -N p3_pilot4 2>&1); r2=$?
+echo "pilot4 current [$D1] history [$D2]"; [ $r1 = 0 ] && [ $r2 = 0 ] && [ -z "$D1" ] && [ -z "$D2" ] || bad "p3_pilot4 exists or qselect failed"
+P2=$(timeout 30 qstat -xf 1528798.stdct-mgmt-02 2>&1 | grep -E 'job_state|Hold_Types'); echo "pilot2: $(echo $P2)"; echo "$P2" | grep -q 'job_state = H' || bad "pilot2 not held"
+echo "== my jobs"; timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+if [ $fail != 0 ]; then echo "NOT SUBMITTED"; exit 8; fi
+echo "== all checks passed; submitting once"; date
+bash jobs/vanda/submit.sh pilot4 --queue auto --project personal-leonyil.qian --yes; echo "submit_rc=$?"; date
+echo "== initial state"; for j in $(timeout 30 qselect -u leonyil.qian -N p3_pilot4 2>/dev/null); do timeout 30 qstat -xf ${j%%.*}.stdct-mgmt-02 2>&1 | grep -vi cookie | egrep 'Job Id|Job_Name|job_state|queue =|qtime|stime|exec_host|comment|project|Resource_List\.(select|place|walltime|ncpus|queue_charge_rate)|am_job_cache|job\.(walltime|ncpus|queue_charge_rate)'; done
+timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+
+== output
+Tue Nov 10 05:42:01 PM +08 2026
+stdct-login-01
+== source
+commit 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079
+tree 90488b5b3e83fd0078597b80e18ecc713d78a750
+manifest 0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823
+status incl. untracked/ignored 0
+== resources and cap
+#PBS -N p3_pilot4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=00:45:00
+#PBS -j oe
+REQUIRE_FROZEN=0 SCALE_CHECKS=1
+requested core-hours: 11520/60 = 192 (cap 192)
+== 3 lookups
+17:42:02 user=[resolved] group=[resolved] whoami=[resolved]
+17:42:03 user=[resolved] group=[resolved] whoami=[resolved]
+17:42:04 user=[resolved] group=[resolved] whoami=[resolved]
+== server
+    server_state = Scheduling
+    scheduling = True
+== queue auto
+    queue_type = Route
+    resources_default.queue_charge_rate = 1
+    route_destinations = batch_cpu,batch_gpu
+    enabled = True
+    started = True
+== queue batch_cpu
+    queue_type = Execution
+    resources_max.ncpus = 720
+    resources_max.nodect = 10
+    resources_max.walltime = 240:00:00
+    resources_default.queue_charge_rate = 1
+    default_chunk.node_pool = cpu_node
+    max_run = [u:PBS_GENERIC=6]
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== duplicates
+pilot4 current [] history []
+pilot2: job_state = H Hold_Types = s
+== my jobs
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 H   -- 
+== all checks passed; submitting once
+Tue Nov 10 05:42:15 PM +08 2026
+command: qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079 -o /home/svu/leonyil.qian/dsa5208-p3-7f1b5a6-pilot4/code/artifacts/cluster/logs/ jobs/vanda/pilot4.pbs
+1535640.stdct-mgmt-02
+submit_rc=0
+Tue Nov 10 05:42:15 PM +08 2026
+== initial state
+Job Id: 1535640.stdct-mgmt-02
+    Job_Name = p3_pilot4
+    job_state = Q
+    queue = batch_cpu
+    qtime = Tue Nov 10 17:42:15 2026
+    Resource_List.am_job_cache = "{}"
+    Resource_List.ncpus = 256
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 1
+    Resource_List.select = 4:ncpus=64:mpiprocs=64:mem=444GB
+    Resource_List.walltime = 00:45:00
+    project = personal-leonyil.qian
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 H   -- 
+1535640.stdct-* leonyil* batch_c* p3_pilot4     --    4 256  1776g 00:45 Q   -- 
+
+== read at 17:42:33 SGT (job record, selected fields)
+job_state R; stime 17:42:18; exec_host GN-A40-083/0*0+GN-A40-079/0*0+GN-A40-085/0*0+GN-A40-080/0*0
+Resource_List.am_job_cache: job.walltime 2700, job.queue_charge_rate 1.0, job.ngpus 0, job.ncpus 256.0  -> 256 x 0.75 h = 192 CPU-hours at rate 1
+Resource_List.select = 4:ncpus=64:mpiprocs=64:mem=444GB (site changed mem from the requested 240gb; mem = 1776gb total); walltime 00:45:00; place scatter; project personal-leonyil.qian
