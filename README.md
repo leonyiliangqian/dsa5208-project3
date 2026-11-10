@@ -56,7 +56,9 @@ These are stable results from real Vanda jobs. Sources and limits are in [notes/
 | Hybrid matches serial across two nodes | `1514458` | One node pair, 16 cores, comparison unbound |
 | GPU solver correct on a real device | `1514775` | NVIDIA A40 |
 | GPU against CPU timing | `1519638` | GPU slower than 36 CPU cores at all 4 sizes; one job, three repetitions |
-| Serial and MPI+OpenMP runtime, 1 to 64 cores | `1528774` | One whole node, three repetitions; ranges within 3% apart from the first two runs. Earlier: `1523703`, 16 shared cores |
+| Serial and MPI+OpenMP runtime, 1 to 64 cores | `1528774` | One whole Gold 6438N node, three repetitions; ranges within 3% apart from the first two runs. Earlier: `1523703`, 16 shared cores |
+| MPI and MPI+OpenMP strong and weak scaling, 1 to 256 cores | `1535991` | Four Platinum 8452Y nodes, 64 cores each, three repetitions, 90 of 90 runs; own serial baseline. At 256 cores: strong efficiency 0.18 (MPI only) and 0.20 (8 threads per rank), weak 0.08 and 0.16 |
+| Hybrid matches serial exactly with bound ranks on 256 cores | `1535640`, `1535991` | Four nodes |
 
-**MPI and MPI+OpenMP strong and weak scaling to 256 cores do not exist yet.** Pilots `1523275` and `1522998` set sizes only and are not
-results. Local Docker runs are tests and never results.
+The two scaling jobs ran on different CPU models and are reported separately. Pilots (`1523275`, `1522998`, `1535640`) set sizes only and
+are not results. Local Docker runs are tests and never results.

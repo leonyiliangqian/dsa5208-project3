@@ -21,7 +21,7 @@ EVIDENCE ?= artifacts/local
 .PHONY: help all hybrid gpu check-gpu clean check check-context check-hybrid preflight sanitize toolchain placement internode
 
 help:       ## Show this help
-	@grep -E '^[a-z-]+:.*##' $(MAKEFILE_LIST) | sed 's/:.*##/\t/' | column -t -s "$$(printf '\t')"
+	@awk -F ':.*## *' '/^[a-z-]+:.*##/ {printf "  %-14s %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 
 all: $(BIN)/bh_serial  ## Build the serial reference
 

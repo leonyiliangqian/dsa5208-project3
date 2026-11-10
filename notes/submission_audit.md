@@ -1,13 +1,14 @@
 # Submission audit
 
-Checked 5 November 2026 against [assignment_brief.txt](assignment_brief.txt) and Lecture 12 in [project_memory.md](project_memory.md).
-**Not ready to hand in:** required measurements and group review are missing. Nothing has been submitted.
+Checked 11 November 2026 against [assignment_brief.txt](assignment_brief.txt) and Lecture 12 in [project_memory.md](project_memory.md).
+Due 17 November 2026 (per Leon; cutoff time unconfirmed). **Not ready to hand in:** the required measurements now exist, but group review,
+names and IDs, and the Canvas source route are open. Nothing has been submitted.
 
 ## What is handed in
 
 | Item | Source | How it is made | Status |
 |---|---|---|---|
-| PDF report | `report/` | Compiled as [../report/README.md](../report/README.md) describes | **Working draft only**, with red `[PENDING]` markers |
+| PDF report | `report/` | Compiled as [../report/README.md](../report/README.md) describes | **Draft with all results**, 13 pages; one red `[PENDING]` marker left, for the Canvas source route |
 | Source with a run README | `code/` | `bash scripts/package_submission.sh`, from `code/`, at the final commit | Package tested; rebuild at the final commit |
 
 **How source reaches Canvas is unconfirmed.** The brief lists "file upload, PDF only" and also requires source code. The group must
@@ -19,13 +20,13 @@ check the Canvas page. A repository link should not be assumed to meet the requi
 |---|---|---|---|
 | Explain the algorithm | 5 | Report: Problem and Method | Drafted; group review open |
 | Serial runtime against N | 5 | Report: Results; job `1528774` | **Measured** on a whole 64-core node, 10^4 to 3 x 10^6, three repetitions (earlier: `1523703`, shared node) |
-| MPI strong and weak to at least 256 CPU cores, with speedup, efficiency, communication | 10 | Report: Results; `bench4` | **Missing.** Needs a charged queue and Leon's decision |
-| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `1528774`, then `bench4` | **Partial:** to 64 cores of one node; nothing beyond one node |
+| MPI strong and weak to at least 256 CPU cores, with speedup, efficiency, communication | 10 | Report: Scaling to 256 Cores on Four Nodes; job `1535991` | **Measured**, 1 to 256 cores on four nodes, three repetitions, own baselines; group review open |
+| MPI+OpenMP analysis | 10 (shared with GPU) | Report: Results; `1528774` and `1535991` | **Measured** to 64 cores of one node and to 256 cores on four nodes (8 threads per rank), kept separate |
 | At least one GPU test | | Job `1519638` | Measured; review open |
-| Discussion of decisions, techniques, communication | 5 | Report: Parallelization Decisions, Discussion | Decisions drafted; Discussion needs results |
-| Scaling and efficiency discussion | | Report: Results, Discussion | **Partial:** to 16 cores, with variability |
+| Discussion of decisions, techniques, communication | 5 | Report: Parallelization Decisions, Discussion | Drafted with measured results; group review open |
+| Scaling and efficiency discussion | | Report: Results, Discussion | Drafted from `1528774` and `1535991`; group review open |
 | Parallel algorithm validated, with why each test matters | | Report: Correctness, Table 1 | Drafted |
-| Runtime figures from Atlas or Vanda; logarithmic time, N and CPU axes | | `report_figures.py` | 16-core figures generated from Vanda; 256 cores missing |
+| Runtime figures from Atlas or Vanda; logarithmic time, N and CPU axes | | `report_figures.py` | Generated from Vanda jobs `1528774` and `1535991` (the latter with the `b4_` prefix) |
 | Non-standard terms defined | | Report: Terms Used | Drafted |
 | Synthetic generator explained, no equilibrium claim | | Report: input generation | Drafted |
 | Conclusions about real data | | Not applicable: synthetic input | None needed |
@@ -40,7 +41,7 @@ check the Canvas page. A repository link should not be assumed to meet the requi
 | `code/README.md`, `code/Makefile` | `code/artifacts/`: logs, terminal output, run records, job cookies |
 | `code/common`, `serial`, `hybrid`, `gpu`: all C++ source | `notes/`, `report/`, `HANDOFF.md`, root `README.md` |
 | `code/tests`: gates and probes | `bin/`, caches, object files |
-| `code/scripts`, `manifests`, `jobs`, `docker` | Package tools that need the repository: `package_submission.sh`, `package_test.sh`, `repo_links_test.py` |
+| `code/scripts`, `manifests`, `jobs`, `docker` | Tools and tests that need the repository: `package_submission.sh`, `package_test.sh`, `repo_links_test.py`, `redact_evidence.py`, `report_figures_prefix_test.py` |
 
 The script refuses to build if a log, text output, binary, private key or job cookie appears in the included paths, and takes files
 only from the committed tree, so private connection files on a machine cannot enter. Some scripts need what stays out:

@@ -24,7 +24,7 @@ done
 # Split so this file does not match its own patterns.
 private='leon''yil|/Users/''leon|A0[0-9]{6}[A-Z]|gmail''[.]com'
 ! grep -rlE "BEGIN [A-Z ]*PRIVATE KEY|PBS_JOBCOOKIE=[0-9A-F]|$private" "$work/x" | grep -q .; result no_credentials_or_personal_details $?
-! grep -E '(package_submission|package_test|repo_links_test|redact_evidence|HANDOFF)' "$work/list" | grep -q .; result no_internal_tools $?
+! grep -E '(package_submission|package_test|repo_links_test|redact_evidence|report_figures_prefix_test|HANDOFF)' "$work/list" | grep -q .; result no_internal_tools $?
 # The README must stand alone: every dependency and build path, and no pointer out of the package.
 readme="$work/x/dsa5208-project3/code/README.md"
 for word in '## Dependencies' 'make hybrid' 'make gpu' 'mpicxx' 'nvc++' 'make check-hybrid' 'make check-gpu' 'Python 3'; do

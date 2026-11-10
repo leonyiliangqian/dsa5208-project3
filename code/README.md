@@ -6,6 +6,21 @@ a hybrid MPI+OpenMP solver and an OpenMP target (GPU) solver. The report is hand
 This README covers everything needed to build and run the code, and it stands alone. Run records, logs and the report source are
 not part of this package. All commands below run from this directory.
 
+## Quick start
+
+With Docker (the image is built from `docker/Dockerfile` on first use: GCC, Open MPI, Python 3):
+
+```sh
+unzip dsa5208-project3-source.zip && cd dsa5208-project3/code
+docker/run.sh make help                              # list the targets
+docker/run.sh make all hybrid gpu                    # serial, MPI+OpenMP, and the GPU solver on the host (no offload)
+docker/run.sh make check check-hybrid check-gpu      # the three correctness gates
+docker/run.sh bash tests/pipeline_e2e.sh             # tiny end-to-end run: plan, runs, analysis, figures
+```
+
+On Linux with GCC, Open MPI and Python 3 installed, run the same commands without `docker/run.sh`. The GPU build above runs its
+target regions on the host and checks logic only; a real GPU needs its own compiler and build folder (see OpenMP target solver).
+
 | Path | Contents |
 |---|---|
 | `common/nbody.hpp` | Particles, Plummer-profile positions, direct summation, octree, leapfrog |
@@ -38,8 +53,10 @@ Binaries go to `bin/<os>/` (`bin/darwin`, `bin/linux`), so builds for different 
 make all                # serial: bin/<os>/bh_serial
 make hybrid             # MPI+OpenMP: bin/<os>/bh_hybrid
 make gpu                # OpenMP target: bin/<os>/bh_gpu, on the host without offload support
-make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" gpu     # for a GPU, with NVHPC
 ```
+
+For a real GPU, build with NVHPC into its own folder, so it never mixes with the host build in `bin/<os>/`:
+`make BIN=bin/nvhpc CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" all gpu`.
 
 In Docker, put `docker/run.sh` in front: `docker/run.sh make all hybrid gpu`.
 
@@ -108,7 +125,7 @@ particles still sharing a cell at depth 64 stay in one leaf, so none are dropped
 A cell is used as a monopole only if it passes s/d < theta and does not contain
 the target particle; otherwise it is opened, and opened leaves are summed
 pairwise without self-interaction. Default leaf size 8: in a local sweep L=8 and
-L=16 were fastest with overlapping ranges; re-tune on the cluster before formal runs.
+L=16 were fastest with overlapping ranges. It was fixed at 8 before the formal runs, and the cluster leaf study kept it.
 
 ## Hybrid design (replicated baseline)
 
@@ -130,7 +147,9 @@ N positions, so memory per rank is O(N) and the build is redundant.
 Timed region: `--steps` steps after setup (initial forces, optional energy,
 `--warmup` steps). Hybrid: barrier, then per-rank `MPI_Wtime`, reduced with
 MPI_MAX; phase times (integrate, exchange, build, traverse) are per-rank sums
-reduced with MPI_MAX, plus the traverse mean for the imbalance ratio max/mean.
+reduced with MPI_MAX, plus the traverse mean for the imbalance ratio max/mean. Each maximum
+may come from a different rank, so with several ranks the phases need not sum to the wall
+time, and the exchange time includes any wait for slower ranks at `MPI_Allgatherv`.
 Serial times the same region and phases with `steady_clock`. Use serial
 Barnes–Hut, never direct summation, as the speedup denominator.
 
@@ -171,9 +190,15 @@ Open MPI then starts a second daemon on the head node, as it does there.
 
 ## Vanda (PBS)
 
-Every job is submitted only through `jobs/vanda/submit.sh <job> --queue auto_free
---no-project` (dry run unless `--yes`), which records the login node's commit as
-`SOURCE_GIT_REV` (compute nodes have no git). Jobs build on the compute node and
+Every job is submitted only through `jobs/vanda/submit.sh`, from a clean clone of the commit
+to run. Without `--yes` it only prints the `qsub` line; it records the login node's commit as
+`SOURCE_GIT_REV` (compute nodes have no git). Free queue (up to 160 CPUs per job and user) and
+charged queue (needed for 256 cores; charged on the request, cores x walltime x rate):
+
+```sh
+bash jobs/vanda/submit.sh bench1 --queue auto_free --no-project              # dry run, free
+bash jobs/vanda/submit.sh bench4 --queue auto --project <your-project>       # dry run, charged
+``` Jobs build on the compute node and
 run their steps as gates (`jobs/vanda/gates.sh`): each has a time limit, a
 process snapshot before expiry and an ownership-checked cleanup on every node
 after it; kinds are critical, required and optional. The jobs depend on this site's queues and modules, so elsewhere treat them as examples.
@@ -188,6 +213,20 @@ after it; kinds are critical, required and optional. The jobs depend on this sit
 | `bench16.pbs`, `bench1.pbs`, `bench2.pbs`, `bench4.pbs` | 1 x 16 cores; 1, 2 or 4 x 64 cores | formal studies from a frozen plan, with one CPU model |
 | `gpu_validate.pbs`, `gpu_timing.pbs` | 1 GPU, 36 cores, 60 GB | device and correctness gates; device against CPU timing |
 
+### Measured configuration (frozen)
+
+The report's CPU results come from three jobs, each with its own frozen plan; plans and solver sources are left as measured.
+
+| Plan in `manifests/` | Id | SHA-256 | Job and commit |
+|---|---|---|---|
+| `studies_16core.json` | `studies-16core-v1` | `2525574ba733e4a74c44100daa0a8ec2b8a89e7e9e81c7a8025ea44439226dcd` | `bench16.pbs`, `e86bf5d` |
+| `studies_single_node.json` | `studies-single-node-v1` | `ea1ceb2c734b08009ce4a582ed8d1c0e2d8d6a877d0e30d0d392274de7c1c64b` | `bench1.pbs`, `a64e0fe` |
+| `studies_four_node.json` | `studies-four-node-v1` | `0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c` | `bench4.pbs`, `a72ce26` |
+
+All three built with `-O3 -std=c++17 -Wall -Wextra -march=native` (Open MPI 4.1.6, GCC 13.2.0) on the compute node. The solver
+sources (`common/`, `serial/`, `hybrid/`, `gpu/`) are unchanged since then. The source hash in each run record also covers the
+`Makefile`, whose job-check targets and `help` changed afterwards, so a rebuild records a different hash with the same solver code.
+
 ## OpenMP target solver
 
 `gpu/bh_gpu.cpp` offloads the force traversal; the tree is built on the host. `--backend device`
@@ -197,8 +236,11 @@ target regions on the host, so `make check-gpu` then tests logic only. `jobs/van
 runs it on a device.
 
 ```sh
-docker/run.sh make check-gpu                                   # no GPU
-make CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" \
-    GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node
+docker/run.sh make check-gpu                                   # no GPU: host fallback, logic only
+make BIN=bin/nvhpc CXX=nvc++ GPU_CXX=nvc++ CXXFLAGS="-O3 -std=c++17" GPU_OMPFLAGS="-mp=gpu -Minfo=mp" \
+    GPU_GATE_ARGS=--expect-device check-gpu                    # on a GPU node, separate build folder
 ```
+
+`--expect-device` makes the gate fail unless the kernel really ran on a device; `--expect-no-device` (the default) makes the host
+fallback fail if it unexpectedly offloads.
 

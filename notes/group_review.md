@@ -1,6 +1,6 @@
 # Group checklist before hand-in
 
-Due 17 November 2026 (per Leon, 10 Nov; cutoff time unconfirmed). **Not ready: required measurements and reviews are missing.** Nothing has been submitted.
+Due 17 November 2026 (per Leon, 10 Nov; cutoff time unconfirmed). **Not ready: the required measurements are in the report (verified Vanda jobs up to 256 cores), but the group items below are open.** Nothing has been submitted.
 Unticked means not done or not confirmed. Tick only what actually happened.
 
 ## Names and IDs
