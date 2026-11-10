@@ -1,0 +1,78 @@
+bench4 staging and dry run, 10 Nov 2026, approved by Leon for staging only. Nothing submitted; no charge.
+Bundle: git bundle of a72ce26e13e315af0686a5ddf1286e36e749eea8 (HEAD main) from a local scratch clone; git bundle verify OK; a local clone from it matched commit, tree and manifest, clean; local dry run printed qsub only.
+Transfer once at 18:28 SGT over the existing ssh session (target absent before): sha256 6e88a940cb68fd1f70b2cc9b4a9c496eb3b16d1313200332dc679df45662368e, 1614928 bytes, local = remote.
+Clone: git clone -q -b main ~/dsa5208-p3-a72ce26.bundle ~/dsa5208-p3-a72ce26-bench4, 18:28:46-18:29:15, rc 0 (target absent before).
+
+== verification and dry-run script
+C=a72ce26e13e315af0686a5ddf1286e36e749eea8; T=fb393ec86dff907013c78976e9adafb2c34290ff; M=0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c
+for i in $(seq 1 24); do grep -q ALLDONE ~/clone-a72ce26.log 2>/dev/null && break; sleep 5; done; cat ~/clone-a72ce26.log
+date; hostname
+cd ~/dsa5208-p3-a72ce26-bench4/code || exit 9
+h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/studies_four_node.json | cut -d' ' -f1)
+echo "commit $h $([ $h = $C ] && echo ok || echo BAD)"; echo "tree $t $([ $t = $T ] && echo ok || echo BAD)"; echo "manifest $s $([ $s = $M ] && echo ok || echo BAD)"
+echo "status incl. untracked/ignored: $(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)"
+python3 -c "import json;m=json.load(open('manifests/studies_four_node.json'));print('manifest',m['id'],'|',m['status'][:6],'| cases',len(m['cases']))"
+echo "== resources"; grep -E '^#PBS|^REQUIRE_FROZEN|^EXPECT_NODES' jobs/vanda/bench4.pbs
+echo "== budget (rate 1)"; for g in 400 600; do python3 -B scripts/plan_budget.py manifests/studies_four_node.json jobs/vanda/bench4.pbs --rate 1 --startup-s $g | tail -5; done
+echo "== p3_bench4 before"; echo "current [$(timeout 30 qselect -u leonyil.qian -N p3_bench4 2>&1)] history [$(timeout 30 qselect -x -u leonyil.qian -N p3_bench4 2>&1)]"
+echo "== dry run, no --yes"; bash jobs/vanda/submit.sh bench4 --queue auto --project personal-leonyil.qian; echo "submit_rc=$?"
+echo "== p3_bench4 after"; echo "current [$(timeout 30 qselect -u leonyil.qian -N p3_bench4 2>&1)] history [$(timeout 30 qselect -x -u leonyil.qian -N p3_bench4 2>&1)]"
+echo "== my jobs"; timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+echo "status after: $(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)"
+echo "== queues"; for q in auto batch_cpu; do timeout 30 qstat -Qf $q 2>&1 | egrep "Queue:|enabled|started|queue_charge_rate"; done; timeout 30 qstat -Bf 2>&1 | grep -E "scheduling|server_state"
+du -sh ~/dsa5208-p3-a72ce26-bench4
+
+== output
+Tue Nov 10 06:28:46 PM +08 2026
+clone_rc=0
+Tue Nov 10 06:29:15 PM +08 2026
+ALLDONE
+Tue Nov 10 06:29:19 PM +08 2026
+stdct-login-01
+commit a72ce26e13e315af0686a5ddf1286e36e749eea8 ok
+tree fb393ec86dff907013c78976e9adafb2c34290ff ok
+manifest 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c ok
+status incl. untracked/ignored: 0
+manifest studies-four-node-v1 | frozen | cases 30
+== resources
+#PBS -N p3_bench4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=03:00:00
+#PBS -j oe
+EXPECT_NODES=4 CPUS_PER_NODE=${SIM_CPUS_PER_NODE:-64} PLACE_R=8 PLACE_T=8
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+== budget (rate 1)
+credits at assumed rate 1 per core-hour: 768 if charged on the request
+runs: 90, estimated 3078 s, worst case 9390 s, budget 9704 s after 400 s of gates and 696 s reserved at the end
+expected job time: 58 min = 247 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+credits at assumed rate 1 per core-hour: 768 if charged on the request
+runs: 90, estimated 3078 s, worst case 9390 s, budget 9504 s after 600 s of gates and 696 s reserved at the end
+expected job time: 61 min = 262 core-hours used
+largest node memory: 143 GB of 240 GB
+PLAN OK
+== p3_bench4 before
+current [] history []
+== dry run, no --yes
+command: qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=a72ce26e13e315af0686a5ddf1286e36e749eea8 -o /home/svu/leonyil.qian/dsa5208-p3-a72ce26-bench4/code/artifacts/cluster/logs/ jobs/vanda/bench4.pbs
+dry run: add --yes to submit
+submit_rc=0
+== p3_bench4 after
+current [] history []
+== my jobs
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 H   -- 
+status after: 0
+== queues
+Queue: auto
+    resources_default.queue_charge_rate = 1
+    enabled = True
+    started = True
+Queue: batch_cpu
+    resources_default.queue_charge_rate = 1
+    enabled = True
+    started = True
+    server_state = Scheduling
+    scheduling = True
+110M	/home/svu/leonyil.qian/dsa5208-p3-a72ce26-bench4

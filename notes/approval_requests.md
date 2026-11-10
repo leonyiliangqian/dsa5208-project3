@@ -19,7 +19,16 @@ Based on verified `pilot4` `1535640` (sizing only). Two separate approvals; neit
 | Charge | **Expected debit 768 CPU-hours** = 256 cores x 3 h x rate 1, whatever the run time: `pilot4` was debited its full request (10,000.0 to 9,808.0, Leon, 10 Nov) after using 10.5 of 45 min. Leaves about 9,040 if the rate and balance stay the same |
 | Not verified | Queue wait; which nodes `batch_cpu` gives (`pilot4` got four GN-A40 hosts, Platinum 8452Y); the 8 x 8 schedule choice (kept at dynamic 64, see `plan_256core.md`, 10 Nov) |
 
-### Step 1: stage a clean clone of `a72ce26` and dry-run it (no job, no charge)
+### Step 1: stage a clean clone of `a72ce26` and dry-run it (no job, no charge): done 10 Nov, approval used
+
+**Approved by Leon for staging only and done on 10 Nov 18:28-18:29 SGT.** Bundle transferred once (SHA-256 `6e88a940...`, 1,614,928 bytes, local = remote),
+cloned to `~/dsa5208-p3-a72ce26-bench4`: commit, tree `fb393ec`, frozen manifest hash and resources verified; no modified, untracked or ignored files before or
+after. Budget passes with 400 or 600 s of gates. Dry run printed
+`qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=a72ce26e13e315af0686a5ddf1286e36e749eea8 -o /home/svu/leonyil.qian/dsa5208-p3-a72ce26-bench4/code/artifacts/cluster/logs/ jobs/vanda/bench4.pbs`
+and submitted nothing: no `p3_bench4` in current jobs or history before or after. `auto` and `batch_cpu` enabled and started at rate 1, scheduling on.
+Left for step 2: Leon's fresh available-balance reading and his charge approval (expected debit 768). Record:
+`code/artifacts/cluster/discovery/vanda_bench4_staging_dryrun_a72ce26_20261110T1829.txt`. As proposed:
+
 
 Same actions as `pilot4`'s step 1 (8 Nov), with `a72ce26`, bundle `dsa5208-p3-a72ce26.bundle`, clone `~/dsa5208-p3-a72ce26-bench4`, and the dry run
 `bash jobs/vanda/submit.sh bench4 --queue auto --project personal-leonyil.qian` without `--yes`. `bench4` refuses to run unless the manifest status begins
