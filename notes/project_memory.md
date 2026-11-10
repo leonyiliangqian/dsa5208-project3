@@ -4,7 +4,7 @@
 
 Contacting the lecturer is no longer needed, because the deadline Leon refers to for that contact has passed. Do not draft,
 send or ask to send lecturer messages. `lecturer_questions_draft.md` stays only as an inactive, unsent record.
-This says nothing about the final project deadline, which **stays 13 November 2026, 23:59 SGT** unless Leon says otherwise.
+This says nothing about the final project deadline. On 10 Nov Leon gave it as **17 November 2026**; the cutoff time is unconfirmed.
 
 Remaining decisions: pilot sizing; 256-core access, charge approval and current balance; formal experiments; report review.
 
@@ -24,7 +24,7 @@ report and submission packaging. They are requirements, not measured results.
   must use logarithmic scales.
 - Further Vanda downtime may lead the lecturer to extend the deadline.
   No extension or replacement deadline has been announced in this excerpt;
-  retain 13 November 2026, 23:59 SGT until a new date is confirmed.
+  use 17 November 2026 (Leon, 10 Nov); the cutoff time is unconfirmed.
 
 ### Grading (35 points)
 

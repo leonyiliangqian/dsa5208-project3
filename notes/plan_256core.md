@@ -14,7 +14,31 @@ needs one of these:
 | Stop at 128 cores on the free queue | `bench1` and `bench2` | Does not meet "at least 256"; the report must say so |
 
 Leave time for queue waits, because the free pilot has already
-waited 10 h 1 min and the wait on `batch_cpu` has never been tested. Due 13 Nov 23:59 SGT.
+waited 10 h 1 min and the wait on `batch_cpu` has never been tested. Due 17 Nov 2026 (per Leon, 10 Nov; cutoff time unconfirmed).
+
+## Recommendation, 10 November 2026: go to `pilot4` without the free sizing run
+
+Due 17 Nov 2026 (per Leon, 10 Nov; cutoff time unconfirmed, so plan as if it could be early that day). **Not approved; nothing submitted.**
+
+**Facts since 8 Nov:** `pilot2` `1528798` is on a PBS system hold after 21 failed launch attempts (exit -10, no output); it ran nothing and gives no
+sizing. The login node's account lookups failed for all directory accounts at 16:58 and worked again by 17:19; NUS HPC incident INC000003671794 is open.
+Launch test `1535562` passed at 17:19 on one free-pool node (CN-161, Platinum 8452Y). The staged `pilot4` clone was unchanged and clean at 17:30.
+`batch_cpu` had 126 queued, 119 held and 122 running.
+
+**Why not wait for `pilot2`:** it would need Leon to release it and then two whole free nodes, which took over two days last time, and it could fail to
+launch again. It adds no gate `pilot4` lacks: `pilot4` runs the same allocation, placement, bound exchange, bound comparison with serial and cleanup checks on
+4 nodes. The cost of skipping it is paying for a first multi-node launch at 64 ranks per node: at most 192 CPU-hours (1.9% of the 10,000 read on 7 Nov) if
+billed on the request. `bench4` then needs `pilot4` verified, its plan frozen and its own approval; to leave two days for analysis and the report, it should
+be submitted by about 13-14 Nov. Releasing `1528798` costs nothing and can be done in parallel, but `pilot4` should not wait for it.
+
+**`pilot4` as staged:** source `7f1b5a6`, tree `90488b5`, clone `~/dsa5208-p3-7f1b5a6-pilot4`, `pilot_four_node.json` SHA-256 `0372e6b0...`;
+`select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, 45 min, queue `auto` to `batch_cpu` at rate 1, `-P personal-leonyil.qian`. Charge limit
+192 CPU-hours requested (assumed 1 CPU-hour per core-hour); expected use 53-74. All critical gates as in `bench1`, on 4 nodes.
+
+**Before submitting:** (1) Leon decides to proceed without `pilot2` (a plan change: the evidence gap is above); (2) Leon reads the balance with `amgr login`;
+(3) account lookups and `qstat` work in the submission session; (4) the clone is rechecked unchanged and clean; (5) Leon's explicit charge approval
+(text in `approval_requests.md`, step 2). Untested: whether `cpu_node` nodes resolve the account (an optional 1-core charged probe would cost about
+0.08 CPU-hours), and their CPU model; the same-model gate stops a mixed set, possibly after a charge.
 
 ## Status and contingency, 8 November 2026
 

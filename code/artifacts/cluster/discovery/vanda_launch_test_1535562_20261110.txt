@@ -1,0 +1,40 @@
+Launch test, Vanda job 1535562.stdct-mgmt-02 (p3_acctprobe), 10 Nov 2026. Summary record.
+Approved by Leon: exactly one free diagnostic job, 1 node, 1 core, 1 GB, 5 min, auto_free -> cpu_serial,
+no -P, rate 0. Purpose: check that PBS can start a job for this account and that the account resolves on
+an execution node, after job 1528798 (pilot2 rerun) was held following 21 failed launches (exit -10).
+Account identifiers (user name, UID, GID, group names, home path, project name) and the raw job output are
+deliberately not in this file. The raw output stays on Vanda only, outside every project clone.
+
+Script: ~/p3-acctprobe/acctprobe.pbs on Vanda (not project code, not in this repository), SHA-256
+54659d5fcd2b521f22464cc34ba94883629bc7229d559446f3f6acd2aa53a244, identical locally and on Vanda.
+It prints only: id; a passwd lookup by UID and by name; a group lookup of the primary GID; whoami;
+whether the home directory is writable; the nsswitch passwd line; the allowed CPUs and CPU model.
+
+Checks, all passed in one bounded session immediately before qsub (10 Nov 17:19:27-17:19:32 SGT):
+  script hash matched; three consecutive account lookups on the login node resolved (UID to name,
+  name to UID, primary GID to group); PBS server Active, scheduling True; auto_free and cpu_serial
+  enabled, started, queue_charge_rate 0; no p3_acctprobe in current jobs or history; 1528798 still
+  job_state H with Hold_Types s; no p3_pilot4 job. qsub ran once and returned 1535562.stdct-mgmt-02.
+
+PBS outcome (qstat -xf, 17:19:40):
+  job_state F, Exit_status 0, run_count 1 (started on the first attempt)
+  queue cpu_serial, exec_host CN-161/2, exec_vnode (CN-161[0]:ncpus=1:mem=1gb), queue_charge_rate 0
+  qtime 17:19:32, stime 17:19:36, obittime 17:19:38; resources_used walltime 00:00:01, cput 0, mem 0kb
+
+Job output on CN-161 (summarised; output file SHA-256 a21686d2f84fe63e4405467b9950b4582389eafa637d35a32c531bfa54a30d73):
+  id: the expected UID and primary GID, both shown with names                     PASS
+  passwd lookup by UID and by name: the expected account, home directory as expected PASS
+  group lookup of the primary GID: resolved to its name                            PASS
+  whoami: the expected account name                                                PASS
+  home directory writable: yes                                                     PASS
+  nsswitch passwd line: same as the login node (centrifydc files sss systemd)
+  CPU model: Intel(R) Xeon(R) Platinum 8452Y
+  Note: one supplementary group was shown by number only, without a name.
+
+Verdict: PASS. Scope: one free-pool node (CN-161) at one moment. It does not show that charged
+cpu_node nodes resolve the account, that multi-node launches work, that the fault will not recur, or why
+1528798 failed to launch; NUS HPC incident INC000003671794 covers that.
+
+Context, same day (login node, read-only): at 16:58:08-16:58:29 SGT 0 of 20 account lookups resolved and
+other directory accounts also failed (only local accounts resolved), and the PBS client could not reach the
+server while lookups failed; at 16:44 and again at 17:19 and 17:30 lookups resolved.

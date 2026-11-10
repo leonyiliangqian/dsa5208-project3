@@ -1,12 +1,12 @@
 # Project 3 handoff: current status
 
-**This is the only place for changing job status.** Report due **13 Nov 2026 23:59 SGT**. Not ready to hand in: see
+**This is the only place for changing job status.** Report due **17 Nov 2026** (per Leon, 10 Nov; cutoff time unconfirmed). Not ready to hand in: see
 [notes/group_review.md](notes/group_review.md). Everything under "History" is dated and may be out of date.
 
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 10 November 2026, 17:00 SGT
+## Current status, 10 November 2026, 17:45 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -16,6 +16,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1526501` `bench1` | **Failed, 6 Nov 21:03:** exit 5 in 35 s on CN-158; 4 gates passed, then `internode` lost Open MPI's second daemon | Nothing measured. Approval used; not retried |
 | `1528774` `bench1` rerun | **Finished, passed and verified:** exit 0, 54 min 36 s on IN-008 (whole Gold 6438N node), 9 of 9 gates, 148 of 148 runs verified, 9 of 9 cleanups CLEAN | **Formal 1 to 64-core results**, now the source of the report's CPU figures and tables. One node only |
 | `1528798` `pilot2` rerun | **Held by PBS (system hold)** since 10 Nov 14:43: 21 failed launch attempts, exit status -10, "too many failed attempts to run". No run directory, gate file or output: our script never ran. Followed a PBS server outage on 9 Nov | Approval used. Left on hold; releasing it needs Leon's decision. Diagnosis: `code/artifacts/cluster/discovery/vanda_pilot2_hold_1528798_20261110T1644.txt` |
+| `1535562` launch test | **Passed** 10 Nov 17:19: free, 1 core, `cpu_serial` on CN-161; exit 0 on the first attempt; account, primary group and home-directory write resolved on the node | Approved once; used. Covers one free-pool node at one moment, not `cpu_node` or multi-node launches. Summary: `code/artifacts/cluster/discovery/vanda_launch_test_1535562_20261110.txt` |
 | `pilot4`, `bench4` | Not approved: charged, need `pilot2` to pass or Leon's decision to skip it; balance 10,000 CPU-hours on 7 Nov | Up to 192 + 725 = 917 core-hours requested. `bench4` has its gates since 8 Nov. Plan and contingency: [notes/plan_256core.md](notes/plan_256core.md) |
 
 - **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23
@@ -32,7 +33,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 **Next, in order:**
 
 1. When asked, check `1528798` once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
-2. **Mon 9 Nov 18:00 SGT, Leon decides:** if `1528798` has not started, whether to request `pilot4` without it (gap and cost in `plan_256core.md`).
+2. **Leon decides (10 Nov):** go to `pilot4` directly, with `1528798` left held, as recommended in `plan_256core.md` (10 Nov), or release `1528798` first.
    Then a fresh balance read, a `pilot4` clone and dry run (needs approval), and `pilot4` itself (charge approval). Both requests are written in
    [notes/approval_requests.md](notes/approval_requests.md) (8 Nov). **Staged 8 Nov 13:30:** clean clone `~/dsa5208-p3-7f1b5a6-pilot4`, Vanda dry run
    passed, nothing submitted. Left before `pilot4`: Leon's fresh balance read (`amgr login`), `pilot2` or the skip decision, and charge approval. `bench4` follows only a verified `pilot4`, by about Wed 11 Nov.
