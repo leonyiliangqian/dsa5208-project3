@@ -6,7 +6,7 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 10 November 2026, 19:00 SGT
+## Current status, 10 November 2026, 18:40 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -18,7 +18,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1528798` `pilot2` rerun | **Held by PBS (system hold)** since 10 Nov 14:43: 21 failed launch attempts, exit status -10, "too many failed attempts to run". No run directory, gate file or output: our script never ran. Followed a PBS server outage on 9 Nov | Approval used. Left on hold; releasing it needs Leon's decision. Diagnosis: `code/artifacts/cluster/discovery/vanda_pilot2_hold_1528798_20261110T1644.txt` |
 | `1535562` launch test | **Passed** 10 Nov 17:19: free, 1 core, `cpu_serial` on CN-161; exit 0 on the first attempt; account, primary group and home-directory write resolved on the node | Approved once; used. Covers one free-pool node at one moment, not `cpu_node` or multi-node launches. Summary: `code/artifacts/cluster/discovery/vanda_launch_test_1535562_20261110.txt` |
 | `1535640` `pilot4` | **Finished, passed and verified:** exit 0, 10 min 34 s on GN-A40-079/080/083/085 (all Platinum 8452Y, 64 of 72 CPUs each, split 36 + 28), 9 of 9 gates, 9 of 9 runs verified (`verify_run.py` after a fix, `dcade83`), 36 of 36 cleanups CLEAN. Charge basis 192 CPU-hours; balance before 10000.0 | **Sizing and 256-core correctness only** (one repetition, 2 timed steps): bound runs on 256 cores matched serial exactly. Leon to read the balance after it |
-| `bench4` | **Not approved.** Plan frozen from `pilot4` (`a72ce26`, manifest SHA-256 `0ddec3b7...`), 90 runs, walltime 3 h, dynamic chunk 64 kept. **Expected debit 768 CPU-hours** (billing is on the request, see below), leaving about 9,040 | Request in [notes/approval_requests.md](notes/approval_requests.md) (10 Nov). **Staged 10 Nov 18:29:** clean clone `~/dsa5208-p3-a72ce26-bench4`, Vanda dry run passed, nothing submitted. Needs a fresh balance reading and charge approval |
+| `1535991` `bench4` | **Running since 10 Nov 18:36:51** on CN-064/065/061/047, `batch_cpu`, rate 1; 4 x 64 cores, 3 h; source `a72ce26`, frozen manifest `0ddec3b7...`. Charge basis 768 CPU-hours (billed on the request); balance before 9,808.0 | Submitted once; approval used. Do not resubmit or cancel. Formal 1 to 256-core strong and weak scaling if its gates pass. Expected about 1 h |
 
 - **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23
   (64 x 1, efficiency 0.36) to 39 (2 x 32, 0.61); the per-rank tree build grows to about 31% and the exchange about 9% of the 64-rank run; static beat
@@ -35,7 +35,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 
 1. When asked, check `1528798` once; when finished, retrieve and verify. If a gate fails, diagnose and do not retry.
 2. **Billing observed (10 Nov):** Leon read 9,808.0 CPU-hours after `pilot4`, down from 10,000.0: exactly 192, the full 45-minute request at rate 1, although the job used 10.5 min. So billing is on the request (cores x walltime x rate), not on use.
-3. `bench4` staged and dry-run (10 Nov 18:29). Next: Leon's fresh available-balance reading and charge approval (768 expected), then submit once.
+3. When asked, check `1535991` once; when finished, retrieve and verify it, analyse it on its own (own serial baseline, Platinum 8452Y), and report it separately from `1528774`. Leon reads the balance afterwards (expected 9,040).
 4. Group items in [notes/group_review.md](notes/group_review.md).
 
 ## Status on 6 November 2026, 18:44 SGT, superseded

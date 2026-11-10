@@ -1,0 +1,141 @@
+bench4 submission, 10 Nov 2026, under Leon's charge approval (one run, cap 768 CPU-hours). Balance before: 9,808.0 available CPU-hours (Leon, hpc project, about 18:24 SGT).
+Billing basis observed with pilot4: the full request is debited (cores x walltime x rate), so 768 is the expected debit.
+
+== First attempt, 18:35:10, interrupted by the user while running, at the scheduler check (before the duplicate check and qsub). Captured output:
+Tue Nov 10 06:35:10 PM +08 2026
+stdct-login-01
+== source
+commit a72ce26e13e315af0686a5ddf1286e36e749eea8
+tree fb393ec86dff907013c78976e9adafb2c34290ff
+manifest 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c
+status incl. untracked/ignored 0
+manifest studies-four-node-v1 frozen cases 30 schedule dynamic 64
+== resources and cap
+# timings and recheck with scripts/plan_budget.py. SCALE_CHECKS (required by
+#PBS -N p3_bench4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=03:00:00
+#PBS -j oe
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+requested core-minutes 46080 = 768 core-hours (cap 768; balance read by Leon 9808.0)
+== 3 lookups
+18:35:11 user=[resolved] group=[resolved] whoami=[resolved]
+18:35:12 user=[resolved] group=[resolved] whoami=[resolved]
+18:35:13 user=[resolved] group=[resolved] whoami=[resolved]
+== server
+
+== Read-only reconciliation, 18:36:22: no p3_bench4 in current jobs or history; no leftover script process; clone clean (0 lines). Nothing had been submitted.
+
+== Second and only submitting run, 18:36:3x-18:36:48 (same script, all checks rerun)
+-- script
+C=a72ce26e13e315af0686a5ddf1286e36e749eea8; T=fb393ec86dff907013c78976e9adafb2c34290ff; M=0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c
+fail=0; bad(){ echo "CHECK FAILED: $*"; fail=1; }
+date; hostname
+cd ~/dsa5208-p3-a72ce26-bench4/code || { echo "no clone"; exit 9; }
+echo "== source"; h=$(git rev-parse HEAD); t=$(git rev-parse 'HEAD^{tree}'); s=$(sha256sum manifests/studies_four_node.json | cut -d' ' -f1); st=$(git -C .. status --porcelain --ignored --untracked-files=all | wc -l)
+echo "commit $h"; echo "tree $t"; echo "manifest $s"; echo "status incl. untracked/ignored $st"
+[ "$h" = "$C" ] || bad commit; [ "$t" = "$T" ] || bad tree; [ "$s" = "$M" ] || bad manifest; [ "$st" = 0 ] || bad "clone not clean"
+python3 -B -c "import json,sys;m=json.load(open('manifests/studies_four_node.json'));d=m['defaults'];print('manifest',m['id'],m['status'][:6],'cases',len(m['cases']),'schedule',d['schedule'],d['chunk']);sys.exit(0 if m['status'].startswith('frozen') and d['schedule']=='dynamic' and d['chunk']==64 else 1)" || bad "manifest not frozen or schedule changed"
+echo "== resources and cap"; grep -E '^#PBS|SCALE_CHECKS|REQUIRE_FROZEN' jobs/vanda/bench4.pbs
+grep -qx '#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb' jobs/vanda/bench4.pbs || bad select
+grep -qx '#PBS -l place=scatter' jobs/vanda/bench4.pbs || bad place
+grep -qx '#PBS -l walltime=03:00:00' jobs/vanda/bench4.pbs || bad walltime
+[ "$(grep -c '^#PBS -l' jobs/vanda/bench4.pbs)" = 3 ] || bad "unexpected extra resource lines"
+grep -q 'REQUIRE_FROZEN=1 SCALE_CHECKS=1' jobs/vanda/bench4.pbs || bad "gates or frozen check missing"
+grep -q 'ALLOC_SAME_MODEL=1' jobs/vanda/measure.sh || bad "same-model gate missing"
+ch=$(( 4*64*180 )); echo "requested core-minutes $ch = $(( ch/60 )) core-hours (cap 768; balance read by Leon 9808.0)"; [ $ch -le $(( 768*60 )) ] || bad "request over cap"; [ $(( ch/60 )) -le 9808 ] || bad "over balance"
+echo "== 3 lookups"; for i in 1 2 3; do u=$(getent passwd "$(id -u)" | cut -d: -f1); g=$(getent group "$(id -g)" | cut -d: -f1); w=$(whoami 2>/dev/null); echo "$(date +%T) user=[${u:+resolved}] group=[${g:+resolved}] whoami=[${w:+resolved}]"; [ -n "$u" ] && [ -n "$g" ] && [ "$w" = "$u" ] || bad "lookup $i"; sleep 1; done
+echo "== server"; B=$(timeout 30 qstat -Bf 2>&1); echo "$B" | grep -E 'server_state|scheduling|errno|cannot'
+echo "$B" | grep -qE 'server_state = (Active|Scheduling)' || bad "server not active"; echo "$B" | grep -q 'scheduling = True' || bad "scheduling not True"
+for q in auto batch_cpu; do Q=$(timeout 30 qstat -Qf $q 2>&1); echo "== queue $q"; echo "$Q" | grep -E 'queue_type|enabled|started|queue_charge_rate|route_destinations|resources_max\.(ncpus|nodect|walltime)|max_run|default_chunk' | grep -vE '\[u:(e0|e1|sau)'
+  echo "$Q" | grep -q 'enabled = True' || bad "$q not enabled"; echo "$Q" | grep -q 'started = True' || bad "$q not started"
+  echo "$Q" | grep -q 'resources_default.queue_charge_rate = 1$' || bad "$q rate not 1"; done
+BC=$(timeout 30 qstat -Qf batch_cpu 2>&1); n=$(echo "$BC" | awk '/resources_max.ncpus/{print $3}'); d=$(echo "$BC" | awk '/resources_max.nodect/{print $3}'); [ "${n:-0}" -ge 256 ] && [ "${d:-0}" -ge 4 ] || bad "batch_cpu cannot admit 4 x 64"
+echo "== duplicates"; D1=$(timeout 30 qselect -u leonyil.qian -N p3_bench4 2>&1); r1=$?; D2=$(timeout 30 qselect -x -u leonyil.qian -N p3_bench4 2>&1); r2=$?
+echo "bench4 current [$D1] history [$D2]"; [ $r1 = 0 ] && [ $r2 = 0 ] && [ -z "$D1" ] && [ -z "$D2" ] || bad "p3_bench4 exists or qselect failed"
+P2=$(timeout 30 qstat -xf 1528798.stdct-mgmt-02 2>&1 | grep -E 'job_state|Hold_Types'); echo "pilot2: $(echo $P2)"; echo "$P2" | grep -q 'job_state = H' || bad "pilot2 not held"
+echo "== my jobs"; timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+if [ $fail != 0 ]; then echo "NOT SUBMITTED"; exit 8; fi
+echo "== all checks passed; submitting once"; date
+bash jobs/vanda/submit.sh bench4 --queue auto --project personal-leonyil.qian --yes; echo "submit_rc=$?"; date
+echo "== initial state"; for j in $(timeout 30 qselect -u leonyil.qian -N p3_bench4 2>/dev/null); do timeout 30 qstat -xf ${j%%.*}.stdct-mgmt-02 2>&1 | grep -vi cookie | egrep 'Job Id|Job_Name|job_state|queue =|qtime|stime|exec_host|comment|project|Resource_List\.(select|place|walltime|ncpus|queue_charge_rate)|am_job_cache|job\.(walltime|ncpus|queue_charge_rate)'; done
+timeout 30 qstat -u leonyil.qian 2>&1 | tail -n +6
+-- output
+Tue Nov 10 06:36:41 PM +08 2026
+stdct-login-01
+== source
+commit a72ce26e13e315af0686a5ddf1286e36e749eea8
+tree fb393ec86dff907013c78976e9adafb2c34290ff
+manifest 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c
+status incl. untracked/ignored 0
+manifest studies-four-node-v1 frozen cases 30 schedule dynamic 64
+== resources and cap
+# timings and recheck with scripts/plan_budget.py. SCALE_CHECKS (required by
+#PBS -N p3_bench4
+#PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
+#PBS -l place=scatter
+#PBS -l walltime=03:00:00
+#PBS -j oe
+REQUIRE_FROZEN=1 SCALE_CHECKS=1
+requested core-minutes 46080 = 768 core-hours (cap 768; balance read by Leon 9808.0)
+== 3 lookups
+18:36:42 user=[resolved] group=[resolved] whoami=[resolved]
+18:36:43 user=[resolved] group=[resolved] whoami=[resolved]
+18:36:44 user=[resolved] group=[resolved] whoami=[resolved]
+== server
+    server_state = Scheduling
+    scheduling = True
+== queue auto
+    queue_type = Route
+    resources_default.queue_charge_rate = 1
+    route_destinations = batch_cpu,batch_gpu
+    enabled = True
+    started = True
+== queue batch_cpu
+    queue_type = Execution
+    resources_max.ncpus = 720
+    resources_max.nodect = 10
+    resources_max.walltime = 240:00:00
+    resources_default.queue_charge_rate = 1
+    default_chunk.node_pool = cpu_node
+    max_run = [u:PBS_GENERIC=6]
+    max_run_res.ncpus = [u:PBS_GENERIC=720]
+    enabled = True
+    started = True
+== duplicates
+bench4 current [] history []
+pilot2: job_state = H Hold_Types = s
+== my jobs
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 H   -- 
+== all checks passed; submitting once
+Tue Nov 10 06:36:47 PM +08 2026
+command: qsub -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=a72ce26e13e315af0686a5ddf1286e36e749eea8 -o /home/svu/leonyil.qian/dsa5208-p3-a72ce26-bench4/code/artifacts/cluster/logs/ jobs/vanda/bench4.pbs
+1535991.stdct-mgmt-02
+submit_rc=0
+Tue Nov 10 06:36:48 PM +08 2026
+== initial state
+Job Id: 1535991.stdct-mgmt-02
+    Job_Name = p3_bench4
+    job_state = Q
+    queue = batch_cpu
+    qtime = Tue Nov 10 18:36:48 2026
+    Resource_List.am_job_cache = "{}"
+    Resource_List.ncpus = 256
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 1
+    Resource_List.select = 4:ncpus=64:mpiprocs=64:mem=444GB
+    Resource_List.walltime = 03:00:00
+    project = personal-leonyil.qian
+1528798.stdct-* leonyil* cpu_par* p3_pilot2     --    2 128  240gb 00:30 H   -- 
+1535991.stdct-* leonyil* batch_c* p3_bench4     --    4 256  1776g 03:00 Q   -- 
+
+== read at 18:37:03
+Tue Nov 10 06:37:03 PM +08 2026
+    job_state = R
+    exec_host = CN-064/0*0+CN-065/0*0+CN-061/0*0+CN-047/0*0
+    Resource_List.am_job_cache = {"job.walltime": 10800,
+	 "job.queue_charge_rate": 1.0, "job.ngpus": 0, "job.ncpus": 256.0,
+    stime = Tue Nov 10 18:36:51 2026
+    comment = Job run at Tue Nov 10 at 18:36 on (CN-064[0]:mem=256423mb:ncpus=3
+bench4 jobs: 1535991.stdct-mgmt-02 

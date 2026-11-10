@@ -1,6 +1,6 @@
 # Approval requests
 
-**No approval is open.** The `pilot4` charge approval (10 Nov, cap 192 CPU-hours) was used: job `1535640`, submitted once on 10 Nov 17:42:15 SGT. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
+**No approval is open.** The `bench4` charge approval (10 Nov, cap 768) was used: job `1535991`. The `pilot4` charge approval (10 Nov, cap 192 CPU-hours) was used: job `1535640`, submitted once on 10 Nov 17:42:15 SGT. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
 both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Proposed, 10 November 2026: `bench4` staging, then `bench4`: not approved
@@ -39,6 +39,12 @@ with `frozen`, which it does.
 > submit.sh bench4 --queue auto --project personal-leonyil.qian WITHOUT --yes. No submission, charge, authentication or permission change.
 
 ### Step 2: `bench4` (charged; needs step 1, Leon's fresh available-balance reading, and his charge approval)
+
+**Used: submitted once as `1535991.stdct-mgmt-02` on 10 Nov 18:36:48 SGT.** Balance before (Leon, about 18:24): 9,808.0 available CPU-hours. A first run of the
+checks was interrupted at 18:35 before its duplicate check and `qsub`; a read-only check found no `p3_bench4` and a clean clone, and the same checks then
+ran in full and passed. PBS recorded the charge basis 256 CPUs x 10800 s at rate 1 = 768 CPU-hours (the cap; billed on the request). Running at 18:36:51 on
+CN-064, CN-065, CN-061 and CN-047. A failure is not retried. Record: `code/artifacts/cluster/discovery/vanda_bench4_submit_a72ce26_20261110T1836.txt`.
+
 
 > Leon explicitly approves exactly ONE bench4 submission, CHARGED, at most 768 CPU-hours requested from personal-leonyil.qian: source a72ce26e13e315af0686a5ddf1286e36e749eea8,
 > tree fb393ec86dff907013c78976e9adafb2c34290ff, clone ~/dsa5208-p3-a72ce26-bench4, manifest studies_four_node.json SHA256 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c,
