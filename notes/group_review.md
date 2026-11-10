@@ -29,18 +29,17 @@ The report's declaration must not claim more than this table. Each member fills 
 Keep the red `[PENDING]` markers for missing measurements until formal Vanda results are verified. Pilot timings are for sizing.
 
 - [x] Serial runtime against N: measured in job `1528774`, a whole 64-core node (earlier `1523703`, 16 shared cores). Group review of the text still open.
-- [ ] MPI strong and weak scaling to at least 256 CPU cores, with speedup and efficiency.
-- [ ] MPI+OpenMP strong and weak scaling: to 64 cores of one node, from job `1528774`. Missing beyond one node, to 256 cores.
-- [ ] Communication share of runtime and phase times: within one node only. Missing between nodes.
+- [x] MPI strong and weak scaling to 256 CPU cores, with speedup and efficiency: job `1535991` (4 nodes, Platinum 8452Y), verified 11 Nov, in the report. Group review of the text still open.
+- [x] MPI+OpenMP strong and weak scaling: to 64 cores of one node (`1528774`, Gold 6438N) and to 256 cores on four nodes (`1535991`, Platinum 8452Y), kept separate with their own baselines.
+- [x] Communication share of runtime and phase times: within one node (`1528774`) and across four nodes (`1535991`).
 - [x] Ranks x threads, schedule, leaf size, and accuracy against cost: at 64 cores, job `1528774`.
 - [ ] Measured findings, Discussion, Limitations from measurements, Conclusion.
-- [ ] Memory per node, interconnect, and the nodes used for measurement.
-- [ ] **256 cores:** Pilot4 was submitted under Leon's approval. See the [handoff](../HANDOFF.md) for job status. After it finishes, verify its
-      gates and sizing data, then recheck the Vanda balance. If it passes, freeze the Bench4 manifest and obtain separate approval for the formal run.
+- [x] Memory per node and the nodes used for measurement; the interconnect was not characterised (stated in the report).
+- [x] **256 cores:** `pilot4` `1535640` (sizing) and `bench4` `1535991` (formal) passed and were verified; balance after `bench4` to be read by Leon (expected 9,040).
 
 ## Report review
 
-- [ ] Read the Results text, now from job `1528774` (7 Nov), especially the tree-build, schedule (8 x 8) and efficiency-above-1 paragraphs.
+- [ ] Read the Results text: `1528774` (one node) and the new four-node subsection from `1535991` (11 Nov), especially the tree-build, exchange and weak-scaling paragraphs.
 - [ ] Read: Terms Used, input generation, Table 1 (test purposes), Planned Studies, the lines marked "expected", Parallelization
       Decisions, What the Results Support, and the pilot paragraph in Results.
 - [ ] GPU paragraph, against job `1519638`.

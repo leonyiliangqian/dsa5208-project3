@@ -846,3 +846,27 @@ peak 1.78 GiB per rank, about 114 GiB per node at 64 ranks. Each multi-rank run 
 core (162 MiB per rank); rule 8 keeps it (12%). Strong 64 x 1, 128 x 1, 256 x 1, 16 x 8 and 32 x 8 limits raised from 30 to 60 s (64 x 1 took 28 s with 3 steps
 projected). Sizes, steps, theta, leaf size, schedule and 3 repetitions unchanged. Walltime 3 h: worst case 9390 s plus up to 600 s of gates. Expected 35 min of
 runs from measured times (pilot4, and `bench1` scaled by the 1.13 serial ratio for single-node cases), 51-58 min by the model.
+
+### `bench4` 1535991: passed and verified; 256-core results in the report, 11 Nov (Vanda job finished 10 Nov 19:17)
+
+**Outcome.** Exit 0, 10 Nov 18:36:51-19:17:45 SGT (40 min 40 s of 3 h), `batch_cpu`, rate 1, on CN-047, CN-061, CN-064 and CN-065: all Platinum 8452Y, 64 of
+72 CPUs each. Retrieved on 11 Nov with bounded commands over the existing session; 294 of 294 files checksum-verified; the job cookie redacted with a ledger
+row; no numeric UID in the run. Record: `artifacts/cluster/discovery/vanda_retrieval_1535991_20261111.txt`.
+
+- **Gates, read independently:** 9 of 9 PASS, 36 of 36 cleanups CLEAN. 4 hosts, one model, 64 CPUs each; placement 32 x 8 and 256 x 1 bound on 64 distinct
+  CPUs per host; bound exchange on 256 ranks across 4 hosts with data verified; six bound comparisons with serial on 256 cores, all exactly zero.
+- **Provenance:** source `a72ce26` (clean), one binary pair, one host, one job; plan and manifest `studies-four-node-v1`, frozen, SHA-256 `0ddec3b7...`.
+- **Runs:** `verify_run.py` PASS, 90 of 90 (30 cases x 3 interleaved repetitions), none failed, timed out or skipped; longest run 59% of its limit.
+  `analyze.py` re-derived `analysis/bench4-1535991/` identical to the job's summary. Efficiencies recomputed from the raw records matched the figures (17 points).
+
+**Results (formal, 1 to 256 cores, own baselines; Platinum 8452Y, so not compared with `1528774`).** Serial 22.4 s per step at N = 10^6. Strong, MPI only:
+efficiency 0.91 at 2, 0.37 at 64 (one node), 0.27 at 128 (two), 0.18 at 256 (four), speedup 46; 8 threads per rank: 0.97 at 8, 0.46 at 64, 0.30 at 128,
+0.20 at 256, speedup 52. Threads beat ranks at every core count. Traversal 36.6 s (2 ranks) to 0.50 s (256); build 0.40 s to 0.88 s, about 60% at 256; exchange
+0.47 s at 64 ranks on one node, 0.37 s at 128, 0.32 s at 256 (17%, 19%, 22% of the run; includes waiting). Weak, 50,000 per core: 0.20 at 64, 0.13 at 128,
+0.08 at 256 (T = 1); 0.35, 0.25, 0.16 (T = 8); build 65% and 58% at 256; up to 1.78 GiB per rank. Repetitions within 3.6% except 32 x 8 (8.2%); one weak case,
+2 ranks, had a 13% exchange share, not investigated. Causes of the build growth and of threads being faster were not tested.
+
+**Report and code.** `report_figures.py --prefix` (`8c0fd3e`, test `tests/report_figures_prefix_test.py`: unprefixed output identical to the committed
+fragments) writes bench4's fragments as `b4_*` with `fig:b4-`/`tab:b4-` labels. New subsection "Scaling to 256 Cores on Four Nodes" (`165480f`); every
+256-core placeholder replaced; methodology now says the exchange time includes waiting. Compiles to 13 pages, no errors, undefined references or overfull
+boxes; only the Canvas marker remains.
