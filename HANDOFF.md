@@ -6,7 +6,7 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 10 November 2026, 17:45 SGT (pilot4 row 17:42)
+## Current status, 10 November 2026, 17:51 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -17,7 +17,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1528774` `bench1` rerun | **Finished, passed and verified:** exit 0, 54 min 36 s on IN-008 (whole Gold 6438N node), 9 of 9 gates, 148 of 148 runs verified, 9 of 9 cleanups CLEAN | **Formal 1 to 64-core results**, now the source of the report's CPU figures and tables. One node only |
 | `1528798` `pilot2` rerun | **Held by PBS (system hold)** since 10 Nov 14:43: 21 failed launch attempts, exit status -10, "too many failed attempts to run". No run directory, gate file or output: our script never ran. Followed a PBS server outage on 9 Nov | Approval used. Left on hold; releasing it needs Leon's decision. Diagnosis: `code/artifacts/cluster/discovery/vanda_pilot2_hold_1528798_20261110T1644.txt` |
 | `1535562` launch test | **Passed** 10 Nov 17:19: free, 1 core, `cpu_serial` on CN-161; exit 0 on the first attempt; account, primary group and home-directory write resolved on the node | Approved once; used. Covers one free-pool node at one moment, not `cpu_node` or multi-node launches. Summary: `code/artifacts/cluster/discovery/vanda_launch_test_1535562_20261110.txt` |
-| `1535640` `pilot4` | **Running since 10 Nov 17:42:18** on GN-A40-079/080/083/085, `batch_cpu`, rate 1; 4 x 64 cores, 45 min; source `7f1b5a6`. Charge basis 256 CPUs x 45 min = 192 CPU-hours (the cap). Balance before: 10000.0 (Leon, ~17:39) | Submitted once; approval used. Do not resubmit or cancel. Sizing and 256-core correctness only; read the balance again afterwards |
+| `1535640` `pilot4` | **Running at 17:51 SGT** (started 10 Nov 17:42:18) on GN-A40-079/080/083/085, `batch_cpu`, rate 1; 4 x 64 cores, 45 min; source `7f1b5a6`. Charge basis 256 CPUs x 45 min = 192 CPU-hours (the cap). Balance before: 10000.0 (Leon, ~17:39) | Submitted once; approval used. Do not resubmit or cancel. Sizing and 256-core correctness only; read the balance again afterwards |
 | `bench4` | Not approved: needs a verified `pilot4`, its plan frozen from it, and its own approval | Up to 725 core-hours requested. Has its gates since 8 Nov |
 
 - **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23

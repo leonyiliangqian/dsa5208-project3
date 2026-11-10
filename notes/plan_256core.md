@@ -1,9 +1,13 @@
 # Plan to 256 cores: requests for approval
 
-Written 4 November 2026, resized 5 November from pilot `1523275`. **Nothing here is approved or submitted beyond the jobs marked, and every size and
-time is provisional.** Current status is in `../HANDOFF.md`; simulated and local checks are in `experiments.md`.
+Written 4 November 2026, resized 5 November from pilot `1523275`. The dated sections below preserve the planning history.
 
-## Decision needed
+**Current plan (10 November):** Pilot4 was submitted once after Leon approved the 192 CPU-hour cap and reported a fresh balance of 10,000 CPU-hours.
+Pilot2 stays held. See the [handoff](../HANDOFF.md) for Pilot4 job `1535640` and its current status. After it finishes, verify the gates and sizing data
+and check the actual debit. If it passes, freeze the Bench4 manifest and obtain separate charge approval. Bench4 is the remaining planned cluster job.
+Its sizes, runtime and charge estimate are provisional until Pilot4 is verified.
+
+## Options considered before Pilot4
 
 Lecture 12 gives 10 points to MPI scaling to at least 256 CPU cores. The free queue stops at 160 CPUs per job, so 256 cores
 needs one of these:
@@ -16,9 +20,9 @@ needs one of these:
 Leave time for queue waits, because the free pilot has already
 waited 10 h 1 min and the wait on `batch_cpu` has never been tested. Due 17 Nov 2026 (per Leon, 10 Nov; cutoff time unconfirmed).
 
-## Recommendation, 10 November 2026: go to `pilot4` without the free sizing run
+## Recommendation before Pilot4 approval, 10 November 2026, 17:30 SGT
 
-Due 17 Nov 2026 (per Leon, 10 Nov; cutoff time unconfirmed, so plan as if it could be early that day). **Not approved; nothing submitted.**
+The recommendation at the time was to proceed directly to Pilot4. Due 17 Nov 2026 (per Leon, 10 Nov; cutoff time unconfirmed).
 
 **Facts since 8 Nov:** `pilot2` `1528798` is on a PBS system hold after 21 failed launch attempts (exit -10, no output); it ran nothing and gives no
 sizing. The login node's account lookups failed for all directory accounts at 16:58 and worked again by 17:19; NUS HPC incident INC000003671794 is open.

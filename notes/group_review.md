@@ -22,11 +22,11 @@ The report's declaration must not claim more than this table. Each member fills 
 
 - [ ] The declaration in `report/main.tex` matches [ai_usage.md](ai_usage.md) and the table above.
 - [ ] Did AI help with the earlier serial code and design? Not established.
-- [ ] Did OpenAI Codex have a role in November? Some session messages mention a "Codex Claude-check schedule". Not established.
+- [ ] Confirm the group review of the Project 3 statement in `report/main.tex`, which names OpenAI Codex, GPT and Claude.
 
 ## Results still missing
 
-These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275` does not fill any of them.
+Keep the red `[PENDING]` markers for missing measurements until formal Vanda results are verified. Pilot timings are for sizing.
 
 - [x] Serial runtime against N: measured in job `1528774`, a whole 64-core node (earlier `1523703`, 16 shared cores). Group review of the text still open.
 - [ ] MPI strong and weak scaling to at least 256 CPU cores, with speedup and efficiency.
@@ -35,8 +35,8 @@ These stay as red `[PENDING]` markers until Vanda runs fill them. Pilot `1523275
 - [x] Ranks x threads, schedule, leaf size, and accuracy against cost: at 64 cores, job `1528774`.
 - [ ] Measured findings, Discussion, Limitations from measurements, Conclusion.
 - [ ] Memory per node, interconnect, and the nodes used for measurement.
-- [ ] **256 cores:** Leon reads the balance with `amgr login` and decides on charge approval. Without it, the report must say that
-      scaling stops short of 256 cores.
+- [ ] **256 cores:** Pilot4 was submitted under Leon's approval. See the [handoff](../HANDOFF.md) for job status. After it finishes, verify its
+      gates and sizing data, then recheck the Vanda balance. If it passes, freeze the Bench4 manifest and obtain separate approval for the formal run.
 
 ## Report review
 
