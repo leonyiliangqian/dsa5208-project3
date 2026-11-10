@@ -2,8 +2,8 @@
 """Recheck a finished run directory from its raw records, independently of analyze.py.
 
 Every run in plan.json must have one record that matches its case: parameters, effective team
-and schedule, manifest, commit, binary and host. Phase times must add up, stdout must agree with
-the record, stderr must be empty, and summary.csv must agree with the raw values. Nothing is
+and schedule, manifest, commit, binary and host. Phase times must be consistent with the wall time
+(see phase_problems), stdout must agree with the record to its printed precision, stderr must be empty, and summary.csv must agree with the raw values. Nothing is
 compared against an expected speed. Prints one line per case. Exit 1 if any check fails.
 
   verify_run.py RUN_DIR
@@ -12,9 +12,41 @@ import csv
 import hashlib
 import json
 from pathlib import Path
+import re
 import sys
 
 from run_manifest import GRACE_S, expand
+
+PHASES = ("integrate_s", "exchange_s", "build_s", "traverse_s")
+
+
+def phase_problems(r, ranks):
+    """Phase times against wall time. Each phase and the wall time are maxima over ranks, reduced
+    independently (MPI_MAX per value in bh_hybrid.cpp), so with several ranks they may come from
+    different ranks: the sum of the phase maxima may exceed the wall time (a rank waiting in the
+    exchange for a slower one), but no phase can exceed it, and the slowest rank's phases, each at
+    most its maximum, account for its wall time, so the sum cannot fall far below it. One rank
+    (or serial): all values come from the same process, so they must add up."""
+    wall = r["wall_s"]
+    total = sum(r[k] for k in PHASES)
+    out = [f"{k} {r[k]:.3f} negative" for k in PHASES if r[k] < 0]
+    out += [f"{k} {r[k]:.3f} over wall {wall:.3f}" for k in PHASES if r[k] > wall * 1.001 + 0.01]
+    if ranks <= 1:
+        if not 0.9 * wall <= total <= 1.1 * wall + 0.1:
+            out.append(f"phases {total:.3f} against wall {wall:.3f}")
+    elif total < 0.9 * wall:
+        out.append(f"phases {total:.3f} under wall {wall:.3f}")
+    for lo, hi in (("traverse_min_s", "traverse_mean_s"), ("traverse_mean_s", "traverse_s"), ("wall_min_s", "wall_s")):
+        if lo in r and hi in r and r[lo] > r[hi] * 1.000001 + 1e-6:
+            out.append(f"{lo} {r[lo]:.6f} over {hi} {r[hi]:.6f}")
+    return out
+
+
+def stdout_wall_ok(wall_s, text):
+    """The program prints wall_s=%.4f from the same double it writes with %.6f into the record,
+    so the two may differ by half a unit in the 4th decimal (double rounding), never more."""
+    m = re.search(r"\bwall_s=([0-9.]+)", text)
+    return bool(m) and abs(float(m.group(1)) - wall_s) <= 0.5e-4 + 1e-6
 
 
 def main():
@@ -73,12 +105,12 @@ def main():
         else:
             check(d["command"][0] == "taskset", f"{case}: not pinned")
         check(len(r["hosts"]) == p.get("nodes", 1), f"{case}: hosts {r['hosts']}")
-        phases = r["integrate_s"] + r["exchange_s"] + r["build_s"] + r["traverse_s"]
-        # Phases are maxima over ranks, so they can pass wall slightly, but never fall far below it.
-        check(0.9 * r["wall_s"] <= phases <= 1.1 * r["wall_s"] + 0.1, f"{case}: phases {phases:.3f} against wall {r['wall_s']:.3f}")
+        phases = sum(r[k] for k in PHASES)
+        for problem in phase_problems(r, p["ranks"] if p["program"] == "hybrid" else 1):
+            check(False, f"{case}: {problem}")
         check(d["elapsed_s"] >= r["setup_s"] + r["wall_s"] - 0.01, f"{case}: elapsed under setup + wall")
         check(not (run / folder / f"{case}_rep{rep}.stderr").read_text().strip(), f"{case}: stderr not empty")
-        check(f"{r['wall_s']:.4f}" in (run / folder / f"{case}_rep{rep}.stdout").read_text(), f"{case}: stdout wall")
+        check(stdout_wall_ok(r["wall_s"], (run / folder / f"{case}_rep{rep}.stdout").read_text()), f"{case}: stdout wall")
         seen["binary"].setdefault(d["binary"], set()).add(d["binary_sha256"])
         seen["source"].add(d["source_tree_sha256"])
         seen["rev"].add((d["git_rev"], d["git_dirty"]))
