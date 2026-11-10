@@ -1,6 +1,7 @@
 Read-only diagnosis of the system hold on 1528798 (pilot2 rerun), 10 Nov 2026, existing ssh session, bounded commands. Job left on hold; nothing changed.
+Redaction, 10 Nov 2026: the account's numeric UID was replaced with [UID redacted] in a follow-up commit; nothing else changed. The earlier version remains in Git history.
 Earlier: 9 Nov 12:13-12:18 SGT qstat refused (errno 15010, server stdct-mgmt-02 unreachable); 10 Nov 16:39 first read: H, 'job held, too many failed attempts to run', Exit_status -10, last attempt 14:43:20-14:43:21.
-A read at 16:41 hit the login node's user-lookup fault ('whoami: cannot find name for user ID 26435') and returned nothing.
+A read at 16:41 hit the login node's user-lookup fault ('whoami: cannot find name for user ID [UID redacted]') and returned nothing.
 
 == qstat -xf and exit-code search
 Tue Nov 10 04:44:02 PM +08 2026
