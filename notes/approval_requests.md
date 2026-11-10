@@ -1,6 +1,7 @@
 # Approval requests
 
-**No approval is open.** The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
+**Open, conditional and unused: one `pilot4` run (charge approved 10 Nov, capped at 192 CPU-hours).** It may be submitted only after Leon provides a fresh
+available-balance reading and every check below passes; see "Step 2" below. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
 both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
 ## Proposed, 8 November 2026: `pilot4` staging, then `pilot4`: not approved
@@ -66,6 +67,26 @@ cd ~/dsa5208-p3-7f1b5a6-pilot4/code && bash jobs/vanda/submit.sh pilot4 --queue 
 > No submission, charge, authentication or permission change.
 
 ### Step 2: `pilot4` (charged; needs `pilot2` passed or Leon's skip decision, a fresh balance read, and step 1 done)
+
+**Approved by Leon on 10 Nov, conditional, not yet used.** Decisions recorded with it: go to `pilot4` directly and leave `pilot2` `1528798` held;
+step 1 (staging) is done. Scope: exactly one submission of the staged run at `7f1b5a6`; 4 nodes x 64 cores, 240 GB per node, `place=scatter`,
+45 min, `auto` to `batch_cpu` at rate 1, `-P personal-leonyil.qian`; charge capped at 192 CPU-hours. It covers no probe, retry, resubmission or `bench4`.
+
+**Not submitted until all of these hold, checked in the submission session; stop if any fails or the charge could exceed the cap:**
+
+1. Leon has given a fresh available-balance reading himself (time, figure, project name as `hpc project` shows it), and it covers 192 CPU-hours.
+2. Clone `~/dsa5208-p3-7f1b5a6-pilot4`: commit `7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079`, tree `90488b5b3e83fd0078597b80e18ecc713d78a750`, no modified,
+   untracked or ignored files; `pilot_four_node.json` SHA-256 `0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823`; `pilot4.pbs` requests
+   `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, `walltime=00:45:00` (4 x 64 x 0.75 h = 192 core-hours, the cap).
+3. Account lookups resolve on the login node, three in a row.
+4. PBS server Active, scheduling True.
+5. `auto` and `batch_cpu` enabled and started, `queue_charge_rate = 1` on both.
+6. No `p3_pilot4` in current jobs or history; `1528798` still held.
+
+Then `cd ~/dsa5208-p3-7f1b5a6-pilot4/code && bash jobs/vanda/submit.sh pilot4 --queue auto --project personal-leonyil.qian --yes` exactly once, and the job ID
+is recorded. If the outcome of `qsub` is uncertain, nothing is resubmitted.
+
+As proposed on 8 Nov:
 
 > Leon explicitly approves exactly ONE pilot4 submission, CHARGED, at most 192 CPU-hours requested from personal-leonyil.qian: source
 > 7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079, tree 90488b5b3e83fd0078597b80e18ecc713d78a750, clone ~/dsa5208-p3-7f1b5a6-pilot4, manifest pilot_four_node.json
