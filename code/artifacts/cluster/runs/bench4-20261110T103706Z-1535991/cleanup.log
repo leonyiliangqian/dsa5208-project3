@@ -1,0 +1,45 @@
+== after allocation 18:37:41
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after build 18:37:57
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after placement 18:38:14
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after place_mpi 18:38:33
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after internode 18:38:52
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after serial 18:39:00
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after bound_vs_serial 18:41:01
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after runs 19:17:31
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+== after analyze 19:17:38
+leftover_check host=CN-047 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-061 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-064 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN
+leftover_check host=CN-065 owned_found=0 owned_remaining=0 foreign=0 unattributed=0 CLEAN

@@ -1,0 +1,272 @@
+run_id=bench4-20261110T103706Z-1535991 job=1535991.stdct-mgmt-02 host=CN-064 start=2026-11-10T18:37:06+08:00 source_rev=a72ce26e13e315af0686a5ddf1286e36e749eea8
+manifest=manifests/studies_four_node.json scale=1 placement_override=none sim_cpus_per_node=none
+Unloading shared
+  WARNING: Did not unuse /cm/shared/modulefiles
+Loading OpenMPI/4.1.6-GCC-13.2.0
+  Loading requirement: GCCcore/13.2.0 zlib/1.2.13-GCCcore-13.2.0
+    binutils/2.40-GCCcore-13.2.0 GCC/13.2.0 ncurses/6.4-GCCcore-13.2.0
+    numactl/2.0.16-GCCcore-13.2.0 XZ/5.4.4-GCCcore-13.2.0
+    libxml2/2.11.5-GCCcore-13.2.0 libpciaccess/0.17-GCCcore-13.2.0
+    hwloc/2.9.2-GCCcore-13.2.0 OpenSSL/1.1 libevent/2.1.12-GCCcore-13.2.0
+    UCX/1.15.0-GCCcore-13.2.0 libfabric/1.19.0-GCCcore-13.2.0
+    PMIx/4.2.6-GCCcore-13.2.0 UCC/1.2.0-GCCcore-13.2.0
+nodes=4 launcher=pbs_tmrsh mpirun_base=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH
+manifest_status=frozen 10 Nov 2026 from pilot4 job 1535640 (one repetition, sizing only) by the rules in notes/plan_256core.md: serial 21.8 s per step at N=10^6 keeps N_s=10^6; 64x1 efficiency 0.36 and 162 MiB per rank keep 50,000 particles per core; exchange 12% at 64x1; strong 64x1 and multi-node strong limits raised to 60 s, at least twice the pilot elapsed time sha256=0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c
+walltime_s=10800 end_reserve_s=60 gate_overhead_s=258 remote_exec=/opt/pbs/bin/pbs_tmrsh
+
+===== gate allocation (critical, limit 90s) 18:37:23: env ALLOC_EXPECT_NODES=4 ALLOC_CPUS_PER_NODE=64 ALLOC_SAME_MODEL=1 bash jobs/vanda/allocation_check.sh artifacts/cluster/runs/bench4-20261110T103706Z-1535991 4 pbs_tmrsh
+
+=================================================================
+======================   ALLOCATED NODES   ======================
+	cn-047: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+	cn-061: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+	cn-064: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+	cn-065: flags=0x10 slots=64 max_slots=0 slots_inuse=0 state=UP
+node CN-047 allowed=0-56,58,60,62,64,66,68,70 arch=x86_64 model=Intel(R)_Xeon(R)_Platinum_8452Y ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node CN-061 allowed=0-56,58,60,62,64,66,68,70 arch=x86_64 model=Intel(R)_Xeon(R)_Platinum_8452Y ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node CN-064 allowed=0-56,58,60,62,64,66,68,70 arch=x86_64 model=Intel(R)_Xeon(R)_Platinum_8452Y ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+node CN-065 allowed=0-56,58,60,62,64,66,68,70 arch=x86_64 model=Intel(R)_Xeon(R)_Platinum_8452Y ancestry=bash<orted<pbs_shepherd<pbs_mom pbs_jobid_env=yes isa=abm,adx,aes,amx_bf16,amx_int8,amx_tile,avx,avx2,avx512_bf16,avx512_bitalg,avx512bw,avx512cd,avx512dq,avx512f,avx512_fp16,avx512ifma,avx512vbmi,avx512_vbmi2,avx512vl,avx512_vnni,avx512_vpopcntdq,avx_vnni,bmi1,bmi2,cldemote,clflushopt,clwb,f16c,fma,gfni,movbe,movdir64b,movdiri,popcnt,rdrand,rdseed,serialize,sha_ni,sse,sse2,sse4_1,sse4_2,ssse3,vaes,vpclmulqdq,waitpkg,xsave,xsavec,xsaveopt,xsaves
+allocation hosts=['cn-047', 'cn-061', 'cn-064', 'cn-065'] head=cn-064 allowed_cpus=[64, 64, 64, 64] archs=['x86_64']
+launcher=pbs_tmrsh plm_selected=['rsh'] ras_selected=['tm'] remote_ancestry=['bash<orted<pbs_shepherd<pbs_mom', 'bash<orted<pbs_shepherd<pbs_mom', 'bash<orted<pbs_shepherd<pbs_mom'] remote_pbs_mom_visible=[True, True, True]
+recorded_only template_line_seen=True
+recorded_only orte_node_list=['CN-064', 'cn-064', 'cn-065', 'cn-061', 'cn-047'] case_aliases=['cn-064']
+recorded_only models=['Intel(R)_Xeon(R)_Platinum_8452Y'] mixed_models=False isa_lists_equal=True pbs_jobid_env=['yes', 'yes', 'yes', 'yes']
+4_hosts=ok cpus_64_each=ok arch_x86_64=ok one_cpu_model=ok plm_rsh_selected=ok agent_not_contradicted=ok daemonize_not_seen=ok remote_orted_not_sshd=ok remote_under_pbs_mom=ok pbs_jobid_on_every_node=ok
+allocation PASS
+allocation PASS rc=0 secs=18 kind=critical 
+
+===== gate build (critical, limit 300s) 18:37:48: make BIN=bin/vanda-1535991 all hybrid
+mkdir -p bin/vanda-1535991
+g++ -O3 -std=c++17 -Wall -Wextra -march=native -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1535991/bh_serial serial/barnes_hut.cpp
+mpicxx -O3 -std=c++17 -Wall -Wextra -march=native -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -DNBODY_CXXFLAGS='"-O3 -std=c++17 -Wall -Wextra -march=native"' -o bin/vanda-1535991/bh_hybrid hybrid/bh_hybrid.cpp
+build PASS rc=0 secs=9 kind=critical 
+
+===== gate placement (critical, limit 90s) 18:38:04: make BIN=bin/vanda-1535991 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=4 PLACE_R=8 PLACE_T=8
+trace t=1794307094.511 host=CN-064 rank=4 pid=1250987 stage=finalize_done 
+trace t=1794307094.511 host=CN-064 rank=3 pid=1250986 stage=finalize_done 
+trace t=1794307094.511 host=CN-061 rank=18 pid=677860 stage=finalize_done 
+trace t=1794307094.511 host=CN-064 rank=6 pid=1250989 stage=finalize_done 
+trace t=1794307094.511 host=CN-064 rank=7 pid=1250990 stage=finalize_done 
+trace t=1794307094.511 host=CN-064 rank=1 pid=1250984 stage=finalize_done 
+trace t=1794307094.511 host=CN-061 rank=17 pid=677859 stage=finalize_done 
+trace t=1794307094.511 host=CN-061 rank=16 pid=677858 stage=finalize_done 
+trace t=1794307094.511 host=CN-061 rank=19 pid=677861 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=31 pid=610681 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=29 pid=610679 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=28 pid=610678 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=30 pid=610680 stage=finalize_done 
+trace t=1794307094.511 host=CN-064 rank=2 pid=1250985 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=24 pid=610674 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=26 pid=610676 stage=finalize_done 
+trace t=1794307094.511 host=CN-047 rank=25 pid=610675 stage=finalize_done 
+trace t=1794307094.512 host=CN-061 rank=22 pid=677864 stage=finalize_done 
+trace t=1794307094.512 host=CN-061 rank=21 pid=677863 stage=finalize_done 
+trace t=1794307094.512 host=CN-061 rank=20 pid=677862 stage=finalize_done 
+trace t=1794307094.512 host=CN-047 rank=27 pid=610677 stage=finalize_done 
+trace t=1794307094.512 host=CN-061 rank=23 pid=677865 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=14 pid=31469 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=15 pid=31470 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=11 pid=31466 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=12 pid=31467 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=13 pid=31468 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=8 pid=31463 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=10 pid=31465 stage=finalize_done 
+trace t=1794307094.513 host=CN-065 rank=9 pid=31464 stage=finalize_done 
+placement PASS rc=0 secs=10 kind=critical 
+
+===== gate place_mpi (critical, limit 180s) 18:38:21: make BIN=bin/vanda-1535991 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH placement PLACE_NODES=4 PLACE_R=64 PLACE_T=1
+trace t=1794307113.394 host=CN-064 rank=55 pid=1251415 stage=finalize_done 
+trace t=1794307113.394 host=CN-065 rank=89 pid=31769 stage=finalize_done 
+trace t=1794307113.394 host=CN-064 rank=34 pid=1251352 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=77 pid=31757 stage=finalize_done 
+trace t=1794307113.395 host=CN-061 rank=159 pid=678166 stage=finalize_done 
+trace t=1794307113.394 host=CN-047 rank=238 pid=611069 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=70 pid=31747 stage=finalize_done 
+trace t=1794307113.395 host=CN-061 rank=135 pid=678144 stage=finalize_done 
+trace t=1794307113.394 host=CN-047 rank=252 pid=611094 stage=finalize_done 
+trace t=1794307113.394 host=CN-064 rank=63 pid=1251478 stage=finalize_done 
+trace t=1794307113.394 host=CN-047 rank=202 pid=610964 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=41 pid=1251361 stage=finalize_done 
+trace t=1794307113.394 host=CN-065 rank=68 pid=31749 stage=finalize_done 
+trace t=1794307113.395 host=CN-061 rank=167 pid=678174 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=71 pid=31748 stage=finalize_done 
+trace t=1794307113.395 host=CN-061 rank=175 pid=678182 stage=finalize_done 
+trace t=1794307113.394 host=CN-047 rank=207 pid=610962 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=54 pid=1251386 stage=finalize_done 
+trace t=1794307113.395 host=CN-047 rank=200 pid=610959 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=33 pid=1251353 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=72 pid=31750 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=75 pid=31751 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=26 pid=1251344 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=84 pid=31762 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=0 pid=1251323 stage=finalize_done 
+trace t=1794307113.395 host=CN-064 rank=3 pid=1251322 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=65 pid=31742 stage=finalize_done 
+trace t=1794307113.395 host=CN-065 rank=103 pid=31779 stage=finalize_done 
+trace t=1794307113.395 host=CN-047 rank=225 pid=610985 stage=finalize_done 
+trace t=1794307113.398 host=CN-064 rank=60 pid=1251464 stage=finalize_done 
+place_mpi PASS rc=0 secs=12 kind=critical 
+
+===== gate internode (critical, limit 180s) 18:38:40: make BIN=bin/vanda-1535991 MPIRUN=mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH internode INTERNODE_NP=256 INTERNODE_HOSTS=4
+[CN-061:678751] MCW rank 176 bound to socket 1[core 48[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././B/././././././././././././././.]
+[CN-064:1252002] MCW rank 58 bound to socket 1[core 58[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././B/././././.]
+[CN-065:32355] MCW rank 110 bound to socket 1[core 46[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././B/././././././././././././././././.]
+[CN-065:32355] MCW rank 117 bound to socket 1[core 53[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././B/./././././././././.]
+[CN-065:32355] MCW rank 123 bound to socket 1[core 59[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././B/./././.]
+[CN-064:1252002] MCW rank 53 bound to socket 1[core 53[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././B/./././././././././.]
+[CN-064:1252002] MCW rank 60 bound to socket 1[core 60[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././B/././.]
+[CN-061:678751] MCW rank 185 bound to socket 1[core 57[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././B/./././././.]
+[CN-061:678751] MCW rank 182 bound to socket 1[core 54[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././B/././././././././.]
+[CN-064:1252002] MCW rank 63 bound to socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././././B]
+[CN-064:1252002] MCW rank 62 bound to socket 1[core 62[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././././B/.]
+[CN-061:678751] MCW rank 180 bound to socket 1[core 52[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././B/././././././././././.]
+[CN-065:32355] MCW rank 114 bound to socket 1[core 50[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././B/././././././././././././.]
+[CN-065:32355] MCW rank 120 bound to socket 1[core 56[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/././././././.]
+[CN-065:32355] MCW rank 121 bound to socket 1[core 57[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././B/./././././.]
+[CN-064:1252002] MCW rank 57 bound to socket 1[core 57[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././B/./././././.]
+[CN-061:678751] MCW rank 191 bound to socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././././B]
+[CN-065:32355] MCW rank 127 bound to socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././././B]
+[CN-061:678751] MCW rank 189 bound to socket 1[core 61[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././B/./.]
+[CN-064:1252002] MCW rank 61 bound to socket 1[core 61[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././B/./.]
+[CN-065:32355] MCW rank 124 bound to socket 1[core 60[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././B/././.]
+[CN-065:32355] MCW rank 118 bound to socket 1[core 54[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././B/././././././././.]
+[CN-061:678751] MCW rank 184 bound to socket 1[core 56[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/././././././.]
+[CN-061:678751] MCW rank 186 bound to socket 1[core 58[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././B/././././.]
+[CN-065:32355] MCW rank 125 bound to socket 1[core 61[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][./././././././././././././././././././././././././B/./.]
+[CN-061:678751] MCW rank 188 bound to socket 1[core 60[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././B/././.]
+[CN-065:32355] MCW rank 122 bound to socket 1[core 58[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././B/././././.]
+[CN-061:678751] MCW rank 190 bound to socket 1[core 62[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././././B/.]
+[CN-065:32355] MCW rank 126 bound to socket 1[core 62[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././././././././B/.]
+internode_check ranks=256 hosts=4 [CN-047,CN-061,CN-064,CN-065] offset=64 pairs_cross_host=1 data_ok=1 sendrecv_8MiB_max_s=0.0444 allgatherv_1000003x3_max_s=0.0847 expect_hosts=4 PASS
+internode PASS rc=0 secs=12 kind=critical 
+
+===== gate serial (critical, limit 240s) 18:38:59: make BIN=bin/vanda-1535991 EVIDENCE=artifacts/cluster/runs/bench4-20261110T103706Z-1535991 check
+python3 tests/validate_serial.py --binary bin/vanda-1535991/bh_serial \
+    --out artifacts/cluster/runs/bench4-20261110T103706Z-1535991/serial_validation_vanda-1535991.json
+self_test case=empty n=0 leaf_size=1 nodes=0 PASS
+self_test case=empty n=0 leaf_size=8 nodes=0 PASS
+self_test case=singleton n=1 leaf_size=1 nodes=1 PASS
+self_test case=singleton n=1 leaf_size=8 nodes=1 PASS
+self_test case=all_coincident n=100 leaf_size=1 nodes=65 PASS
+self_test case=all_coincident n=100 leaf_size=8 nodes=65 PASS
+self_test case=coincident_cluster n=550 leaf_size=1 nodes=809 PASS
+self_test case=coincident_cluster n=550 leaf_size=8 nodes=298 PASS
+self_test case=below_max_depth n=205 leaf_size=1 nodes=365 PASS
+self_test case=below_max_depth n=205 leaf_size=8 nodes=96 PASS
+self_test case=unequal_masses n=1000 leaf_size=1 nodes=1484 PASS
+self_test case=unequal_masses n=1000 leaf_size=8 nodes=436 PASS
+self_test case=lattice_on_planes n=125 leaf_size=1 nodes=171 PASS
+self_test case=lattice_on_planes n=125 leaf_size=8 nodes=65 PASS
+self_test case=two_particle_analytic PASS
+self_test case=symmetric_cube PASS
+self_test case=negative_control_force_perturbation PASS
+self_test case=negative_control_mass_mismatch PASS
+self_test failures=0
+argument rejection: 10 invalid invocations exit 2
+validate n=2000 theta=0.000 leaf_size=1 nodes=2979 max_rel_err=1.128e-14 mean_rel_err=1.476e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=1 nodes=2979 max_rel_err=1.573e-02 mean_rel_err=8.571e-04 max_abs_err=2.599e-03
+validate n=2000 theta=0.500 leaf_size=1 nodes=2979 max_rel_err=1.095e-01 mean_rel_err=3.517e-03 max_abs_err=1.094e-02
+validate n=2000 theta=0.000 leaf_size=8 nodes=867 max_rel_err=1.144e-14 mean_rel_err=1.471e-15 max_abs_err=2.461e-15
+validate n=2000 theta=0.300 leaf_size=8 nodes=867 max_rel_err=8.409e-03 mean_rel_err=6.735e-04 max_abs_err=7.099e-04
+validate n=2000 theta=0.500 leaf_size=8 nodes=867 max_rel_err=5.909e-02 mean_rel_err=2.962e-03 max_abs_err=5.480e-03
+PASS: serial gate (edge cases, arguments, theta=0 vs direct)
+serial PASS rc=0 secs=1 kind=critical 
+
+===== gate bound_vs_serial (critical, limit 480s) 18:39:07: make BIN=bin/vanda-1535991 EVIDENCE=artifacts/cluster/runs/bench4-20261110T103706Z-1535991 check-hybrid MPIRUN=mpirun MPIRUN_FLAGS=--prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH HYBRID_GATE_ARGS=--max-cores 256 --suite bound --expect-hosts 4
+python3 tests/validate_hybrid.py --serial bin/vanda-1535991/bh_serial --hybrid bin/vanda-1535991/bh_hybrid \
+    --mpirun mpirun --mpirun-flags "--prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH" \
+    --out artifacts/cluster/runs/bench4-20261110T103706Z-1535991/hybrid_validation_vanda-1535991.json --max-cores 256 --suite bound --expect-hosts 4
+hybrid case=bound_256x1_traj n=20011 steps=10 ranks=256 threads=1 schedule=dynamic/64 hosts=4 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_32x8_traj n=20011 steps=10 ranks=32 threads=8 schedule=dynamic/64 hosts=4 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_64x4_guided n=20003 steps=10 ranks=64 threads=4 schedule=guided/0 hosts=4 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_32x8_accel n=20011 steps=1 ranks=32 threads=8 schedule=static/0 hosts=4 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_32x8_theta0 n=4001 steps=1 ranks=32 threads=8 schedule=static/0 hosts=4 acc_max_abs_diff=0.00e+00 PASS
+hybrid case=bound_256x1_zero_owned n=10 steps=10 ranks=256 threads=1 schedule=static/0 hosts=4 pos_max_abs_diff=0.00e+00 vel_max_abs_diff=0.00e+00 acc_max_abs_diff=0.00e+00 PASS
+hybrid repeat 3 runs 2x4 dynamic/1 bitwise_identical=True PASS
+hybrid reject --n 12abc exit=2 PASS
+hybrid reject --theta -1 exit=2 PASS
+hybrid reject --schedule fifo exit=2 PASS
+hybrid reject --steps 0 exit=2 PASS
+hybrid negative_control position*(1+1e-9) detected=True PASS
+PASS: hybrid gate (serial vs MPI+OpenMP, repeatability, argument rejection)
+bound_vs_serial PASS rc=0 secs=113 kind=critical 
+
+===== gate runs (required, limit 10240s) 18:41:08: python3 scripts/run_manifest.py manifests/studies_four_node.json --out artifacts/cluster/runs/bench4-20261110T103706Z-1535991 --bin bin/vanda-1535991 --mpirun mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535991.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH --cores-per-node 64 --nodes 4 --first-cpu 0 --deadline 1794317130 --scale 1
+strong_hybrid_2x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=37.066527
+strong_hybrid_4x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=20.021522
+strong_hybrid_8x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=10.957912
+strong_hybrid_16x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=6.138142
+strong_hybrid_32x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=4.035558
+strong_hybrid_64x1_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=2.746054
+strong_hybrid_128x1_2nodes_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.929578
+strong_hybrid_256x1_4nodes_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.468369
+strong_hybrid_1x8_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=8.864103
+strong_hybrid_2x8_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=5.060394
+strong_hybrid_4x8_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=3.322942
+strong_hybrid_8x8_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=2.21965
+strong_hybrid_16x8_2nodes_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.772982
+strong_hybrid_32x8_4nodes_dynamic64_n1000000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.295204
+weak_hybrid_1x1_dynamic64_n50000_th0p5_L8_rep3: exit=0 ok=True wall_s=1.904644
+weak_hybrid_2x1_dynamic64_n100000_th0p5_L8_rep3: exit=0 ok=True wall_s=2.566956
+weak_hybrid_4x1_dynamic64_n200000_th0p5_L8_rep3: exit=0 ok=True wall_s=2.67608
+weak_hybrid_8x1_dynamic64_n400000_th0p5_L8_rep3: exit=0 ok=True wall_s=3.587591
+weak_hybrid_16x1_dynamic64_n800000_th0p5_L8_rep3: exit=0 ok=True wall_s=4.741107
+weak_hybrid_32x1_dynamic64_n1600000_th0p5_L8_rep3: exit=0 ok=True wall_s=7.008257
+weak_hybrid_64x1_dynamic64_n3200000_th0p5_L8_rep3: exit=0 ok=True wall_s=9.664257
+weak_hybrid_128x1_2nodes_dynamic64_n6400000_th0p5_L8_rep3: exit=0 ok=True wall_s=14.639415
+weak_hybrid_256x1_4nodes_dynamic64_n12800000_th0p5_L8_rep3: exit=0 ok=True wall_s=22.749482
+weak_hybrid_1x8_dynamic64_n400000_th0p5_L8_rep3: exit=0 ok=True wall_s=2.915683
+weak_hybrid_2x8_dynamic64_n800000_th0p5_L8_rep3: exit=0 ok=True wall_s=3.835088
+weak_hybrid_4x8_dynamic64_n1600000_th0p5_L8_rep3: exit=0 ok=True wall_s=5.798903
+weak_hybrid_8x8_dynamic64_n3200000_th0p5_L8_rep3: exit=0 ok=True wall_s=8.30772
+weak_hybrid_16x8_2nodes_dynamic64_n6400000_th0p5_L8_rep3: exit=0 ok=True wall_s=11.978605
+weak_hybrid_32x8_4nodes_dynamic64_n12800000_th0p5_L8_rep3: exit=0 ok=True wall_s=18.065159
+manifest studies-four-node-v1 (frozen 10 Nov 2026 from pilot4 job 1535640 (one repetition, sizing only) by the rules in notes/plan_256core.md: serial 21.8 s per step at N=10^6 keeps N_s=10^6; 64x1 efficiency 0.36 and 162 MiB per rank keep 50,000 particles per core; exchange 12% at 64x1; strong 64x1 and multi-node strong limits raised to 60 s, at least twice the pilot elapsed time) sha256=0ddec3b7b31d runs=90 worst_case_s=9390 scale=1
+runs PASS rc=0 secs=2183 kind=required limit cut from 99999s to 10240s (worst-case overhead 258s) to fit the walltime
+
+===== gate analyze (required, limit 120s) 19:17:38: python3 scripts/analyze.py artifacts/cluster/runs/bench4-20261110T103706Z-1535991
+  bh_hybrid  n=50000 1x1 P=1 dynamic/64 reps=3 wall_med=1.9046s [1.8648,1.9057]
+  bh_hybrid  n=100000 2x1 P=2 dynamic/64 reps=3 wall_med=2.5380s [2.5123,2.5670]
+  bh_hybrid  n=200000 4x1 P=4 dynamic/64 reps=3 wall_med=2.6761s [2.6594,2.6805]
+  bh_hybrid  n=400000 1x8 P=8 dynamic/64 reps=3 wall_med=2.9157s [2.8955,2.9340]
+  bh_hybrid  n=400000 8x1 P=8 dynamic/64 reps=3 wall_med=3.5934s [3.5876,3.6048]
+  bh_hybrid  n=800000 2x8 P=16 dynamic/64 reps=3 wall_med=3.8194s [3.8151,3.8351]
+  bh_hybrid  n=800000 16x1 P=16 dynamic/64 reps=3 wall_med=4.7444s [4.7411,4.7468]
+  bh_hybrid  n=1000000 2x1 P=2 dynamic/64 reps=3 wall_med=37.0279s [37.0180,37.0665] speedup=1.82 eff=0.91
+  bh_hybrid  n=1000000 4x1 P=4 dynamic/64 reps=3 wall_med=20.0860s [20.0215,20.0936] speedup=3.35 eff=0.84
+  bh_hybrid  n=1000000 1x8 P=8 dynamic/64 reps=3 wall_med=8.6957s [8.6782,8.8641] speedup=7.74 eff=0.97
+  bh_hybrid  n=1000000 8x1 P=8 dynamic/64 reps=3 wall_med=10.9579s [10.9232,10.9714] speedup=6.14 eff=0.77
+  bh_hybrid  n=1000000 2x8 P=16 dynamic/64 reps=3 wall_med=5.0651s [5.0604,5.0793] speedup=13.29 eff=0.83
+  bh_hybrid  n=1000000 16x1 P=16 dynamic/64 reps=3 wall_med=6.1513s [6.1381,6.1682] speedup=10.94 eff=0.68
+  bh_hybrid  n=1000000 4x8 P=32 dynamic/64 reps=3 wall_med=3.3291s [3.3229,3.3334] speedup=20.22 eff=0.63
+  bh_hybrid  n=1000000 32x1 P=32 dynamic/64 reps=3 wall_med=4.0356s [4.0073,4.0551] speedup=16.68 eff=0.52
+  bh_hybrid  n=1000000 8x8 P=64 dynamic/64 reps=3 wall_med=2.2646s [2.2197,2.2961] speedup=29.72 eff=0.46
+  bh_hybrid  n=1000000 64x1 P=64 dynamic/64 reps=3 wall_med=2.8098s [2.7461,2.8232] speedup=23.96 eff=0.37
+  bh_hybrid  n=1000000 16x8 P=128 dynamic/64 reps=3 wall_med=1.7514s [1.7097,1.7730] speedup=38.43 eff=0.30
+  bh_hybrid  n=1000000 128x1 P=128 dynamic/64 reps=3 wall_med=1.9166s [1.9080,1.9296] speedup=35.12 eff=0.27
+  bh_hybrid  n=1000000 32x8 P=256 dynamic/64 reps=3 wall_med=1.2952s [1.2582,1.3650] speedup=51.97 eff=0.20
+  bh_hybrid  n=1000000 256x1 P=256 dynamic/64 reps=3 wall_med=1.4684s [1.4552,1.4817] speedup=45.84 eff=0.18
+  bh_serial  n=1000000 1x1 P=1 -/0 reps=3 wall_med=67.3147s [67.2323,67.9832]
+  bh_hybrid  n=1600000 4x8 P=32 dynamic/64 reps=3 wall_med=5.8113s [5.7989,5.8123]
+  bh_hybrid  n=1600000 32x1 P=32 dynamic/64 reps=3 wall_med=7.0083s [7.0076,7.0130]
+  bh_hybrid  n=3200000 8x8 P=64 dynamic/64 reps=3 wall_med=8.3077s [8.2812,8.3137]
+  bh_hybrid  n=3200000 64x1 P=64 dynamic/64 reps=3 wall_med=9.6643s [9.6635,9.6758]
+  bh_hybrid  n=6400000 16x8 P=128 dynamic/64 reps=3 wall_med=11.8986s [11.8009,11.9786]
+  bh_hybrid  n=6400000 128x1 P=128 dynamic/64 reps=3 wall_med=14.6077s [14.5922,14.6394]
+  bh_hybrid  n=12800000 32x8 P=256 dynamic/64 reps=3 wall_med=18.0500s [17.8049,18.0652]
+  bh_hybrid  n=12800000 256x1 P=256 dynamic/64 reps=3 wall_med=22.7495s [22.6137,22.8238]
+analyze PASS rc=0 secs=0 kind=required 
+
+===== summary 19:17:45
+allocation PASS rc=0 secs=18 kind=critical 
+build PASS rc=0 secs=9 kind=critical 
+placement PASS rc=0 secs=10 kind=critical 
+place_mpi PASS rc=0 secs=12 kind=critical 
+internode PASS rc=0 secs=12 kind=critical 
+serial PASS rc=0 secs=1 kind=critical 
+bound_vs_serial PASS rc=0 secs=113 kind=critical 
+runs PASS rc=0 secs=2183 kind=required limit cut from 99999s to 10240s (worst-case overhead 258s) to fit the walltime
+analyze PASS rc=0 secs=0 kind=required 
+verdict required_or_critical=9 not_passed=0 optional: none
+verdict PASS
+end=2026-11-10T19:17:45+08:00 elapsed_s=2439 walltime_s=10800

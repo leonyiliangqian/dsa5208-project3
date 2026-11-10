@@ -1,0 +1,31 @@
+bench4-20261110T103706Z-1535991: 90 records, 0 failed, 30 configurations
+  bh_hybrid  n=50000 1x1 P=1 dynamic/64 reps=3 wall_med=1.9046s [1.8648,1.9057]
+  bh_hybrid  n=100000 2x1 P=2 dynamic/64 reps=3 wall_med=2.5380s [2.5123,2.5670]
+  bh_hybrid  n=200000 4x1 P=4 dynamic/64 reps=3 wall_med=2.6761s [2.6594,2.6805]
+  bh_hybrid  n=400000 1x8 P=8 dynamic/64 reps=3 wall_med=2.9157s [2.8955,2.9340]
+  bh_hybrid  n=400000 8x1 P=8 dynamic/64 reps=3 wall_med=3.5934s [3.5876,3.6048]
+  bh_hybrid  n=800000 2x8 P=16 dynamic/64 reps=3 wall_med=3.8194s [3.8151,3.8351]
+  bh_hybrid  n=800000 16x1 P=16 dynamic/64 reps=3 wall_med=4.7444s [4.7411,4.7468]
+  bh_hybrid  n=1000000 2x1 P=2 dynamic/64 reps=3 wall_med=37.0279s [37.0180,37.0665] speedup=1.82 eff=0.91
+  bh_hybrid  n=1000000 4x1 P=4 dynamic/64 reps=3 wall_med=20.0860s [20.0215,20.0936] speedup=3.35 eff=0.84
+  bh_hybrid  n=1000000 1x8 P=8 dynamic/64 reps=3 wall_med=8.6957s [8.6782,8.8641] speedup=7.74 eff=0.97
+  bh_hybrid  n=1000000 8x1 P=8 dynamic/64 reps=3 wall_med=10.9579s [10.9232,10.9714] speedup=6.14 eff=0.77
+  bh_hybrid  n=1000000 2x8 P=16 dynamic/64 reps=3 wall_med=5.0651s [5.0604,5.0793] speedup=13.29 eff=0.83
+  bh_hybrid  n=1000000 16x1 P=16 dynamic/64 reps=3 wall_med=6.1513s [6.1381,6.1682] speedup=10.94 eff=0.68
+  bh_hybrid  n=1000000 4x8 P=32 dynamic/64 reps=3 wall_med=3.3291s [3.3229,3.3334] speedup=20.22 eff=0.63
+  bh_hybrid  n=1000000 32x1 P=32 dynamic/64 reps=3 wall_med=4.0356s [4.0073,4.0551] speedup=16.68 eff=0.52
+  bh_hybrid  n=1000000 8x8 P=64 dynamic/64 reps=3 wall_med=2.2646s [2.2197,2.2961] speedup=29.72 eff=0.46
+  bh_hybrid  n=1000000 64x1 P=64 dynamic/64 reps=3 wall_med=2.8098s [2.7461,2.8232] speedup=23.96 eff=0.37
+  bh_hybrid  n=1000000 16x8 P=128 dynamic/64 reps=3 wall_med=1.7514s [1.7097,1.7730] speedup=38.43 eff=0.30
+  bh_hybrid  n=1000000 128x1 P=128 dynamic/64 reps=3 wall_med=1.9166s [1.9080,1.9296] speedup=35.12 eff=0.27
+  bh_hybrid  n=1000000 32x8 P=256 dynamic/64 reps=3 wall_med=1.2952s [1.2582,1.3650] speedup=51.97 eff=0.20
+  bh_hybrid  n=1000000 256x1 P=256 dynamic/64 reps=3 wall_med=1.4684s [1.4552,1.4817] speedup=45.84 eff=0.18
+  bh_serial  n=1000000 1x1 P=1 -/0 reps=3 wall_med=67.3147s [67.2323,67.9832]
+  bh_hybrid  n=1600000 4x8 P=32 dynamic/64 reps=3 wall_med=5.8113s [5.7989,5.8123]
+  bh_hybrid  n=1600000 32x1 P=32 dynamic/64 reps=3 wall_med=7.0083s [7.0076,7.0130]
+  bh_hybrid  n=3200000 8x8 P=64 dynamic/64 reps=3 wall_med=8.3077s [8.2812,8.3137]
+  bh_hybrid  n=3200000 64x1 P=64 dynamic/64 reps=3 wall_med=9.6643s [9.6635,9.6758]
+  bh_hybrid  n=6400000 16x8 P=128 dynamic/64 reps=3 wall_med=11.8986s [11.8009,11.9786]
+  bh_hybrid  n=6400000 128x1 P=128 dynamic/64 reps=3 wall_med=14.6077s [14.5922,14.6394]
+  bh_hybrid  n=12800000 32x8 P=256 dynamic/64 reps=3 wall_med=18.0500s [17.8049,18.0652]
+  bh_hybrid  n=12800000 256x1 P=256 dynamic/64 reps=3 wall_med=22.7495s [22.6137,22.8238]

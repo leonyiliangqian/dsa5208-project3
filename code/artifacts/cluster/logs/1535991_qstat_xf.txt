@@ -1,0 +1,77 @@
+Job Id: 1535991.stdct-mgmt-02
+    Job_Name = p3_bench4
+    Job_Owner = leonyil.qian@vanda.nus.edu.sg
+    resources_used.cpupercent = 13787
+    resources_used.cput = 22:47:05
+    resources_used.mem = 449642648kb
+    resources_used.ncpus = 256
+    resources_used.ngpus = 0
+    resources_used.vmem = 152538848kb
+    resources_used.walltime = 00:40:40
+    job_state = F
+    queue = batch_cpu
+    server = stdct-mgmt-02
+    Checkpoint = u
+    ctime = Tue Nov 10 18:36:48 2026
+    Error_Path = vanda.nus.edu.sg:/nfs/home/svu/leonyil.qian/dsa5208-p3-a72ce26
+	-bench4/code/p3_bench4.e1535991
+    exec_host = CN-064/0*0+CN-065/0*0+CN-061/0*0+CN-047/0*0
+    exec_vnode = (CN-064[0]:mem=256423mb:ncpus=36+CN-064[1]:mem=198233mb:ncpus=
+	28)+(CN-065[0]:mem=256465mb:ncpus=36+CN-065[1]:mem=198191mb:ncpus=28)+(
+	CN-061[0]:mem=256465mb:ncpus=36+CN-061[1]:mem=198191mb:ncpus=28)+(CN-04
+	7[0]:mem=256465mb:ncpus=36+CN-047[1]:mem=198191mb:ncpus=28)
+    Hold_Types = n
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Tue Nov 10 19:17:45 2026
+    Output_Path = stdct-login-01.stdct.loc:/home/svu/leonyil.qian/dsa5208-p3-a7
+	2ce26-bench4/code/artifacts/cluster/logs/
+    Priority = 0
+    qtime = Tue Nov 10 18:36:48 2026
+    Rerunable = True
+    Resource_List.am_job_cache = {"job.walltime": 10800,
+	 "job.queue_charge_rate": 1.0, "job.ngpus": 0, "job.ncpus": 256.0,
+	 "am_cloud_enabled": false}
+    Resource_List.mem = 1776gb
+    Resource_List.mpiprocs = 256
+    Resource_List.ncpus = 256
+    Resource_List.ngpus = 0
+    Resource_List.nodect = 4
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 1
+    Resource_List.select = 4:ncpus=64:mpiprocs=64:mem=444GB
+    Resource_List.walltime = 03:00:00
+    stime = Tue Nov 10 18:36:51 2026
+    obittime = Tue Nov 10 19:17:45 2026
+    session_id = 1250316
+    jobdir = /home/svu/leonyil.qian
+    substate = 92
+    Variable_List = PBS_O_HOME=/home/svu/leonyil.qian,PBS_O_LANG=en_US.UTF-8,
+	PBS_O_LOGNAME=leonyil.qian,
+	PBS_O_PATH=/home/svu/leonyil.qian/.local/bin:/home/svu/leonyil.qian/bi
+	n:/cm/shared/apps/apptainer/1.4.1/bin:/cm/local/apps/environment-module
+	s/4.5.3//bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/am/
+	python/bin:/sbin:/usr/sbin:/cm/local/apps/environment-modules/4.5.3/bin
+	:/opt/pbs/bin,PBS_O_SHELL=/bin/bash,
+	PBS_O_INTERACTIVE_AUTH_METHOD=resvport,
+	PBS_O_HOST=stdct-login-01.stdct.loc,
+	PBS_O_WORKDIR=/nfs/home/svu/leonyil.qian/dsa5208-p3-a72ce26-bench4/cod
+	e,PBS_O_SYSTEM=Linux,
+	SOURCE_GIT_REV=a72ce26e13e315af0686a5ddf1286e36e749eea8,
+	PBS_O_QUEUE=auto
+    comment = Job run at Tue Nov 10 at 18:36 on (CN-064[0]:mem=256423mb:ncpus=3
+	6+CN-064[1]:mem=198233mb:ncpus=28)+(CN-065[0]:mem=256465mb:ncpus=36+CN-
+	065[1]:mem=198191mb:ncpus=28)+(CN-061[0]:mem=256465mb:ncpus=36+CN-061[1
+	]:mem=198191mb:ncpus=28)+(CN-047[0]:mem=25646... and finished
+    etime = Tue Nov 10 18:36:48 2026
+    run_count = 1
+    Stageout_status = 1
+    Exit_status = 0
+    Submit_arguments = -q auto -P personal-leonyil.qian -v SOURCE_GIT_REV=a72ce
+	26e13e315af0686a5ddf1286e36e749eea8 -o /home/svu/leonyil.qian/dsa5208-p
+	3-a72ce26-bench4/code/artifacts/cluster/logs/ jobs/vanda/bench4.pbs
+    history_timestamp = 1794309466
+    project = personal-leonyil.qian
+    Submit_Host = vanda.nus.edu.sg
+
