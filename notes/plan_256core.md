@@ -7,6 +7,27 @@ Pilot2 stays held. See the [handoff](../HANDOFF.md) for Pilot4 job `1535640` and
 and check the actual debit. If it passes, freeze the Bench4 manifest and obtain separate charge approval. Bench4 is the remaining planned cluster job.
 Its sizes, runtime and charge estimate are provisional until Pilot4 is verified.
 
+## `pilot4` result and `bench4` frozen, 10 November 2026
+
+`pilot4` `1535640` passed and was verified (details in `experiments.md`, 10 Nov). Sizing only. The rules above, applied to it:
+
+| Rule | `pilot4` value | Outcome |
+|---|---|---|
+| 1, 2 | 9 of 9 gates, no timeouts | Proceed |
+| 3 | Platinum 8452Y on all 4 nodes | `bench4` baselines inside its own job only |
+| 4 | Serial 21.8 s per step at 10^6 | Keep N_s = 10^6 |
+| 5 | No hybrid 1 x 1 in `pilot4`; 0.99 of serial in `bench1` | No action |
+| 6 | 64 x 1 efficiency 0.36 | Keep |
+| 7 | 162 MiB per rank at 64 x 1; 1.78 GiB at 12.8 x 10^6 (114 GiB per node) | Keep 50,000 per core |
+| 8 | Exchange 12% at 64 x 1 (33% at 256 x 1) | Keep; communication is a finding |
+| 9 | Not run in `pilot4`. `bench1` (formal) found static 14% faster than dynamic 64 at 8 x 8, dynamic best at 1 x 64 | Keep dynamic 64 for comparability with `bench1` and `bench16`; flagged for Leon |
+| 12 | Model missed about 15 s of launch per multi-rank run | Raised five strong limits to 60 s; walltime 3 h |
+
+`studies-four-node-v1` is frozen at `a72ce26` (SHA-256 `0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c`), 30 cases x 3 repetitions.
+`bench4.pbs`: `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, 3 h, cap 768 CPU-hours at rate 1 if billed on the request. Expected about 40-60 min
+including gates (154-262 CPU-hours if billed on use). Alternative not adopted: limits at 2.5 x measured estimates would allow 2 h 25 min (cap 619), but the
+single-node estimates are scaled from another CPU model. The request is in `approval_requests.md` (10 Nov).
+
 ## Options considered before Pilot4
 
 Lecture 12 gives 10 points to MPI scaling to at least 256 CPU cores. The free queue stops at 160 CPUs per job, so 256 cores

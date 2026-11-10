@@ -821,3 +821,28 @@ under failed runs. Compiled in a scratch copy: 11 pages, no errors, undefined re
 interconnect, Canvas source submission, group review.
 
 **pilot2 rerun 1528798:** one read at 12:40:49 SGT: Q since 11:50:37, `Insufficient amount of resource: node_pool`, rate 0. Not changed.
+
+### `pilot4` 1535640: passed and verified; verifier fixed; `bench4` frozen, 10 Nov (Vanda job finished 17:53)
+
+**Outcome.** Exit 0, 17:42:18-17:53:14 SGT (10 min 34 s of the 45 min requested), `batch_cpu`, rate 1, on GN-A40-079, -080, -083 and -085: all Intel Xeon Platinum
+8452Y, each with 64 of 72 CPUs split 36 + 28 between sockets (the cpuset shape on which `1526501` failed). Retrieved with bounded commands over the
+existing session, 51 of 51 files checksum-verified, the job cookie redacted with a ledger row. Charge basis recorded by PBS: 256 CPUs x 2700 s at rate 1.
+
+- **Gates, read independently:** 9 of 9 PASS; 36 of 36 cleanups CLEAN. `allocation`: 4 hosts, 64 CPUs each, one model. `placement` 32 x 8 and `place_mpi`
+  256 x 1: 64 distinct bound CPUs on every host. `internode` (bound): 256 ranks on 4 hosts, every exchange pair across hosts, data verified.
+  `bound_vs_serial`: 256 x 1, 32 x 8, 64 x 4 guided, one-step forces, theta = 0 and ranks owning nothing, all exactly equal to serial.
+- **Runs:** 9 of 9 completed. The first `verify_run.py` flagged two 256 x 1 records. Both were checker errors, confirmed against `bh_hybrid.cpp` and the
+  originals: each phase and the wall time are separate `MPI_MAX` reductions, so phase maxima may sum past the wall time (1.640 s against 1.270 s); and the
+  stdout `wall_s=%.4f` (15.0507) differs by double rounding from re-rounding the record's 15.050750. Fixed in `dcade83` with regressions
+  (`tests/verify_run_test.py`, 17 of 17): one-rank and serial records must still add up, no phase may exceed the wall time, the sum may not fall below
+  it, and stdout must match to its printed precision. Rerun: `pilot4` 9 of 9, `bench1` 148 of 148, `bench16` 121 of 121, `pilot1` 20 of 20, all PASS.
+
+**Sizing values (one repetition, 2 timed steps; not results).** Serial at N = 10^6: 21.8 s per step on this model (Gold 6438N in `1528774`: 19.4 s).
+Against that serial run: 64 x 1 speedup 23 (efficiency 0.36), 128 x 1 on 2 nodes 34 (0.26), 256 x 1 on 4 nodes 34 (0.13), 32 x 8 on 4 nodes 48 (0.19).
+Exchange share 12% at 64 x 1, 16% at 128 x 1, 33% at 256 x 1; at 256 x 1 the build took 49%. Weak at 12.8 x 10^6: 7.5 s per step at 256 x 1, 5.9 s at 32 x 8;
+peak 1.78 GiB per rank, about 114 GiB per node at 64 ranks. Each multi-rank run spent about 15 s outside its timed region (launch), which the budget model omitted.
+
+**`bench4` frozen (`a72ce26`), by the rules in `plan_256core.md`:** rule 4 keeps N_s = 10^6 (21.8 s per step); rule 6 keeps it (0.36); rule 7 keeps 50,000 per
+core (162 MiB per rank); rule 8 keeps it (12%). Strong 64 x 1, 128 x 1, 256 x 1, 16 x 8 and 32 x 8 limits raised from 30 to 60 s (64 x 1 took 28 s with 3 steps
+projected). Sizes, steps, theta, leaf size, schedule and 3 repetitions unchanged. Walltime 3 h: worst case 9390 s plus up to 600 s of gates. Expected 35 min of
+runs from measured times (pilot4, and `bench1` scaled by the 1.13 serial ratio for single-node cases), 51-58 min by the model.

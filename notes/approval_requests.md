@@ -3,6 +3,42 @@
 **No approval is open.** The `pilot4` charge approval (10 Nov, cap 192 CPU-hours) was used: job `1535640`, submitted once on 10 Nov 17:42:15 SGT. Nothing else is approved. The `bench1` rerun (job `1528774`) and the `pilot2` rerun (job `1528798`) were each approved and submitted once on 7 Nov;
 both approvals are used up. `pilot2` (`1526470`) and `bench1` (`1526501`) both failed before any timing, and their approvals are used up. Each job needs Leon's own approval. Preparing a clone on Vanda writes to Vanda, so it needs approval too.
 
+## Proposed, 10 November 2026: `bench4` staging, then `bench4`: not approved
+
+Formal strong and weak scaling from 1 to 256 cores in one 4-node job, three repetitions, every point against a serial baseline from the same job and CPU model.
+Based on verified `pilot4` `1535640` (sizing only). Two separate approvals; neither is given.
+
+| | |
+|---|---|
+| Source | `a72ce26e13e315af0686a5ddf1286e36e749eea8`, tree `fb393ec86dff907013c78976e9adafb2c34290ff` (commit `a72ce26`) |
+| Manifest | `studies_four_node.json`, `studies-four-node-v1`, **frozen**, SHA-256 `0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c`; 30 cases x 3 repetitions = 90 runs: strong at N = 10^6 (serial; 2 to 256 ranks x 1 thread; 1 to 32 ranks x 8 threads), weak at 50,000 particles per core to N = 12.8 x 10^6 (same layouts) |
+| Request | `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, `walltime=03:00:00`; queue `auto` to `batch_cpu`, rate 1, `-P personal-leonyil.qian`. PBS rewrote `pilot4`'s memory to 444 GB per chunk; the charge basis was CPUs x walltime |
+| Gates | As `pilot4`, all critical: same CPU model on 4 hosts, placement 8 x 8 and 64 x 1 per node, bound exchange on 256 ranks, serial, bound comparison with serial on 256 cores; then runs and analysis; cleanup checked on every node after each |
+| Runtime | Expected about 40-60 min including gates: 35 min of runs from measured times (51 min by the model) plus 6-10 min of gates. Worst case, every run at its limit: 9390 s of runs plus up to 600 s of gates, within 3 h |
+| Memory | Largest case 12.8 x 10^6 at 64 ranks per node: 1.78 GiB per rank measured, about 114 GiB per node, of 240 GB requested |
+| Charge | **Cap 256 x 3 h = 768 CPU-hours** if billed on the request (7.7% of the 10,000 read before `pilot4`); about 154-262 if billed on use. Leon's balance reading after `pilot4` should show which applies |
+| Not verified | Billing basis; queue wait; which nodes `batch_cpu` gives (`pilot4` got four GN-A40 hosts, Platinum 8452Y); the 8 x 8 schedule choice (kept at dynamic 64, see `plan_256core.md`, 10 Nov) |
+
+### Step 1: stage a clean clone of `a72ce26` and dry-run it (no job, no charge)
+
+Same actions as `pilot4`'s step 1 (8 Nov), with `a72ce26`, bundle `dsa5208-p3-a72ce26.bundle`, clone `~/dsa5208-p3-a72ce26-bench4`, and the dry run
+`bash jobs/vanda/submit.sh bench4 --queue auto --project personal-leonyil.qian` without `--yes`. `bench4` refuses to run unless the manifest status begins
+with `frozen`, which it does.
+
+> Leon approves staging only: create ~/dsa5208-p3-a72ce26-bench4 from an exact-source bundle of a72ce26e13e315af0686a5ddf1286e36e749eea8 with bounded existing-auth operations,
+> verify commit, tree fb393ec86dff907013c78976e9adafb2c34290ff, a clean clone and studies_four_node.json SHA256 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c, and run
+> submit.sh bench4 --queue auto --project personal-leonyil.qian WITHOUT --yes. No submission, charge, authentication or permission change.
+
+### Step 2: `bench4` (charged; needs step 1, Leon's fresh available-balance reading, and his charge approval)
+
+> Leon explicitly approves exactly ONE bench4 submission, CHARGED, at most 768 CPU-hours requested from personal-leonyil.qian: source a72ce26e13e315af0686a5ddf1286e36e749eea8,
+> tree fb393ec86dff907013c78976e9adafb2c34290ff, clone ~/dsa5208-p3-a72ce26-bench4, manifest studies_four_node.json SHA256 0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c,
+> 4 nodes x 64 cores, 240 GB per node, place=scatter, 3 h, queue auto, -P personal-leonyil.qian, rate 1. Balance read by Leon at <time>: <value>. Before
+> submitting, use bounded existing-auth checks to verify commit, tree, clean clone, manifest, resources, account lookups, scheduling on, auto and batch_cpu
+> enabled and started at rate 1, and no p3_bench4 in current jobs or history. If anything fails, authentication is needed or the charge could exceed the cap,
+> stop and report. Otherwise submit once with submit.sh bench4 --queue auto --project personal-leonyil.qian --yes and record the job ID. No retries,
+> cancellations, other jobs, credential or security changes, monitoring loops or final submission.
+
 ## Proposed, 8 November 2026: `pilot4` staging, then `pilot4`: not approved
 
 Two separate approvals. Step 1 (staging) was approved and done on 8 Nov; step 2, charged, is not approved. The current plan still needs `pilot2`
