@@ -16,8 +16,8 @@ Based on verified `pilot4` `1535640` (sizing only). Two separate approvals; neit
 | Gates | As `pilot4`, all critical: same CPU model on 4 hosts, placement 8 x 8 and 64 x 1 per node, bound exchange on 256 ranks, serial, bound comparison with serial on 256 cores; then runs and analysis; cleanup checked on every node after each |
 | Runtime | Expected about 40-60 min including gates: 35 min of runs from measured times (51 min by the model) plus 6-10 min of gates. Worst case, every run at its limit: 9390 s of runs plus up to 600 s of gates, within 3 h |
 | Memory | Largest case 12.8 x 10^6 at 64 ranks per node: 1.78 GiB per rank measured, about 114 GiB per node, of 240 GB requested |
-| Charge | **Cap 256 x 3 h = 768 CPU-hours** if billed on the request (7.7% of the 10,000 read before `pilot4`); about 154-262 if billed on use. Leon's balance reading after `pilot4` should show which applies |
-| Not verified | Billing basis; queue wait; which nodes `batch_cpu` gives (`pilot4` got four GN-A40 hosts, Platinum 8452Y); the 8 x 8 schedule choice (kept at dynamic 64, see `plan_256core.md`, 10 Nov) |
+| Charge | **Expected debit 768 CPU-hours** = 256 cores x 3 h x rate 1, whatever the run time: `pilot4` was debited its full request (10,000.0 to 9,808.0, Leon, 10 Nov) after using 10.5 of 45 min. Leaves about 9,040 if the rate and balance stay the same |
+| Not verified | Queue wait; which nodes `batch_cpu` gives (`pilot4` got four GN-A40 hosts, Platinum 8452Y); the 8 x 8 schedule choice (kept at dynamic 64, see `plan_256core.md`, 10 Nov) |
 
 ### Step 1: stage a clean clone of `a72ce26` and dry-run it (no job, no charge)
 

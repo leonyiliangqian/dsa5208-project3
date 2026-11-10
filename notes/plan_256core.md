@@ -24,8 +24,8 @@ Its sizes, runtime and charge estimate are provisional until Pilot4 is verified.
 | 12 | Model missed about 15 s of launch per multi-rank run | Raised five strong limits to 60 s; walltime 3 h |
 
 `studies-four-node-v1` is frozen at `a72ce26` (SHA-256 `0ddec3b7b31d0d30bfc49c54010c6d25d31954dc0eccece63b7c9a5d615edf6c`), 30 cases x 3 repetitions.
-`bench4.pbs`: `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, 3 h, cap 768 CPU-hours at rate 1 if billed on the request. Expected about 40-60 min
-including gates (154-262 CPU-hours if billed on use). Alternative not adopted: limits at 2.5 x measured estimates would allow 2 h 25 min (cap 619), but the
+`bench4.pbs`: `select=4:ncpus=64:mpiprocs=64:mem=240gb`, `place=scatter`, 3 h. Expected about 40-60 min including gates, but billing is on the
+request (observed with `pilot4`), so the expected debit is the full 768 CPU-hours. Alternative not adopted: limits at 2.5 x measured estimates would allow 2 h 25 min (cap 619), but the
 single-node estimates are scaled from another CPU model. The request is in `approval_requests.md` (10 Nov).
 
 ## Options considered before Pilot4
@@ -81,6 +81,7 @@ models of those hosts are unverified. Record: `code/artifacts/cluster/discovery/
 | Verified | `auto` routes to `batch_cpu` at `queue_charge_rate = 1`; `batch_cpu` allows 720 CPUs and 6 running jobs per user, 10 nodes per job | `qstat -Qf`, 8 Nov |
 | Assumed | 1 CPU-hour charged per core-hour at rate 1 | Unit name only |
 | Unknown | Charged on the request (walltime x cores) or on use; whether a failed job is charged | Compare the balance before and after `pilot4` |
+| Observed 10 Nov | **Charged on the request:** `pilot4` was debited 192 CPU-hours (10,000.0 to 9,808.0, Leon) for 4 x 64 cores x 45 min at rate 1, after using 10.5 min | `bench4`: 768 expected, leaving about 9,040 |
 
 Requested core-hours, the most that could be charged if charging is on the request: `pilot4` 192, `bench4` 725, together 917, or 9.2% of the balance.
 Expected use from `plan_budget.py`: 53 and 240. That model overestimated `bench1`'s runs by 1.8 times on one IN node (5681 s estimated, 3137 s measured);
