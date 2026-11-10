@@ -9,13 +9,15 @@
 # timings and recheck with scripts/plan_budget.py. SCALE_CHECKS (required by
 # Leon, 6 Nov) runs the 64 x 1 per-node placement probe, the bound exchange
 # check and bound runs against serial on all 256 cores before any timing; the
-# walltime must cover their time, measured on 4 nodes by pilot4.
+# walltime must cover their time, measured on 4 nodes by pilot4. 3 h (10 Nov):
+# worst case 9390 s of runs plus 600 s of gates (pilot4 took 322 s) and the
+# end reserve; expected about 1 h. Cap 256 cores x 3 h = 768 core-hours.
 # Submit only after approval, through jobs/vanda/submit.sh.
 #
 #PBS -N p3_bench4
 #PBS -l select=4:ncpus=64:mpiprocs=64:mem=240gb
 #PBS -l place=scatter
-#PBS -l walltime=02:50:00
+#PBS -l walltime=03:00:00
 #PBS -j oe
 
 RUN_PREFIX=bench4

@@ -1,0 +1,186 @@
+{
+  "timestamp_utc": "2026-11-10T09:47:56.266976+00:00",
+  "kind": "cluster correctness validation under PBS batch; not performance evidence",
+  "execution_context": "pbs_batch",
+  "pbs_jobid": "1535640.stdct-mgmt-02",
+  "pbs_queue": "batch_cpu",
+  "hostname": "GN-A40-083",
+  "source_git_rev": "7f1b5a6cbdaabe0e625e1e98f7ee80b3b6a8f079",
+  "platform": "Linux-5.14.0-427.125.1.el9_4.x86_64-x86_64-with-glibc2.34",
+  "mpirun_flags": "--prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH",
+  "suite": "bound",
+  "expect_hosts": 4,
+  "source_sha256": {
+    "common/nbody.hpp": "7f8fe48d54052d1733e1829467f85bcedf60a959ba06d5c365f3289b5dc9529b",
+    "common/run_support.hpp": "0339cf997feed049f442322382ba801ce0e715add459694304721b12d44af81c",
+    "serial/barnes_hut.cpp": "e892786da703c7b619fe37e2ce551f1b9729eb0fae5ab4b7ad7226f52b92a617",
+    "hybrid/bh_hybrid.cpp": "980e1488f3caa76b11cbf12444cb3a70c707e29eb1e663713044317bb50df450"
+  },
+  "binary_sha256": {
+    "bh_serial": "dd15717835a5a4c67339684dd423b03f5b7ebb5f8b4996edd1c6cdb1c7eb0309",
+    "bh_hybrid": "89144047edd4d413fc5dd57ff3babeb1a6f699bf57927012570e104aaa6f939d"
+  },
+  "tolerances": {
+    "acceleration_1_step": [
+      1e-12,
+      1e-14
+    ],
+    "trajectory_10_steps": [
+      1e-10,
+      1e-13
+    ]
+  },
+  "cases": [
+    {
+      "case": "bound_256x1_traj",
+      "n": 20011,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 256,
+      "threads": 1,
+      "schedule": "dynamic",
+      "chunk": 64,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "dynamic"
+    },
+    {
+      "case": "bound_32x8_traj",
+      "n": 20011,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 32,
+      "threads": 8,
+      "schedule": "dynamic",
+      "chunk": 64,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "dynamic"
+    },
+    {
+      "case": "bound_64x4_guided",
+      "n": 20003,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 64,
+      "threads": 4,
+      "schedule": "guided",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "guided"
+    },
+    {
+      "case": "bound_32x8_accel",
+      "n": 20011,
+      "steps": 1,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 32,
+      "threads": 8,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "bound_32x8_theta0",
+      "n": 4001,
+      "steps": 1,
+      "theta": 0.0,
+      "leaf_size": 8,
+      "ranks": 32,
+      "threads": 8,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    },
+    {
+      "case": "bound_256x1_zero_owned",
+      "n": 10,
+      "steps": 10,
+      "theta": 0.5,
+      "leaf_size": 8,
+      "ranks": 256,
+      "threads": 1,
+      "schedule": "static",
+      "chunk": 0,
+      "returncode": 0,
+      "hosts": [
+        "GN-A40-083",
+        "GN-A40-079",
+        "GN-A40-085",
+        "GN-A40-080"
+      ],
+      "ok": true,
+      "pos_max_abs_diff": 0.0,
+      "pos_max_tol_ratio": 0.0,
+      "vel_max_abs_diff": 0.0,
+      "vel_max_tol_ratio": 0.0,
+      "acc_max_abs_diff": 0.0,
+      "acc_max_tol_ratio": 0.0,
+      "schedule_effective": "static"
+    }
+  ],
+  "repeat_bitwise_identical": true,
+  "negative_control_detected": true,
+  "failures": []
+}

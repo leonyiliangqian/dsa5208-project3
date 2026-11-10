@@ -1,0 +1,10 @@
+pilot4-20261110T094241Z-1535640: 9 records, 0 failed, 9 configurations
+  bh_hybrid  n=1000000 64x1 P=64 dynamic/64 reps=1 wall_med=1.9018s [1.9018,1.9018] speedup=22.95 eff=0.36
+  bh_hybrid  n=1000000 128x1 P=128 dynamic/64 reps=1 wall_med=1.2966s [1.2966,1.2966] speedup=33.66 eff=0.26
+  bh_hybrid  n=1000000 32x8 P=256 dynamic/64 reps=1 wall_med=0.9020s [0.9020,0.9020] speedup=48.39 eff=0.19
+  bh_hybrid  n=1000000 256x1 P=256 dynamic/64 reps=1 wall_med=1.2698s [1.2698,1.2698] speedup=34.37 eff=0.13
+  bh_serial  n=1000000 1x1 P=1 -/0 reps=1 wall_med=43.6493s [43.6493,43.6493]
+  bh_hybrid  n=6400000 32x8 P=256 dynamic/64 reps=1 wall_med=5.6320s [5.6320,5.6320]
+  bh_hybrid  n=6400000 256x1 P=256 dynamic/64 reps=1 wall_med=7.3699s [7.3699,7.3699]
+  bh_hybrid  n=12800000 32x8 P=256 dynamic/64 reps=1 wall_med=11.8513s [11.8513,11.8513]
+  bh_hybrid  n=12800000 256x1 P=256 dynamic/64 reps=1 wall_med=15.0508s [15.0508,15.0508]

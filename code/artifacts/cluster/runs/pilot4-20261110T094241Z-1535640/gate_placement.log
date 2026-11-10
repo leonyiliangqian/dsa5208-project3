@@ -1,0 +1,716 @@
+mpicxx -O2 -fopenmp -DOMPI_SKIP_MPICXX -DMPICH_SKIP_MPICXX -o bin/vanda-1535640/placement_check tests/toolchain/placement_check.cpp
+OMP_NUM_THREADS=8 OMP_PROC_BIND=close OMP_PLACES=cores PLACEMENT_EXPECT_BOUND=1 \
+    PLACEMENT_EXPECT_HOSTS=4 PLACEMENT_TRACE=1 \
+    mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 32 --map-by ppr:8:node:PE=8 \
+    --bind-to core --report-bindings -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES \
+    -x PLACEMENT_EXPECT_BOUND -x PLACEMENT_EXPECT_HOSTS -x PLACEMENT_TRACE bin/vanda-1535640/placement_check
+[GN-A40-083:597396] MCW rank 4 bound to socket 0[core 32[hwt 0]], socket 0[core 33[hwt 0]], socket 0[core 34[hwt 0]], socket 0[core 35[hwt 0]], socket 1[core 36[hwt 0]], socket 1[core 37[hwt 0]], socket 1[core 38[hwt 0]], socket 1[core 39[hwt 0]]: [././././././././././././././././././././././././././././././././B/B/B/B][B/B/B/B/./././././././././././././././././././././././.]
+[GN-A40-083:597396] MCW rank 5 bound to socket 1[core 40[hwt 0]], socket 1[core 41[hwt 0]], socket 1[core 42[hwt 0]], socket 1[core 43[hwt 0]], socket 1[core 44[hwt 0]], socket 1[core 45[hwt 0]], socket 1[core 46[hwt 0]], socket 1[core 47[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[GN-A40-083:597396] MCW rank 6 bound to socket 1[core 48[hwt 0]], socket 1[core 49[hwt 0]], socket 1[core 50[hwt 0]], socket 1[core 51[hwt 0]], socket 1[core 52[hwt 0]], socket 1[core 53[hwt 0]], socket 1[core 54[hwt 0]], socket 1[core 55[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[GN-A40-083:597396] MCW rank 7 bound to socket 1[core 56[hwt 0]], socket 1[core 57[hwt 0]], socket 1[core 58[hwt 0]], socket 1[core 59[hwt 0]], socket 1[core 60[hwt 0]], socket 1[core 61[hwt 0]], socket 1[core 62[hwt 0]], socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/B/B/B/B/B/B/B]
+[GN-A40-083:597396] MCW rank 0 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-083:597396] MCW rank 1 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-083:597396] MCW rank 2 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-083:597396] MCW rank 3 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B/./././.][./././././././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 24 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 25 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 26 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 27 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B/./././.][./././././././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 28 bound to socket 0[core 32[hwt 0]], socket 0[core 33[hwt 0]], socket 0[core 34[hwt 0]], socket 0[core 35[hwt 0]], socket 1[core 36[hwt 0]], socket 1[core 37[hwt 0]], socket 1[core 38[hwt 0]], socket 1[core 39[hwt 0]]: [././././././././././././././././././././././././././././././././B/B/B/B][B/B/B/B/./././././././././././././././././././././././.]
+[GN-A40-080:875156] MCW rank 29 bound to socket 1[core 40[hwt 0]], socket 1[core 41[hwt 0]], socket 1[core 42[hwt 0]], socket 1[core 43[hwt 0]], socket 1[core 44[hwt 0]], socket 1[core 45[hwt 0]], socket 1[core 46[hwt 0]], socket 1[core 47[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[GN-A40-080:875156] MCW rank 30 bound to socket 1[core 48[hwt 0]], socket 1[core 49[hwt 0]], socket 1[core 50[hwt 0]], socket 1[core 51[hwt 0]], socket 1[core 52[hwt 0]], socket 1[core 53[hwt 0]], socket 1[core 54[hwt 0]], socket 1[core 55[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[GN-A40-080:875156] MCW rank 31 bound to socket 1[core 56[hwt 0]], socket 1[core 57[hwt 0]], socket 1[core 58[hwt 0]], socket 1[core 59[hwt 0]], socket 1[core 60[hwt 0]], socket 1[core 61[hwt 0]], socket 1[core 62[hwt 0]], socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/B/B/B/B/B/B/B]
+[GN-A40-085:806760] MCW rank 20 bound to socket 0[core 32[hwt 0]], socket 0[core 33[hwt 0]], socket 0[core 34[hwt 0]], socket 0[core 35[hwt 0]], socket 1[core 36[hwt 0]], socket 1[core 37[hwt 0]], socket 1[core 38[hwt 0]], socket 1[core 39[hwt 0]]: [././././././././././././././././././././././././././././././././B/B/B/B][B/B/B/B/./././././././././././././././././././././././.]
+[GN-A40-085:806760] MCW rank 21 bound to socket 1[core 40[hwt 0]], socket 1[core 41[hwt 0]], socket 1[core 42[hwt 0]], socket 1[core 43[hwt 0]], socket 1[core 44[hwt 0]], socket 1[core 45[hwt 0]], socket 1[core 46[hwt 0]], socket 1[core 47[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[GN-A40-085:806760] MCW rank 22 bound to socket 1[core 48[hwt 0]], socket 1[core 49[hwt 0]], socket 1[core 50[hwt 0]], socket 1[core 51[hwt 0]], socket 1[core 52[hwt 0]], socket 1[core 53[hwt 0]], socket 1[core 54[hwt 0]], socket 1[core 55[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[GN-A40-085:806760] MCW rank 23 bound to socket 1[core 56[hwt 0]], socket 1[core 57[hwt 0]], socket 1[core 58[hwt 0]], socket 1[core 59[hwt 0]], socket 1[core 60[hwt 0]], socket 1[core 61[hwt 0]], socket 1[core 62[hwt 0]], socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/B/B/B/B/B/B/B]
+[GN-A40-085:806760] MCW rank 16 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-085:806760] MCW rank 17 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-085:806760] MCW rank 18 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-085:806760] MCW rank 19 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B/./././.][./././././././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 8 bound to socket 0[core 0[hwt 0]], socket 0[core 1[hwt 0]], socket 0[core 2[hwt 0]], socket 0[core 3[hwt 0]], socket 0[core 4[hwt 0]], socket 0[core 5[hwt 0]], socket 0[core 6[hwt 0]], socket 0[core 7[hwt 0]]: [B/B/B/B/B/B/B/B/./././././././././././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 9 bound to socket 0[core 8[hwt 0]], socket 0[core 9[hwt 0]], socket 0[core 10[hwt 0]], socket 0[core 11[hwt 0]], socket 0[core 12[hwt 0]], socket 0[core 13[hwt 0]], socket 0[core 14[hwt 0]], socket 0[core 15[hwt 0]]: [././././././././B/B/B/B/B/B/B/B/./././././././././././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 10 bound to socket 0[core 16[hwt 0]], socket 0[core 17[hwt 0]], socket 0[core 18[hwt 0]], socket 0[core 19[hwt 0]], socket 0[core 20[hwt 0]], socket 0[core 21[hwt 0]], socket 0[core 22[hwt 0]], socket 0[core 23[hwt 0]]: [././././././././././././././././B/B/B/B/B/B/B/B/./././././././././././.][./././././././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 11 bound to socket 0[core 24[hwt 0]], socket 0[core 25[hwt 0]], socket 0[core 26[hwt 0]], socket 0[core 27[hwt 0]], socket 0[core 28[hwt 0]], socket 0[core 29[hwt 0]], socket 0[core 30[hwt 0]], socket 0[core 31[hwt 0]]: [././././././././././././././././././././././././B/B/B/B/B/B/B/B/./././.][./././././././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 12 bound to socket 0[core 32[hwt 0]], socket 0[core 33[hwt 0]], socket 0[core 34[hwt 0]], socket 0[core 35[hwt 0]], socket 1[core 36[hwt 0]], socket 1[core 37[hwt 0]], socket 1[core 38[hwt 0]], socket 1[core 39[hwt 0]]: [././././././././././././././././././././././././././././././././B/B/B/B][B/B/B/B/./././././././././././././././././././././././.]
+[GN-A40-079:837122] MCW rank 13 bound to socket 1[core 40[hwt 0]], socket 1[core 41[hwt 0]], socket 1[core 42[hwt 0]], socket 1[core 43[hwt 0]], socket 1[core 44[hwt 0]], socket 1[core 45[hwt 0]], socket 1[core 46[hwt 0]], socket 1[core 47[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././B/B/B/B/B/B/B/B/./././././././././././././././.]
+[GN-A40-079:837122] MCW rank 14 bound to socket 1[core 48[hwt 0]], socket 1[core 49[hwt 0]], socket 1[core 50[hwt 0]], socket 1[core 51[hwt 0]], socket 1[core 52[hwt 0]], socket 1[core 53[hwt 0]], socket 1[core 54[hwt 0]], socket 1[core 55[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././B/B/B/B/B/B/B/B/./././././././.]
+[GN-A40-079:837122] MCW rank 15 bound to socket 1[core 56[hwt 0]], socket 1[core 57[hwt 0]], socket 1[core 58[hwt 0]], socket 1[core 59[hwt 0]], socket 1[core 60[hwt 0]], socket 1[core 61[hwt 0]], socket 1[core 62[hwt 0]], socket 1[core 63[hwt 0]]: [./././././././././././././././././././././././././././././././././././.][././././././././././././././././././././B/B/B/B/B/B/B/B]
+trace t=1794303846.356 host=GN-A40-083 rank=6 pid=597510 stage=start affinity=25 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=6 pid=597510 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=5 pid=597509 stage=start affinity=9 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=5 pid=597509 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=3 pid=597507 stage=start affinity=48 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=3 pid=597507 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=7 pid=597511 stage=start affinity=41 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=7 pid=597511 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=1 pid=597505 stage=start affinity=16 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=1 pid=597505 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=2 pid=597506 stage=start affinity=32 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=2 pid=597506 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=0 pid=597504 stage=start affinity=0 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=0 pid=597504 stage=mpi_init_begin 
+trace t=1794303846.356 host=GN-A40-083 rank=4 pid=597508 stage=start affinity=1 omp_num_threads=8
+trace t=1794303846.356 host=GN-A40-083 rank=4 pid=597508 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=13 pid=837231 stage=start affinity=9 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=13 pid=837231 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=14 pid=837232 stage=start affinity=25 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=14 pid=837232 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=8 pid=837226 stage=start affinity=0 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=8 pid=837226 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=9 pid=837227 stage=start affinity=16 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=9 pid=837227 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=10 pid=837228 stage=start affinity=32 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=10 pid=837228 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=11 pid=837229 stage=start affinity=48 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=11 pid=837229 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=15 pid=837233 stage=start affinity=41 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=15 pid=837233 stage=mpi_init_begin 
+trace t=1794303846.394 host=GN-A40-079 rank=12 pid=837230 stage=start affinity=1 omp_num_threads=8
+trace t=1794303846.394 host=GN-A40-079 rank=12 pid=837230 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=23 pid=806874 stage=start affinity=41 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=23 pid=806874 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=22 pid=806873 stage=start affinity=25 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=22 pid=806873 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=21 pid=806872 stage=start affinity=9 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=21 pid=806872 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=19 pid=806870 stage=start affinity=48 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=19 pid=806870 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=17 pid=806868 stage=start affinity=16 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=17 pid=806868 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=18 pid=806869 stage=start affinity=32 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=18 pid=806869 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=16 pid=806867 stage=start affinity=0 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=16 pid=806867 stage=mpi_init_begin 
+trace t=1794303846.397 host=GN-A40-085 rank=20 pid=806871 stage=start affinity=1 omp_num_threads=8
+trace t=1794303846.397 host=GN-A40-085 rank=20 pid=806871 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=24 pid=875260 stage=start affinity=0 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=24 pid=875260 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=25 pid=875261 stage=start affinity=16 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=25 pid=875261 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=26 pid=875262 stage=start affinity=32 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=26 pid=875262 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=27 pid=875263 stage=start affinity=48 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=27 pid=875263 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=28 pid=875264 stage=start affinity=1 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=28 pid=875264 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=29 pid=875265 stage=start affinity=9 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=29 pid=875265 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=31 pid=875267 stage=start affinity=41 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=31 pid=875267 stage=mpi_init_begin 
+trace t=1794303846.419 host=GN-A40-080 rank=30 pid=875266 stage=start affinity=25 omp_num_threads=8
+trace t=1794303846.419 host=GN-A40-080 rank=30 pid=875266 stage=mpi_init_begin 
+trace t=1794303847.621 host=GN-A40-083 rank=2 pid=597506 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=2 pid=597506 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=1 pid=597505 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=1 pid=597505 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=10 pid=837228 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=10 pid=837228 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=31 pid=875267 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=31 pid=875267 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=5 pid=597509 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=5 pid=597509 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=12 pid=837230 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=12 pid=837230 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=20 pid=806871 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=20 pid=806871 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=13 pid=837231 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=13 pid=837231 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=21 pid=806872 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=21 pid=806872 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=29 pid=875265 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=29 pid=875265 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=0 pid=597504 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=0 pid=597504 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=18 pid=806869 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=18 pid=806869 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=24 pid=875260 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=24 pid=875260 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=6 pid=597510 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=6 pid=597510 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=8 pid=837226 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=8 pid=837226 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=9 pid=837227 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=9 pid=837227 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=17 pid=806868 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=17 pid=806868 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=26 pid=875262 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=26 pid=875262 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=4 pid=597508 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=4 pid=597508 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=14 pid=837232 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=14 pid=837232 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=23 pid=806874 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=23 pid=806874 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=27 pid=875263 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=27 pid=875263 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=7 pid=597511 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=7 pid=597511 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=15 pid=837233 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=15 pid=837233 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=16 pid=806867 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=16 pid=806867 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=28 pid=875264 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=28 pid=875264 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-083 rank=3 pid=597507 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-083 rank=3 pid=597507 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-079 rank=11 pid=837229 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-079 rank=11 pid=837229 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=22 pid=806873 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=22 pid=806873 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=30 pid=875266 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=30 pid=875266 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-085 rank=19 pid=806870 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-085 rank=19 pid=806870 stage=allreduce_threads_begin threads=8
+trace t=1794303847.621 host=GN-A40-080 rank=25 pid=875261 stage=mpi_init_done size=32 provided=1
+trace t=1794303847.621 host=GN-A40-080 rank=25 pid=875261 stage=allreduce_threads_begin threads=8
+trace t=1794303847.633 host=GN-A40-079 rank=10 pid=837228 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=10 pid=837228 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=21 pid=806872 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=21 pid=806872 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=24 pid=875260 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=24 pid=875260 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=7 pid=597511 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=7 pid=597511 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=15 pid=837233 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=15 pid=837233 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=22 pid=806873 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=22 pid=806873 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=26 pid=875262 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=26 pid=875262 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=6 pid=597510 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=6 pid=597510 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=27 pid=875263 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=27 pid=875263 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=4 pid=597508 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=4 pid=597508 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=12 pid=837230 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=12 pid=837230 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=18 pid=806869 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=18 pid=806869 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=13 pid=837231 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=13 pid=837231 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=17 pid=806868 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=17 pid=806868 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=25 pid=875261 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=25 pid=875261 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=2 pid=597506 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=2 pid=597506 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=1 pid=597505 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=1 pid=597505 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=9 pid=837227 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=9 pid=837227 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=23 pid=806874 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=23 pid=806874 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-080 rank=28 pid=875264 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-080 rank=28 pid=875264 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=8 pid=837226 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=8 pid=837226 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=16 pid=806867 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=16 pid=806867 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=31 pid=875267 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=31 pid=875267 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=5 pid=597509 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=5 pid=597509 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-079 rank=11 pid=837229 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-079 rank=11 pid=837229 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=19 pid=806870 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=19 pid=806870 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=29 pid=875265 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=29 pid=875265 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=0 pid=597504 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=0 pid=597504 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-079 rank=14 pid=837232 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-079 rank=14 pid=837232 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-085 rank=20 pid=806871 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-085 rank=20 pid=806871 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-080 rank=30 pid=875266 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.634 host=GN-A40-080 rank=30 pid=875266 stage=omp_begin 
+trace t=1794303847.633 host=GN-A40-083 rank=3 pid=597507 stage=allreduce_threads_done min=8 max=8
+trace t=1794303847.633 host=GN-A40-083 rank=3 pid=597507 stage=omp_begin 
+trace t=1794303847.634 host=GN-A40-079 rank=15 pid=837233 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=21 pid=806872 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=28 pid=875264 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=7 pid=597511 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=10 pid=837228 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=16 pid=806867 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=31 pid=875267 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=2 pid=597506 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=8 pid=837226 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=18 pid=806869 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=29 pid=875265 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=1 pid=597505 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=11 pid=837229 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=17 pid=806868 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=27 pid=875263 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=4 pid=597508 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=23 pid=806874 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=24 pid=875260 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=3 pid=597507 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=13 pid=837231 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=9 pid=837227 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=22 pid=806873 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=25 pid=875261 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=0 pid=597504 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=20 pid=806871 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=30 pid=875266 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-083 rank=6 pid=597510 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=14 pid=837232 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-079 rank=12 pid=837230 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-085 rank=19 pid=806870 stage=omp_team_started team=8
+trace t=1794303847.634 host=GN-A40-080 rank=26 pid=875262 stage=omp_team_started team=8
+trace t=1794303847.635 host=GN-A40-083 rank=5 pid=597509 stage=omp_team_started team=8
+trace t=1794303848.034 host=GN-A40-079 rank=10 pid=837228 stage=omp_done thread_cpus=32,34,36,38,40,42,44,46
+trace t=1794303848.034 host=GN-A40-079 rank=10 pid=837228 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=17 pid=806868 stage=omp_done thread_cpus=16,18,20,22,24,26,28,30
+trace t=1794303848.034 host=GN-A40-083 rank=7 pid=597511 stage=omp_done thread_cpus=41,43,45,47,49,51,53,55
+trace t=1794303848.034 host=GN-A40-079 rank=15 pid=837233 stage=omp_done thread_cpus=41,43,45,47,49,51,53,55
+trace t=1794303848.034 host=GN-A40-085 rank=23 pid=806874 stage=omp_done thread_cpus=41,43,45,47,49,51,53,55
+trace t=1794303848.034 host=GN-A40-085 rank=23 pid=806874 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=1 pid=597505 stage=omp_done thread_cpus=16,18,20,22,24,26,28,30
+trace t=1794303848.034 host=GN-A40-083 rank=1 pid=597505 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=15 pid=837233 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=2 pid=597506 stage=omp_done thread_cpus=32,34,36,38,40,42,44,46
+trace t=1794303848.034 host=GN-A40-083 rank=2 pid=597506 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=4 pid=597508 stage=omp_done thread_cpus=1,3,5,7,64,66,68,70
+trace t=1794303848.034 host=GN-A40-083 rank=4 pid=597508 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=7 pid=597511 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=11 pid=837229 stage=omp_done thread_cpus=48,50,52,54,56,58,60,62
+trace t=1794303848.034 host=GN-A40-079 rank=11 pid=837229 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=8 pid=837226 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1794303848.034 host=GN-A40-079 rank=8 pid=837226 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=11 pid=837229 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-079 rank=11 pid=837229 stage=bcast_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=16 pid=806867 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1794303848.034 host=GN-A40-085 rank=16 pid=806867 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=18 pid=806869 stage=omp_done thread_cpus=32,34,36,38,40,42,44,46
+trace t=1794303848.034 host=GN-A40-085 rank=18 pid=806869 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=21 pid=806872 stage=omp_done thread_cpus=9,11,13,15,17,19,21,23
+trace t=1794303848.034 host=GN-A40-085 rank=21 pid=806872 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=17 pid=806868 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=17 pid=806868 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-079 rank=10 pid=837228 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-085 rank=17 pid=806868 stage=bcast_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=13 pid=837231 stage=omp_done thread_cpus=9,11,13,15,17,19,21,23
+trace t=1794303848.034 host=GN-A40-079 rank=13 pid=837231 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=28 pid=875264 stage=omp_done thread_cpus=1,3,5,7,64,66,68,70
+trace t=1794303848.035 host=GN-A40-080 rank=27 pid=875263 stage=omp_done thread_cpus=48,50,52,54,56,58,60,62
+trace t=1794303848.035 host=GN-A40-080 rank=27 pid=875263 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-079 rank=10 pid=837228 stage=bcast_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=6 pid=597510 stage=omp_done thread_cpus=25,27,29,31,33,35,37,39
+trace t=1794303848.034 host=GN-A40-083 rank=6 pid=597510 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=28 pid=875264 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=0 pid=597504 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1794303848.034 host=GN-A40-085 rank=20 pid=806871 stage=omp_done thread_cpus=1,3,5,7,64,66,68,70
+trace t=1794303848.035 host=GN-A40-080 rank=31 pid=875267 stage=omp_done thread_cpus=41,43,45,47,49,51,53,55
+trace t=1794303848.034 host=GN-A40-083 rank=3 pid=597507 stage=omp_done thread_cpus=48,50,52,54,56,58,60,62
+trace t=1794303848.034 host=GN-A40-083 rank=3 pid=597507 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=3 pid=597507 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-083 rank=3 pid=597507 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=23 pid=806874 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=23 pid=806874 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=26 pid=875262 stage=omp_done thread_cpus=32,34,36,38,40,42,44,46
+trace t=1794303848.035 host=GN-A40-080 rank=26 pid=875262 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=6 pid=597510 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-083 rank=6 pid=597510 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=30 pid=875266 stage=omp_done thread_cpus=25,27,29,31,33,35,37,39
+trace t=1794303848.035 host=GN-A40-080 rank=30 pid=875266 stage=gather_begin 
+trace t=1794303848.034 host=GN-A40-083 rank=7 pid=597511 stage=gather_done 
+trace t=1794303848.034 host=GN-A40-083 rank=7 pid=597511 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-083 rank=0 pid=597504 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=27 pid=875263 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=27 pid=875263 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=14 pid=837232 stage=omp_done thread_cpus=25,27,29,31,33,35,37,39
+trace t=1794303848.035 host=GN-A40-080 rank=24 pid=875260 stage=omp_done thread_cpus=0,2,4,6,8,10,12,14
+trace t=1794303848.035 host=GN-A40-080 rank=24 pid=875260 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=29 pid=875265 stage=omp_done thread_cpus=9,11,13,15,17,19,21,23
+trace t=1794303848.035 host=GN-A40-080 rank=29 pid=875265 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=29 pid=875265 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=29 pid=875265 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=12 pid=837230 stage=omp_done thread_cpus=1,3,5,7,64,66,68,70
+trace t=1794303848.035 host=GN-A40-079 rank=12 pid=837230 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=13 pid=837231 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-079 rank=13 pid=837231 stage=bcast_begin 
+trace t=1794303848.034 host=GN-A40-085 rank=22 pid=806873 stage=omp_done thread_cpus=25,27,29,31,33,35,37,39
+trace t=1794303848.034 host=GN-A40-085 rank=22 pid=806873 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=9 pid=837227 stage=omp_done thread_cpus=16,18,20,22,24,26,28,30
+trace t=1794303848.035 host=GN-A40-079 rank=9 pid=837227 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=20 pid=806871 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=31 pid=875267 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-083 rank=2 pid=597506 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-083 rank=2 pid=597506 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=9 pid=837227 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-079 rank=9 pid=837227 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=22 pid=806873 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=22 pid=806873 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=26 pid=875262 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=26 pid=875262 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-083 rank=1 pid=597505 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-083 rank=1 pid=597505 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=14 pid=837232 stage=gather_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=21 pid=806872 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=31 pid=875267 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=20 pid=806871 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=20 pid=806871 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=30 pid=875266 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=30 pid=875266 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=14 pid=837232 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-079 rank=14 pid=837232 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=28 pid=875264 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=28 pid=875264 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=15 pid=837233 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-080 rank=31 pid=875267 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=12 pid=837230 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-079 rank=12 pid=837230 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=8 pid=837226 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-079 rank=8 pid=837226 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-079 rank=15 pid=837233 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=21 pid=806872 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-080 rank=25 pid=875261 stage=omp_done thread_cpus=16,18,20,22,24,26,28,30
+trace t=1794303848.035 host=GN-A40-085 rank=19 pid=806870 stage=omp_done thread_cpus=48,50,52,54,56,58,60,62
+trace t=1794303848.035 host=GN-A40-080 rank=25 pid=875261 stage=gather_begin 
+trace t=1794303848.036 host=GN-A40-080 rank=25 pid=875261 stage=gather_done 
+trace t=1794303848.036 host=GN-A40-080 rank=25 pid=875261 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=19 pid=806870 stage=gather_begin 
+trace t=1794303848.036 host=GN-A40-080 rank=24 pid=875260 stage=gather_done 
+trace t=1794303848.036 host=GN-A40-080 rank=24 pid=875260 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=19 pid=806870 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=18 pid=806869 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=18 pid=806869 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=16 pid=806867 stage=gather_done 
+trace t=1794303848.035 host=GN-A40-085 rank=16 pid=806867 stage=bcast_begin 
+trace t=1794303848.035 host=GN-A40-085 rank=19 pid=806870 stage=bcast_begin 
+trace t=1794303848.036 host=GN-A40-083 rank=5 pid=597509 stage=omp_done thread_cpus=9,11,13,15,17,19,21,23
+trace t=1794303848.036 host=GN-A40-083 rank=5 pid=597509 stage=gather_begin 
+trace t=1794303848.036 host=GN-A40-083 rank=5 pid=597509 stage=gather_done 
+trace t=1794303848.036 host=GN-A40-083 rank=0 pid=597504 stage=gather_done 
+trace t=1794303848.036 host=GN-A40-083 rank=4 pid=597508 stage=gather_done 
+trace t=1794303848.036 host=GN-A40-083 rank=4 pid=597508 stage=bcast_begin 
+placement host=GN-A40-083 rank=0 thread=0 cpu=0 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=1 cpu=2 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=2 cpu=4 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=3 cpu=6 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=4 cpu=8 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=5 cpu=10 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=6 cpu=12 mask_cpus=1
+placement host=GN-A40-083 rank=0 thread=7 cpu=14 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=0 cpu=16 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=1 cpu=18 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=2 cpu=20 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=3 cpu=22 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=4 cpu=24 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=5 cpu=26 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=6 cpu=28 mask_cpus=1
+placement host=GN-A40-083 rank=1 thread=7 cpu=30 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=0 cpu=32 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=1 cpu=34 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=2 cpu=36 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=3 cpu=38 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=4 cpu=40 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=5 cpu=42 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=6 cpu=44 mask_cpus=1
+placement host=GN-A40-083 rank=2 thread=7 cpu=46 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=0 cpu=48 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=1 cpu=50 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=2 cpu=52 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=3 cpu=54 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=4 cpu=56 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=5 cpu=58 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=6 cpu=60 mask_cpus=1
+placement host=GN-A40-083 rank=3 thread=7 cpu=62 mask_cpus=1
+trace t=1794303848.036 host=GN-A40-083 rank=5 pid=597509 stage=bcast_begin 
+placement host=GN-A40-083 rank=4 thread=0 cpu=1 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=1 cpu=3 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=2 cpu=5 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=3 cpu=7 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=4 cpu=64 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=5 cpu=66 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=6 cpu=68 mask_cpus=1
+placement host=GN-A40-083 rank=4 thread=7 cpu=70 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=0 cpu=9 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=1 cpu=11 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=2 cpu=13 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=3 cpu=15 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=4 cpu=17 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=5 cpu=19 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=6 cpu=21 mask_cpus=1
+placement host=GN-A40-083 rank=5 thread=7 cpu=23 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=0 cpu=25 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=1 cpu=27 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=2 cpu=29 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=3 cpu=31 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=4 cpu=33 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=5 cpu=35 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=6 cpu=37 mask_cpus=1
+placement host=GN-A40-083 rank=6 thread=7 cpu=39 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=0 cpu=41 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=1 cpu=43 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=2 cpu=45 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=3 cpu=47 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=4 cpu=49 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=5 cpu=51 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=6 cpu=53 mask_cpus=1
+placement host=GN-A40-083 rank=7 thread=7 cpu=55 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=0 cpu=0 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=1 cpu=2 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=2 cpu=4 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=3 cpu=6 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=4 cpu=8 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=5 cpu=10 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=6 cpu=12 mask_cpus=1
+placement host=GN-A40-079 rank=8 thread=7 cpu=14 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=0 cpu=16 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=1 cpu=18 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=2 cpu=20 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=3 cpu=22 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=4 cpu=24 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=5 cpu=26 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=6 cpu=28 mask_cpus=1
+placement host=GN-A40-079 rank=9 thread=7 cpu=30 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=0 cpu=32 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=1 cpu=34 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=2 cpu=36 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=3 cpu=38 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=4 cpu=40 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=5 cpu=42 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=6 cpu=44 mask_cpus=1
+placement host=GN-A40-079 rank=10 thread=7 cpu=46 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=0 cpu=48 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=1 cpu=50 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=2 cpu=52 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=3 cpu=54 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=4 cpu=56 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=5 cpu=58 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=6 cpu=60 mask_cpus=1
+placement host=GN-A40-079 rank=11 thread=7 cpu=62 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=0 cpu=1 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=1 cpu=3 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=2 cpu=5 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=3 cpu=7 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=4 cpu=64 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=5 cpu=66 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=6 cpu=68 mask_cpus=1
+placement host=GN-A40-079 rank=12 thread=7 cpu=70 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=0 cpu=9 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=1 cpu=11 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=2 cpu=13 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=3 cpu=15 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=4 cpu=17 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=5 cpu=19 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=6 cpu=21 mask_cpus=1
+placement host=GN-A40-079 rank=13 thread=7 cpu=23 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=0 cpu=25 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=1 cpu=27 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=2 cpu=29 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=3 cpu=31 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=4 cpu=33 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=5 cpu=35 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=6 cpu=37 mask_cpus=1
+placement host=GN-A40-079 rank=14 thread=7 cpu=39 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=0 cpu=41 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=1 cpu=43 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=2 cpu=45 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=3 cpu=47 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=4 cpu=49 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=5 cpu=51 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=6 cpu=53 mask_cpus=1
+placement host=GN-A40-079 rank=15 thread=7 cpu=55 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=0 cpu=0 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=1 cpu=2 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=2 cpu=4 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=3 cpu=6 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=4 cpu=8 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=5 cpu=10 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=6 cpu=12 mask_cpus=1
+placement host=GN-A40-085 rank=16 thread=7 cpu=14 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=0 cpu=16 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=1 cpu=18 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=2 cpu=20 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=3 cpu=22 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=4 cpu=24 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=5 cpu=26 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=6 cpu=28 mask_cpus=1
+placement host=GN-A40-085 rank=17 thread=7 cpu=30 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=0 cpu=32 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=1 cpu=34 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=2 cpu=36 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=3 cpu=38 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=4 cpu=40 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=5 cpu=42 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=6 cpu=44 mask_cpus=1
+placement host=GN-A40-085 rank=18 thread=7 cpu=46 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=0 cpu=48 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=1 cpu=50 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=2 cpu=52 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=3 cpu=54 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=4 cpu=56 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=5 cpu=58 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=6 cpu=60 mask_cpus=1
+placement host=GN-A40-085 rank=19 thread=7 cpu=62 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=0 cpu=1 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=1 cpu=3 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=2 cpu=5 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=3 cpu=7 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=4 cpu=64 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=5 cpu=66 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=6 cpu=68 mask_cpus=1
+placement host=GN-A40-085 rank=20 thread=7 cpu=70 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=0 cpu=9 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=1 cpu=11 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=2 cpu=13 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=3 cpu=15 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=4 cpu=17 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=5 cpu=19 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=6 cpu=21 mask_cpus=1
+placement host=GN-A40-085 rank=21 thread=7 cpu=23 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=0 cpu=25 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=1 cpu=27 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=2 cpu=29 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=3 cpu=31 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=4 cpu=33 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=5 cpu=35 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=6 cpu=37 mask_cpus=1
+placement host=GN-A40-085 rank=22 thread=7 cpu=39 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=0 cpu=41 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=1 cpu=43 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=2 cpu=45 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=3 cpu=47 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=4 cpu=49 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=5 cpu=51 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=6 cpu=53 mask_cpus=1
+placement host=GN-A40-085 rank=23 thread=7 cpu=55 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=0 cpu=0 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=1 cpu=2 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=2 cpu=4 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=3 cpu=6 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=4 cpu=8 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=5 cpu=10 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=6 cpu=12 mask_cpus=1
+placement host=GN-A40-080 rank=24 thread=7 cpu=14 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=0 cpu=16 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=1 cpu=18 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=2 cpu=20 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=3 cpu=22 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=4 cpu=24 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=5 cpu=26 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=6 cpu=28 mask_cpus=1
+placement host=GN-A40-080 rank=25 thread=7 cpu=30 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=0 cpu=32 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=1 cpu=34 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=2 cpu=36 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=3 cpu=38 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=4 cpu=40 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=5 cpu=42 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=6 cpu=44 mask_cpus=1
+placement host=GN-A40-080 rank=26 thread=7 cpu=46 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=0 cpu=48 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=1 cpu=50 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=2 cpu=52 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=3 cpu=54 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=4 cpu=56 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=5 cpu=58 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=6 cpu=60 mask_cpus=1
+placement host=GN-A40-080 rank=27 thread=7 cpu=62 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=0 cpu=1 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=1 cpu=3 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=2 cpu=5 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=3 cpu=7 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=4 cpu=64 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=5 cpu=66 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=6 cpu=68 mask_cpus=1
+placement host=GN-A40-080 rank=28 thread=7 cpu=70 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=0 cpu=9 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=1 cpu=11 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=2 cpu=13 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=3 cpu=15 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=4 cpu=17 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=5 cpu=19 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=6 cpu=21 mask_cpus=1
+placement host=GN-A40-080 rank=29 thread=7 cpu=23 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=0 cpu=25 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=1 cpu=27 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=2 cpu=29 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=3 cpu=31 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=4 cpu=33 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=5 cpu=35 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=6 cpu=37 mask_cpus=1
+placement host=GN-A40-080 rank=30 thread=7 cpu=39 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=0 cpu=41 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=1 cpu=43 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=2 cpu=45 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=3 cpu=47 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=4 cpu=49 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=5 cpu=51 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=6 cpu=53 mask_cpus=1
+placement host=GN-A40-080 rank=31 thread=7 cpu=55 mask_cpus=1
+placement_host host=GN-A40-079 threads=64 distinct_cpus=64
+trace t=1794303848.037 host=GN-A40-079 rank=8 pid=837226 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=0 pid=597504 stage=bcast_begin 
+trace t=1794303848.037 host=GN-A40-079 rank=15 pid=837233 stage=finalize_begin verdict=PASS
+placement_host host=GN-A40-080 threads=64 distinct_cpus=64
+placement_host host=GN-A40-083 threads=64 distinct_cpus=64
+placement_host host=GN-A40-085 threads=64 distinct_cpus=64
+placement_hosts distinct=4 expected=4
+placement_check ranks=32 threads=8 online_cpus=72 max_mask_cpus=1 expect_bound=1 PASS
+trace t=1794303848.037 host=GN-A40-079 rank=14 pid=837232 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=18 pid=806869 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=3 pid=597507 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=19 pid=806870 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=0 pid=597504 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-079 rank=10 pid=837228 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-079 rank=9 pid=837227 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=17 pid=806868 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=28 pid=875264 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=2 pid=597506 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-079 rank=12 pid=837230 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=26 pid=875262 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=4 pid=597508 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-079 rank=11 pid=837229 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=31 pid=875267 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=6 pid=597510 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=7 pid=597511 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-079 rank=13 pid=837231 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=5 pid=597509 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=16 pid=806867 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=23 pid=806874 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-083 rank=1 pid=597505 stage=finalize_begin verdict=PASS
+trace t=1794303848.037 host=GN-A40-085 rank=22 pid=806873 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-085 rank=21 pid=806872 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=30 pid=875266 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-085 rank=20 pid=806871 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=29 pid=875265 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=25 pid=875261 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=27 pid=875263 stage=finalize_begin verdict=PASS
+trace t=1794303848.038 host=GN-A40-080 rank=24 pid=875260 stage=finalize_begin verdict=PASS
+trace t=1794303848.084 host=GN-A40-079 rank=13 pid=837231 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=3 pid=597507 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-079 rank=15 pid=837233 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-079 rank=14 pid=837232 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-080 rank=30 pid=875266 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=0 pid=597504 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-079 rank=12 pid=837230 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=16 pid=806867 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=1 pid=597505 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=5 pid=597509 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=17 pid=806868 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=18 pid=806869 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=2 pid=597506 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=23 pid=806874 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=6 pid=597510 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=22 pid=806873 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=7 pid=597511 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-083 rank=4 pid=597508 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=19 pid=806870 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-085 rank=20 pid=806871 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-080 rank=29 pid=875265 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-080 rank=27 pid=875263 stage=finalize_done 
+trace t=1794303848.085 host=GN-A40-080 rank=28 pid=875264 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-080 rank=25 pid=875261 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-080 rank=26 pid=875262 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-080 rank=24 pid=875260 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-080 rank=31 pid=875267 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-079 rank=8 pid=837226 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-079 rank=9 pid=837227 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-079 rank=11 pid=837229 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-085 rank=21 pid=806872 stage=finalize_done 
+trace t=1794303848.086 host=GN-A40-079 rank=10 pid=837228 stage=finalize_done 

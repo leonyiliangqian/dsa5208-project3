@@ -1,0 +1,303 @@
+{
+  "manifest": "manifests/pilot_four_node.json",
+  "manifest_id": "pilot-four-node-v1",
+  "manifest_status": "proposed",
+  "manifest_sha256": "0372e6b05b96810a6ef2c9f687b66904e5c414a8143bad87de756377ff8af823",
+  "scale": 1,
+  "nodes": 4,
+  "cores_per_node": 64,
+  "deadline": 1794305765.0,
+  "runs": [
+    {
+      "case": "strong_hybrid_256x1_4nodes_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 256 --map-by ppr:64:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "1000000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "strong_hybrid_32x8_4nodes_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 32 --map-by ppr:8:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "1000000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "strong_hybrid_128x1_2nodes_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 128 --map-by ppr:64:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 128,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "1000000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "strong_hybrid_64x1_dynamic64_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 64 --map-by ppr:64:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 64,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "1000000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 30
+    },
+    {
+      "case": "strong_serial_n1000000_th0p5_L8",
+      "rep": 1,
+      "study": "strong",
+      "program": "serial",
+      "launcher": "taskset -c 0",
+      "env": {
+        "OMP_NUM_THREADS": "1"
+      },
+      "cores": 1,
+      "argv": [
+        "bin/vanda-1535640/bh_serial",
+        "--n",
+        "1000000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42"
+      ],
+      "timeout_s": 260
+    },
+    {
+      "case": "weak_hybrid_256x1_4nodes_dynamic64_n6400000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 256 --map-by ppr:64:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "6400000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 120
+    },
+    {
+      "case": "weak_hybrid_32x8_4nodes_dynamic64_n6400000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 32 --map-by ppr:8:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "6400000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 110
+    },
+    {
+      "case": "weak_hybrid_256x1_4nodes_dynamic64_n12800000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 256 --map-by ppr:64:node:PE=1 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "1",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "12800000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 270
+    },
+    {
+      "case": "weak_hybrid_32x8_4nodes_dynamic64_n12800000_th0p5_L8",
+      "rep": 1,
+      "study": "weak",
+      "program": "hybrid",
+      "launcher": "mpirun --prefix /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0 --hostfile /var/spool/pbs/aux/1535640.stdct-mgmt-02 --mca plm rsh --mca plm_rsh_agent /opt/pbs/bin/pbs_tmrsh --mca plm_rsh_no_tree_spawn 1 --mca orte_leave_session_attached 1 -x PATH -x LD_LIBRARY_PATH -np 32 --map-by ppr:8:node:PE=8 --bind-to core -x OMP_NUM_THREADS -x OMP_PROC_BIND -x OMP_PLACES",
+      "env": {
+        "OMP_NUM_THREADS": "8",
+        "OMP_PROC_BIND": "close",
+        "OMP_PLACES": "cores"
+      },
+      "cores": 256,
+      "argv": [
+        "bin/vanda-1535640/bh_hybrid",
+        "--n",
+        "12800000",
+        "--theta",
+        "0.5",
+        "--leaf-size",
+        "8",
+        "--steps",
+        "2",
+        "--warmup",
+        "1",
+        "--seed",
+        "42",
+        "--schedule",
+        "dynamic",
+        "--chunk",
+        "64"
+      ],
+      "timeout_s": 240
+    }
+  ]
+}

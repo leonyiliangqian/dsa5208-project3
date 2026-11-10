@@ -1,0 +1,10 @@
+strong_hybrid_256x1_4nodes_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=1.26982
+strong_hybrid_32x8_4nodes_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=0.901973
+strong_hybrid_128x1_2nodes_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=1.296625
+strong_hybrid_64x1_dynamic64_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=1.901814
+strong_serial_n1000000_th0p5_L8_rep1: exit=0 ok=True wall_s=43.649257
+weak_hybrid_256x1_4nodes_dynamic64_n6400000_th0p5_L8_rep1: exit=0 ok=True wall_s=7.36987
+weak_hybrid_32x8_4nodes_dynamic64_n6400000_th0p5_L8_rep1: exit=0 ok=True wall_s=5.631991
+weak_hybrid_256x1_4nodes_dynamic64_n12800000_th0p5_L8_rep1: exit=0 ok=True wall_s=15.05075
+weak_hybrid_32x8_4nodes_dynamic64_n12800000_th0p5_L8_rep1: exit=0 ok=True wall_s=11.851266
+manifest pilot-four-node-v1 (proposed) sha256=0372e6b05b96 runs=9 worst_case_s=1255 scale=1

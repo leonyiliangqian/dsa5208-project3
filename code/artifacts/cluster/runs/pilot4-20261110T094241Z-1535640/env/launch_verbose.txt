@@ -1,0 +1,54 @@
+[GN-A40-083:596962] mca: base: components_register: registering framework plm components
+[GN-A40-083:596962] mca: base: components_register: found loaded component rsh
+[GN-A40-083:596962] mca: base: components_register: component rsh register function successful
+[GN-A40-083:596962] mca: base: components_open: opening plm components
+[GN-A40-083:596962] mca: base: components_open: found loaded component rsh
+[GN-A40-083:596962] mca: base: components_open: component rsh open function successful
+[GN-A40-083:596962] mca:base:select: Auto-selecting plm components
+[GN-A40-083:596962] mca:base:select:(  plm) Querying component [rsh]
+[GN-A40-083:596962] mca:base:select:(  plm) Query of component [rsh] set priority to 10
+[GN-A40-083:596962] mca:base:select:(  plm) Selected component [rsh]
+[GN-A40-083:596962] mca: base: components_register: registering framework ras components
+[GN-A40-083:596962] mca: base: components_register: found loaded component simulator
+[GN-A40-083:596962] mca: base: components_register: component simulator register function successful
+[GN-A40-083:596962] mca: base: components_register: found loaded component tm
+[GN-A40-083:596962] mca: base: components_register: component tm register function successful
+[GN-A40-083:596962] mca: base: components_register: found loaded component slurm
+[GN-A40-083:596962] mca: base: components_register: component slurm register function successful
+[GN-A40-083:596962] mca: base: components_open: opening ras components
+[GN-A40-083:596962] mca: base: components_open: found loaded component simulator
+[GN-A40-083:596962] mca: base: components_open: found loaded component tm
+[GN-A40-083:596962] mca: base: components_open: component tm open function successful
+[GN-A40-083:596962] mca: base: components_open: found loaded component slurm
+[GN-A40-083:596962] mca: base: components_open: component slurm open function successful
+[GN-A40-083:596962] mca:base:select: Auto-selecting ras components
+[GN-A40-083:596962] mca:base:select:(  ras) Querying component [simulator]
+[GN-A40-083:596962] mca:base:select:(  ras) Querying component [tm]
+[GN-A40-083:596962] mca:base:select:(  ras) Query of component [tm] set priority to 100
+[GN-A40-083:596962] mca:base:select:(  ras) Querying component [slurm]
+[GN-A40-083:596962] mca:base:select:(  ras) Selected component [tm]
+[GN-A40-083:596962] mca: base: close: unloading component simulator
+[GN-A40-083:596962] mca: base: close: component slurm closed
+[GN-A40-083:596962] mca: base: close: unloading component slurm
+[GN-A40-083:596962] [[38620,0],0] plm:rsh: final template argv:
+	/opt/pbs/bin/pbs_tmrsh <template>           PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin:$PATH ; export PATH ; LD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${LD_LIBRARY_PATH:-} ; export LD_LIBRARY_PATH ; DYLD_LIBRARY_PATH=/app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/lib:${DYLD_LIBRARY_PATH:-} ; export DYLD_LIBRARY_PATH ;   /app1/ebapps/arches/flat-avx2/software/OpenMPI/4.1.6-GCC-13.2.0/bin/orted -mca orte_leave_session_attached "1" -mca ess "env" -mca ess_base_jobid "2531000320" -mca ess_base_vpid "<template>" -mca ess_base_num_procs "5" -mca orte_node_regex "GN-A[2:40]-083,gn-a[2:40]-083,gn-a[2:40]-079,gn-a[2:40]-085,gn-a[2:40]-080@0(5)" -mca orte_hnp_uri "2531000320.0;tcp://192.168.22.35:54839" --mca plm_rsh_agent "/opt/pbs/bin/pbs_tmrsh" --mca plm_rsh_no_tree_spawn "1" --mca plm_base_verbose "10" --mca ras_base_verbose "10" -mca plm "rsh" -mca btl "self,vader,tcp" -mca pml "ob1" -mca hwloc_base_binding_policy "none" -mca rmaps_base_mapping_policy "ppr:1:node" -mca pmix "^s1,s2,cray,isolated"
+[GN-A40-083:596962] [[38620,0],0] complete_setup on job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],2]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],4]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],3]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],4]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],2]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive update proc state command from [[38620,0],3]
+[GN-A40-083:596962] [[38620,0],0] plm:base:receive got update_proc_state for job [38620,1]
+[GN-A40-083:596962] mca: base: close: unloading component tm
+[GN-A40-083:596962] mca: base: close: component rsh closed
+[GN-A40-083:596962] mca: base: close: unloading component rsh
