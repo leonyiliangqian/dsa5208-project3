@@ -6,7 +6,7 @@
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
 [notes/evidence_index.md](notes/evidence_index.md) (every job), [notes/submission_audit.md](notes/submission_audit.md) (requirements and package).
 
-## Current status, 8 November 2026, 13:00 SGT
+## Current status, 10 November 2026, 17:00 SGT
 
 | Job | State | Means |
 |---|---|---|
@@ -15,7 +15,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 | `1526470` `pilot2` | **Failed, 7 Nov 07:38:** exit 5 in 13 s at `allocation`: mixed CPU models (IN-004 Gold 6438N + CN-158 Platinum 8452Y), as designed | Nothing measured. Approval used; not retried |
 | `1526501` `bench1` | **Failed, 6 Nov 21:03:** exit 5 in 35 s on CN-158; 4 gates passed, then `internode` lost Open MPI's second daemon | Nothing measured. Approval used; not retried |
 | `1528774` `bench1` rerun | **Finished, passed and verified:** exit 0, 54 min 36 s on IN-008 (whole Gold 6438N node), 9 of 9 gates, 148 of 148 runs verified, 9 of 9 cleanups CLEAN | **Formal 1 to 64-core results**, now the source of the report's CPU figures and tables. One node only |
-| `1528798` `pilot2` rerun | **Queued** at 8 Nov 12:43 SGT (Codex), 25 h since 7 Nov 11:50, `cpu_parallel`, rate 0; PBS: insufficient `node_pool`, no start estimate | Submitted once; approval used. Do not resubmit or cancel. Sizing only; may stop at `allocation` if nodes are mixed |
+| `1528798` `pilot2` rerun | **Held by PBS (system hold)** since 10 Nov 14:43: 21 failed launch attempts, exit status -10, "too many failed attempts to run". No run directory, gate file or output: our script never ran. Followed a PBS server outage on 9 Nov | Approval used. Left on hold; releasing it needs Leon's decision. Diagnosis: `code/artifacts/cluster/discovery/vanda_pilot2_hold_1528798_20261110T1644.txt` |
 | `pilot4`, `bench4` | Not approved: charged, need `pilot2` to pass or Leon's decision to skip it; balance 10,000 CPU-hours on 7 Nov | Up to 192 + 725 = 917 core-hours requested. `bench4` has its gates since 8 Nov. Plan and contingency: [notes/plan_256core.md](notes/plan_256core.md) |
 
 - **Report:** CPU figures and tables regenerated from `1528774` (1 to 64 cores, repetitions within 3% apart from the first two runs). At 64 cores: speedup 23

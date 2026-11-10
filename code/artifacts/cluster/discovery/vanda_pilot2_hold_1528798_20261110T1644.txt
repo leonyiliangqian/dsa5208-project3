@@ -1,0 +1,89 @@
+Read-only diagnosis of the system hold on 1528798 (pilot2 rerun), 10 Nov 2026, existing ssh session, bounded commands. Job left on hold; nothing changed.
+Earlier: 9 Nov 12:13-12:18 SGT qstat refused (errno 15010, server stdct-mgmt-02 unreachable); 10 Nov 16:39 first read: H, 'job held, too many failed attempts to run', Exit_status -10, last attempt 14:43:20-14:43:21.
+A read at 16:41 hit the login node's user-lookup fault ('whoami: cannot find name for user ID 26435') and returned nothing.
+
+== qstat -xf and exit-code search
+Tue Nov 10 04:44:02 PM +08 2026
+stdct-login-01
+leonyil.qian
+== qstat -xf (cookie lines excluded)
+Job Id: 1528798.stdct-mgmt-02
+    Job_Name = p3_pilot2
+    Job_Owner = leonyil.qian@vanda.nus.edu.sg
+    job_state = H
+    queue = cpu_parallel
+    server = stdct-mgmt-02
+    Checkpoint = u
+    ctime = Sat Nov  7 11:50:37 2026
+    Error_Path = vanda.nus.edu.sg:/nfs/home/svu/leonyil.qian/dsa5208-p3-a64e0fe
+	-pilot2/code/p3_pilot2.e1528798
+    Hold_Types = s
+    Join_Path = oe
+    Keep_Files = oed
+    Mail_Points = a
+    mtime = Tue Nov 10 14:43:21 2026
+    Output_Path = stdct-login-01.stdct.loc:/home/svu/leonyil.qian/dsa5208-p3-a6
+	4e0fe-pilot2/code/artifacts/cluster/logs/
+    Priority = 0
+    qtime = Sat Nov  7 11:50:37 2026
+    Rerunable = True
+    Resource_List.am_job_cache = {"job.walltime": 1800,
+	 "job.queue_charge_rate": 0, "job.ngpus": 0, "job.ncpus": 128.0,
+	 "am_cloud_enabled": false}
+    Resource_List.mem = 240gb
+    Resource_List.mpiprocs = 128
+    Resource_List.ncpus = 128
+    Resource_List.ngpus = 0
+    Resource_List.nodect = 2
+    Resource_List.place = scatter
+    Resource_List.queue_charge_rate = 0
+    Resource_List.select = 2:ncpus=64:mpiprocs=64:mem=120gb
+    Resource_List.walltime = 00:30:00
+    stime = Tue Nov 10 14:43:20 2026
+    obittime = Tue Nov 10 14:43:21 2026
+    substate = 20
+	n:/cm/shared/apps/apptainer/1.4.1/bin:/cm/local/apps/environment-module
+	s/4.5.3//bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/am/
+	python/bin:/sbin:/usr/sbin:/cm/local/apps/environment-modules/4.5.3/bin
+	:/opt/pbs/bin,PBS_O_SHELL=/bin/bash,
+	e,PBS_O_SYSTEM=Linux,
+	SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a6548c68f7656c3c,
+    comment = job held, too many failed attempts to run
+    run_count = 21
+    Exit_status = -10
+    Submit_arguments = -q auto_free -v SOURCE_GIT_REV=a64e0fed6df1d5f4bb971471a
+	6548c68f7656c3c -o /home/svu/leonyil.qian/dsa5208-p3-a64e0fe-pilot2/cod
+	e/artifacts/cluster/logs/ jobs/vanda/pilot2.pbs
+    project = personal-leonyil.qian
+    Submit_Host = vanda.nus.edu.sg
+
+== exit code -10 definition
+
+== user lookups, PBS docs, own held jobs, queue load
+Tue Nov 10 04:44:28 PM +08 2026
+stdct-login-01
+== user lookup, 10 tries 1 s apart
+try 1 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 2 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 3 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 4 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 5 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 6 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 7 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 8 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 9 passwd_by_uid=ok id_un=leonyil.qian group=ok
+try 10 passwd_by_uid=ok id_un=leonyil.qian group=ok
+== PBS docs for -10
+== other held jobs with the same comment (all users, comment only)
+jobs listed: 1
+held with failed attempts: 1
+      1 leonyil* cpu_par* p3_pilot2 H
+== running jobs by queue now
+Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
+batch_cpu            0   400 yes yes   143   129   117     2     0     1 Exe*
+cpu_serial           0    94 yes yes    53    37     4     0     0     0 Exe*
+cpu_parallel         0    44 yes yes     6    27     9     0     0     0 Exe*
+batch_cpux           0    16 yes yes     1    10     4     0     0     0 Exe*
+
+== tracejob (login node has no server/MoM logs for the job); error file absent
+tracejob: Couldn't find Job Id 1528798.stdct-mgmt-02 in logs of past 5 days
