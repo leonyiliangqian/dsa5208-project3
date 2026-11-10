@@ -48,6 +48,20 @@ only from the committed tree, so private connection files on a machine cannot en
 `report_tables.py` reads `artifacts/local/`, and `report_figures.py` writes to the report by default. Both are included for
 transparency, and the run README's `--allow-local --out` form works alone.
 
+## Verified, 11 November, at `ba10fb6` (candidate for hand-in)
+
+Package `dsa5208-project3-source-ba10fb6.zip` (kept next to the repository, outside it): 83 files, SHA-256
+`b972a4a1c8ba24fdf24285809389aff33a5ae890f0386a5e23f8939acef2a228`. No logs, terminal output, run records, binaries, caches, job cookies,
+private keys, user names, numeric UIDs or personal paths; none of the repository-only tools or `report_figures_prefix_test.py`.
+Unzipped outside the repository and run in the existing Docker image (`dsa5208-p3-dev:bookworm`), exactly as its Quick start says:
+`make help` (now `awk`, since the image has no `column`), `make all hybrid gpu` (no warnings), `make check check-hybrid check-gpu`
+(serial PASS, hybrid PASS, GPU host fallback 29 of 29), `tests/pipeline_e2e.sh` 42 of 42. Also from the package: `verify_run_test` 17 of 17,
+`allocation_check_test` 13 of 13 (evidence replays skipped), `plan_budget_test`, `pbs_entry_test`, `launch_policy_test` 21 of 21.
+In the repository: `package_test`, `repo_links_test`, `report_figures_prefix_test`, `allocation_check_test` 15 of 15, and `verify_run`
+on `1523703`, `1528774`, `1535640`, `1535991` all PASS. Not tested from the package: a real GPU build (done on Vanda from the
+repository) and a Vanda job. Later commits that touch only `notes/`, `report/` or the root files leave the package's contents unchanged;
+rebuild it at the final commit anyway.
+
 ## Verified, 6 November, at `0647895`
 
 The package was rebuilt after the figure and report scripts changed. It has 80 files and includes the reviewed `report_figures.py`. It has no logs, terminal output, run records,

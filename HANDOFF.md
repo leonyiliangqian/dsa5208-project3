@@ -38,6 +38,7 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 2. **Billing observed (10 Nov):** Leon read 9,808.0 CPU-hours after `pilot4`, down from 10,000.0: exactly 192, the full 45-minute request at rate 1, although the job used 10.5 min. So billing is on the request (cores x walltime x rate), not on use.
 3. Leon reads the balance after `bench4` (`hpc project`; expected 9,040). No further cluster job is planned.
 4. Group items in [notes/group_review.md](notes/group_review.md): names and IDs, reading the Results, Canvas source hand-in, final PDF and source archive.
+   Source package tested at `ba10fb6` (11 Nov): `../dsa5208-project3-source-ba10fb6.zip`, details in `notes/submission_audit.md`; rebuild at the final commit.
 
 ## Status on 6 November 2026, 18:44 SGT, superseded
 
