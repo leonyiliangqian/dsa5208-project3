@@ -27,7 +27,7 @@ Axes for time, problem size and core count are logarithmic (Lecture 12).
   fig_gpu_runtime.tex, tab_gpu.tex                   study "gpu_timing" (device and cpu on the same workloads)
   tab_leaf.tex                                       study "leaf" (+ the leaf size 8 row of the same configuration)
   tab_repetitions.tex                                strong runs at their largest N, each repetition against
-                                                     serial and hybrid 1x1 of the same repetition
+                                                     serial and (when it was run) hybrid 1x1 of the same repetition
   tab_failed_runs.tex                                every failed, timed-out or skipped run
 Runtime figures draw the min-max range of the repetitions as error bars. --context adds the
 same sentence (job, node, limits) to every caption. --prefix P (lower-case letters and digits)
@@ -366,7 +366,7 @@ def leaf(rows, w):
 
 
 def repetitions(rows, inputs, w):
-    """Each strong-scaling repetition against the serial and hybrid 1x1 runs of the same repetition.
+    """Each strong-scaling repetition against the serial and, when present, hybrid 1x1 runs of the same repetition.
     Repetitions are interleaved, so runs of one repetition ran close together in time."""
     strong_rows = [r for r in rows if has_study(r, "strong") or has_study(r, "ranks_threads")]
     if not strong_rows:
@@ -398,15 +398,24 @@ def repetitions(rows, inputs, w):
         times = walls[key]
         e_s = [s[i] / times[i] / p for i in reps if i in times]
         e_1 = [one[i] / times[i] / p for i in reps if one and i in times and i in one]
-        body.append([("serial" if key[0] == "serial" else f"{key[1]}$\\times${key[2]}"), str(p),
-                     ", ".join(f"{times[i]:.2f}" if i in times else "--" for i in reps),
-                     rng(e_s) if key[0] != "serial" else "--", rng(e_1) if key[0] != "serial" and key != ("hybrid", 1, 1) else "--"])
-    table("tab_repetitions.tex", w,
-          w.caption(f"Every repetition of the strong-scaling runs at $N={fmt_n(n).strip('$')}$, with the efficiency of each "
-                    "repetition against the serial and the hybrid $1\\times1$ runs of the same repetition: "
-                    "the range shows how much the baseline alone moves the result. Efficiency above 1 means the "
-                    "core-time fell below the baseline's."),
-          "tab:repetitions", ["run", "$P$", "wall per repetition (s)", "$E$ vs serial", "$E$ vs $1\\times1$"], body)
+        row = [("serial" if key[0] == "serial" else f"{key[1]}$\\times${key[2]}"), str(p),
+               ", ".join(f"{times[i]:.2f}" if i in times else "--" for i in reps),
+               rng(e_s) if key[0] != "serial" else "--"]
+        if one:
+            row.append(rng(e_1) if key[0] != "serial" and key != ("hybrid", 1, 1) else "--")
+        body.append(row)
+    head = f"Every repetition of the strong-scaling runs at $N={fmt_n(n).strip('$')}$, with the efficiency of each "
+    if one:
+        text = (head + "repetition against the serial and the hybrid $1\\times1$ runs of the same repetition: "
+                "the range shows how much the baseline alone moves the result. Efficiency above 1 means the "
+                "core-time fell below the baseline's.")
+        cols = ["run", "$P$", "wall per repetition (s)", "$E$ vs serial", "$E$ vs $1\\times1$"]
+    else:
+        # No hybrid 1x1 run in these inputs: the serial run is the only baseline, so do not name another.
+        text = (head + "repetition against the serial run of the same repetition, the only baseline these runs "
+                "include. Efficiency above 1 would mean the core-time fell below the serial run's.")
+        cols = ["run", "$P$", "wall per repetition (s)", "$E$ vs serial"]
+    table("tab_repetitions.tex", w, w.caption(text), "tab:repetitions", cols, body)
 
 
 def fmt_n(n):
