@@ -1,6 +1,6 @@
 # DSA5208 Project 3: Barnes–Hut with MPI+OpenMP
 
-Due **17 November 2026** (per Leon, 10 Nov; cutoff time unconfirmed; the brief said 13 November, 23:59), 35 points. Group listing to confirm: Yan Yixin, Zhang Yue, Leon Yiliang Qian.
+Due **17 November 2026** (lecturer's Canvas extension, 10 Nov; the brief said 13 November, 23:59; no new time was given, so 23:59 is an unverified planning assumption), 35 points. Group listing to confirm: Yan Yixin, Zhang Yue, Leon Yiliang Qian.
 
 This repository is the group's internal research record. It holds the code, the report source, and every job's evidence. **What gets
 handed in is smaller:** a PDF report and a clean source package built from `code/`, as [notes/submission_audit.md](notes/submission_audit.md)

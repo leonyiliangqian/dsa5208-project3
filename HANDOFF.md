@@ -1,6 +1,6 @@
 # Project 3 handoff: current status
 
-**This is the only place for changing job status.** Report due **17 Nov 2026** (per Leon, 10 Nov; cutoff time unconfirmed). Not ready to hand in: see
+**This is the only place for changing job status.** Report due **17 Nov 2026** (confirmed by the lecturer's Canvas announcement, edited 10 Nov; it gives no time, so 23:59 is a planning assumption inherited from the original brief, not a verified Canvas cutoff). Not ready to hand in: see
 [notes/group_review.md](notes/group_review.md). Everything under "History" is dated and may be out of date.
 
 Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/README.md) (notes index),
@@ -29,7 +29,15 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 - **Fixed** in `1c50f92` and `0339f20`: explicit bound placement for `internode`; host names compared in one form; alias recorded. Tested locally only.
 - **Mixed nodes:** no PBS resource selects a CPU model, so the same-model rule stays and a two-node job may again stop at `allocation`.
 - **256 cores (11 Nov):** strong efficiency at N = 10^6 0.18 (256 x 1, speedup 46) and 0.20 (32 x 8, speedup 52); weak 0.08 and 0.16; at 256 ranks the
-  repeated tree build takes about 60% of the run and the exchange about 22%. Report compiles to 13 pages; only the group's Canvas marker remains.
+  repeated tree build takes about 60% of the run and the exchange about 22%. Report compiles to 14 pages after the 11 Nov revision (below); only the group's Canvas marker remains.
+- **Report revision, 11 Nov (committed and pushed with this note):** abstract added; studies rewritten after the fact to
+  match `1528774` and `1535991` and their baselines; cross-node correctness scoped by job (`1514458` unbound; bound comparisons in
+  `1528774`, `1535640`, `1535991`); queue, charge and memory requests corrected; results provenance per dataset; exchange and memory
+  paragraphs (upper bounds against summed RSS); GPU scope (one device, no CUDA-aware MPI); layout. Every changed number was recomputed
+  from the analysis summaries. AI statement unchanged. No job submitted. Second pass: `report_figures.py` drops the hybrid 1x1
+  column and its caption wording when a job has no 1x1 run. Only `report/generated/b4_tab_repetitions.tex` changed; its values are unchanged, and the
+  other eight `b4_` fragments and all bench1 fragments regenerate identically. Rows for 7, 8 and 10 Nov were added to `ai_usage.md`,
+  reconstructed from the commits.
 - **Approvals: none open** (`pilot4` used). Nothing is watching `1528798`. Lecturer contact is closed. Evidence redaction as below.
 
 **Next, in order:**
@@ -38,6 +46,8 @@ Where things are: [README.md](README.md) (entry point), [notes/README.md](notes/
 2. **Billing observed (10 Nov):** Leon read 9,808.0 CPU-hours after `pilot4`, down from 10,000.0: exactly 192, the full 45-minute request at rate 1, although the job used 10.5 min. So billing is on the request (cores x walltime x rate), not on use.
 3. Leon reads the balance after `bench4` (`hpc project`; expected 9,040). No further cluster job is planned.
 4. Group items in [notes/group_review.md](notes/group_review.md): names and IDs, reading the Results, Canvas source hand-in, final PDF and source archive.
+   AI declaration: the report keeps the statement Leon approved; [notes/ai_declaration_review.md](notes/ai_declaration_review.md) lists nine discrepancies with
+   `ai_usage.md` and an alternative draft for the group to decide on.
    Source package tested at `ba10fb6` (11 Nov): `../dsa5208-project3-source-ba10fb6.zip`, details in `notes/submission_audit.md`; rebuild at the final commit.
 
 ## Status on 6 November 2026, 18:44 SGT, superseded

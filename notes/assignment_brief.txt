@@ -65,3 +65,12 @@ and I will provide direction if necessary.
 series GPU computing, HIP for AMD GPUs, SYCL, and others. I am less familiar
 with these so the support I can provide is limited, but if you are interested
 in using one of these, please get in touch with me.
+
+--------------------------------------------------------------------------
+Deadline extension (Canvas announcement by Anthony Chen)
+--------------------------------------------------------------------------
+Posted 6 Nov 2026: extended to 16 November because of Vanda downtime.
+Edited 10 Nov 2026: extended to 17 November 2026, because of further Vanda
+downtime. No time of day is given. 23:59, from the original brief, is a planning
+assumption until the Canvas cutoff is verified.
+The due date above (13 November) is superseded.

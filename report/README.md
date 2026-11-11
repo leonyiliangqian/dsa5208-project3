@@ -1,9 +1,13 @@
 # Project 3 report
 
-Group members: Yan Yixin, Zhang Yue, Leon Yiliang Qian (names and IDs to be confirmed).
+Group members as listed in the title block: Yan Yixin, Zhang Yue, Leon Yiliang Qian (membership and student IDs not yet confirmed by the group).
 
-**This folder is the working report.** It has red `[PENDING]` markers and no PDF in it. The **final submission PDF** is a separate
-file made at the end, kept as `report/DSA5208_Project3_Report.pdf`. No such file exists yet, so nothing here is ready to hand in.
+**This folder is the working report.** All measured results are in it: Vanda jobs 1528774 (one node), 1535991 (four nodes, 256
+cores) and 1519638 (GPU). As of the 11 Nov revision it compiles to 14 pages. One red `[PENDING]` marker remains, for how source
+code reaches Canvas, and three group decisions are open: that route, names and student IDs, and the AI declaration (see
+[../notes/ai_declaration_review.md](../notes/ai_declaration_review.md)). The group has also not yet read the text. The **final submission PDF** is a separate file made at the end, kept as
+`report/DSA5208_Project3_Report.pdf`. No such file exists yet, so nothing here is ready to hand in. Due 17 November 2026 (lecturer's
+Canvas extension); 23:59 is an unverified planning assumption.
 
 | Path | Purpose | Edit by hand? |
 |---|---|---|

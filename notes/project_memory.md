@@ -4,7 +4,7 @@
 
 Contacting the lecturer is no longer needed, because the deadline Leon refers to for that contact has passed. Do not draft,
 send or ask to send lecturer messages. `lecturer_questions_draft.md` stays only as an inactive, unsent record.
-This says nothing about the final project deadline. On 10 Nov Leon gave it as **17 November 2026**; the cutoff time is unconfirmed.
+This says nothing about the final project deadline. The lecturer extended it to 16 Nov (announcement of 6 Nov), then to **17 November 2026** (edit of 10 Nov), because of Vanda downtime. The announcement gives no time. Plan for 23:59, inherited from the original brief, until the new Canvas cutoff is verified.
 
 Remaining decisions: pilot sizing; 256-core access, charge approval and current balance; formal experiments; report review.
 
@@ -24,7 +24,7 @@ report and submission packaging. They are requirements, not measured results.
   must use logarithmic scales.
 - Further Vanda downtime may lead the lecturer to extend the deadline.
   No extension or replacement deadline has been announced in this excerpt;
-  use 17 November 2026 (Leon, 10 Nov); the cutoff time is unconfirmed.
+  The lecturer has since extended the deadline to 17 November 2026 (Canvas announcement, edited 10 Nov).
 
 ### Grading (35 points)
 

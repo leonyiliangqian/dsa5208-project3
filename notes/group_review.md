@@ -1,6 +1,6 @@
 # Group checklist before hand-in
 
-Due 17 November 2026 (per Leon, 10 Nov; cutoff time unconfirmed). **Not ready: the required measurements are in the report (verified Vanda jobs up to 256 cores), but the group items below are open.** Nothing has been submitted.
+Due 17 November 2026 (confirmed by the lecturer's Canvas announcement, edited 10 Nov; it gives no time, so 23:59 is a planning assumption inherited from the original brief, not a verified Canvas cutoff). **Not ready: the required measurements are in the report (verified Vanda jobs up to 256 cores), but the group items below are open.** Nothing has been submitted.
 Unticked means not done or not confirmed. Tick only what actually happened.
 
 ## Names and IDs
@@ -23,6 +23,7 @@ The report's declaration must not claim more than this table. Each member fills 
 - [ ] The declaration in `report/main.tex` matches [ai_usage.md](ai_usage.md) and the table above.
 - [ ] Did AI help with the earlier serial code and design? Not established.
 - [ ] Confirm the group review of the Project 3 statement in `report/main.tex`, which names OpenAI Codex, GPT and Claude.
+- [ ] Resolve the nine discrepancies in [ai_declaration_review.md](ai_declaration_review.md), then keep the current statement or adopt a completed version of the alternative draft.
 
 ## Results still missing
 
@@ -40,7 +41,7 @@ Keep the red `[PENDING]` markers for missing measurements until formal Vanda res
 ## Report review
 
 - [ ] Read the Results text: `1528774` (one node) and the new four-node subsection from `1535991` (11 Nov), especially the tree-build, exchange and weak-scaling paragraphs.
-- [ ] Read: Terms Used, input generation, Table 1 (test purposes), Planned Studies, the lines marked "expected", Parallelization
+- [ ] Read: Terms Used, input generation, Table 1 (test purposes), Studies (formerly Planned Studies), the lines marked "expected", Parallelization
       Decisions, What the Results Support, and the pilot paragraph in Results.
 - [ ] GPU paragraph, against job `1519638`.
 

@@ -1,14 +1,14 @@
 # Submission audit
 
 Checked 11 November 2026 against [assignment_brief.txt](assignment_brief.txt) and Lecture 12 in [project_memory.md](project_memory.md).
-Due 17 November 2026 (per Leon; cutoff time unconfirmed). **Not ready to hand in:** the required measurements now exist, but group review,
+Due 17 November 2026 (confirmed by the lecturer's Canvas announcement, edited 10 Nov; it gives no time, so 23:59 is a planning assumption inherited from the original brief, not a verified Canvas cutoff). **Not ready to hand in:** the required measurements now exist, but group review,
 names and IDs, and the Canvas source route are open. Nothing has been submitted.
 
 ## What is handed in
 
 | Item | Source | How it is made | Status |
 |---|---|---|---|
-| PDF report | `report/` | Compiled as [../report/README.md](../report/README.md) describes | **Draft with all results**, 13 pages; one red `[PENDING]` marker left, for the Canvas source route |
+| PDF report | `report/` | Compiled as [../report/README.md](../report/README.md) describes | **Draft with all results**, 14 pages after the 11 Nov revision; one red `[PENDING]` marker left, for the Canvas source route |
 | Source with a run README | `code/` | `bash scripts/package_submission.sh`, from `code/`, at the final commit | Package tested; rebuild at the final commit |
 
 **How source reaches Canvas is unconfirmed.** The brief lists "file upload, PDF only" and also requires source code. The group must

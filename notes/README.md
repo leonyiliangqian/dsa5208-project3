@@ -19,6 +19,7 @@ Current job status is in [../HANDOFF.md](../HANDOFF.md), not here. **Lecturer co
 | | [vanda_discovery_2026-10-28.md](vanda_discovery_2026-10-28.md) | Site facts on 28 Oct | Historical; recheck before relying on it |
 | Group | [group_review.md](group_review.md) | What the group must check and supply before hand-in | Current |
 | | [ai_usage.md](ai_usage.md) | AI-use record behind the report's declaration | Current |
+| | [ai_declaration_review.md](ai_declaration_review.md) | Current AI statement, its discrepancies with the record, and an alternative draft, 11 Nov | Current; group to decide
 | Historical | [project3_prep.md](project3_prep.md) | Readiness note, 28 Oct | Historical, superseded by `requirements_plan.md` and `submission_audit.md` |
 | | [progress_report_draft.md](progress_report_draft.md) | Optional progress report; the 30 Oct date has passed | Historical, never sent |
 | | [lecturer_questions_draft.md](lecturer_questions_draft.md) | Lecturer questions | Historical, inactive, never sent. Do not revise or send |

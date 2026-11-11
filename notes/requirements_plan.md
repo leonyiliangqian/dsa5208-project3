@@ -5,7 +5,7 @@
 Written 3 November 2026 from [project_memory.md](project_memory.md) and read-only
 checks saved in `code/artifacts/cluster/discovery/vanda_lecture12_checks_20261103.txt`.
 No job, allocation or charge below is approved unless marked done or queued.
-Deadline: 17 November 2026 (Leon, 10 Nov); cutoff time unconfirmed.
+Deadline: 17 November 2026 (confirmed by the lecturer's Canvas announcement, edited 10 Nov; it gives no time, so 23:59 is a planning assumption inherited from the original brief, not a verified Canvas cutoff).
 
 ## Rubric against current state
 
