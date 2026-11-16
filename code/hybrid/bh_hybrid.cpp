@@ -248,8 +248,10 @@ int run(int argc, char **argv, int provided) {
     MPI_Reduce(local, vsum, 6, MPI_DOUBLE, MPI_SUM, 0, MPI_COMM_WORLD);
     MPI_Reduce(local, vmin, 6, MPI_DOUBLE, MPI_MIN, 0, MPI_COMM_WORLD);
 
-    // Replication check: every rank must hold bitwise-identical global
-    // positions and masses, and owned counts must sum to N.
+    // Replication check: a weighted checksum of the global positions and the
+    // mass sum must be identical on every rank, and owned counts must sum to N.
+    // This catches a missing or misplaced exchange; it is not a full bitwise
+    // comparison (the dump-based comparison with serial does that).
     double sums[2] = {0.0, 0.0};
     for (std::size_t i = 0; i < n; ++i) {
         sums[0] += p.pos[i].x + 2.0 * p.pos[i].y + 3.0 * p.pos[i].z;
