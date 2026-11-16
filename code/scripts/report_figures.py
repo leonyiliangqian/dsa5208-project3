@@ -30,7 +30,8 @@ Axes for time, problem size and core count are logarithmic (Lecture 12).
                                                      serial and (when it was run) hybrid 1x1 of the same repetition
   tab_failed_runs.tex                                every failed, timed-out or skipped run
 Runtime figures draw the min-max range of the repetitions as error bars. --context adds the
-same sentence (job, node, limits) to every caption. --prefix P (lower-case letters and digits)
+same sentence (job, node, limits) to every caption. --placement sets the LaTeX float placement
+of every fragment (default t). --prefix P (lower-case letters and digits)
 writes P_<name>.tex with every \label and \ref renamed fig:P-... and tab:P-..., so the results of
 a second job (e.g. the 4-node job on another CPU model) can sit beside the first without
 overwriting or merging; without it the output is unchanged.
@@ -93,6 +94,9 @@ def spread(r, x):
 
 BARS = " Bars: fastest to slowest repetition."
 
+# Float placement of every fragment; --placement changes it.
+PLACEMENT = "t"
+
 
 def label(r):
     return f"{r['ranks']}$\\times${r['threads']}"
@@ -112,7 +116,7 @@ def log_ticks(series):
 
 def fig_xy(series, xlabel, ylabel, caption, lab, ideal=None, logx=True, logy=False, legend="north west",
            log_base_x=2, axis_opts=""):
-    lines = ["\\begin{figure}[t]", "\\centering", "\\begin{tikzpicture}",
+    lines = [f"\\begin{{figure}}[{PLACEMENT}]", "\\centering", "\\begin{tikzpicture}",
              "\\begin{axis}[width=0.9\\columnwidth, height=0.65\\columnwidth, "
              f"xlabel={{{xlabel}}}, ylabel={{{ylabel}}}, "
              + (f"xmode=log, log basis x={log_base_x}, " if logx else "")
@@ -157,7 +161,7 @@ def strong(rows, w):
         series_e.append((name, [(r["cores"], r["efficiency"]) for r in rs]))
     pmax = max(r["cores"] for r in pts)
     n = sorted({r["n"] for r in pts})
-    base = (f"$N={','.join(map(str, n))}$, median of repetitions; serial Barnes--Hut baseline on the same "
+    base = (f"$N={', '.join(fmt_n(x).strip('$') for x in n)}$, median of repetitions; serial Barnes--Hut baseline on the same "
             "CPU model and build.")
     w.write("fig_strong_runtime.tex", fig_xy(
         series_t, "allocated cores $P$", "timed-region wall time (s)", w.caption("Strong-scaling runtime. " + base + BARS),
@@ -171,18 +175,20 @@ def strong(rows, w):
 
 
 def table(name, w, caption, lab, head, body, cols=None, wide=False, colsep=None):
-    """Single-column tables are scaled to the column width; wide=True gives a
+    """Single-column tables are set at their natural size and shrunk only if
+    wider than the column, so tables share one font size; wide=True gives a
     full-width table* (cols then sets the column types, e.g. a p{} column).
-    colsep narrows the gaps, in pt, when a wide table has many columns."""
+    colsep narrows the gaps, in pt, when a table has many columns."""
     env = "table*" if wide else "table"
     cols = cols or "l" + "r" * (len(head) - 1)
     tab = (["\\begin{tabular}{" + cols + "}", "\\toprule", " & ".join(head) + " \\\\", "\\midrule"]
            + [" & ".join(row) + " \\\\" for row in body] + ["\\bottomrule", "\\end{tabular}"])
     if not wide:
-        tab = ["\\resizebox{\\columnwidth}{!}{%"] + tab + ["}"]
+        tab = (["\\sbox0{%"] + tab + ["}%"]
+               + ["\\ifdim\\wd0>\\columnwidth\\resizebox{\\columnwidth}{!}{\\usebox0}\\else\\usebox0\\fi"])
     if colsep:
         tab = [f"\\setlength{{\\tabcolsep}}{{{colsep}pt}}"] + tab
-    lines = [f"\\begin{{{env}}}[t]", "\\centering", "\\small", f"\\caption{{{caption}}}",
+    lines = [f"\\begin{{{env}}}[{PLACEMENT}]", "\\centering", "\\small", f"\\caption{{{caption}}}",
              f"\\label{{{lab}}}"] + tab + [f"\\end{{{env}}}", ""]
     w.write(name, "\n".join(lines))
 
@@ -205,10 +211,10 @@ def ranks_threads(rows, w):
              f"{r['efficiency']:.2f}" if "efficiency" in r else "--",
              f"{r['traverse_imbalance']:.3f}" if "traverse_imbalance" in r else "--"] for r in rs]
     table("tab_ranks_threads.tex", w,
-          w.caption("Ranks $\\times$ threads at fixed allocated cores $P$: timed-region wall time, median "
-                    "[min, max] in seconds, speedup and efficiency against serial Barnes--Hut, and "
-                    "traversal imbalance (max/mean over ranks)."),
-          "tab:ranks-threads", ["$P$", "ranks$\\times$threads", "wall (s)", "$S$", "$E$", "imbalance"], body)
+          w.caption("Ranks $\\times$ threads ($R\\times T$) at fixed allocated cores $P$: timed-region wall "
+                    "time, median [min, max] in seconds; speedup $S$ and efficiency $E$ against serial "
+                    "Barnes--Hut; traversal imbalance (max/mean over ranks)."),
+          "tab:ranks-threads", ["$P$", "$R\\times T$", "wall (s)", "$S$", "$E$", "imbalance"], body, colsep=4)
 
 
 def schedule(rows, w):
@@ -228,7 +234,7 @@ def schedule(rows, w):
     table("tab_schedule.tex", w,
           w.caption("OpenMP loop schedule and chunk size (chunk 0 = runtime default): timed-region wall "
                     "time, median [min, max] in seconds, and traversal imbalance."),
-          "tab:schedule", ["ranks$\\times$threads", "schedule", "chunk", "wall (s)", "imbalance"], body)
+          "tab:schedule", ["$R\\times T$", "schedule", "chunk", "wall (s)", "imbalance"], body, colsep=4)
 
 
 def serial_n(rows, w):
@@ -268,7 +274,8 @@ def weak(rows, w):
         eff.append((name(t), [(r["cores"], p0["wall_median_s"] / r["wall_median_s"]) for r in rs]))
         ends |= {p0["cores"], rs[-1]["cores"]}
         per_core = sorted({r["n"] // r["cores"] for r in rs})
-        notes.append(f"$T={t}$: $P_0={p0['cores']}$, $N_0={p0['n']}$, {', '.join(map(str, per_core))} particles per core")
+        notes.append(f"$T={t}$: $P_0={p0['cores']}$, $N_0={fmt_int(p0['n'])}$, "
+                     f"{', '.join(fmt_int(x) for x in per_core)} particles per core")
     base = "; ".join(notes) + ". Constant particles per core is not constant work per core."
     w.write("fig_weak_runtime.tex", fig_xy(
         runtime, "allocated cores $P$", "timed-region wall time (s)",
@@ -310,7 +317,8 @@ def comm_fraction(rows, w):
             series, "allocated cores $P$", "exchange time / wall time",
             w.caption("Share of the timed region spent in the per-step position exchange "
                       "(\\texttt{MPI\\_Allgatherv}), maximum over ranks divided by wall time."),
-            "fig:comm-fraction"))
+            "fig:comm-fraction",
+            axis_opts="scaled y ticks=false, yticklabel style={/pgf/number format/fixed, /pgf/number format/precision=2}, "))
 
 
 def accuracy(rows, inputs, w):
@@ -334,17 +342,29 @@ def accuracy(rows, inputs, w):
     if not acc and not cost:
         return
     thetas = sorted(set(acc) | set(cost))
+    # Settings shared by every row go into the caption; a column is kept only where rows differ.
+    err_n = {a[0] for a in acc.values()}
+    cfg = {(label(c), c["n"]) for c in cost.values()}
+    one_n, one_cfg = len(err_n) == 1, len(cfg) == 1
+    head = (["$\\theta$"] + ([] if one_n else ["$N$ (error)"]) + ["max rel. error", "mean rel. error"]
+            + ([] if one_cfg else ["$R\\times T$"]) + ["wall (s)"])
     body = []
     for th in thetas:
         a = acc.get(th)
         c = cost.get(th)
-        body.append([f"{th:g}", f"{a[0]}" if a else "--", a[1] if a else "--", a[2] if a else "--",
-                     label(c) if c else "--", fmt_wall(c) if c else "--"])
+        body.append([f"{th:g}"] + ([] if one_n else [f"{a[0]}" if a else "--"])
+                    + [fmt_sci(a[1]) if a else "--", fmt_sci(a[2]) if a else "--"]
+                    + ([] if one_cfg else [label(c) if c else "--"]) + [fmt_wall(c) if c else "--"])
+    where = ""
+    if one_n:
+        where += f" Errors at $N={next(iter(err_n))}$."
+    if one_cfg:
+        lab, n = next(iter(cfg))
+        where += f" Times at {lab}, $N={fmt_n(n).strip('$')}$."
     table("tab_accuracy_cost.tex", w,
           w.caption("Accuracy against cost across $\\theta$: force error of serial Barnes--Hut against direct "
-                    "summation (max and mean relative error at the stated $N$), and hybrid timed-region wall "
-                    "time, median [min, max] in seconds."),
-          "tab:accuracy-cost", ["$\\theta$", "$N$ (error)", "max rel.", "mean rel.", "config", "wall (s)"], body)
+                    "summation, and hybrid timed-region wall time, median [min, max] in seconds." + where),
+          "tab:accuracy-cost", head, body, colsep=4)
 
 
 def leaf(rows, w):
@@ -356,13 +376,13 @@ def leaf(rows, w):
           and (has_study(r, "leaf") or r["leaf_size"] == 8)]
     rs = sorted({id(r): r for r in rs}.values(), key=lambda r: (r["program"], r["cores"], r["leaf_size"]))
     ref = {(r["program"], r["ranks"], r["threads"]): r["wall_median_s"] for r in rs if r["leaf_size"] == 8}
-    body = [[esc(r["program"]), label(r), fmt_n(r["n"]), str(r["leaf_size"]), fmt_wall(r),
+    body = [["serial" if r["program"] == "bh_serial" else label(r), fmt_n(r["n"]), str(r["leaf_size"]), fmt_wall(r),
              f"{r['wall_median_s'] / ref[(r['program'], r['ranks'], r['threads'])]:.2f}"
              if (r["program"], r["ranks"], r["threads"]) in ref else "--"] for r in rs]
     table("tab_leaf.tex", w,
-          w.caption("Leaf size: timed-region wall time, median [min, max] in seconds, and median relative to leaf "
-                    "size 8 in the same configuration."),
-          "tab:leaf", ["program", "ranks$\\times$threads", "$N$", "leaf", "wall (s)", "vs leaf 8"], body)
+          w.caption("Leaf size $L$: timed-region wall time, median [min, max] in seconds, and the median relative "
+                    "to $L=8$ in the same configuration (serial program, or hybrid $R\\times T$)."),
+          "tab:leaf", ["run", "$N$", "$L$", "wall (s)", "vs $L=8$"], body, colsep=4)
 
 
 def repetitions(rows, inputs, w):
@@ -390,7 +410,10 @@ def repetitions(rows, inputs, w):
     reps = sorted(s)
 
     def rng(vals):
-        return f"{min(vals):.2f}--{max(vals):.2f}" if vals else "--"
+        if not vals:
+            return "--"
+        lo, hi = f"{min(vals):.2f}", f"{max(vals):.2f}"
+        return lo if lo == hi else f"{lo}--{hi}"
 
     body = []
     for key in sorted(walls, key=lambda k: (k[1] * k[2], k[0] != "serial", -k[1])):
@@ -404,18 +427,28 @@ def repetitions(rows, inputs, w):
         if one:
             row.append(rng(e_1) if key[0] != "serial" and key != ("hybrid", 1, 1) else "--")
         body.append(row)
-    head = f"Every repetition of the strong-scaling runs at $N={fmt_n(n).strip('$')}$, with the efficiency of each "
+    head = (f"Each repetition of the strong-scaling runs at $N={fmt_n(n).strip('$')}$: timed-region wall time, "
+            "and efficiency $E$ (smallest to largest over the repetitions) against ")
     if one:
-        text = (head + "repetition against the serial and the hybrid $1\\times1$ runs of the same repetition: "
-                "the range shows how much the baseline alone moves the result. Efficiency above 1 means the "
-                "core-time fell below the baseline's.")
-        cols = ["run", "$P$", "wall per repetition (s)", "$E$ vs serial", "$E$ vs $1\\times1$"]
+        text = (head + "the serial and the hybrid $1\\times1$ runs of the same repetition. The two columns show "
+                "how much the choice of baseline moves the result.")
+        cols = ["$R\\times T$", "$P$", "wall per repetition (s)", "$E$ vs serial", "$E$ vs $1\\times1$"]
     else:
         # No hybrid 1x1 run in these inputs: the serial run is the only baseline, so do not name another.
-        text = (head + "repetition against the serial run of the same repetition, the only baseline these runs "
-                "include. Efficiency above 1 would mean the core-time fell below the serial run's.")
-        cols = ["run", "$P$", "wall per repetition (s)", "$E$ vs serial"]
-    table("tab_repetitions.tex", w, w.caption(text), "tab:repetitions", cols, body)
+        text = (head + "the serial run of the same repetition, the only baseline these runs include.")
+        cols = ["$R\\times T$", "$P$", "wall per repetition (s)", "$E$ vs serial"]
+    table("tab_repetitions.tex", w, w.caption(text), "tab:repetitions", cols, body, colsep=4)
+
+
+def fmt_int(n):
+    """50000 as 50{,}000 (math-mode thousands separator)."""
+    return f"{int(n):,}".replace(",", "{,}")
+
+
+def fmt_sci(text):
+    """A recorded value such as 1.412e-02 as 1.41 x 10^-2 (three significant figures)."""
+    m, e = f"{float(text):.2e}".split("e")
+    return f"${m}\\times10^{{{int(e)}}}$"
 
 
 def fmt_n(n):
@@ -437,7 +470,8 @@ def gpu_timing(rows, w):
     r0 = paired[0]
     gpu = (r0.get("gpu_hardware") or "GPU").split(",")[0]
     cpu_of = {r["n"]: r for r in rs if r["backend"] == "cpu"}
-    what = (f"{r0['steps']} timed steps, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, {esc(r0['cpu_model'])}. "
+    cpu = esc(r0["cpu_model"].replace("(R)", ""))
+    what = (f"{r0['steps']} timed steps, $\\theta={r0['theta']:g}$, leaf size {r0['leaf_size']}, {cpu}. "
             f"Only the force traversal differs: on the device, or on {r0['threads']} bound CPU threads (schedule dynamic, "
             "chunk 64). Both backends build and flatten the tree and integrate on one host thread, and those times are "
             "included; setup and warmup are not.")
@@ -483,7 +517,12 @@ def main():
     ap.add_argument("--allow-local", action="store_true")
     ap.add_argument("--context", default="", help="sentence added to every caption, e.g. the job and its limits")
     ap.add_argument("--prefix", default="", help="name and label prefix for a second job's fragments, e.g. b4")
+    ap.add_argument("--placement", default="t", help="LaTeX float placement of every fragment (default: t)")
     a = ap.parse_args()
+    if not re.fullmatch(r"!?[htbp]+", a.placement):
+        sys.exit(f"--placement must be LaTeX float specifiers such as t, tb or !htb: {a.placement!r}")
+    global PLACEMENT
+    PLACEMENT = a.placement
     if a.prefix and not re.fullmatch(r"[a-z][a-z0-9]*", a.prefix):
         sys.exit(f"--prefix must be lower-case letters and digits, starting with a letter: {a.prefix!r}")
     rows, failed, inputs = load(a.summaries)

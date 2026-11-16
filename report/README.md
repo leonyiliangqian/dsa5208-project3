@@ -1,13 +1,14 @@
 # Project 3 report
 
-Group members as listed in the title block: Yan Yixin, Zhang Yue, Leon Yiliang Qian (membership and student IDs not yet confirmed by the group).
+Group members: Yan Yixin (A0327039A), Zhang Yue (A0333668U), Leon Yiliang Qian (A0355825W); names, IDs and the Canvas route
+(PDF plus source ZIP upload) confirmed by Leon on 16 Nov 2026.
 
-**This folder is the working report.** All measured results are in it: Vanda jobs 1528774 (one node), 1535991 (four nodes, 256
-cores) and 1519638 (GPU). As of the 11 Nov revision it compiles to 14 pages. One red `[PENDING]` marker remains, for how source
-code reaches Canvas, and three group decisions are open: that route, names and student IDs, and the AI declaration (see
-[../notes/ai_declaration_review.md](../notes/ai_declaration_review.md)). The group has also not yet read the text. The **final submission PDF** is a separate file made at the end, kept as
-`report/DSA5208_Project3_Report.pdf`. No such file exists yet, so nothing here is ready to hand in. Due 17 November 2026 (lecturer's
-Canvas extension); 23:59 is an unverified planning assumption.
+**This folder is the report source.** All measured results are in it: Vanda jobs 1528774 (one node), 1535991 (four nodes, 256
+cores) and 1519638 (GPU). After the final editing pass of 16 Nov it compiles to 13 pages with no `[PENDING]` content, no
+undefined reference and no overfull box. The **final submission PDF** is `report/DSA5208_Project3_Report.pdf`, compiled from
+this folder as described below; rebuild it whenever the source changes. Due 17 November 2026, 23:59 (Canvas). The AI
+declaration is the statement Leon approved; [../notes/ai_declaration_review.md](../notes/ai_declaration_review.md) lists
+authorship questions that only the group can settle. Group review of the text is not recorded as done.
 
 | Path | Purpose | Edit by hand? |
 |---|---|---|
@@ -52,7 +53,8 @@ Then re-upload the changed `generated/` files. Numbers in the report's tables an
 
 ## Before submission
 
-1. No `\pending{` remains: `grep -n 'pending{' main.tex` prints nothing.
+1. No `[PENDING` text appears in the compiled PDF. (The `\pending` macro and the `\resultslot` fallback stay in
+   `main.tex` by design, so searching the source for `pending{` is not a valid check.)
 2. The Overleaf source matches this folder. Download the Overleaf project as a
    ZIP (Menu → Download → Source), unzip it to a scratch folder and compare:
    `diff -r <unzipped> report/ -x '*.pdf'`. Resolve every difference in the repository first.
