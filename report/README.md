@@ -1,7 +1,9 @@
 # Project 3 report
 
 Group members: Yan Yixin (A0327039A), Zhang Yue (A0333668U), Leon Yiliang Qian (A0355825W); names, IDs and the Canvas route
-(PDF plus source ZIP upload) confirmed by Leon on 16 Nov 2026.
+(PDF plus source ZIP upload) confirmed by Leon on 16 Nov 2026. The brief asks for code in the PDF or as a public GitHub
+link, so the report also links https://github.com/leonyiliangqian/dsa5208-project3-code: the ZIP's files plus a short root
+README, created 16 Nov 2026. Rebuild that repository too if the packaged code changes.
 
 **This folder is the report source.** All measured results are in it: Vanda jobs 1528774 (one node), 1535991 (four nodes, 256
 cores) and 1519638 (GPU). After the final editing pass of 16 Nov it compiles to 13 pages with no `[PENDING]` content, no
