@@ -5,7 +5,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{multirow}
-\usepackage{float} % [H] keeps the decisions table inside the Discussion
+\usepackage{float}
 \setcounter{dbltopnumber}{3} % allow three full-width tables at a page top, so none drifts past the references
 \renewcommand{\floatpagefraction}{0.8}    % a page of floats only when they nearly fill it
 \renewcommand{\dblfloatpagefraction}{0.8}
@@ -342,7 +342,7 @@ No run of job 1528774, 1535991 or 1523703 failed, timed out or was skipped; the 
 \subsection{Parallelization Decisions}
 Table~\ref{tab:decisions} lists the technique used for each part of the program and the communication it needs. These are design choices. Their cost has been measured on up to 64 cores of one node and on 256 cores across four nodes.
 
-\begin{table}[H]
+\begin{table}[t]
 \centering
 \small
 \caption{Technique and communication for each part of a timestep.}
