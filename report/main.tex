@@ -181,7 +181,8 @@ Repeated threaded runs & Results that depend on thread timing \\
 Perturbed force, mass mismatch, removed exchange & A test harness that cannot fail \\
 Invalid arguments & Ranks left hanging in a collective \\
 Placement probe & Threads sharing a core, which would spoil timings \\
-GPU against direct summation and serial & A missing data transfer; silent fallback to the CPU \\
+GPU against direct summation and serial & Incorrect device forces, including errors from missing data transfers \\
+GPU device execution check & Silent fallback to the CPU \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -313,7 +314,7 @@ Each step a rank receives about 24\,MB, the positions it does not own, so a node
 
 \resultslot{b4_fig_weak_runtime}{four-node weak-scaling runtime.}
 \resultslot{b4_fig_weak_efficiency}{four-node weak-scaling efficiency.}
-With 50{,}000 particles per core, MPI-only weak efficiency fell to 0.20 at 64 cores, 0.13 at 128 and 0.08 at 256, and with 8 threads per rank to 0.35, 0.25 and 0.16 (Figure~\ref{fig:b4-weak}). As expected, constant particles per core is not constant work: at 256 cores $N=1.28\times10^7$, every rank builds the whole tree, and the build took 65\% (MPI only) and 58\% (8 threads per rank) of the run, against an exchange share of 10\% and 9\%. Each process records its own peak resident set; the largest at $N=1.28\times10^7$ was 1781\,MiB (1.74\,GiB). With 64 ranks per node at $256\times1$, 64 times that maximum bounds a node at about 111.3\,GiB, and the measured per-rank peaks summed over all ranks and divided among the four nodes give 111.1\,GiB. With $32\times8$, eight ranks per node, both are about 13.9\,GiB. Peaks of different ranks need not occur at the same time, and pages shared between processes count in each, so these sums are estimates from above of the memory a node used at once, not measurements of it.
+With 50{,}000 particles per core, MPI-only weak efficiency fell to 0.20 at 64 cores, 0.13 at 128 and 0.08 at 256, and with 8 threads per rank to 0.35, 0.25 and 0.16 (Figure~\ref{fig:b4-weak}). As expected, constant particles per core is not constant work: at 256 cores $N=1.28\times10^7$, every rank builds the whole tree, and the build took 65\% (MPI only) and 58\% (8 threads per rank) of the run, against an exchange share of 10\% and 9\%. Each process records its own peak resident set; the largest at $N=1.28\times10^7$ was 1781\,MiB (1.74\,GiB). With 64 ranks per node at $256\times1$, 64 times that maximum bounds a node at about 111.3\,GiB, and summing the measured per-rank peaks across all ranks and dividing by four gives an average of 111.1\,GiB per node. With $32\times8$, eight ranks per node, both are about 13.9\,GiB. Peaks of different ranks need not occur at the same time, and pages shared between processes count in each, so sums of per-rank peaks bound concurrent RSS from above. The four-node average does not bound each individual node.
 
 \resultslot{b4_tab_repetitions}{four-node per-repetition table.}
 \resultslot{b4_tab_failed_runs}{four-node failed, timed-out and skipped runs.}
